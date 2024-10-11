@@ -1,5 +1,6 @@
 # Android AntiForensic Tools
 [Readme на русском](./README_RU.md)
+
 **Read at least the "Installation" section before using the application!**
 ## Description
 
@@ -15,7 +16,7 @@ My app is designed to address these shortcomings. It allows you to wipe all data
 
 Unfortunately, there are limits to the stealthiness of deleting data, although deleting data is still much more stealthy than resetting the device to factory defaults. After deleting data in various places in the system (logs, cache, statistics, etc.) remains a lot of evidence that this data existed. It is almost impossible to erase all these traces, and an advanced adversary with full access to the device will be able to detect them. Fortunately, some of these traces are harmless - you can make up whatever you want about a deleted Android profile. However, some traces allow to find out that you have recently deleted data using this application, that will make the enemy much more interested in extracting the truth from you. I try to fight with such traces. The app includes some additional options that will allow you to hide its existence on the device and its role in erasing data from your device. However, the study of traces of deleted data is still far from complete.
 
-## Установка
+## Installation
 In the "Releases" section, you can download 5 versions of the app. 2 of them can be installed as regular APKs, and 3 need to be installed via ADB. The ADB installation process will be described below. Versions that can be installed as regular APKs have the drawback that the self-destruct option is not compatible with administrator privileges, and administrator privileges are required to protect against passwords brute-force. Therefore, they are called "NOT_RECOMMENDED" and their installation is not recommended.
 
 4 versions of the app are disguised as other apps - [Island](https://github.com/oasisfeng/island) and [Shelter](https://gitea.angry.im/PeterCxy/Shelter). They have changed the package name, icon, and name. This is to ensure that after app uninstallation or self-destruction for an adversary examining the system it looks as if you uninstalled one of those apps from the device, not Android AntiForensic Tools. These apps were chosen for cloaking because they're open source, and you're unlikely to use both apps at the same time. If you have one of these installed on your device, install a version of Android AntiForensic Tools that masquerades as the other.
