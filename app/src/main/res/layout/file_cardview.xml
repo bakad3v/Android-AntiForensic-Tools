@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  style="?attr/materialCardViewElevatedStyle"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop="8dp">
+
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+      <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:contentDescription="@string/file_photo_description" />
+
+      <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+          android:id="@+id/path"
+          style="?attr/textAppearanceTitleMedium"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:ellipsize="start"
+          android:maxLines="2"
+          android:paddingStart="8dp"
+          android:paddingEnd="8dp"
+          android:textColor="?attr/colorOnSecondaryContainer" />
+
+        <com.google.android.material.textview.MaterialTextView
+          android:id="@+id/priority"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:maxLines="1"
+          android:padding="8dp"
+          android:ellipsize="end"
+          android:textColor="?attr/colorOnSecondaryContainer"
+          style="?attr/textAppearanceBodyMedium">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.google.android.material.divider.MaterialDivider
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <LinearLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:orientation="horizontal">
+
+          <Button
+            android:id="@+id/more"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_more" />
+
+          <Space
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+          </Space>
+
+          <Button
+            android:id="@+id/edit"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:contentDescription="@string/edit_text"
+            app:icon="@drawable/ic_baseline_edit_24">
+
+          </Button>
+
+          <Button
+            android:id="@+id/delete"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:contentDescription="@string/delete"
+            app:icon="@drawable/ic_baseline_delete_24"
+            app:iconTint="?attr/colorError">
+
+          </Button>
+        </LinearLayout>
+      </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+  </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <data>
+
+    <variable
+      name="viewmodel"
+      type="com.android.aftools.presentation.viewmodels.PasswordsVM" />
+  </data>
+
+  <LinearLayout
+    android:id="@+id/linear"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+      android:orientation="vertical"
+      android:gravity="center"
+      >
+
+
+    <LinearLayout
+      android:id="@+id/linearLayout2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+
+      <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:maxLines="1"
+        app:passwordText="@{viewmodel.passwordStatus}"
+        style="?attr/textAppearanceDisplaySmall" />
+
+      <com.google.android.material.textfield.TextInputLayout
+        style="@style/LoginTextInputLayoutStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:wrongPasswordError="@{viewmodel.passwordStatus}"
+        app:hintAnimationEnabled="true"
+        app:passwordToggleEnabled="true">
+
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/password"
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:inputType="textPassword"
+          android:maxLines="1"
+          android:gravity="start"
+          app:textInputLayoutFocusedRectEnabled="false" />
+
+
+      </com.google.android.material.textfield.TextInputLayout>
+      <TextView
+          android:layout_width="250dp"
+          android:layout_height="wrap_content"
+          android:gravity="center_horizontal"
+          android:text="@string/duress_password"
+          style="?attr/textAppearanceBodyLarge" />
+    </LinearLayout>
+
+
+  </LinearLayout>
+</layout>

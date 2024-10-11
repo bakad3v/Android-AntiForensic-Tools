@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/maxpriority"
+    android:title="@string/maxpr" />
+  <item android:id="@+id/minpriority"
+    android:title="@string/minpr" />
+  <item android:id="@+id/alphabet"
+    android:title="@string/alphabet" />
+  <item android:id="@+id/desalphabet"
+    android:title="@string/disalphabet" />
+  <item android:id="@+id/maxsize"
+    android:title="@string/sizebig" />
+  <item android:id="@+id/minsize"
+    android:title="@string/sizesmall" />
+</menu>
