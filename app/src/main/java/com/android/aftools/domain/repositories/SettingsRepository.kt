@@ -15,7 +15,7 @@ interface SettingsRepository {
   suspend fun setDeleteProfiles(new: Boolean)
   suspend fun setTRIM(new: Boolean)
   suspend fun setWipe(new: Boolean)
-  suspend fun runRoot(new: Boolean)
+  suspend fun setRunRoot(new: Boolean)
   suspend fun sendBroadcast(new: Boolean)
   suspend fun setRemoveItself(new: Boolean)
   suspend fun setLogdOnStart(new: Boolean)

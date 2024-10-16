@@ -19,7 +19,13 @@ import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class Root @Inject constructor(@ApplicationContext private val context: Context, private val profilesMapper: ProfilesMapper, private val setRootActiveUseCase: SetRootActiveUseCase, private val dpm: DevicePolicyManager, private val userManager: UserManager) : SuperUser {
+class Root @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val profilesMapper: ProfilesMapper,
+    private val setRootActiveUseCase: SetRootActiveUseCase,
+    private val dpm: DevicePolicyManager,
+    private val userManager: UserManager
+) : SuperUser {
 
     private val deviceAdmin by lazy { ComponentName(context, DeviceAdminReceiver::class.java) }
 
@@ -28,10 +34,16 @@ class Root @Inject constructor(@ApplicationContext private val context: Context,
         if (!result.isSuccess) {
             if (!askSuperUserRights()) {
                 setRootActiveUseCase(false)
-                throw SuperUserException(NO_ROOT_RIGHTS,UIText.StringResource(R.string.no_root_rights))
+                throw SuperUserException(
+                    NO_ROOT_RIGHTS,
+                    UIText.StringResource(R.string.no_root_rights)
+                )
             }
             val resultText = result.out.joinToString(";")
-            throw SuperUserException(resultText,UIText.StringResource(R.string.unknow_root_error,resultText))
+            throw SuperUserException(
+                resultText,
+                UIText.StringResource(R.string.unknow_root_error, resultText)
+            )
         }
         return result
     }
@@ -85,26 +97,58 @@ class Root @Inject constructor(@ApplicationContext private val context: Context,
 
     override suspend fun setUserSwitcherStatus(status: Boolean) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
-            throw SuperUserException(ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),UIText.StringResource(R.string.wrong_android_version,Build.VERSION_CODES.P.toString()))
+            throw SuperUserException(
+                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
+                UIText.StringResource(
+                    R.string.wrong_android_version,
+                    Build.VERSION_CODES.P.toString()
+                )
+            )
         executeRootCommand("settings put global user_switcher_enabled ${status.toInt()}")
     }
 
     override suspend fun getUserSwitcherStatus(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
-            throw SuperUserException(ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),UIText.StringResource(R.string.wrong_android_version,Build.VERSION_CODES.P.toString()))
-        return executeRootCommand("settings get global user_switcher_enabled").out[0].toInt().toBoolean()
+            throw SuperUserException(
+                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
+                UIText.StringResource(
+                    R.string.wrong_android_version,
+                    Build.VERSION_CODES.P.toString()
+                )
+            )
+        return try {
+            executeRootCommand("settings get global user_switcher_enabled").out[0].toInt()
+                .toBoolean()
+        } catch (e: NumberFormatException) {
+            throw SuperUserException(NUMBER_NOT_RECOGNISED, UIText.StringResource(R.string.number_not_found))
+        }
     }
+
     override suspend fun setSwitchUserRestriction(status: Boolean) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
-            throw SuperUserException(ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),UIText.StringResource(R.string.wrong_android_version,Build.VERSION_CODES.P.toString()))
+            throw SuperUserException(
+                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
+                UIText.StringResource(
+                    R.string.wrong_android_version,
+                    Build.VERSION_CODES.P.toString()
+                )
+            )
         executeRootCommand("pm set-user-restriction ${UserManager.DISALLOW_USER_SWITCH} ${status.toInt()}")
     }
 
     override suspend fun getSwitchUserRestriction(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P)
-            throw SuperUserException(ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),UIText.StringResource(R.string.wrong_android_version,Build.VERSION_CODES.P.toString()))
+            throw SuperUserException(
+                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
+                UIText.StringResource(
+                    R.string.wrong_android_version,
+                    Build.VERSION_CODES.P.toString()
+                )
+            )
         return try {
-            executeRootCommand("dumpsys user | grep \"${UserManager.DISALLOW_USER_SWITCH}\"").out[0].endsWith(UserManager.DISALLOW_USER_SWITCH)
+            executeRootCommand("dumpsys user | grep \"${UserManager.DISALLOW_USER_SWITCH}\"").out[0].endsWith(
+                UserManager.DISALLOW_USER_SWITCH
+            )
         } catch (e: SuperUserException) {
             false
         }
@@ -112,11 +156,17 @@ class Root @Inject constructor(@ApplicationContext private val context: Context,
 
 
     override suspend fun getSafeBootStatus(): Boolean =
-        executeRootCommand("dumpsys device_policy | grep \"${UserManager.DISALLOW_SAFE_BOOT}\"").out[0].endsWith(UserManager.DISALLOW_SAFE_BOOT)
+        executeRootCommand("dumpsys device_policy | grep \"${UserManager.DISALLOW_SAFE_BOOT}\"").out[0].endsWith(
+            UserManager.DISALLOW_SAFE_BOOT
+        )
 
 
     override suspend fun getMultiuserUIStatus(): Boolean =
-        executeRootCommand("getprop fw.show_multiuserui").out[0].toInt().toBoolean()
+        try {
+            executeRootCommand("getprop fw.show_multiuserui").out[0].toInt().toBoolean()
+        } catch (e: NumberFormatException) {
+            throw SuperUserException(NUMBER_NOT_RECOGNISED, UIText.StringResource(R.string.number_not_found))
+        }
 
     fun askSuperUserRights(): Boolean {
         val result = Shell.cmd("id").exec()
@@ -140,8 +190,10 @@ class Root @Inject constructor(@ApplicationContext private val context: Context,
         executeRootCommand("sm fstrim")
     }
 
-  companion object {
-      private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
-      private const val ANDROID_VERSION_INCORRECT = "Wrong android version, SDK version %s or higher required"
-  }
+    companion object {
+        private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
+        private const val ANDROID_VERSION_INCORRECT =
+            "Wrong android version, SDK version %s or higher required"
+        private const val NUMBER_NOT_RECOGNISED = "Number not recognised"
+    }
 }

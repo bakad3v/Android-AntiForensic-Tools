@@ -9,6 +9,7 @@ import com.android.aftools.domain.usecases.logs.WriteToLogsUseCase
 import com.android.aftools.domain.usecases.permissions.GetPermissionsUseCase
 import com.android.aftools.domain.usecases.profiles.GetProfilesToDeleteUseCase
 import com.android.aftools.domain.usecases.profiles.SetProfileDeletionStatusUseCase
+import com.android.aftools.domain.usecases.rootCommand.GetRootCommandUseCase
 import com.android.aftools.domain.usecases.settings.GetSettingsUseCase
 import com.android.aftools.presentation.utils.UIText
 import com.android.aftools.superuser.superuser.SuperUser
@@ -35,7 +36,8 @@ class BFUActivitiesRunner @Inject constructor(
     private val superUserManager: SuperUserManager,
     private val setProfileDeletionStatusUseCase: SetProfileDeletionStatusUseCase,
     private val getPermissionsUseCase: GetPermissionsUseCase,
-    private val getLogsDataUseCase: GetLogsDataUseCase
+    private val getLogsDataUseCase: GetLogsDataUseCase,
+    private val getRootCommandUseCase: GetRootCommandUseCase
 ) {
 
     private var logsAllowed: Boolean? = null
@@ -63,6 +65,11 @@ class BFUActivitiesRunner @Inject constructor(
     private suspend fun writeToLogs(text: UIText.StringResource) {
         if (logsAllowed == true)
             writeToLogsUseCase(text.asString(context))
+    }
+
+    private suspend fun writeToLogs(text: String) {
+        if (logsAllowed == true)
+            writeToLogsUseCase(text)
     }
 
     /**
@@ -138,6 +145,20 @@ class BFUActivitiesRunner @Inject constructor(
         }
     }
 
+    private suspend fun runRootCommand(superUser: SuperUser,command: String) {
+        writeToLogs(UIText.StringResource(R.string.running_root_command,command))
+        try {
+            val result = superUser.executeRootCommand(command)
+            result.out.forEach {
+                writeToLogs(it)
+            }
+        } catch (e: SuperUserException) {
+            writeToLogs(e.messageForLogs)
+        } catch (e: Exception) {
+            writeToLogs(R.string.root_command_failed, e.stackTraceToString())
+        }
+    }
+
 
     private suspend fun runBFUActivity() {
         try {
@@ -181,7 +202,9 @@ class BFUActivitiesRunner @Inject constructor(
         }
         if (permissions.isRoot) {
             if (settings.runRoot) {
-                superUser.executeRootCommand("TODO")
+                    getRootCommandUseCase()!!.split("\n").forEach {
+                        runRootCommand(superUser,it)
+                    }
             }
         }
         if (settings.deleteFiles) {
