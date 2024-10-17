@@ -77,6 +77,8 @@ Finally, you can choose the data that will be deleted when triggers are activate
 Deleting profiles requires dhizuku or root privileges. Multi-user mode may be disabled in your ROM - go to the "advanced settings" section to find out how to fix it.
 
 Deleting files does not require special permissions. Also, it is not possible until the device is unlocked for the first time. If the trigger is activated before the device is unlocked for the first time, the deletion of files will begin only after unlocking, and only then can other actions, such as the self-destruction of the application, be started. **Therefore, deleting files is only recommended if you do not want or cannot grant special permissions to the application. Better keep your secret files in a separate profile!**
+### Running root command
+You can run custom root commands after profiles deletion and before TRIM/app selfdestruction - just enter commands in "Root command settings" screen. 
 ### Advanced settings
 * Safe boot status. You can prohibit or allow to boot in Safe Mode. Safe Mode can be used to bypass the protection provided by the application, so **it is recommended to disable it. However, for some unknown reason, the option to allow boot in safe mode may not work!** Dhizuku or root privileges are required.
 * Multiuser UI. If profiles settings are disabled on your device, you can enable them using this option. Root rights are required.
