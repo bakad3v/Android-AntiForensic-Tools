@@ -54,16 +54,6 @@
           android:permission="android.permission.BIND_JOB_SERVICE">
       </service>
      <receiver
-       android:name=".presentation.receivers.DuressListener"
-       android:directBootAware="true"
-       android:enabled="true"
-       android:exported="true"
-       tools:ignore="ExportedReceiver">
-       <intent-filter>
-         <action android:name="com.android.aftools.action.TRIGGER" />
-       </intent-filter>
-     </receiver>
-     <receiver
        android:name=".presentation.receivers.DeviceAdminReceiver"
        android:permission="android.permission.BIND_DEVICE_ADMIN"
        android:exported="true"

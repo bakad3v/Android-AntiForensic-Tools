@@ -34,6 +34,7 @@ class ProfilesVM @Inject constructor(
 
     val profiles = getProfilesUseCase().map {
         if (it == null) {
+            showNoSuperuserRightsDialog()
             ProfilesDataState.SuperUserAbsent
         } else
         ProfilesDataState.ViewData(it)

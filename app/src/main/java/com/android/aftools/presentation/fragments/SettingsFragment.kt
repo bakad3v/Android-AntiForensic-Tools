@@ -2,7 +2,10 @@ package com.android.aftools.presentation.fragments
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -51,6 +54,7 @@ import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.SELF_DES
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.TRIM_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.USB_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.WIPE_DIALOG
+import com.google.android.material.color.MaterialColors
 import com.google.android.material.materialswitch.MaterialSwitch
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -122,7 +126,7 @@ class SettingsFragment : Fragment() {
   }
 
   /**
-   * Setting up buttons and switches
+   * Setting up buttons and switches. Switches are disabled if user doesn't provide enough rights.
    */
   private fun setupButtonsAndSwitches() {
 
@@ -237,6 +241,8 @@ class SettingsFragment : Fragment() {
 
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.settingsState.collect {
+        binding.switchRunOnPassword.isEnabled = it.serviceWorking
+        binding.switchUsbConnection.isEnabled = it.serviceWorking
         binding.switchWipe.setCheckedProgrammatically(it.wipe,switchWipeListener)
         binding.switchTrim.setCheckedProgrammatically(it.trim, switchTrimListener)
         binding.switchSelfDestruct.setCheckedProgrammatically(it.removeItself, switchSelfDestructListener)
@@ -259,9 +265,38 @@ class SettingsFragment : Fragment() {
     }
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.permissionsState.collect {
+        val rootOrDhizuku = it.isRoot || it.isOwner
+        binding.switchTrim.isEnabled = it.isRoot
+        binding.switchWipe.isEnabled = rootOrDhizuku || it.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+        binding.switchSelfDestruct.isEnabled = rootOrDhizuku
+        binding.switchClearAndHide.isEnabled = it.isOwner && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        binding.switchBruteforce.isEnabled = it.isAdmin
+        binding.switchLogdOnBoot.isEnabled = it.isRoot
+        binding.switchLogdOnStart.isEnabled = it.isRoot
+        binding.setMultiuserUi.isClickable = it.isRoot
+        binding.setUserSwitcherUi.isClickable = it.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+        binding.switchUserPermission.isClickable = rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+        binding.setSafeBoot.isClickable = rootOrDhizuku
+        binding.multiuserUiIcon.iconTint = if (it.isRoot) {
+          val color = MaterialColors.getColor(binding.multiuserUiIcon, com.google.android.material.R.attr.colorPrimary)
+          ColorStateList.valueOf(color)
+        } else ColorStateList.valueOf(Color.GRAY)
+        binding.userSwitcherUiIcon.iconTint = if (it.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+          val color = MaterialColors.getColor(binding.userSwitcherUiIcon, com.google.android.material.R.attr.colorPrimary)
+          ColorStateList.valueOf(color)
+        } else ColorStateList.valueOf(Color.GRAY)
+        binding.switchUserPermissionIcon.iconTint = if (rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+          val color = MaterialColors.getColor(binding.switchUserPermissionIcon, com.google.android.material.R.attr.colorPrimary)
+          ColorStateList.valueOf(color)
+        } else ColorStateList.valueOf(Color.GRAY)
+        binding.safeBootIcon.iconTint = if (rootOrDhizuku) {
+          val color = MaterialColors.getColor(binding.safeBootIcon, com.google.android.material.R.attr.colorPrimary)
+          ColorStateList.valueOf(color)
+        } else ColorStateList.valueOf(Color.GRAY)
         binding.switchRoot.setCheckedProgrammatically(it.isRoot,switchRootListener)
         binding.switchAdmin.setCheckedProgrammatically(it.isAdmin,switchAdminListener)
         binding.switchDhizuku.setCheckedProgrammatically(it.isOwner,switchDhizukuListener)
+
       }
     }
     viewLifecycleOwner.launchLifecycleAwareCoroutine {

@@ -79,7 +79,7 @@ class SettingsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun runRoot(new: Boolean) {
+    override suspend fun setRunRoot(new: Boolean) {
         context.settingsDatastore.updateData {
             it.copy(runRoot = new)
         }

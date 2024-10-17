@@ -60,10 +60,11 @@ class MainActivity : AppCompatActivity() {
         mainBinding.navigationView.inflateMenu(R.menu.main_menu)
         val conf = AppBarConfiguration(
             setOf(
-                R.id.setupFilesFragment,
-                R.id.logsFragment,
                 R.id.settingsFragment,
                 R.id.profilesFragment,
+                R.id.rootFragment,
+                R.id.setupFilesFragment,
+                R.id.logsFragment,
                 R.id.aboutFragment
             ), mainBinding.drawer
         )

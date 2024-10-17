@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="@string/enable_root_command"
+        android:id="@+id/enable_root_command"
+        android:icon="@drawable/ic_baseline_play_arrow_24"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="1"/>
+    <item android:title="@string/edit_command"
+        android:id="@+id/edit_command"
+        android:icon="@drawable/ic_baseline_edit_24"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="2"/>
+</menu>

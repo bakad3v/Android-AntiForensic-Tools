@@ -97,7 +97,7 @@ class ProfilesFragment: Fragment() {
     private fun setupMenu() {
         requireActivity().addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                launchLifecycleAwareCoroutine {
+                viewLifecycleOwner.launchLifecycleAwareCoroutine {
                     menuInflater.inflate(R.menu.profiles_menu, menu)
                     menu.drawSwitchProfileDeletionStatusButton()
                 }
@@ -150,9 +150,6 @@ class ProfilesFragment: Fragment() {
     private fun setupProfilesDataListener() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.profiles.collect {
-                if (it is ProfilesDataState.SuperUserAbsent) {
-                   viewModel.showNoSuperuserRightsDialog()
-                }
                 if (it is ProfilesDataState.ViewData) {
                     myProfileAdapter.submitList(it.items)
                 }

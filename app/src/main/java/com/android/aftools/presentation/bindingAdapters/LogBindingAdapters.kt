@@ -1,21 +1,12 @@
 package com.android.aftools.presentation.bindingAdapters
 
 import android.view.View
-import android.widget.ProgressBar
 import android.widget.ScrollView
 import androidx.core.text.HtmlCompat
 import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.databinding.BindingAdapter
 import com.android.aftools.presentation.states.LogsDataState
 import com.google.android.material.textview.MaterialTextView
-
-@BindingAdapter("progressBarFromLogsState")
-fun ProgressBar.statusFromState(state: LogsDataState) {
-  visibility = when (state) {
-    is LogsDataState.Loading -> View.VISIBLE
-    is LogsDataState.ViewLogs -> View.GONE
-  }
-}
 
 @BindingAdapter("logsTextFromState")
 fun MaterialTextView.textFromState(state: LogsDataState) {

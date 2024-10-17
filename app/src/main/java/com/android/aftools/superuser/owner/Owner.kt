@@ -215,7 +215,6 @@ class Owner @Inject constructor(@ApplicationContext private val context: Context
         } else {
             dpm.clearUserRestriction(deviceOwner, UserManager.DISALLOW_SAFE_BOOT)
         }
-        dpm.setGlobalSetting(deviceOwner, "safe_boot_disallowed",status.toInt().toString())
     }
 
     override suspend fun getSafeBootStatus(): Boolean =

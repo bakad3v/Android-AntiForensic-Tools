@@ -25,6 +25,8 @@
     android:name="com.android.aftools.presentation.fragments.SettingsFragment" />
   <fragment
       android:id="@+id/profilesFragment"
-      android:name="com.android.aftools.presentation.fragments.ProfilesFragment"
-      android:label="ProfilesFragment" />
+      android:name="com.android.aftools.presentation.fragments.ProfilesFragment" />
+  <fragment
+      android:id="@+id/rootFragment"
+      android:name="com.android.aftools.presentation.fragments.RootFragment" />
 </navigation>

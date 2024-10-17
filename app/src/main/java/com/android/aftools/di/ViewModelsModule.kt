@@ -6,6 +6,7 @@ import com.android.aftools.presentation.actions.LogsActions
 import com.android.aftools.presentation.states.ActivityState
 import com.android.aftools.presentation.states.LogsDataState
 import com.android.aftools.presentation.states.PasswordState
+import com.android.aftools.presentation.states.RootState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -35,4 +36,7 @@ class ViewModelsModule {
 
   @Provides
   fun provideSettingsActionsChannel(): Channel<DialogActions> = Channel()
+
+  @Provides
+  fun provideRootState(): MutableStateFlow<RootState> = MutableStateFlow(RootState.Loading)
 }
