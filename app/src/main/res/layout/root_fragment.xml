@@ -6,7 +6,7 @@
 
         <variable
             name="viewmodel"
-            type="com.android.aftools.presentation.viewmodels.RootVM" />
+            type="net.typeblog.shelter.presentation.viewmodels.RootVM" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

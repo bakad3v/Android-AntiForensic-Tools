@@ -4,7 +4,7 @@
     app:startDestination="@id/passFragmentNav">
   <fragment
     android:id="@+id/passFragmentNav"
-    android:name="com.android.aftools.presentation.fragments.PassFragment">
+    android:name="net.typeblog.shelter.presentation.fragments.PassFragment">
     <action
         android:id="@+id/action_passFragmentNav_to_settingsFragment"
         app:destination="@id/settingsFragment"
@@ -13,20 +13,20 @@
   </fragment>
   <fragment
     android:id="@+id/setupFilesFragment"
-    android:name="com.android.aftools.presentation.fragments.SetupFilesFragment" />
+    android:name="net.typeblog.shelter.presentation.fragments.SetupFilesFragment" />
   <fragment
     android:id="@+id/logsFragment"
-    android:name="com.android.aftools.presentation.fragments.LogsFragment" />
+    android:name="net.typeblog.shelter.presentation.fragments.LogsFragment" />
   <fragment
       android:id="@+id/aboutFragment"
-      android:name="com.android.aftools.presentation.fragments.AboutFragment" />
+      android:name="net.typeblog.shelter.presentation.fragments.AboutFragment" />
   <fragment
     android:id="@+id/settingsFragment"
-    android:name="com.android.aftools.presentation.fragments.SettingsFragment" />
+    android:name="net.typeblog.shelter.presentation.fragments.SettingsFragment" />
   <fragment
       android:id="@+id/profilesFragment"
-      android:name="com.android.aftools.presentation.fragments.ProfilesFragment" />
+      android:name="net.typeblog.shelter.presentation.fragments.ProfilesFragment" />
   <fragment
       android:id="@+id/rootFragment"
-      android:name="com.android.aftools.presentation.fragments.RootFragment" />
+      android:name="net.typeblog.shelter.presentation.fragments.RootFragment" />
 </navigation>

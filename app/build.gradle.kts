@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.android.aftools"
+    namespace = "net.typeblog.shelter"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.android.aftools"
+        applicationId = "net.typeblog.shelter"
         minSdk = 26
         targetSdk = 34
         versionCode = 1

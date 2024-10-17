@@ -6,7 +6,7 @@
 
     <variable
       name="viewmodel"
-      type="com.android.aftools.presentation.viewmodels.LogsVM" />
+      type="net.typeblog.shelter.presentation.viewmodels.LogsVM" />
   </data>
 
 
