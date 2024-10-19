@@ -6,6 +6,7 @@
 ## Known bugs
 * **TRIM option breaks self-destruction**
 * **Sade boot mode disabling doesn't work**
+
 I am testing bug fixes now!
 
 ## Description
