@@ -189,7 +189,7 @@ class Root @Inject constructor(
     }
 
     override suspend fun runTrim() {
-        executeRootCommand("sm fstrim")
+        Shell.cmd("sm fstrim &").submit()
     }
 
     companion object {

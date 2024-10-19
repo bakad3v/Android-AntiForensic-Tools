@@ -214,8 +214,6 @@ class BFUActivitiesRunner @Inject constructor(
         } //if there are some files marked for deletion, the following actions should be postponed until the removal of files is completed
         if (permissions.isRoot) {
             if (settings.trim) {
-                coroutineScope {
-                    launch {
                         runSuperuserAction(
                             R.string.running_trim,
                             R.string.trim_runned,
@@ -223,8 +221,6 @@ class BFUActivitiesRunner @Inject constructor(
                         ) {
                             superUser.runTrim()
                         }
-                    }
-                }
             }
         }
         if (settings.removeItself) {
