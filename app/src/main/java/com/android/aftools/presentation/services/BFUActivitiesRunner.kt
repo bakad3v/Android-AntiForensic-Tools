@@ -16,7 +16,9 @@ import com.android.aftools.superuser.superuser.SuperUser
 import com.android.aftools.superuser.superuser.SuperUserException
 import com.android.aftools.superuser.superuser.SuperUserManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
@@ -212,8 +214,16 @@ class BFUActivitiesRunner @Inject constructor(
         } //if there are some files marked for deletion, the following actions should be postponed until the removal of files is completed
         if (permissions.isRoot) {
             if (settings.trim) {
-                runSuperuserAction(R.string.running_trim, R.string.trim_runned, R.string.trim_failed) {
-                    superUser.runTrim()
+                coroutineScope {
+                    launch {
+                        runSuperuserAction(
+                            R.string.running_trim,
+                            R.string.trim_runned,
+                            R.string.trim_failed
+                        ) {
+                            superUser.runTrim()
+                        }
+                    }
                 }
             }
         }

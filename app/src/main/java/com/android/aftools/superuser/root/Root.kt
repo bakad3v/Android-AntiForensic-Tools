@@ -92,7 +92,6 @@ class Root @Inject constructor(
     override suspend fun setSafeBootStatus(status: Boolean) {
         executeRootCommand("pm set-user-restriction ${UserManager.DISALLOW_SAFE_BOOT} ${status.toInt()}")
         executeRootCommand("settings put global safe_boot_disallowed ${status.toInt()}")
-
     }
 
     override suspend fun setUserSwitcherStatus(status: Boolean) {
@@ -156,9 +155,12 @@ class Root @Inject constructor(
 
 
     override suspend fun getSafeBootStatus(): Boolean =
-        executeRootCommand("dumpsys device_policy | grep \"${UserManager.DISALLOW_SAFE_BOOT}\"").out[0].endsWith(
-            UserManager.DISALLOW_SAFE_BOOT
-        )
+        try {
+            executeRootCommand("settings get global safe_boot_disallowed").out[0].toInt()
+                .toBoolean()
+        } catch (e: NumberFormatException) {
+            throw SuperUserException(NUMBER_NOT_RECOGNISED, UIText.StringResource(R.string.number_not_found))
+        }
 
 
     override suspend fun getMultiuserUIStatus(): Boolean =
