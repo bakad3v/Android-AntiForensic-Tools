@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools">
+
+  <data>
+
+    <variable
+      name="viewmodel"
+      type="com.android.aftools.presentation.viewmodels.UsualFilesSettingsVM" />
+  </data>
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/basic"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline9"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_end="8dp" />
+
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+      android:id="@+id/add"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="end"
+      android:clickable="true"
+      android:text="@string/fab_text"
+      app:fabSize="normal"
+      app:icon="@drawable/ic_baseline_add_24"
+      app:layout_constraintBottom_toTopOf="@+id/guideline23"
+      app:layout_constraintEnd_toStartOf="@+id/guideline9"
+      app:rippleColor="?attr/background"
+      android:focusable="true" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/add_file"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginEnd="8dp"
+      android:layout_marginBottom="12dp"
+      android:clickable="true"
+      app:fabSize="normal"
+      app:layout_constraintBottom_toTopOf="@+id/add"
+      app:layout_constraintEnd_toStartOf="@+id/guideline9"
+      app:rippleColor="?attr/background"
+      app:srcCompat="@drawable/ic_baseline_insert_drive_file_color"
+      android:focusable="true"
+      android:contentDescription="@string/add_file" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+      android:id="@+id/add_folder"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:clickable="true"
+      android:layout_marginEnd="8dp"
+      android:layout_marginBottom="12dp"
+      app:srcCompat ="@drawable/ic_baseline_folder_24_colored"
+      app:layout_constraintBottom_toTopOf="@+id/add_file"
+      app:layout_constraintEnd_toStartOf="@+id/guideline9"
+      app:fabSize="normal"
+      android:focusable="true"
+      android:contentDescription="@string/add_folder" />
+
+
+    <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/items"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:scrollbars="vertical"
+      app:layout_constraintBottom_toTopOf="@+id/guideline23"
+      app:layout_constraintEnd_toEndOf="@+id/guideline9"
+      app:layout_constraintHorizontal_bias="0.0"
+      app:layout_constraintStart_toStartOf="@+id/guideline14"
+      app:layout_constraintTop_toBottomOf="@+id/sort"
+      app:layout_constraintVertical_bias="1.0"
+      tools:listitem="@layout/file_cardview"
+      app:controlFilesVisibility="@{viewmodel.autoDeletionDataState}"/>
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline23"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal"
+      app:layout_constraintGuide_end="8dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/guideline14"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="8dp" />
+
+    <TextView
+      android:id="@+id/sort"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:paddingStart="8dp"
+      android:paddingTop="4dp"
+      android:paddingBottom="4dp"
+      android:singleLine="true"
+      style="?attr/textAppearanceBodyLarge"
+      app:drawableLeftCompat="@drawable/ic_baseline_sort_24"
+      app:layout_constraintStart_toEndOf="@+id/guideline14"
+      app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+      android:id="@+id/progressBar2"
+      style="?android:attr/progressBarStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toTopOf="@+id/guideline23"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@+id/sort"
+      app:controlProgressVisibility="@{viewmodel.autoDeletionDataState}"/>
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

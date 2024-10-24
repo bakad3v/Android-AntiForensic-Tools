@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto">
+
+  <data>
+
+    <variable
+      name="viewmodel"
+      type="com.android.aftools.presentation.viewmodels.LogsVM" />
+  </data>
+
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ProgressBar
+      android:id="@+id/progressBar3"
+      style="?android:attr/progressBarStyle"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      app:layout_constraintBottom_toBottomOf="@+id/scrollView3"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:controlProgressVisibility="@{viewmodel.logsState}"/>
+
+
+    <ScrollView
+      android:id="@+id/scrollView3"
+      android:layout_width="0dp"
+      android:layout_height="0dp"
+      android:layout_margin="8dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toTopOf="parent"
+      app:scrollOnNewItem="@{viewmodel.logsState}">
+
+     <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:orientation="vertical"
+       app:layout_constraintBottom_toBottomOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/toolbar">
+
+       <com.google.android.material.textview.MaterialTextView
+         android:id="@+id/data"
+         android:layout_width="match_parent"
+         android:contentDescription="@string/log"
+         android:layout_height="wrap_content"
+         android:gravity="top"
+         android:paddingStart="0dp"
+         android:paddingTop="4dp"
+         android:paddingEnd="0dp"
+         android:paddingBottom="0dp"
+         android:textIsSelectable="true"
+         style="?attr/textAppearanceBodyLarge"
+         app:logsTextFromState="@{viewmodel.logsState}"/>
+
+
+     </LinearLayout>
+   </ScrollView>
+
+
+ </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
