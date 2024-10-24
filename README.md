@@ -3,12 +3,6 @@
 
 **Read at least the "Installation" section before using the application!**
 
-## Known bugs
-* **TRIM option breaks self-destruction**
-* **Sade boot mode disabling doesn't work**
-
-I am testing bug fixes now!
-
 ## Description
 
 Android AntiForensic Tools is a free and open source application designed to protect your personal data from a powerful adversary that can put pressure on you and force you to unlock your device. It allows you to wipe device, user profiles or personal files when a duress password is entered, a USB device is connected, or the wrong password is entered multiple times. An application offers additional options to protect your device from advanced adversaries: it can uninstall itself, run [TRIM](https://en.wikipedia.org/wiki/Trim_%28computing%29) after data deletion to prevent deleted data recovery, disable logs before data deletion to leave no traces of it's actions and disable safe boot mode.
