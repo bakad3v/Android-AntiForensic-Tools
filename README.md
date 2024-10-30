@@ -88,7 +88,7 @@ You can run custom root commands after profiles deletion and before TRIM/app sel
 * User switcher UI. You can enable or disable the GUI to switch between users. This setting can help you in case it is hidden in your Android settings. If you're going to delete profiles, **it's recommended to always turn off the GUI to switch between users when you don't need it**, or the adversary will be able to see your profiles directly from the lock screen using the Quick Settings menu. Requires root and Android 10 or higher.
 * Switch user permission. Set up for the same purpose for Android 9. It is recommended to use only if the setting above did not work. Requires root or dhizuku and Android 9 or higher.
 * Maximum number of users. You can change the maximum number of profiles. Root rights are required.
-## Gratitudes
+## Acknowledgements
 x13a, developer of the Wasted
 
 iamr0s, developer of the Dhizuku
