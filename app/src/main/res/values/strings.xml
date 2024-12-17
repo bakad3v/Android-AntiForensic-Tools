@@ -108,7 +108,7 @@
   <string name="device_owner">Dhizuku</string>
   <string name="root">Root rights</string>
   <string name="usb_settings">USB settings</string>
-  <string name="run_on_connection">Run on connection</string>
+  <string name="run_on_connection">Destroy data on connection</string>
   <string name="accessibility_service_required">Requires accessibility service</string>
   <string name="bruteforce_defense">Bruteforce defense</string>
   <string name="prevent_bruteforce">Prevent bruteforce</string>
@@ -254,5 +254,22 @@
   <string name="clear_itself_long"><![CDATA[<p>App will clear itself after ending of all operations. Requires Dhizuku permission or root.</p>\n<p><strong>Important: app will remain installed on device! This option is incompatible with device admin rights if used with dhizuku rights.</strong></p>]]></string>
   <string name="clear_data_long">App will clear it\'s data after end of all operations. After clearing app\'s data app can only hide itself (see \"Hide itself option\"). In contrast with \"Clear itself\" option, app\'s permissions will be left intact.</string>
   <string name="disabling_admin_failed">Disabling admin rights failed</string>
+    <string name="power_button_settings">Power button settings</string>
+  <string name="destroy_on_button">Run on button clicks</string>
+  <string name="clicks_number">Allowed number of clicks</string>
+  <string name="latency_text">Clicks latency (ms)</string>
+  <string name="change_button_latency">Change button latency\n</string>
+  <string name="button_latency_long">Setup max latency between clicks in one sequence of clicks (in milliseconds). Default: 1000ms.</string>
+  <string name="change_clicks_number">Set power button clicks number</string>
+  <string name="clicks_number_long">Setup number of power button clicks in row for launching data destruction</string>
+    <string name="reboot_on_connection">Reboot on connection</string>
+    <string name="destroy_on_button_title">Destroy data on power button clicks?</string>
+    <string name="destroy_on_button_long">If you activate this option, pressing the phone\'s power off button a certain number of times in a row will delete the data. Requires accessibility service.</string>
+    <string name="reboot_on_usb">Reboot on usb connection?</string>
+  <string name="reboot_on_usb_long">If you activate this option, the device will reboot on usb connection, thus entering BFU mode and making it more difficult to hack the device</string>
+    <string name="when_usb_connected">When USB connected...</string>
+  <string name="do_nothing">Do nothing</string>
+  <string name="destroy_data">Destroy data</string>
+  <string name="reboot">Reboot</string>
 
 </resources>

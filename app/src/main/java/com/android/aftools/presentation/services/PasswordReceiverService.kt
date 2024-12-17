@@ -9,7 +9,11 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.UserManager
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import com.android.aftools.domain.entities.UsbSettings
+import com.android.aftools.domain.usecases.button.ButtonClickUseCase
+import com.android.aftools.domain.usecases.button.GetButtonSettingsUseCase
 import com.android.aftools.domain.usecases.passwordManager.CheckPasswordUseCase
 import com.android.aftools.domain.usecases.passwordManager.GetPasswordStatusUseCase
 import com.android.aftools.domain.usecases.settings.GetSettingsUseCase
@@ -69,6 +73,9 @@ class PasswordReceiverService : AccessibilityService() {
     @Inject
     lateinit var getPasswordStatusUseCase: GetPasswordStatusUseCase
 
+    @Inject
+    lateinit var buttonClicksUseCase: ButtonClickUseCase
+
     override fun onCreate() {
         super.onCreate()
         coroutineScope.launch {
@@ -80,9 +87,25 @@ class PasswordReceiverService : AccessibilityService() {
             setServiceStatusUseCase(true)
             setLogdServiceStatus()
         }
+        listenButtonClicked()
         listenUserUnlocked()
         listenUsbConnection()
         keyguardManager = getSystemService(KeyguardManager::class.java)
+    }
+
+    private fun listenButtonClicked() {
+        val screenStateChangedFilter =
+            IntentFilter(Intent.ACTION_SCREEN_ON).apply {addAction(Intent.ACTION_SCREEN_OFF) }
+        val buttonClickedReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                coroutineScope.launch {
+                    if (buttonClicksUseCase()) {
+                        runActions()
+                    }
+                }
+            }
+        }
+        registerReceiver(buttonClickedReceiver,screenStateChangedFilter)
     }
 
     /**
@@ -113,8 +136,13 @@ class PasswordReceiverService : AccessibilityService() {
 
     private suspend fun runOnUSBConnected() {
         val settings = getUsbSettingsUseCase().first()
-        if (settings.runOnConnection)
-            runActions()
+        when(settings) {
+            UsbSettings.RUN_ON_CONNECTION -> runActions()
+            UsbSettings.REBOOT_ON_CONNECTION -> try {
+                superUserManager.getSuperUser().reboot()
+            } catch (e: Exception) {}
+            UsbSettings.DO_NOTHING -> {}
+        }
     }
 
     /**
@@ -198,6 +226,7 @@ class PasswordReceiverService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
+
         if (keyguardManager?.isDeviceLocked != true ||
             event?.isEnabled != true
         ) return

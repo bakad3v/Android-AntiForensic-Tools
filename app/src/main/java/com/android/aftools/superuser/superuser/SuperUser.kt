@@ -177,4 +177,10 @@ interface SuperUser {
      */
     @Throws(SuperUserException::class)
     suspend fun getSwitchUserRestriction(): Boolean
+
+    /**
+     * Reboot device
+     */
+    @Throws(SuperUserException::class)
+    suspend fun reboot()
 }

@@ -24,6 +24,7 @@ import com.android.aftools.R
 import com.android.aftools.TopLevelFunctions.launchLifecycleAwareCoroutine
 import com.android.aftools.databinding.SettingsFragmentBinding
 import com.android.aftools.domain.entities.Theme
+import com.android.aftools.domain.entities.UsbSettings
 import com.android.aftools.presentation.activities.MainActivity
 import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.InputDigitDialog
@@ -39,6 +40,8 @@ import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.DISABLE_
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.DISABLE_SAFE_BOOT_RESTRICTION_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.DISABLE_SWITCH_USER_RESTRICTION_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.DISABLE_USER_SWITCHER_DIALOG
+import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.EDIT_CLICK_NUMBER_DIALOG
+import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.EDIT_LATENCY_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.ENABLE_MULTIUSER_UI_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.ENABLE_SAFE_BOOT_RESTRICTION_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.ENABLE_SWITCH_USER_RESTRICTION_DIALOG
@@ -51,10 +54,12 @@ import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.MAX_PASS
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.MOVE_TO_ACCESSIBILITY_SERVICE
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.MOVE_TO_ADMIN_SETTINGS
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.OPEN_MULTIUSER_SETTINGS_DIALOG
+import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.REBOOT_ON_USB_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.RUN_ON_PASSWORD_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.SELF_DESTRUCTION_DIALOG
+import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.TRIGGER_ON_BUTTON_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.TRIM_DIALOG
-import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.USB_DIALOG
+import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.RUN_ON_USB_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.WIPE_DIALOG
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -86,10 +91,17 @@ class SettingsFragment : Fragment() {
     super.onViewCreated(view, savedInstanceState)
     setupActivity()
     setupThemesMenu()
+    setupUsbMenu()
     listenDialogResults()
     setupDialogs()
     setupMenu()
     setupButtonsAndSwitches()
+  }
+
+  private fun setupUsbMenu() {
+    binding.showUsbMenu.setOnClickListener {
+      showUsbMenu()
+    }
   }
 
   /**
@@ -126,252 +138,342 @@ class SettingsFragment : Fragment() {
       isChecked = value
       setOnCheckedChangeListener(listener)
   }
+  val switchWipeListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setWipe(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showWipeDialog()
+  }
+
+  val switchTrimListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setRunTRIM(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showTRIMDialog()
+  }
+
+  val switchBruteforceListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setBruteforceProtection(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showBruteforceDialog()
+  }
+
+  val switchSelfDestructListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setRemoveItself(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showSelfDestructionDialog()
+  }
+
+  val switchRootListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.showRootDisableDialog()
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.askRoot()
+  }
+
+  val switchAdminListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.disableAdmin()
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    requestAdminRights()
+  }
+
+  val switchAccessibilityServiceListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    switch.isChecked = !checked
+    viewModel.showAccessibilityServiceDialog()
+  }
+
+  val switchDhizukuListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    switch.isChecked = !checked
+    viewModel.askDhizuku()
+  }
+
+  val switchLogdOnStartListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setLogdOnStartStatus(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showLogdOnStartDialog()
+  }
+
+  val switchLogdOnBootListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setLogdOnBootStatus(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showLogdOnBootDialog()
+  }
+
+  val switchHideListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setHide(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showHideDialog()
+  }
+
+  val switchClearListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setClear(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showClearDialog()
+  }
+
+  val switchClearDataListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setClearData(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showClearDataDialog()
+  }
+
+  val switchRunOnDuressPasswordListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setRunOnDuressPassword(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showRunOnDuressPasswordDialog()
+  }
+
+  val switchTriggerOnButtonListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setTriggerOnButton(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showSetTriggerOnButtonDialog()
+  }
 
   /**
    * Setting up buttons and switches. Switches are disabled if user doesn't provide enough rights.
    */
   private fun setupButtonsAndSwitches() {
+    listenSettings()
+    listenButtonSettings()
+    listenBruteforceProtectionSettings()
+    checkPermissions()
+    listenUsbSettings()
+    switchInitialSetup()
+    setupClickableElements()
+  }
 
-    val switchWipeListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setWipe(false)
-        return@OnCheckedChangeListener
+  private fun setupClickableElements() {
+    with(binding) {
+      setupPassword.setOnClickListener {
+        viewModel.showPasswordInput()
       }
-      switch.isChecked = false
-      viewModel.showWipeDialog()
-    }
-
-    val switchTrimListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setRunTRIM(false)
-        return@OnCheckedChangeListener
+      usersLimit.setOnClickListener {
+        viewModel.showChangeUserLimitDialog()
       }
-      switch.isChecked = false
-      viewModel.showTRIMDialog()
-    }
-
-    val switchBruteforceListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setBruteforceProtection(false)
-        return@OnCheckedChangeListener
+      latency.setOnClickListener {
+        viewModel.editButtonLatencyDialog()
       }
-      switch.isChecked = false
-      viewModel.showBruteforceDialog()
-    }
-
-    val switchSelfDestructListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setRemoveItself(false)
-        return@OnCheckedChangeListener
+      clicksNumber.setOnClickListener {
+        viewModel.editClicksNumberDialog()
       }
-      switch.isChecked = false
-      viewModel.showSelfDestructionDialog()
-    }
-
-    val switchRootListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.showRootDisableDialog()
-        return@OnCheckedChangeListener
+      setMultiuserUi.setOnClickListener {
+        viewModel.changeMultiuserUISettingsDialog()
       }
-      switch.isChecked = false
-      viewModel.askRoot()
-    }
-
-    val switchAdminListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.disableAdmin()
-        return@OnCheckedChangeListener
+      setSafeBoot.setOnClickListener {
+        viewModel.changeSafeBootRestrictionSettingsDialog()
       }
-      switch.isChecked = false
-      requestAdminRights()
-    }
-
-    val switchAccessibilityServiceListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      switch.isChecked = !checked
-      viewModel.showAccessibilityServiceDialog()
-    }
-
-    val switchDhizukuListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      switch.isChecked = !checked
-      viewModel.askDhizuku()
-    }
-
-    val switchUsbListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setUsbConnectionStatus(false)
-        return@OnCheckedChangeListener
+      setUserSwitcherUi.setOnClickListener {
+        viewModel.changeUserSwitcherDialog()
       }
-      switch.isChecked = false
-      viewModel.showRunOnUSBConnectionDialog()
-    }
-
-    val switchLogdOnStartListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setLogdOnStartStatus(false)
-        return@OnCheckedChangeListener
+      switchUserPermission.setOnClickListener {
+        viewModel.changeSwitchUserDialog()
       }
-      switch.isChecked = false
-      viewModel.showLogdOnStartDialog()
-    }
-
-    val switchLogdOnBootListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setLogdOnBootStatus(false)
-        return@OnCheckedChangeListener
+      allowedAttempts.setOnClickListener {
+        viewModel.editMaxPasswordAttemptsDialog()
       }
-      switch.isChecked = false
-      viewModel.showLogdOnBootDialog()
-    }
-
-    val switchHideListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setHide(false)
-        return@OnCheckedChangeListener
       }
-      switch.isChecked = false
-      viewModel.showHideDialog()
-    }
+  }
 
-    val switchClearListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setClear(false)
-        return@OnCheckedChangeListener
+  private fun switchInitialSetup() {
+    if (!viewModel.switchesInitialized) {
+      with(binding) {
+        switchAccessibility.setOnCheckedChangeListener(switchAccessibilityServiceListener)
+        switchAdmin.setOnCheckedChangeListener(switchAdminListener)
+        switchDhizuku.setOnCheckedChangeListener(switchDhizukuListener)
+        switchRoot.setOnCheckedChangeListener(switchRootListener)
+        switchTrim.setOnCheckedChangeListener(switchTrimListener)
+        switchWipe.setOnCheckedChangeListener(switchWipeListener)
+        switchSelfDestruct.setOnCheckedChangeListener(switchSelfDestructListener)
+        switchBruteforce.setOnCheckedChangeListener(switchBruteforceListener)
+        switchLogdOnBoot.setOnCheckedChangeListener(switchLogdOnBootListener)
+        switchLogdOnStart.setOnCheckedChangeListener(switchLogdOnStartListener)
+        switchHide.setOnCheckedChangeListener(switchHideListener)
+        switchClear.setOnCheckedChangeListener(switchClearListener)
+        switchClearData.setOnCheckedChangeListener(switchClearDataListener)
+        switchRunOnPassword.setOnCheckedChangeListener(switchRunOnDuressPasswordListener)
+        switchPowerButton.setOnCheckedChangeListener(switchTriggerOnButtonListener)
       }
-      switch.isChecked = false
-      viewModel.showClearDialog()
-    }
-
-    val switchClearDataListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setClearData(false)
-        return@OnCheckedChangeListener
+      viewModel.switchesInitialized = true
       }
-      switch.isChecked = false
-      viewModel.showClearDataDialog()
-    }
+  }
 
-    val switchRunOnDuressPasswordListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-      if (!checked) {
-        viewModel.setRunOnDuressPassword(false)
-        return@OnCheckedChangeListener
-      }
-      switch.isChecked = false
-      viewModel.showRunOnDuressPasswordDialog()
-    }
-
+  private fun listenUsbSettings() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
-      viewModel.settingsState.collect {
-        binding.switchRunOnPassword.isEnabled = it.serviceWorking
-        binding.switchUsbConnection.isEnabled = it.serviceWorking
-        binding.switchWipe.setCheckedProgrammatically(it.wipe,switchWipeListener)
-        binding.switchTrim.setCheckedProgrammatically(it.trim, switchTrimListener)
-        binding.switchSelfDestruct.setCheckedProgrammatically(it.removeItself, switchSelfDestructListener)
-        binding.switchAccessibility.setCheckedProgrammatically(it.serviceWorking,switchAccessibilityServiceListener)
-        binding.switchLogdOnBoot.setCheckedProgrammatically(it.stopLogdOnBoot, switchLogdOnBootListener)
-        binding.switchLogdOnStart.setCheckedProgrammatically(it.stopLogdOnStart, switchLogdOnStartListener)
-        binding.switchHide.setCheckedProgrammatically(it.hideItself, switchHideListener)
-        binding.switchClear.setCheckedProgrammatically(it.clearItself, switchClearListener)
-        binding.switchClearData.setCheckedProgrammatically(it.clearData, switchClearDataListener)
-        binding.switchRunOnPassword.setCheckedProgrammatically(it.runOnDuressPassword, switchRunOnDuressPasswordListener)
-        binding.showMenu.text = when(it.theme) {
-          Theme.SYSTEM_THEME -> requireContext().getString(R.string.system_theme)
-          Theme.DARK_THEME -> requireContext().getString(R.string.dark_theme)
-          Theme.LIGHT_THEME -> requireContext().getString(R.string.light_theme)
+      viewModel.usbSettingState.collect {
+        val textId = when(it) {
+          UsbSettings.DO_NOTHING -> R.string.do_nothing
+          UsbSettings.RUN_ON_CONNECTION -> R.string.destroy_data
+          UsbSettings.REBOOT_ON_CONNECTION -> R.string.reboot
         }
+            binding.showUsbMenu.text = requireContext().getString(textId)
       }
-    }
-    viewLifecycleOwner.launchLifecycleAwareCoroutine {
-      viewModel.bruteforceProtectionState.collect {
-        binding.switchBruteforce.setCheckedProgrammatically(it.bruteforceRestricted,switchBruteforceListener)
       }
-    }
+  }
+
+  private fun checkPermissions() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.permissionsState.collect {
         val rootOrDhizuku = it.isRoot || it.isOwner
-        binding.switchTrim.isEnabled = it.isRoot
-        binding.switchWipe.isEnabled = rootOrDhizuku || it.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
-        binding.switchSelfDestruct.isEnabled = rootOrDhizuku
-        binding.switchHide.isEnabled = rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-        binding.switchClear.isEnabled = rootOrDhizuku
-        binding.switchBruteforce.isEnabled = it.isAdmin
-        binding.switchLogdOnBoot.isEnabled = it.isRoot
-        binding.switchLogdOnStart.isEnabled = it.isRoot
-        binding.setMultiuserUi.isClickable = it.isRoot
-        binding.setUserSwitcherUi.isClickable = it.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-        binding.switchUserPermission.isClickable = rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-        binding.setSafeBoot.isClickable = rootOrDhizuku
-        binding.multiuserUiIcon.iconTint = if (it.isRoot) {
-          val color = MaterialColors.getColor(binding.multiuserUiIcon, com.google.android.material.R.attr.colorPrimary)
-          ColorStateList.valueOf(color)
-        } else ColorStateList.valueOf(Color.GRAY)
-        binding.userSwitcherUiIcon.iconTint = if (it.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-          val color = MaterialColors.getColor(binding.userSwitcherUiIcon, com.google.android.material.R.attr.colorPrimary)
-          ColorStateList.valueOf(color)
-        } else ColorStateList.valueOf(Color.GRAY)
-        binding.switchUserPermissionIcon.iconTint = if (rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-          val color = MaterialColors.getColor(binding.switchUserPermissionIcon, com.google.android.material.R.attr.colorPrimary)
-          ColorStateList.valueOf(color)
-        } else ColorStateList.valueOf(Color.GRAY)
-        binding.safeBootIcon.iconTint = if (rootOrDhizuku) {
-          val color = MaterialColors.getColor(binding.safeBootIcon, com.google.android.material.R.attr.colorPrimary)
-          ColorStateList.valueOf(color)
-        } else ColorStateList.valueOf(Color.GRAY)
-        binding.switchRoot.setCheckedProgrammatically(it.isRoot,switchRootListener)
-        binding.switchAdmin.setCheckedProgrammatically(it.isAdmin,switchAdminListener)
-        binding.switchDhizuku.setCheckedProgrammatically(it.isOwner,switchDhizukuListener)
-
+        with(binding) {
+          switchTrim.isEnabled = it.isRoot
+          switchWipe.isEnabled =
+            rootOrDhizuku || it.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
+          switchSelfDestruct.isEnabled = rootOrDhizuku
+          switchHide.isEnabled =
+            rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+          switchClear.isEnabled = rootOrDhizuku
+          switchBruteforce.isEnabled = it.isAdmin
+          switchLogdOnBoot.isEnabled = it.isRoot
+          switchLogdOnStart.isEnabled = it.isRoot
+          setMultiuserUi.isClickable = it.isRoot
+          setUserSwitcherUi.isClickable =
+            it.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+          switchUserPermission.isClickable =
+            rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
+          setSafeBoot.isClickable = rootOrDhizuku
+          multiuserUiIcon.iconTint = if (it.isRoot) {
+            val color = MaterialColors.getColor(
+              multiuserUiIcon,
+              com.google.android.material.R.attr.colorPrimary
+            )
+            ColorStateList.valueOf(color)
+          } else ColorStateList.valueOf(Color.GRAY)
+          userSwitcherUiIcon.iconTint =
+            if (it.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+              val color = MaterialColors.getColor(
+                userSwitcherUiIcon,
+                com.google.android.material.R.attr.colorPrimary
+              )
+              ColorStateList.valueOf(color)
+            } else ColorStateList.valueOf(Color.GRAY)
+          switchUserPermissionIcon.iconTint =
+            if (rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+              val color = MaterialColors.getColor(
+                switchUserPermissionIcon,
+                com.google.android.material.R.attr.colorPrimary
+              )
+              ColorStateList.valueOf(color)
+            } else ColorStateList.valueOf(Color.GRAY)
+          safeBootIcon.iconTint = if (rootOrDhizuku) {
+            val color = MaterialColors.getColor(
+              safeBootIcon,
+              com.google.android.material.R.attr.colorPrimary
+            )
+            ColorStateList.valueOf(color)
+          } else ColorStateList.valueOf(Color.GRAY)
+          switchRoot.setCheckedProgrammatically(it.isRoot, switchRootListener)
+          switchAdmin.setCheckedProgrammatically(it.isAdmin, switchAdminListener)
+          switchDhizuku.setCheckedProgrammatically(it.isOwner, switchDhizukuListener)
+        }
       }
-    }
+      }
+  }
+
+  private fun listenBruteforceProtectionSettings() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
-      viewModel.usbSettingState.collect {
-        binding.switchUsbConnection.setCheckedProgrammatically(it.runOnConnection,switchUsbListener)
+      viewModel.bruteforceProtectionState.collect {
+        with(binding) {
+          attemptsNumber.text = it.allowedAttempts.toString()
+          switchBruteforce.setCheckedProgrammatically(
+            it.bruteforceRestricted,
+            switchBruteforceListener
+          )
+        }
+      }
+      }
+  }
+
+  private fun listenButtonSettings() {
+    viewLifecycleOwner.launchLifecycleAwareCoroutine {
+      viewModel.buttonsSettingsState.collect {
+        with(binding) {
+          clicksLatency.text = it.latency.toString()
+          clicksNumberCount.text = it.allowedClicks.toString()
+          switchPowerButton.setCheckedProgrammatically(
+            it.triggerOnButton,
+            switchTriggerOnButtonListener
+          )
+        }
       }
     }
-    binding.setupPassword.setOnClickListener {
-      viewModel.showPasswordInput()
-    }
-    binding.usersLimit.setOnClickListener {
-      viewModel.showChangeUserLimitDialog()
-    }
-    if (!viewModel.switchesInitialized) {
-      binding.switchAccessibility.setOnCheckedChangeListener(switchAccessibilityServiceListener)
-      binding.switchAdmin.setOnCheckedChangeListener(switchAdminListener)
-      binding.switchDhizuku.setOnCheckedChangeListener(switchDhizukuListener)
-      binding.switchRoot.setOnCheckedChangeListener(switchRootListener)
-      binding.switchTrim.setOnCheckedChangeListener(switchTrimListener)
-      binding.switchWipe.setOnCheckedChangeListener(switchWipeListener)
-      binding.switchSelfDestruct.setOnCheckedChangeListener(switchSelfDestructListener)
-      binding.switchUsbConnection.setOnCheckedChangeListener(switchUsbListener)
-      binding.switchBruteforce.setOnCheckedChangeListener(switchBruteforceListener)
-      binding.switchLogdOnBoot.setOnCheckedChangeListener(switchLogdOnBootListener)
-      binding.switchLogdOnStart.setOnCheckedChangeListener(switchLogdOnStartListener)
-      binding.switchHide.setOnCheckedChangeListener(switchHideListener)
-      binding.switchClear.setOnCheckedChangeListener(switchClearListener)
-      binding.switchClearData.setOnCheckedChangeListener(switchClearDataListener)
-      binding.switchRunOnPassword.setOnCheckedChangeListener(switchRunOnDuressPasswordListener)
-      viewModel.switchesInitialized = true
-    }
-    binding.setMultiuserUi.setOnClickListener {
-      viewModel.changeMultiuserUISettingsDialog()
-    }
-    binding.switchClear.setOnClickListener {
+  }
 
-    }
-    binding.switchClearData.setOnClickListener {
-
-    }
-    binding.setSafeBoot.setOnClickListener {
-      viewModel.changeSafeBootRestrictionSettingsDialog()
-    }
-    binding.setUserSwitcherUi.setOnClickListener {
-      viewModel.changeUserSwitcherDialog()
-    }
-    binding.switchUserPermission.setOnClickListener {
-      viewModel.changeSwitchUserDialog()
-    }
-    binding.allowedAttempts.setOnClickListener {
-      viewModel.editMaxPasswordAttemptsDialog()
-    }
+  private fun listenSettings() {
+    viewLifecycleOwner.launchLifecycleAwareCoroutine {
+      viewModel.settingsState.collect {
+        with(binding) {
+          switchRunOnPassword.isEnabled = it.serviceWorking
+          switchPowerButton.isEnabled = it.serviceWorking
+          switchWipe.setCheckedProgrammatically(it.wipe, switchWipeListener)
+          switchTrim.setCheckedProgrammatically(it.trim, switchTrimListener)
+          switchSelfDestruct.setCheckedProgrammatically(
+            it.removeItself,
+            switchSelfDestructListener
+          )
+          switchAccessibility.setCheckedProgrammatically(
+            it.serviceWorking,
+            switchAccessibilityServiceListener
+          )
+          switchLogdOnBoot.setCheckedProgrammatically(
+            it.stopLogdOnBoot,
+            switchLogdOnBootListener
+          )
+          switchLogdOnStart.setCheckedProgrammatically(
+            it.stopLogdOnStart,
+            switchLogdOnStartListener
+          )
+          switchHide.setCheckedProgrammatically(it.hideItself, switchHideListener)
+          switchClear.setCheckedProgrammatically(it.clearItself, switchClearListener)
+          switchClearData.setCheckedProgrammatically(it.clearData, switchClearDataListener)
+          switchRunOnPassword.setCheckedProgrammatically(
+            it.runOnDuressPassword,
+            switchRunOnDuressPasswordListener
+          )
+          showMenu.text = when (it.theme) {
+            Theme.SYSTEM_THEME -> requireContext().getString(R.string.system_theme)
+            Theme.DARK_THEME -> requireContext().getString(R.string.dark_theme)
+            Theme.LIGHT_THEME -> requireContext().getString(R.string.light_theme)
+          }
+          showUsbMenu.isClickable = it.serviceWorking
+        }
+      }
+      }
   }
 
 
@@ -444,9 +546,9 @@ class SettingsFragment : Fragment() {
       viewModel.setRemoveItself(true)
     }
     listenQuestionDialog(
-      USB_DIALOG,
+      RUN_ON_USB_DIALOG,
     ) {
-      viewModel.setUsbConnectionStatus(true)
+      viewModel.setRunOnUsbConnection()
     }
     listenQuestionDialog(
       BRUTEFORCE_DIALOG,
@@ -543,6 +645,30 @@ class SettingsFragment : Fragment() {
     ) {
       viewModel.setClearData(true)
     }
+    InputDigitDialog.setupListener(
+      parentFragmentManager,
+      viewLifecycleOwner,
+      EDIT_LATENCY_DIALOG
+    ) {
+        latency ->
+      viewModel.setLatency(latency)
+    }
+    InputDigitDialog.setupListener(
+      parentFragmentManager,
+      viewLifecycleOwner,
+      EDIT_CLICK_NUMBER_DIALOG
+    ) {
+        clicks ->
+      viewModel.setClicksNumber(clicks)
+    }
+    listenQuestionDialog(
+      TRIGGER_ON_BUTTON_DIALOG
+    ) { viewModel.setTriggerOnButton(true) }
+    listenQuestionDialog(
+      REBOOT_ON_USB_DIALOG
+    ) {
+      viewModel.setRebootOnUSB()
+    }
   }
 
   /**
@@ -588,6 +714,33 @@ class SettingsFragment : Fragment() {
         else -> throw RuntimeException("Wrong priority in priority sorting")
       }
       viewModel.setTheme(theme)
+      return@setOnMenuItemClickListener true
+    }
+    popup.show()
+  }
+
+  /**
+   * Changing USB settings
+   */
+  private fun showUsbMenu() {
+    val popup = PopupMenu(context, binding.showUsbMenu)
+    popup.menuInflater.inflate(R.menu.usb_menu, popup.menu)
+    popup.setOnMenuItemClickListener {
+      when (it.itemId) {
+        R.id.do_nothing -> {
+          viewModel.setDoNothingOnUsbConnection()
+        }
+
+        R.id.run_on_connection -> {
+          viewModel.showRunOnUSBConnectionDialog()
+        }
+
+        R.id.reboot_on_connection -> {
+          viewModel.showRebootOnUSBDialog()
+        }
+
+        else -> throw RuntimeException("Wrong menu item")
+      }
       return@setOnMenuItemClickListener true
     }
     popup.show()

@@ -2,6 +2,7 @@ package com.android.aftools.di
 
 import com.android.aftools.data.repositories.AppsRepositoryImpl
 import com.android.aftools.data.repositories.BruteforceSettingsRepositoryImpl
+import com.android.aftools.data.repositories.ButtonSettingsRepositoryImpl
 import com.android.aftools.data.repositories.FilesRepositoryImpl
 import com.android.aftools.data.repositories.LogsRepositoryImpl
 import com.android.aftools.data.repositories.PermissionsRepositoryImpl
@@ -11,6 +12,7 @@ import com.android.aftools.data.repositories.SettingsRepositoryImpl
 import com.android.aftools.data.repositories.USBSettingsRepositoryImpl
 import com.android.aftools.domain.repositories.AppsRepository
 import com.android.aftools.domain.repositories.BruteforceRepository
+import com.android.aftools.domain.repositories.ButtonSettingsRepository
 import com.android.aftools.domain.repositories.FilesRepository
 import com.android.aftools.domain.repositories.LogsRepository
 import com.android.aftools.domain.repositories.PermissionsRepository
@@ -62,4 +64,8 @@ abstract class RepositoriesModule {
     @Binds
     @Singleton
     abstract fun provideRootRepository(rootRepositoryImpl: RootRepositoryImpl): RootRepository
+
+    @Binds
+    @Singleton
+    abstract fun provideButtonRepository(buttonSettingsRepositoryImpl: ButtonSettingsRepositoryImpl): ButtonSettingsRepository
 }

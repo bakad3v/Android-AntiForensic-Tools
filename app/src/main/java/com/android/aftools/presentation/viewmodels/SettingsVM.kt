@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.android.aftools.R
 import com.android.aftools.domain.entities.BruteforceSettings
+import com.android.aftools.domain.entities.ButtonSettings
 import com.android.aftools.domain.entities.Permissions
 import com.android.aftools.domain.entities.Settings
 import com.android.aftools.domain.entities.Theme
@@ -12,6 +13,10 @@ import com.android.aftools.domain.entities.UsbSettings
 import com.android.aftools.domain.usecases.bruteforce.GetBruteforceSettingsUseCase
 import com.android.aftools.domain.usecases.bruteforce.SetBruteForceLimitUseCase
 import com.android.aftools.domain.usecases.bruteforce.SetBruteForceStatusUseCase
+import com.android.aftools.domain.usecases.button.GetButtonSettingsUseCase
+import com.android.aftools.domain.usecases.button.SetClicksNumberUseCase
+import com.android.aftools.domain.usecases.button.SetLatencyUseCase
+import com.android.aftools.domain.usecases.button.SetTriggerOnButtonUseCase
 import com.android.aftools.domain.usecases.passwordManager.SetPasswordUseCase
 import com.android.aftools.domain.usecases.permissions.GetPermissionsUseCase
 import com.android.aftools.domain.usecases.permissions.SetOwnerActiveUseCase
@@ -38,7 +43,7 @@ import com.android.aftools.domain.usecases.settings.SetUserSwitchRestrictionUseC
 import com.android.aftools.domain.usecases.settings.SetUserSwitcherUseCase
 import com.android.aftools.domain.usecases.settings.SetWipeUseCase
 import com.android.aftools.domain.usecases.usb.GetUsbSettingsUseCase
-import com.android.aftools.domain.usecases.usb.SetUsbStatusUseCase
+import com.android.aftools.domain.usecases.usb.SetUsbSettingsUseCase
 import com.android.aftools.presentation.actions.DialogActions
 import com.android.aftools.presentation.utils.UIText
 import com.android.aftools.superuser.superuser.SuperUserException
@@ -62,7 +67,7 @@ class SettingsVM @Inject constructor(
     private val setWipeUseCase: SetWipeUseCase,
     private val setOwnerActiveUseCase: SetOwnerActiveUseCase,
     private val setRootActiveUseCase: SetRootActiveUseCase,
-    private val setUsbStatusUseCase: SetUsbStatusUseCase,
+    private val setUsbSettingsUseCase: SetUsbSettingsUseCase,
     private val setBruteForceStatusUseCase: SetBruteForceStatusUseCase,
     private val setBruteForceLimitUseCase: SetBruteForceLimitUseCase,
     private val superUserManager: SuperUserManager,
@@ -82,14 +87,24 @@ class SettingsVM @Inject constructor(
     private val getMultiuserUIUseCase: GetMultiuserUIUseCase,
     private val setClearDataUseCase: SetClearDataUseCase,
     private val setClearItselfUseCase: SetCleaItselfUseCase,
+    private val setLatencyUseCase: SetLatencyUseCase,
+    private val setClicksNumberUseCase: SetClicksNumberUseCase,
+    private val setTriggerOnButtonUseCase: SetTriggerOnButtonUseCase,
     getPermissionsUseCase: GetPermissionsUseCase,
     getUSBSettingsUseCase: GetUsbSettingsUseCase,
-    getBruteforceSettingsUseCase: GetBruteforceSettingsUseCase
+    getBruteforceSettingsUseCase: GetBruteforceSettingsUseCase,
+    getButtonSettingsUseCase: GetButtonSettingsUseCase,
 ) : ViewModel() {
 
     var switchesInitialized: Boolean = false
 
     val settingsActionsFlow = settingsActionChannel.receiveAsFlow()
+
+    val buttonsSettingsState = getButtonSettingsUseCase().stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(5000),
+        ButtonSettings()
+    )
 
     val settingsState = getSettingsUseCase().stateIn(
         viewModelScope,
@@ -100,7 +115,7 @@ class SettingsVM @Inject constructor(
     val usbSettingState = getUSBSettingsUseCase().stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),
-        UsbSettings()
+        UsbSettings.DO_NOTHING
     )
 
     val permissionsState = getPermissionsUseCase().stateIn(
@@ -122,6 +137,18 @@ class SettingsVM @Inject constructor(
     fun setBruteForceLimit(limit: Int) {
         viewModelScope.launch {
             setBruteForceLimitUseCase(limit)
+        }
+    }
+
+    fun setLatency(latency: Int) {
+        viewModelScope.launch {
+            setLatencyUseCase(latency)
+        }
+    }
+
+    fun setClicksNumber(clicks: Int) {
+        viewModelScope.launch {
+            setClicksNumberUseCase(clicks)
         }
     }
 
@@ -157,6 +184,32 @@ class SettingsVM @Inject constructor(
             showInfoDialogSuspend(
                 title, message
             )
+        }
+    }
+
+    private suspend fun showInputDigitDialogSuspend(title: UIText.StringResource,
+                             message: UIText.StringResource,
+                             hint: String,
+                             range: IntRange,
+                             requestKey: String)  {
+        settingsActionChannel.send(
+            DialogActions.ShowInputDigitDialog(
+                title = title,
+                message = message,
+                hint = hint,
+                range = range,
+                requestKey = requestKey
+            )
+        )
+    }
+
+    private fun showInputDigitDialog(title: UIText.StringResource,
+                                message: UIText.StringResource,
+                                hint: String,
+                                range: IntRange,
+                                requestKey: String) {
+        viewModelScope.launch {
+            showInputDigitDialogSuspend(title,message,hint,range,requestKey)
         }
     }
 
@@ -202,14 +255,12 @@ class SettingsVM @Inject constructor(
             if (hint == null) {
                 cantGetUserLimit(UIText.StringResource(R.string.number_not_found))
             }
-            settingsActionChannel.send(
-                DialogActions.ShowInputDigitDialog(
+            showInputDigitDialogSuspend(
                     title = UIText.StringResource(R.string.set_users_limit),
                     message = UIText.StringResource(R.string.set_users_limit_long),
                     hint = hint.toString(),
                     range = 1..1000,
                     requestKey = CHANGE_USER_LIMIT_DIALOG
-                )
             )
         }
     }
@@ -572,9 +623,15 @@ class SettingsVM @Inject constructor(
         }
     }
 
-    fun setUsbConnectionStatus(status: Boolean) {
+    fun setRunOnUsbConnection() {
         viewModelScope.launch {
-            setUsbStatusUseCase(status)
+            setUsbSettingsUseCase(UsbSettings.RUN_ON_CONNECTION)
+        }
+    }
+
+    fun setDoNothingOnUsbConnection() {
+        viewModelScope.launch {
+            setUsbSettingsUseCase(UsbSettings.DO_NOTHING)
         }
     }
 
@@ -646,7 +703,7 @@ class SettingsVM @Inject constructor(
         showQuestionDialog(
             title = UIText.StringResource(R.string.run_on_connection),
             message = UIText.StringResource(R.string.run_on_usb_connection_long),
-            USB_DIALOG
+            RUN_ON_USB_DIALOG
         )
     }
 
@@ -659,17 +716,57 @@ class SettingsVM @Inject constructor(
     }
 
     fun editMaxPasswordAttemptsDialog() {
+        showInputDigitDialog(
+            title = UIText.StringResource(R.string.allowed_attempts),
+            message = UIText.StringResource(R.string.password_attempts_number),
+            hint = bruteforceProtectionState.value.allowedAttempts.toString(),
+            range = 1..1000,
+            requestKey = MAX_PASSWORD_ATTEMPTS_DIALOG
+        )
+    }
+
+    fun editButtonLatencyDialog() {
+        showInputDigitDialog(
+            title = UIText.StringResource(R.string.change_button_latency),
+            message = UIText.StringResource(R.string.button_latency_long),
+            hint = buttonsSettingsState.value.latency.toString(),
+            range = 100..100000,
+            requestKey = EDIT_LATENCY_DIALOG
+        )
+    }
+
+    fun editClicksNumberDialog() {
+        showInputDigitDialog(
+            title = UIText.StringResource(R.string.change_clicks_number),
+            message = UIText.StringResource(R.string.clicks_number_long),
+            hint = buttonsSettingsState.value.allowedClicks.toString(),
+            range = 3..20,
+            requestKey = EDIT_CLICK_NUMBER_DIALOG
+        )
+    }
+
+    fun setTriggerOnButton(status: Boolean) {
         viewModelScope.launch {
-            settingsActionChannel.send(
-                DialogActions.ShowInputDigitDialog(
-                    title = UIText.StringResource(R.string.allowed_attempts),
-                    message = UIText.StringResource(R.string.password_attempts_number),
-                    hint = bruteforceProtectionState.value.allowedAttempts.toString(),
-                    range = 1..1000,
-                    requestKey = MAX_PASSWORD_ATTEMPTS_DIALOG
-                )
-            )
+            setTriggerOnButtonUseCase(status)
         }
+    }
+
+    fun setRebootOnUSB() {
+        viewModelScope.launch {
+            setUsbSettingsUseCase(UsbSettings.REBOOT_ON_CONNECTION)
+        }
+    }
+
+    fun showSetTriggerOnButtonDialog() {
+        showQuestionDialog(title = UIText.StringResource(R.string.destroy_on_button_title),
+            message = UIText.StringResource(R.string.destroy_on_button_long),
+            requestKey = TRIGGER_ON_BUTTON_DIALOG)
+    }
+
+    fun showRebootOnUSBDialog() {
+        showQuestionDialog(title = UIText.StringResource(R.string.reboot_on_usb),
+            message = UIText.StringResource(R.string.reboot_on_usb_long),
+            requestKey = REBOOT_ON_USB_DIALOG)
     }
 
     fun showFaq() {
@@ -737,7 +834,7 @@ class SettingsVM @Inject constructor(
         const val TRIM_DIALOG = "trim_dialog"
         const val WIPE_DIALOG = "wipe_dialog"
         const val SELF_DESTRUCTION_DIALOG = "selfdestruct_dialog"
-        const val USB_DIALOG = "usb_dialog"
+        const val RUN_ON_USB_DIALOG = "usb_dialog"
         const val BRUTEFORCE_DIALOG = "bruteforce_dialog"
         const val INSTALL_DIZUKU_DIALOG = "install_dizuku"
         const val LOGD_ON_BOOT_DIALOG = "logd_on_boot"
@@ -757,6 +854,10 @@ class SettingsVM @Inject constructor(
         const val ENABLE_USER_SWITCHER_DIALOG = "enable_user_switcher_dialog"
         const val DISABLE_SWITCH_USER_RESTRICTION_DIALOG = "disable_switch_user_restriction_dialog"
         const val ENABLE_SWITCH_USER_RESTRICTION_DIALOG = "enable_switch_user_restriction_dialog"
+        const val EDIT_LATENCY_DIALOG = "edit_latency_dialog"
+        const val EDIT_CLICK_NUMBER_DIALOG = "edit_click_number_dialog"
+        const val TRIGGER_ON_BUTTON_DIALOG = "trigger_on_button_dialog"
+        const val REBOOT_ON_USB_DIALOG = "reboot_on_usb_dialog"
     }
 
 }

@@ -40,7 +40,8 @@ Ideally, I recommend changing the package name yourself before installing. When 
 4. On your mobile device, [unlock developer settings](https://developer.android.com/studio/debug/dev-options)
 5. Open the developer settings and allow debugging via USB
 6. Connect devices and allow USB debugging for your PC
-7. Open the command prompt and enter the command \<path to platform-tools folder\>/adb[.exe] install -t \<path to apk file\>.
+7. Open the command prompt and enter the command \<path to platform-tools folder\>/adb[.exe] install -t \<path to apk file\>. 
+8. If you install the new version of an app, enter the command \<path to platform-tools folder\>/adb[.exe] install -t -r \<path to apk file\>.
 ### Changing app's package name
 #### Via Android Studio
 1. Install [Android Studio](https://developer.android.com/studio).
