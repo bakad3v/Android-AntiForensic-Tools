@@ -14,7 +14,7 @@ import androidx.navigation.fragment.findNavController
 import com.android.aftools.R
 import com.android.aftools.TopLevelFunctions.launchLifecycleAwareCoroutine
 import com.android.aftools.databinding.PassFragmentBinding
-import com.android.aftools.presentation.activities.MainActivity
+import com.android.aftools.presentation.activities.ActivityStateHolder
 import com.android.aftools.presentation.states.ActivityState
 import com.android.aftools.presentation.states.PasswordState
 import com.android.aftools.presentation.viewmodels.PasswordsVM
@@ -45,7 +45,10 @@ class PassFragment: Fragment() {
 
   override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
     super.onViewCreated(view, savedInstanceState)
-    (activity as MainActivity).setActivityState(ActivityState.PasswordActivityState)
+    val activity = requireActivity()
+    if (activity is ActivityStateHolder) {
+      activity.setActivityState(ActivityState.PasswordActivityState)
+    }
     binding.password.imeOptions = IME_FLAG_NO_PERSONALIZED_LEARNING + IME_ACTION_SEND
     observePasswordState()
     observeTextEntered()

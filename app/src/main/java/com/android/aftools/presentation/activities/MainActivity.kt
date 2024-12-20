@@ -20,7 +20,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ActivityStateHolder {
     private lateinit var controller: NavController
     private var _mainBinding: MainActivityBinding? = null
     private val mainBinding
@@ -77,7 +77,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Function for setting activity state from fragments
      */
-    fun setActivityState(state: ActivityState) {
+    override fun setActivityState(state: ActivityState) {
         viewModel.setActivityState(state)
     }
 

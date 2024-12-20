@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.android.aftools.R
 import com.android.aftools.TopLevelFunctions.launchLifecycleAwareCoroutine
 import com.android.aftools.databinding.SetupProfilesFragmentBinding
-import com.android.aftools.presentation.activities.MainActivity
+import com.android.aftools.presentation.activities.ActivityStateHolder
 import com.android.aftools.presentation.adapters.profileAdapter.ProfileAdapter
 import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.QuestionDialog
@@ -124,13 +124,15 @@ class ProfilesFragment: Fragment() {
     }
 
     private fun setMainActivityState() {
-        (activity as MainActivity).setActivityState(
-            ActivityState.NormalActivityState(
-                getString(
-                    R.string.profiles_deletion_settings
+        val activity = requireActivity()
+        if (activity is ActivityStateHolder)
+            activity.setActivityState(
+                ActivityState.NormalActivityState(
+                    getString(
+                        R.string.profiles_deletion_settings
+                    )
                 )
             )
-        )
     }
 
     /**

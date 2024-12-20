@@ -25,7 +25,7 @@ import com.android.aftools.TopLevelFunctions.launchLifecycleAwareCoroutine
 import com.android.aftools.databinding.SettingsFragmentBinding
 import com.android.aftools.domain.entities.Theme
 import com.android.aftools.domain.entities.UsbSettings
-import com.android.aftools.presentation.activities.MainActivity
+import com.android.aftools.presentation.activities.ActivityStateHolder
 import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.InputDigitDialog
 import com.android.aftools.presentation.dialogs.PasswordInputDialog
@@ -56,10 +56,10 @@ import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.MOVE_TO_
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.OPEN_MULTIUSER_SETTINGS_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.REBOOT_ON_USB_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.RUN_ON_PASSWORD_DIALOG
+import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.RUN_ON_USB_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.SELF_DESTRUCTION_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.TRIGGER_ON_BUTTON_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.TRIM_DIALOG
-import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.RUN_ON_USB_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.WIPE_DIALOG
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.materialswitch.MaterialSwitch
@@ -684,11 +684,13 @@ class SettingsFragment : Fragment() {
   }
 
   private fun setupActivity() {
-    (activity as MainActivity).setActivityState(
-      ActivityState.NormalActivityState(
-        getString(R.string.settings)
+    val activity = requireActivity()
+    if (activity is ActivityStateHolder)
+      activity.setActivityState(
+        ActivityState.NormalActivityState(
+          getString(R.string.settings)
+        )
       )
-    )
   }
 
   /**
