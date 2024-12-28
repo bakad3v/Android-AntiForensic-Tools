@@ -96,8 +96,6 @@ class SettingsVM @Inject constructor(
     getButtonSettingsUseCase: GetButtonSettingsUseCase,
 ) : ViewModel() {
 
-    var switchesInitialized: Boolean = false
-
     val settingsActionsFlow = settingsActionChannel.receiveAsFlow()
 
     val buttonsSettingsState = getButtonSettingsUseCase().stateIn(
@@ -764,9 +762,12 @@ class SettingsVM @Inject constructor(
     }
 
     fun showRebootOnUSBDialog() {
-        showQuestionDialog(title = UIText.StringResource(R.string.reboot_on_usb),
-            message = UIText.StringResource(R.string.reboot_on_usb_long),
-            requestKey = REBOOT_ON_USB_DIALOG)
+        if (permissionsState.value.isAdmin || permissionsState.value.isOwner)
+            showQuestionDialog(title = UIText.StringResource(R.string.reboot_on_usb),
+                message = UIText.StringResource(R.string.reboot_on_usb_long),
+                requestKey = REBOOT_ON_USB_DIALOG)
+        else
+            showInfoDialog(UIText.StringResource(R.string.no_superuser_rights), UIText.StringResource(R.string.provide_root_or_dhizuku))
     }
 
     fun showFaq() {
@@ -774,6 +775,11 @@ class SettingsVM @Inject constructor(
             title = UIText.StringResource(R.string.about_settings),
             message = UIText.StringResource(R.string.settings_faq)
         )
+    }
+
+    fun showRootWarningDialog() {
+        showQuestionDialog(title = UIText.StringResource(R.string.grant_root_rights),
+            message = UIText.StringResource(R.string.warning_root_rights),ROOT_WARNING_DIALOG)
     }
 
     fun disableAdmin() {
@@ -858,6 +864,7 @@ class SettingsVM @Inject constructor(
         const val EDIT_CLICK_NUMBER_DIALOG = "edit_click_number_dialog"
         const val TRIGGER_ON_BUTTON_DIALOG = "trigger_on_button_dialog"
         const val REBOOT_ON_USB_DIALOG = "reboot_on_usb_dialog"
+        const val ROOT_WARNING_DIALOG = "root_warning_dialog"
     }
 
 }

@@ -55,6 +55,7 @@ import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.MOVE_TO_
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.MOVE_TO_ADMIN_SETTINGS
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.OPEN_MULTIUSER_SETTINGS_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.REBOOT_ON_USB_DIALOG
+import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.ROOT_WARNING_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.RUN_ON_PASSWORD_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.RUN_ON_USB_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.SELF_DESTRUCTION_DIALOG
@@ -180,7 +181,7 @@ class SettingsFragment : Fragment() {
       return@OnCheckedChangeListener
     }
     switch.isChecked = false
-    viewModel.askRoot()
+    viewModel.showRootWarningDialog()
   }
 
   val switchAdminListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
@@ -274,7 +275,6 @@ class SettingsFragment : Fragment() {
     listenBruteforceProtectionSettings()
     checkPermissions()
     listenUsbSettings()
-    switchInitialSetup()
     setupClickableElements()
   }
 
@@ -307,29 +307,6 @@ class SettingsFragment : Fragment() {
       allowedAttempts.setOnClickListener {
         viewModel.editMaxPasswordAttemptsDialog()
       }
-      }
-  }
-
-  private fun switchInitialSetup() {
-    if (!viewModel.switchesInitialized) {
-      with(binding) {
-        switchAccessibility.setOnCheckedChangeListener(switchAccessibilityServiceListener)
-        switchAdmin.setOnCheckedChangeListener(switchAdminListener)
-        switchDhizuku.setOnCheckedChangeListener(switchDhizukuListener)
-        switchRoot.setOnCheckedChangeListener(switchRootListener)
-        switchTrim.setOnCheckedChangeListener(switchTrimListener)
-        switchWipe.setOnCheckedChangeListener(switchWipeListener)
-        switchSelfDestruct.setOnCheckedChangeListener(switchSelfDestructListener)
-        switchBruteforce.setOnCheckedChangeListener(switchBruteforceListener)
-        switchLogdOnBoot.setOnCheckedChangeListener(switchLogdOnBootListener)
-        switchLogdOnStart.setOnCheckedChangeListener(switchLogdOnStartListener)
-        switchHide.setOnCheckedChangeListener(switchHideListener)
-        switchClear.setOnCheckedChangeListener(switchClearListener)
-        switchClearData.setOnCheckedChangeListener(switchClearDataListener)
-        switchRunOnPassword.setOnCheckedChangeListener(switchRunOnDuressPasswordListener)
-        switchPowerButton.setOnCheckedChangeListener(switchTriggerOnButtonListener)
-      }
-      viewModel.switchesInitialized = true
       }
   }
 
@@ -668,6 +645,11 @@ class SettingsFragment : Fragment() {
       REBOOT_ON_USB_DIALOG
     ) {
       viewModel.setRebootOnUSB()
+    }
+    listenQuestionDialog(
+      ROOT_WARNING_DIALOG
+    ) {
+      viewModel.askRoot()
     }
   }
 
