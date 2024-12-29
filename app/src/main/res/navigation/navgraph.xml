@@ -22,11 +22,21 @@
       android:name="com.android.aftools.presentation.fragments.AboutFragment" />
   <fragment
     android:id="@+id/settingsFragment"
-    android:name="com.android.aftools.presentation.fragments.SettingsFragment" />
+    android:name="com.android.aftools.presentation.fragments.SettingsFragment" >
+    <action
+        android:id="@+id/action_settingsFragment_to_aboutSettingsFragment"
+        app:destination="@id/aboutSettingsFragment"
+        app:enterAnim="@anim/from_bottom"
+        app:exitAnim="@null" />
+  </fragment>
   <fragment
       android:id="@+id/profilesFragment"
       android:name="com.android.aftools.presentation.fragments.ProfilesFragment" />
   <fragment
       android:id="@+id/rootFragment"
       android:name="com.android.aftools.presentation.fragments.RootFragment" />
+  <fragment
+      android:id="@+id/aboutSettingsFragment"
+      android:name="com.android.aftools.presentation.fragments.AboutSettingsFragment"
+      android:label="AboutSettingsFragment" />
 </navigation>

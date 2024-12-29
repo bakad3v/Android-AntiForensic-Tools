@@ -3,6 +3,7 @@ package com.android.aftools.di
 import com.android.aftools.presentation.actions.DialogActions
 import com.android.aftools.presentation.actions.FileSettingsAction
 import com.android.aftools.presentation.actions.LogsActions
+import com.android.aftools.presentation.actions.SettingsAction
 import com.android.aftools.presentation.states.ActivityState
 import com.android.aftools.presentation.states.LogsDataState
 import com.android.aftools.presentation.states.PasswordState
@@ -32,10 +33,13 @@ class ViewModelsModule {
   fun provideLogsActionChannel(): Channel<LogsActions> = Channel()
 
   @Provides
-  fun provideActivityStateFlow(): MutableStateFlow<ActivityState> = MutableStateFlow(ActivityState.PasswordActivityState)
+  fun provideActivityStateFlow(): MutableStateFlow<ActivityState> = MutableStateFlow(ActivityState.NoActionBarActivityState)
 
   @Provides
-  fun provideSettingsActionsChannel(): Channel<DialogActions> = Channel()
+  fun provideDialogActionsChannel(): Channel<DialogActions> = Channel()
+
+  @Provides
+  fun provideSettingsActionsChannel(): Channel<SettingsAction> = Channel()
 
   @Provides
   fun provideRootState(): MutableStateFlow<RootState> = MutableStateFlow(RootState.Loading)

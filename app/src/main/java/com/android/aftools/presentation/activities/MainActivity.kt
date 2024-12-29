@@ -58,20 +58,7 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
      */
     private fun setupDrawer() {
         mainBinding.navigationView.inflateMenu(R.menu.main_menu)
-        val conf = AppBarConfiguration(
-            setOf(
-                R.id.settingsFragment,
-                R.id.profilesFragment,
-                R.id.rootFragment,
-                R.id.setupFilesFragment,
-                R.id.logsFragment,
-                R.id.aboutFragment
-            ), mainBinding.drawer
-        )
         mainBinding.navigationView.setupWithNavController(controller)
-        if (mainBinding.bigLayout == null) {
-            NavigationUI.setupWithNavController(mainBinding.toolbar2, controller, conf)
-        }
     }
 
     /**
@@ -88,7 +75,7 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
         launchLifecycleAwareCoroutine {
             viewModel.activityState.collect {
                 when (it) {
-                    is ActivityState.PasswordActivityState -> setupPassFragment()
+                    is ActivityState.NoActionBarActivityState -> setupNoActionBarFragment()
                     is ActivityState.NormalActivityState -> setupNormalFragment(it)
                 }
             }
@@ -96,20 +83,40 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
     }
 
     private fun setupNormalFragment(state: ActivityState.NormalActivityState) {
+        mainBinding.toolbar2.visibility = View.VISIBLE
         mainBinding.toolbar2.title = state.title
         if (supportActionBar == null) {
             setSupportActionBar(mainBinding.toolbar2)
         }
         mainBinding.navigationView.visibility = View.VISIBLE
+        setupToolbarMenu()
         if (!drawerReady) {
             setupDrawer()
             drawerReady = true
         }
     }
 
-    private fun setupPassFragment() {
+    private fun setupToolbarMenu() {
+        if (mainBinding.bigLayout == null) {
+            val conf = AppBarConfiguration(
+                setOf(
+                    R.id.settingsFragment,
+                    R.id.profilesFragment,
+                    R.id.rootFragment,
+                    R.id.setupFilesFragment,
+                    R.id.logsFragment,
+                    R.id.aboutFragment
+                ), mainBinding.drawer
+            )
+            NavigationUI.setupWithNavController(mainBinding.toolbar2, controller, conf)
+        }
+    }
+
+    private fun setupNoActionBarFragment() {
+        mainBinding.toolbar2.menu.clear()
         setSupportActionBar(null)
         mainBinding.navigationView.visibility = View.GONE
+        mainBinding.toolbar2.visibility = View.GONE
     }
 
     override fun onDestroy() {

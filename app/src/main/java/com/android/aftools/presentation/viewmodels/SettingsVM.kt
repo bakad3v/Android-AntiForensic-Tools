@@ -45,6 +45,7 @@ import com.android.aftools.domain.usecases.settings.SetWipeUseCase
 import com.android.aftools.domain.usecases.usb.GetUsbSettingsUseCase
 import com.android.aftools.domain.usecases.usb.SetUsbSettingsUseCase
 import com.android.aftools.presentation.actions.DialogActions
+import com.android.aftools.presentation.actions.SettingsAction
 import com.android.aftools.presentation.utils.UIText
 import com.android.aftools.superuser.superuser.SuperUserException
 import com.android.aftools.superuser.superuser.SuperUserManager
@@ -61,7 +62,7 @@ class SettingsVM @Inject constructor(
     getSettingsUseCase: GetSettingsUseCase,
     private val setThemeUseCase: SetThemeUseCase,
     private val setPasswordUseCase: SetPasswordUseCase,
-    private val settingsActionChannel: Channel<DialogActions>,
+    private val settingsActionChannel: Channel<SettingsAction>,
     private val setRemoveItselfUseCase: SetRemoveItselfUseCase,
     private val setTrimUseCase: SetTrimUseCase,
     private val setWipeUseCase: SetWipeUseCase,
@@ -168,8 +169,10 @@ class SettingsVM @Inject constructor(
         requestKey: String
     ) {
         settingsActionChannel.send(
-            DialogActions.ShowQuestionDialog(
-                title, message, requestKey
+            SettingsAction.ShowDialog(
+                DialogActions.ShowQuestionDialog(
+                    title, message, requestKey
+                )
             )
         )
     }
@@ -185,18 +188,22 @@ class SettingsVM @Inject constructor(
         }
     }
 
+
+
     private suspend fun showInputDigitDialogSuspend(title: UIText.StringResource,
                              message: UIText.StringResource,
                              hint: String,
                              range: IntRange,
                              requestKey: String)  {
         settingsActionChannel.send(
-            DialogActions.ShowInputDigitDialog(
-                title = title,
-                message = message,
-                hint = hint,
-                range = range,
-                requestKey = requestKey
+            SettingsAction.ShowDialog(
+                DialogActions.ShowInputDigitDialog(
+                    title = title,
+                    message = message,
+                    hint = hint,
+                    range = range,
+                    requestKey = requestKey
+                )
             )
         )
     }
@@ -216,8 +223,10 @@ class SettingsVM @Inject constructor(
         message: UIText.StringResource,
     ) {
         settingsActionChannel.send(
-            DialogActions.ShowInfoDialog(
-                title, message
+            SettingsAction.ShowDialog(
+                DialogActions.ShowInfoDialog(
+                    title, message
+                )
             )
         )
     }
@@ -650,10 +659,12 @@ class SettingsVM @Inject constructor(
     fun showPasswordInput() {
         viewModelScope.launch {
             settingsActionChannel.send(
-                DialogActions.ShowInputPasswordDialog(
-                    title = UIText.StringResource(R.string.change_password),
-                    hint = "",
-                    message = UIText.StringResource(R.string.enter_password_long)
+                SettingsAction.ShowDialog(
+                    DialogActions.ShowInputPasswordDialog(
+                        title = UIText.StringResource(R.string.change_password),
+                        hint = "",
+                        message = UIText.StringResource(R.string.enter_password_long)
+                    )
                 )
             )
         }
@@ -771,10 +782,11 @@ class SettingsVM @Inject constructor(
     }
 
     fun showFaq() {
-        showInfoDialog(
-            title = UIText.StringResource(R.string.about_settings),
-            message = UIText.StringResource(R.string.settings_faq)
-        )
+        viewModelScope.launch {
+            settingsActionChannel.send(
+                SettingsAction.ShowFaq
+            )
+        }
     }
 
     fun showRootWarningDialog() {

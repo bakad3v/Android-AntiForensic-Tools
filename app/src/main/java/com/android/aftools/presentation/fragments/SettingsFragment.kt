@@ -20,11 +20,13 @@ import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.android.aftools.R
 import com.android.aftools.TopLevelFunctions.launchLifecycleAwareCoroutine
 import com.android.aftools.databinding.SettingsFragmentBinding
 import com.android.aftools.domain.entities.Theme
 import com.android.aftools.domain.entities.UsbSettings
+import com.android.aftools.presentation.actions.SettingsAction
 import com.android.aftools.presentation.activities.ActivityStateHolder
 import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.InputDigitDialog
@@ -660,7 +662,10 @@ class SettingsFragment : Fragment() {
     val dialogLauncher = DialogLauncher(parentFragmentManager, context)
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.settingsActionsFlow.collect {
-        dialogLauncher.launchDialogFromAction(it)
+        when(it) {
+          is SettingsAction.ShowDialog -> dialogLauncher.launchDialogFromAction(it.value)
+          is SettingsAction.ShowFaq -> findNavController().navigate(R.id.action_settingsFragment_to_aboutSettingsFragment)
+        }
       }
     }
   }
