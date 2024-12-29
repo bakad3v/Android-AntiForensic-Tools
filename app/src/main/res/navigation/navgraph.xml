@@ -27,7 +27,7 @@
         android:id="@+id/action_settingsFragment_to_aboutSettingsFragment"
         app:destination="@id/aboutSettingsFragment"
         app:enterAnim="@anim/from_bottom"
-        app:exitAnim="@null" />
+        app:exitAnim="@anim/fade_anim"/>
   </fragment>
   <fragment
       android:id="@+id/profilesFragment"
