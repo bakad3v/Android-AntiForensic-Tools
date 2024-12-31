@@ -47,7 +47,7 @@ class PassFragment: Fragment() {
     super.onViewCreated(view, savedInstanceState)
     val activity = requireActivity()
     if (activity is ActivityStateHolder) {
-      activity.setActivityState(ActivityState.NoActionBarActivityState)
+      activity.setActivityState(ActivityState.NoActionBarNoDrawerActivityState)
     }
     binding.password.imeOptions = IME_FLAG_NO_PERSONALIZED_LEARNING + IME_ACTION_SEND
     observePasswordState()

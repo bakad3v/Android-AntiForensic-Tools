@@ -77,9 +77,16 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
                 when (it) {
                     is ActivityState.NoActionBarActivityState -> setupNoActionBarFragment()
                     is ActivityState.NormalActivityState -> setupNormalFragment(it)
+                    is ActivityState.NoActionBarNoDrawerActivityState -> setupNoActionBarNoDrawerFragment()
                 }
             }
         }
+    }
+
+    private fun setupNoActionBarFragment() {
+        mainBinding.toolbar2.menu.clear()
+        setSupportActionBar(null)
+        mainBinding.toolbar2.visibility = View.GONE
     }
 
     private fun setupNormalFragment(state: ActivityState.NormalActivityState) {
@@ -112,7 +119,7 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
         }
     }
 
-    private fun setupNoActionBarFragment() {
+    private fun setupNoActionBarNoDrawerFragment() {
         mainBinding.toolbar2.menu.clear()
         setSupportActionBar(null)
         mainBinding.navigationView.visibility = View.GONE
