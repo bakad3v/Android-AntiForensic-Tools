@@ -7,7 +7,7 @@
 
     <variable
       name="viewmodel"
-      type="com.android.aftools.presentation.viewmodels.UsualFilesSettingsVM" />
+      type="net.typeblog.shelter.presentation.viewmodels.UsualFilesSettingsVM" />
   </data>
 
   <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,5 +1,5 @@
 <resources>
-  <string name="app_name">AntiForensic Tools</string>
+  <string name="app_name">Shelter</string>
   <string name="enable_logs">Enable logging</string>
   <string name="select_day">Open logs for day</string>
   <string name="change_timeout">Change timeout</string>

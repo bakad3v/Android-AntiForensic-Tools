@@ -7,7 +7,7 @@
 
     <variable
       name="viewmodel"
-      type="com.android.aftools.presentation.viewmodels.ProfilesVM" />
+      type="net.typeblog.shelter.presentation.viewmodels.ProfilesVM" />
   </data>
 
   <androidx.constraintlayout.widget.ConstraintLayout
