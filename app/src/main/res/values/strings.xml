@@ -241,7 +241,7 @@
   <string name="save_root_command">Save root command</string>
     <string name="edit_command">Edit root command</string>
     <string name="enter_root_commands">Enter root commands here</string>
-    <string name="enable_root_command_long">If you activate trigger, these commands will be started.</string>
+    <string name="enable_root_command_long">If you activate trigger, these commands will run after data deletion.</string>
   <string name="no_root_rights_commands">You need root rights to run root commands</string>
     <string name="running_root_command">Running root command: %1$s</string>
     <string name="root_command_failed">Root command failed: %1$s</string>
@@ -256,7 +256,7 @@
   <string name="disabling_admin_failed">Disabling admin rights failed</string>
     <string name="power_button_settings">Power button settings</string>
   <string name="destroy_on_button">Run on button clicks</string>
-  <string name="clicks_number">Allowed number of clicks</string>
+  <string name="clicks_number">Number of clicks</string>
   <string name="latency_text">Clicks latency (ms)</string>
   <string name="change_button_latency">Change button latency\n</string>
   <string name="button_latency_long">Setup max latency between clicks in one sequence of clicks (in milliseconds). Default: 1000ms.</string>
@@ -264,7 +264,7 @@
   <string name="clicks_number_long">Setup number of power button clicks in row for launching data destruction</string>
     <string name="reboot_on_connection">Reboot on connection</string>
     <string name="destroy_on_button_title">Destroy data on power button clicks?</string>
-    <string name="destroy_on_button_long">If you activate this option, pressing the phone\'s power off button a certain number of times in a row will delete the data. Requires accessibility service.</string>
+    <string name="destroy_on_button_long"><![CDATA[<p>If you activate this option, pressing the phone\'s power off button a certain number of times in a row will delete the data. <strong>Warning: any switching on/off of the screen is counted as a click, so be careful!</strong> Requires accessibility service.</p>]]></string>
     <string name="reboot_on_usb">Reboot on usb connection?</string>
   <string name="reboot_on_usb_long">If you activate this option, the device will reboot on usb connection, thus entering BFU mode and making it more difficult to hack the device. Requires root or dhizuku.</string>
     <string name="when_usb_connected">When USB connected...</string>

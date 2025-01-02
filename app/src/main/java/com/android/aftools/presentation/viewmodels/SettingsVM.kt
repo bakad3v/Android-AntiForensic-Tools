@@ -773,7 +773,7 @@ class SettingsVM @Inject constructor(
     }
 
     fun showRebootOnUSBDialog() {
-        if (permissionsState.value.isAdmin || permissionsState.value.isOwner)
+        if (permissionsState.value.isRoot || permissionsState.value.isOwner)
             showQuestionDialog(title = UIText.StringResource(R.string.reboot_on_usb),
                 message = UIText.StringResource(R.string.reboot_on_usb_long),
                 requestKey = REBOOT_ON_USB_DIALOG)

@@ -9,11 +9,9 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.UserManager
-import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import com.android.aftools.domain.entities.UsbSettings
 import com.android.aftools.domain.usecases.button.ButtonClickUseCase
-import com.android.aftools.domain.usecases.button.GetButtonSettingsUseCase
 import com.android.aftools.domain.usecases.passwordManager.CheckPasswordUseCase
 import com.android.aftools.domain.usecases.passwordManager.GetPasswordStatusUseCase
 import com.android.aftools.domain.usecases.settings.GetSettingsUseCase
@@ -36,7 +34,7 @@ import javax.inject.Inject
  * Accessibility service for password interception and usb connections monitoring. Thanks x13a for idea.
  */
 @AndroidEntryPoint
-class PasswordReceiverService : AccessibilityService() {
+class TriggerReceiverService : AccessibilityService() {
     private var keyguardManager: KeyguardManager? = null
     private var password = mutableListOf<Char>()
 
@@ -95,7 +93,7 @@ class PasswordReceiverService : AccessibilityService() {
 
     private fun listenButtonClicked() {
         val screenStateChangedFilter =
-            IntentFilter(Intent.ACTION_SCREEN_ON).apply {addAction(Intent.ACTION_SCREEN_OFF) }
+            IntentFilter(Intent.ACTION_SCREEN_ON).apply { addAction(Intent.ACTION_SCREEN_OFF) }
         val buttonClickedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 coroutineScope.launch {
