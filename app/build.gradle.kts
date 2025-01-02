@@ -7,11 +7,11 @@ plugins {
 }
 
 android {
-    namespace = "com.android.aftools"
+    namespace = "com.oasisfeng.island"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.android.aftools"
+        applicationId = "com.oasisfeng.island"
         minSdk = 26
         targetSdk = 34
         versionCode = 4
