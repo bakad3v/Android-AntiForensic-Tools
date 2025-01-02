@@ -3,8 +3,10 @@
 
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,11 +19,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="8dp"
-            android:paddingEnd="8dp"
             android:paddingTop="8dp"
+            android:paddingEnd="8dp"
             android:text="@string/ui_settings"
-            android:textStyle="bold">
-        </com.google.android.material.textview.MaterialTextView>
+            android:textStyle="bold"></com.google.android.material.textview.MaterialTextView>
 
 
         <LinearLayout
@@ -59,8 +60,7 @@
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </com.google.android.material.divider.MaterialDivider>
+            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
 
         <com.google.android.material.textview.MaterialTextView
             style="?attr/textAppearanceSubtitle1"
@@ -70,37 +70,35 @@
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:text="@string/actions_settings"
-            android:textStyle="bold">
-        </com.google.android.material.textview.MaterialTextView>
+            android:textStyle="bold"></com.google.android.material.textview.MaterialTextView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:text="@string/run_trim">
-            </com.google.android.material.textview.MaterialTextView>
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceTitleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="@string/run_trim"></com.google.android.material.textview.MaterialTextView>
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceLabelLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:text="@string/root_only">
-            </com.google.android.material.textview.MaterialTextView>
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceLabelLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingStart="8dp"
+                    android:text="@string/root_only"></com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
 
             <com.google.android.material.materialswitch.MaterialSwitch
@@ -120,27 +118,26 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_gravity="start"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:text="@string/wipe_data">
-            </com.google.android.material.textview.MaterialTextView>
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceTitleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="@string/wipe_data"></com.google.android.material.textview.MaterialTextView>
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceLabelLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:text="@string/all_superusers">
-            </com.google.android.material.textview.MaterialTextView>
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceLabelLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingStart="8dp"
+                    android:text="@string/all_superusers"></com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
+
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_wipe"
                 android:layout_width="wrap_content"
@@ -161,23 +158,22 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:text="@string/remove_itself">
-            </com.google.android.material.textview.MaterialTextView>
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceTitleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="@string/remove_itself"></com.google.android.material.textview.MaterialTextView>
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceLabelLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:text="@string/root_recommended">
-            </com.google.android.material.textview.MaterialTextView>
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceLabelLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingStart="8dp"
+                    android:text="@string/root_recommended"></com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
+
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_self_destruct"
                 android:layout_width="wrap_content"
@@ -203,8 +199,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="8dp"
-                    android:text="@string/hide_app">
-                </com.google.android.material.textview.MaterialTextView>
+                    android:text="@string/hide_app"></com.google.android.material.textview.MaterialTextView>
 
                 <com.google.android.material.textview.MaterialTextView
                     style="?attr/textAppearanceLabelLarge"
@@ -212,9 +207,9 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:paddingStart="8dp"
-                    android:text="@string/root_or_dhizuku_api">
-                </com.google.android.material.textview.MaterialTextView>
+                    android:text="@string/root_or_dhizuku_api"></com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
+
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_hide"
                 android:layout_width="wrap_content"
@@ -240,8 +235,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="8dp"
-                    android:text="@string/clear_itself">
-                </com.google.android.material.textview.MaterialTextView>
+                    android:text="@string/clear_itself"></com.google.android.material.textview.MaterialTextView>
 
                 <com.google.android.material.textview.MaterialTextView
                     style="?attr/textAppearanceLabelLarge"
@@ -249,9 +243,9 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:paddingStart="8dp"
-                    android:text="@string/root_and_owner">
-                </com.google.android.material.textview.MaterialTextView>
+                    android:text="@string/root_and_owner"></com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
+
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_clear"
                 android:layout_width="wrap_content"
@@ -271,8 +265,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="8dp"
-                android:text="@string/clear_data">
-            </com.google.android.material.textview.MaterialTextView>
+                android:text="@string/clear_data"></com.google.android.material.textview.MaterialTextView>
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_clear_data"
@@ -283,8 +276,7 @@
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </com.google.android.material.divider.MaterialDivider>
+            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -295,8 +287,7 @@
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:text="@string/permissions"
-            android:textStyle="bold">
-        </com.google.android.material.textview.MaterialTextView>
+            android:textStyle="bold"></com.google.android.material.textview.MaterialTextView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -310,8 +301,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="8dp"
-                android:text="@string/admin_rights">
-            </com.google.android.material.textview.MaterialTextView>
+                android:text="@string/admin_rights"></com.google.android.material.textview.MaterialTextView>
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_admin"
@@ -332,8 +322,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="8dp"
-                android:text="@string/device_owner">
-            </com.google.android.material.textview.MaterialTextView>
+                android:text="@string/device_owner"></com.google.android.material.textview.MaterialTextView>
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_dhizuku"
@@ -354,8 +343,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="8dp"
-                android:text="@string/root">
-            </com.google.android.material.textview.MaterialTextView>
+                android:text="@string/root"></com.google.android.material.textview.MaterialTextView>
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_root"
@@ -376,8 +364,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:padding="8dp"
-                android:text="@string/accessibility_service">
-            </com.google.android.material.textview.MaterialTextView>
+                android:text="@string/accessibility_service"></com.google.android.material.textview.MaterialTextView>
 
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_accessibility"
@@ -388,8 +375,7 @@
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </com.google.android.material.divider.MaterialDivider>
+            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
 
         <com.google.android.material.textview.MaterialTextView
             style="?attr/textAppearanceSubtitle1"
@@ -399,8 +385,7 @@
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:text="@string/password_settings"
-            android:textStyle="bold">
-        </com.google.android.material.textview.MaterialTextView>
+            android:textStyle="bold"></com.google.android.material.textview.MaterialTextView>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -409,7 +394,7 @@
             android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_weight="1"
@@ -423,15 +408,15 @@
                     android:text="@string/run_on_password">
 
                 </com.google.android.material.textview.MaterialTextView>
+
                 <com.google.android.material.textview.MaterialTextView
                     style="?attr/textAppearanceLabelLarge"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:paddingStart="8dp"
-                    android:text="@string/accessibility_service_required">
-                </com.google.android.material.textview.MaterialTextView>
+                    android:text="@string/accessibility_service_required"></com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
 
             <com.google.android.material.materialswitch.MaterialSwitch
@@ -441,28 +426,19 @@
                 android:padding="8dp" />
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/setup_password"
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceTitleLarge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:text="@string/change_password">
-            </com.google.android.material.textview.MaterialTextView>
-        </LinearLayout>
+            android:padding="8dp"
+            android:id="@+id/setupPassword"
+            android:text="@string/change_password"></com.google.android.material.textview.MaterialTextView>
 
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-        </com.google.android.material.divider.MaterialDivider>
+            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
 
         <com.google.android.material.textview.MaterialTextView
             style="?attr/textAppearanceSubtitle1"
@@ -480,40 +456,50 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp">
+            android:paddingBottom="8dp"
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:text="@string/run_on_connection">
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceTitleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:maxLines="1"
+                    android:ellipsize="end"
+                    android:text="@string/when_usb_connected">
 
-            </com.google.android.material.textview.MaterialTextView>
+                </com.google.android.material.textview.MaterialTextView>
+
                 <com.google.android.material.textview.MaterialTextView
                     style="?attr/textAppearanceLabelLarge"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="0dp"
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:paddingStart="8dp"
                     android:text="@string/accessibility_service_required">
+
                 </com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
 
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_usb_connection"
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/show_usb_menu"
                 android:layout_width="wrap_content"
+                android:gravity="center|end"
                 android:layout_height="match_parent"
-                android:padding="8dp" />
+                tools:text="Reboot on connection"
+                android:drawableEnd="@drawable/baseline_unfold_more_24"
+                android:padding="8dp">
+
+            </com.google.android.material.textview.MaterialTextView>
+
         </LinearLayout>
 
         <com.google.android.material.divider.MaterialDivider
@@ -541,6 +527,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -548,25 +535,26 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:text="@string/prevent_bruteforce">
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceTitleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="@string/prevent_bruteforce">
 
-            </com.google.android.material.textview.MaterialTextView>
+                </com.google.android.material.textview.MaterialTextView>
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceLabelLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:text="@string/admin_required">
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceLabelLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingStart="8dp"
+                    android:text="@string/admin_required">
 
-            </com.google.android.material.textview.MaterialTextView>
+                </com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
+
             <com.google.android.material.materialswitch.MaterialSwitch
                 android:id="@+id/switch_bruteforce"
                 android:layout_width="wrap_content"
@@ -579,17 +567,159 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:orientation="vertical">
+            android:orientation="horizontal">
 
             <com.google.android.material.textview.MaterialTextView
                 style="?attr/textAppearanceTitleLarge"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="8dp"
                 android:text="@string/allowed_attempts">
 
             </com.google.android.material.textview.MaterialTextView>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            </Space>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/attempts_number"
+                style="?attr/textAppearanceTitleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+
+            </com.google.android.material.textview.MaterialTextView>
         </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="8dp"
+            android:paddingTop="8dp"
+
+            android:paddingEnd="8dp"
+            android:text="@string/power_button_settings"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceTitleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="@string/destroy_on_button">
+
+                </com.google.android.material.textview.MaterialTextView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceLabelLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingStart="8dp"
+                    android:text="@string/accessibility_service_required">
+
+                </com.google.android.material.textview.MaterialTextView>
+            </LinearLayout>
+
+            <com.google.android.material.materialswitch.MaterialSwitch
+                android:id="@+id/switch_power_button"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="8dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/clicks_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                style="?attr/textAppearanceTitleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@string/clicks_number">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            </Space>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/clicks_number_count"
+                style="?attr/textAppearanceTitleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+
+            </com.google.android.material.textview.MaterialTextView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/latency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                style="?attr/textAppearanceTitleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="8dp"
+                android:text="@string/latency_text">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1">
+
+            </Space>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/clicks_latency"
+                style="?attr/textAppearanceTitleLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="8dp">
+
+            </com.google.android.material.textview.MaterialTextView>
+        </LinearLayout>
+
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -604,27 +734,27 @@
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:text="@string/logd_settings"
-            android:textStyle="bold">
-        </com.google.android.material.textview.MaterialTextView>
+            android:textStyle="bold"></com.google.android.material.textview.MaterialTextView>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_weight="1"
                 android:orientation="vertical">
+
                 <com.google.android.material.textview.MaterialTextView
                     style="?attr/textAppearanceTitleLarge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:paddingStart="8dp"
-                    android:text="@string/logd_on_start">
-                </com.google.android.material.textview.MaterialTextView>
+                    android:text="@string/logd_on_start"></com.google.android.material.textview.MaterialTextView>
 
                 <com.google.android.material.textview.MaterialTextView
                     style="?attr/textAppearanceLabelLarge"
@@ -632,8 +762,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:paddingStart="8dp"
-                    android:text="@string/root_only">
-                </com.google.android.material.textview.MaterialTextView>
+                    android:text="@string/root_only"></com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
 
             <com.google.android.material.materialswitch.MaterialSwitch
@@ -647,8 +776,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:paddingBottom="8dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingBottom="8dp">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -705,10 +835,10 @@
         </com.google.android.material.textview.MaterialTextView>
 
         <LinearLayout
+            android:id="@+id/set_multiuser_ui"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:id="@+id/set_multiuser_ui"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -718,24 +848,24 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:text="@string/multiuser_ui">
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceTitleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="@string/multiuser_ui">
 
-            </com.google.android.material.textview.MaterialTextView>
+                </com.google.android.material.textview.MaterialTextView>
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceLabelLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:text="@string/root_only">
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceLabelLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingStart="8dp"
+                    android:text="@string/root_only">
 
-            </com.google.android.material.textview.MaterialTextView>
+                </com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -748,10 +878,10 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/set_user_switcher_ui"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:id="@+id/set_user_switcher_ui"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -791,10 +921,10 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/switch_user_permission"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:id="@+id/switch_user_permission"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -838,8 +968,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:paddingBottom="8dp"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="8dp">
 
             <com.google.android.material.textview.MaterialTextView
                 style="?attr/textAppearanceTitleLarge"
@@ -851,15 +981,16 @@
                 android:text="@string/users_limit">
 
             </com.google.android.material.textview.MaterialTextView>
+
             <com.google.android.material.textview.MaterialTextView
                 style="?attr/textAppearanceLabelLarge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:paddingStart="8dp"
-                android:text="@string/root_only">
-            </com.google.android.material.textview.MaterialTextView>
+                android:text="@string/root_only"></com.google.android.material.textview.MaterialTextView>
         </LinearLayout>
+
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -881,10 +1012,10 @@
         </com.google.android.material.textview.MaterialTextView>
 
         <LinearLayout
+            android:id="@+id/set_safe_boot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
-            android:id="@+id/set_safe_boot"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -894,24 +1025,24 @@
                 android:layout_weight="1"
                 android:orientation="vertical">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:paddingStart="8dp"
-                android:text="@string/safe_boot_status">
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceTitleLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="8dp"
+                    android:text="@string/safe_boot_status">
 
-            </com.google.android.material.textview.MaterialTextView>
+                </com.google.android.material.textview.MaterialTextView>
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceLabelLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:paddingStart="8dp"
-                android:text="@string/root_and_owner">
+                <com.google.android.material.textview.MaterialTextView
+                    style="?attr/textAppearanceLabelLarge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:paddingStart="8dp"
+                    android:text="@string/root_and_owner">
 
-            </com.google.android.material.textview.MaterialTextView>
+                </com.google.android.material.textview.MaterialTextView>
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton

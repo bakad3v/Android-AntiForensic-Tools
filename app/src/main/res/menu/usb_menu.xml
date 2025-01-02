@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:id="@+id/do_nothing"
+    android:title="@string/do_nothing" />
+  <item android:id="@+id/run_on_connection"
+    android:title="@string/destroy_data" />
+  <item android:id="@+id/reboot_on_connection"
+    android:title="@string/reboot" />
+</menu>

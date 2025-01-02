@@ -9,7 +9,7 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.android.aftools.R
 import com.android.aftools.databinding.AboutFragmentBinding
-import com.android.aftools.presentation.activities.MainActivity
+import com.android.aftools.presentation.activities.ActivityStateHolder
 import com.android.aftools.presentation.states.ActivityState
 
 /**
@@ -34,7 +34,10 @@ class AboutFragment: Fragment() {
   }
 
   private fun setMainActivityState() {
-    (activity as MainActivity).setActivityState(ActivityState.NormalActivityState(getString(R.string.about)))
+    val activity = requireActivity()
+    if (activity is ActivityStateHolder) {
+      activity.setActivityState(ActivityState.NormalActivityState(getString(R.string.about)))
+    }
   }
 
 }

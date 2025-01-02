@@ -153,6 +153,10 @@ class Root @Inject constructor(
         }
     }
 
+    override suspend fun reboot() {
+        executeRootCommand("reboot")
+    }
+
 
     override suspend fun getSafeBootStatus(): Boolean {
         val result = executeRootCommand("settings get global safe_boot_disallowed").out[0]

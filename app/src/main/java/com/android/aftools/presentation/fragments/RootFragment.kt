@@ -14,7 +14,7 @@ import androidx.lifecycle.Lifecycle
 import com.android.aftools.R
 import com.android.aftools.TopLevelFunctions.launchLifecycleAwareCoroutine
 import com.android.aftools.databinding.RootFragmentBinding
-import com.android.aftools.presentation.activities.MainActivity
+import com.android.aftools.presentation.activities.ActivityStateHolder
 import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.QuestionDialog
 import com.android.aftools.presentation.states.ActivityState
@@ -129,13 +129,15 @@ class RootFragment : Fragment() {
     }
 
     private fun setMainActivityState() {
-        (activity as MainActivity).setActivityState(
-            ActivityState.NormalActivityState(
-                getString(
-                    R.string.root_command_settings
+        val activity = requireActivity()
+        if (activity is ActivityStateHolder)
+            activity.setActivityState(
+                ActivityState.NormalActivityState(
+                    getString(
+                        R.string.root_command_settings
+                    )
                 )
             )
-        )
     }
 
     private fun setupMenu(editing: Boolean) {

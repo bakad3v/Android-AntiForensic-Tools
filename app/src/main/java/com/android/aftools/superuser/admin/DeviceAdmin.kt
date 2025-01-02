@@ -132,6 +132,10 @@ class DeviceAdmin @Inject constructor(@ApplicationContext private val context: C
         throw SuperUserException(ADMIN_ERROR_TEXT,UIText.StringResource(R.string.device_admin_error))
     }
 
+    override suspend fun reboot() {
+        throw SuperUserException(ADMIN_ERROR_TEXT,UIText.StringResource(R.string.device_admin_error))
+    }
+
     companion object {
         private const val ADMIN_ERROR_TEXT = "Device admin rights are not enough to perform operations."
         private const val NO_ADMIN_RIGHTS = "App doesn't have admin rights."

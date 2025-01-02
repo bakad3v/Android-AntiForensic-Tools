@@ -16,16 +16,16 @@ import com.android.aftools.TopLevelFunctions.formatDate
 import com.android.aftools.TopLevelFunctions.launchLifecycleAwareCoroutine
 import com.android.aftools.databinding.LogsFragmentBinding
 import com.android.aftools.presentation.actions.LogsActions
-import com.android.aftools.presentation.activities.MainActivity
+import com.android.aftools.presentation.activities.ActivityStateHolder
 import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.InputDigitDialog
+import com.android.aftools.presentation.dialogs.QuestionDialog
 import com.android.aftools.presentation.states.ActivityState
 import com.android.aftools.presentation.utils.DateValidatorAllowed
 import com.android.aftools.presentation.viewmodels.LogsVM
 import com.android.aftools.presentation.viewmodels.LogsVM.Companion.CHANGE_LOGS_ENABLED_REQUEST
-import com.android.aftools.presentation.viewmodels.LogsVM.Companion.CHANGE_TIMEOUT_REQUEST
-import com.android.aftools.presentation.dialogs.QuestionDialog
 import com.android.aftools.presentation.viewmodels.LogsVM.Companion.CHANGE_TIMEOUT
+import com.android.aftools.presentation.viewmodels.LogsVM.Companion.CHANGE_TIMEOUT_REQUEST
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -192,11 +192,14 @@ class LogsFragment : Fragment() {
   private fun setupActionBar() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.logsState.collect {
-        (activity as MainActivity).setActivityState(
-          ActivityState.NormalActivityState(
-            it.date.formatDate()
+        val activity = requireActivity()
+        if (activity is ActivityStateHolder) {
+          activity.setActivityState(
+            ActivityState.NormalActivityState(
+              it.date.formatDate()
+            )
           )
-        )
+        }
       }
     }
   }

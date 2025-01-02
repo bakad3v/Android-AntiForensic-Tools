@@ -1,0 +1,12 @@
+package com.android.aftools.domain.usecases.button
+
+import com.android.aftools.domain.entities.ButtonSettings
+import com.android.aftools.domain.repositories.ButtonSettingsRepository
+import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+
+class SetTriggerOnButtonUseCase @Inject constructor(val repository: ButtonSettingsRepository) {
+    suspend operator fun invoke(status: Boolean) {
+        repository.setTriggerOnButtonStatus(status)
+    }
+}

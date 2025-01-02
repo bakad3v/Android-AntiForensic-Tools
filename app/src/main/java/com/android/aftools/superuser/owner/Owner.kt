@@ -235,6 +235,10 @@ class Owner @Inject constructor(@ApplicationContext private val context: Context
         return dpm.getUserRestrictions(deviceOwner).getBoolean(UserManager.DISALLOW_USER_SWITCH)
     }
 
+    override suspend fun reboot() {
+        dpm.reboot(deviceOwner)
+    }
+
     override suspend fun runTrim() {
         throw SuperUserException(NO_ROOT_RIGHTS,UIText.StringResource(R.string.no_root_rights))
     }

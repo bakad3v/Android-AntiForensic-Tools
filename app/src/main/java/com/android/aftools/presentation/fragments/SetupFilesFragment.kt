@@ -26,7 +26,7 @@ import com.android.aftools.TopLevelFunctions.launchLifecycleAwareCoroutine
 import com.android.aftools.databinding.SetupUsualFilesFragmentBinding
 import com.android.aftools.domain.entities.FilesSortOrder
 import com.android.aftools.presentation.actions.FileSettingsAction
-import com.android.aftools.presentation.activities.MainActivity
+import com.android.aftools.presentation.activities.ActivityStateHolder
 import com.android.aftools.presentation.adapters.fileAdapter.FileAdapter
 import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.InputDigitDialog
@@ -227,13 +227,15 @@ class SetupFilesFragment : Fragment() {
   }
 
   private fun setMainActivityState() {
-    (activity as MainActivity).setActivityState(
-      ActivityState.NormalActivityState(
-        getString(
-          R.string.file_deletion_settings
+    val activity = requireActivity()
+    if (activity is ActivityStateHolder)
+      activity.setActivityState(
+        ActivityState.NormalActivityState(
+          getString(
+            R.string.file_deletion_settings
+          )
         )
       )
-    )
   }
 
   /**
