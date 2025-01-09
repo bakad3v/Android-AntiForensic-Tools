@@ -42,6 +42,8 @@ Ideally, I recommend changing the package name yourself before installing. When 
 6. Connect devices and allow USB debugging for your PC
 7. Open the command prompt and enter the command \<path to platform-tools folder\>/adb[.exe] install -t \<path to apk file\>.
 8. If you install the new version of an app, enter the command \<path to platform-tools folder\>/adb[.exe] install -t -r \<path to apk file\>.
+
+8.1 After the update, restart the application accessibility service if it has stopped working
 ### Changing app's package name
 #### Via Android Studio
 1. Install [Android Studio](https://developer.android.com/studio).
@@ -115,3 +117,9 @@ BinTianqi, developer of the [Owndroid](https://github.com/BinTianqi/OwnDroid) - 
 You can support me using crypto.
 
 XMR: 88Z5fsVK6FP4oVNjo2BrHydAEa5Y1gTPi5d7BN68sjVDZ9dTn8wPb89WmUxrxf3T37bRGSR5dekkU9aQ7j8ErWcBJ2GZojC
+
+LTC: ltc1qtfhun6yzt0qlpa9d6s8gr2yd70sg0kx755u3se
+
+BTC: bc1qn9a9eyy2vgrz8yvhk0654d63dt56pxhpn6q4xl
+
+BTC lightning: dualwhorl66@walletofsatoshi.com
