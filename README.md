@@ -115,3 +115,6 @@ BinTianqi, developer of the [Owndroid](https://github.com/BinTianqi/OwnDroid) - 
 You can support me using crypto.
 
 XMR: 88Z5fsVK6FP4oVNjo2BrHydAEa5Y1gTPi5d7BN68sjVDZ9dTn8wPb89WmUxrxf3T37bRGSR5dekkU9aQ7j8ErWcBJ2GZojC
+LTC: ltc1qtfhun6yzt0qlpa9d6s8gr2yd70sg0kx755u3se
+BTC: bc1qn9a9eyy2vgrz8yvhk0654d63dt56pxhpn6q4xl
+BTC lightning: dualwhorl66@walletofsatoshi.com
