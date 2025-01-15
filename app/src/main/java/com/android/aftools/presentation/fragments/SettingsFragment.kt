@@ -2,8 +2,6 @@ package com.android.aftools.presentation.fragments
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.res.ColorStateList
-import android.graphics.Color
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -64,8 +62,6 @@ import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.SELF_DES
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.TRIGGER_ON_BUTTON_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.TRIM_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.WIPE_DIALOG
-import com.google.android.material.color.MaterialColors
-import com.google.android.material.materialswitch.MaterialSwitch
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -102,7 +98,7 @@ class SettingsFragment : Fragment() {
   }
 
   private fun setupUsbMenu() {
-    binding.showUsbMenu.setOnClickListener {
+    binding.usbMenu.setOnClickListener {
       showUsbMenu()
     }
   }
@@ -131,15 +127,6 @@ class SettingsFragment : Fragment() {
 
   private fun requestAdminRights() {
     startActivity(viewModel.adminRightsIntent())
-  }
-
-  /**
-   * Function for setting switch state without triggering OnCheckedChangeListener
-   */
-  private fun MaterialSwitch.setCheckedProgrammatically(value: Boolean, listener: CompoundButton.OnCheckedChangeListener) {
-      setOnCheckedChangeListener(null)
-      isChecked = value
-      setOnCheckedChangeListener(listener)
   }
   val switchWipeListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
@@ -320,7 +307,7 @@ class SettingsFragment : Fragment() {
           UsbSettings.RUN_ON_CONNECTION -> R.string.destroy_data
           UsbSettings.REBOOT_ON_CONNECTION -> R.string.reboot
         }
-            binding.showUsbMenu.text = requireContext().getString(textId)
+            binding.usbMenu.setText(requireContext().getString(textId))
       }
       }
   }
@@ -330,55 +317,29 @@ class SettingsFragment : Fragment() {
       viewModel.permissionsState.collect {
         val rootOrDhizuku = it.isRoot || it.isOwner
         with(binding) {
-          switchTrim.isEnabled = it.isRoot
-          switchWipe.isEnabled =
+          runTrimItem.setSwitchEnabled(it.isRoot)
+          wipeItem.setSwitchEnabled(
             rootOrDhizuku || it.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
-          switchSelfDestruct.isEnabled = rootOrDhizuku
-          switchHide.isEnabled =
+          )
+          removeItselfItem.setSwitchEnabled(rootOrDhizuku)
+          hideAppItem.setSwitchEnabled(
             rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-          switchClear.isEnabled = rootOrDhizuku
-          switchBruteforce.isEnabled = it.isAdmin
-          switchLogdOnBoot.isEnabled = it.isRoot
-          switchLogdOnStart.isEnabled = it.isRoot
-          setMultiuserUi.isClickable = it.isRoot
-          setUserSwitcherUi.isClickable =
+          )
+          clearItselfItem.setSwitchEnabled(rootOrDhizuku)
+          bruteforceItem.setSwitchEnabled(it.isAdmin)
+          logdOnBootItem.setSwitchEnabled(it.isRoot)
+          logdOnStartItem.setSwitchEnabled(it.isRoot)
+          setMultiuserUi.setActive(it.isRoot)
+          setUserSwitcherUi.setActive(
             it.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
-          switchUserPermission.isClickable =
+          )
+          switchUserPermission.setActive(
             rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
-          setSafeBoot.isClickable = rootOrDhizuku
-          multiuserUiIcon.iconTint = if (it.isRoot) {
-            val color = MaterialColors.getColor(
-              multiuserUiIcon,
-              com.google.android.material.R.attr.colorPrimary
-            )
-            ColorStateList.valueOf(color)
-          } else ColorStateList.valueOf(Color.GRAY)
-          userSwitcherUiIcon.iconTint =
-            if (it.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-              val color = MaterialColors.getColor(
-                userSwitcherUiIcon,
-                com.google.android.material.R.attr.colorPrimary
-              )
-              ColorStateList.valueOf(color)
-            } else ColorStateList.valueOf(Color.GRAY)
-          switchUserPermissionIcon.iconTint =
-            if (rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-              val color = MaterialColors.getColor(
-                switchUserPermissionIcon,
-                com.google.android.material.R.attr.colorPrimary
-              )
-              ColorStateList.valueOf(color)
-            } else ColorStateList.valueOf(Color.GRAY)
-          safeBootIcon.iconTint = if (rootOrDhizuku) {
-            val color = MaterialColors.getColor(
-              safeBootIcon,
-              com.google.android.material.R.attr.colorPrimary
-            )
-            ColorStateList.valueOf(color)
-          } else ColorStateList.valueOf(Color.GRAY)
-          switchRoot.setCheckedProgrammatically(it.isRoot, switchRootListener)
-          switchAdmin.setCheckedProgrammatically(it.isAdmin, switchAdminListener)
-          switchDhizuku.setCheckedProgrammatically(it.isOwner, switchDhizukuListener)
+          )
+          setSafeBoot.setActive(rootOrDhizuku)
+          rootItem.setCheckedProgrammatically(it.isRoot, switchRootListener)
+          adminRightsItem.setCheckedProgrammatically(it.isAdmin, switchAdminListener)
+          dhizukuItem.setCheckedProgrammatically(it.isOwner, switchDhizukuListener)
         }
       }
       }
@@ -388,8 +349,8 @@ class SettingsFragment : Fragment() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.bruteforceProtectionState.collect {
         with(binding) {
-          attemptsNumber.text = it.allowedAttempts.toString()
-          switchBruteforce.setCheckedProgrammatically(
+          allowedAttempts.setDigit(it.allowedAttempts.toString())
+          bruteforceItem.setCheckedProgrammatically(
             it.bruteforceRestricted,
             switchBruteforceListener
           )
@@ -402,9 +363,9 @@ class SettingsFragment : Fragment() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.buttonsSettingsState.collect {
         with(binding) {
-          clicksLatency.text = it.latency.toString()
-          clicksNumberCount.text = it.allowedClicks.toString()
-          switchPowerButton.setCheckedProgrammatically(
+          latency.setDigit(it.latency.toString())
+          clicksNumber.setDigit(it.allowedClicks.toString())
+          powerButtonItem.setCheckedProgrammatically(
             it.triggerOnButton,
             switchTriggerOnButtonListener
           )
@@ -417,39 +378,40 @@ class SettingsFragment : Fragment() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.settingsState.collect {
         with(binding) {
-          switchRunOnPassword.isEnabled = it.serviceWorking
-          switchPowerButton.isEnabled = it.serviceWorking
-          switchWipe.setCheckedProgrammatically(it.wipe, switchWipeListener)
-          switchTrim.setCheckedProgrammatically(it.trim, switchTrimListener)
-          switchSelfDestruct.setCheckedProgrammatically(
+          runOnPasswordItem.setSwitchEnabled(it.serviceWorking)
+          powerButtonItem.setSwitchEnabled(it.serviceWorking)
+          wipeItem.setCheckedProgrammatically(it.wipe, switchWipeListener)
+          runTrimItem.setCheckedProgrammatically(it.trim, switchTrimListener)
+          removeItselfItem.setCheckedProgrammatically(
             it.removeItself,
             switchSelfDestructListener
           )
-          switchAccessibility.setCheckedProgrammatically(
+          accessibilityServiceItem.setCheckedProgrammatically(
             it.serviceWorking,
             switchAccessibilityServiceListener
           )
-          switchLogdOnBoot.setCheckedProgrammatically(
+          logdOnBootItem.setCheckedProgrammatically(
             it.stopLogdOnBoot,
             switchLogdOnBootListener
           )
-          switchLogdOnStart.setCheckedProgrammatically(
+          logdOnStartItem.setCheckedProgrammatically(
             it.stopLogdOnStart,
             switchLogdOnStartListener
           )
-          switchHide.setCheckedProgrammatically(it.hideItself, switchHideListener)
-          switchClear.setCheckedProgrammatically(it.clearItself, switchClearListener)
-          switchClearData.setCheckedProgrammatically(it.clearData, switchClearDataListener)
-          switchRunOnPassword.setCheckedProgrammatically(
+          hideAppItem.setCheckedProgrammatically(it.hideItself, switchHideListener)
+          clearItselfItem.setCheckedProgrammatically(it.clearItself, switchClearListener)
+          clearDataItem.setCheckedProgrammatically(it.clearData, switchClearDataListener)
+          runOnPasswordItem.setCheckedProgrammatically(
             it.runOnDuressPassword,
             switchRunOnDuressPasswordListener
           )
-          showMenu.text = when (it.theme) {
+          val text = when (it.theme) {
             Theme.SYSTEM_THEME -> requireContext().getString(R.string.system_theme)
             Theme.DARK_THEME -> requireContext().getString(R.string.dark_theme)
             Theme.LIGHT_THEME -> requireContext().getString(R.string.light_theme)
           }
-          showUsbMenu.isClickable = it.serviceWorking
+          themeMenu.setText(text)
+          usbMenu.isClickable = it.serviceWorking
         }
       }
       }
@@ -457,7 +419,7 @@ class SettingsFragment : Fragment() {
 
 
   private fun setupThemesMenu() {
-    binding.showMenu.setOnClickListener {
+    binding.themeMenu.setOnClickListener {
       showThemesMenu()
     }
   }
@@ -684,7 +646,7 @@ class SettingsFragment : Fragment() {
    * Changing app's theme
    */
   private fun showThemesMenu() {
-    val popup = PopupMenu(context, binding.showMenu)
+    val popup = PopupMenu(context, binding.themeMenu.menu)
     popup.menuInflater.inflate(R.menu.themes_menu, popup.menu)
     popup.setOnMenuItemClickListener {
       val theme = when (it.itemId) {
@@ -712,7 +674,7 @@ class SettingsFragment : Fragment() {
    * Changing USB settings
    */
   private fun showUsbMenu() {
-    val popup = PopupMenu(context, binding.showUsbMenu)
+    val popup = PopupMenu(context, binding.usbMenu.menu)
     popup.menuInflater.inflate(R.menu.usb_menu, popup.menu)
     popup.setOnMenuItemClickListener {
       when (it.itemId) {

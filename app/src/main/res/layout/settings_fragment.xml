@@ -5,8 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/background"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,45 +21,24 @@
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:text="@string/ui_settings"
-            android:textStyle="bold"></com.google.android.material.textview.MaterialTextView>
+            android:textStyle="bold">
 
+        </com.google.android.material.textview.MaterialTextView>
 
-        <LinearLayout
-            android:id="@+id/select_theme"
+        <com.android.aftools.presentation.views.SettingsItemMenuView
+            android:id="@+id/theme_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/theme">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:text="@string/theme">
-
-            </com.google.android.material.textview.MaterialTextView>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/show_menu"
-                style="?attr/textAppearanceLabelLarge"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:drawableEnd="@drawable/baseline_unfold_more_24"
-                android:gravity="center|end"
-                android:paddingStart="8dp"
-                android:paddingEnd="8dp">
-
-            </com.google.android.material.textview.MaterialTextView>
-
-        </LinearLayout>
+        </com.android.aftools.presentation.views.SettingsItemMenuView>
 
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
 
         <com.google.android.material.textview.MaterialTextView
             style="?attr/textAppearanceSubtitle1"
@@ -70,213 +48,67 @@
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:text="@string/actions_settings"
-            android:textStyle="bold"></com.google.android.material.textview.MaterialTextView>
+            android:textStyle="bold">
 
-        <LinearLayout
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/run_trim_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/run_trim"
+            app:requirementsText="@string/root_only">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/run_trim"></com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/root_only"></com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_trim"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/wipe_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/wipe_data"
+            app:requirementsText="@string/all_superusers">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/wipe_data"></com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/all_superusers"></com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_wipe"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/remove_itself_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/remove_itself"
+            app:requirementsText="@string/root_recommended">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/remove_itself"></com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/root_recommended"></com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_self_destruct"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/hide_app_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/hide_app"
+            app:requirementsText="@string/root_or_dhizuku_api">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/hide_app"></com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/root_or_dhizuku_api"></com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_hide"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/clear_itself_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/clear_itself"
+            app:requirementsText="@string/root_and_owner">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/clear_itself"></com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/root_and_owner"></com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_clear"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/clear_data_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/clear_data">
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:text="@string/clear_data"></com.google.android.material.textview.MaterialTextView>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_clear_data"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
 
 
         <com.google.android.material.textview.MaterialTextView
@@ -287,95 +119,43 @@
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:text="@string/permissions"
-            android:textStyle="bold"></com.google.android.material.textview.MaterialTextView>
+            android:textStyle="bold">
 
-        <LinearLayout
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/admin_rights_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/admin_rights">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:text="@string/admin_rights"></com.google.android.material.textview.MaterialTextView>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_admin"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/root_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/root">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:text="@string/device_owner"></com.google.android.material.textview.MaterialTextView>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_dhizuku"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/dhizuku_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/device_owner">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:text="@string/root"></com.google.android.material.textview.MaterialTextView>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_root"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/accessibility_service_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:padding="8dp"
-                android:text="@string/accessibility_service"></com.google.android.material.textview.MaterialTextView>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_accessibility"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
+            app:mainText="@string/accessibility_service">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
 
         <com.google.android.material.textview.MaterialTextView
             style="?attr/textAppearanceSubtitle1"
@@ -385,47 +165,17 @@
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:text="@string/password_settings"
-            android:textStyle="bold"></com.google.android.material.textview.MaterialTextView>
+            android:textStyle="bold">
 
-        <LinearLayout
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/run_on_password_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/run_on_password">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/accessibility_service_required"></com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_run_on_password"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
+            app:mainText="@string/run_on_password"
+            app:requirementsText="@string/accessibility_service_required">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
         <com.google.android.material.textview.MaterialTextView
             style="?attr/textAppearanceTitleLarge"
@@ -433,12 +183,16 @@
             android:layout_height="wrap_content"
             android:padding="8dp"
             android:id="@+id/setupPassword"
-            android:text="@string/change_password"></com.google.android.material.textview.MaterialTextView>
+            android:text="@string/change_password">
+
+        </com.google.android.material.textview.MaterialTextView>
 
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"></com.google.android.material.divider.MaterialDivider>
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
 
         <com.google.android.material.textview.MaterialTextView
             style="?attr/textAppearanceSubtitle1"
@@ -452,55 +206,14 @@
 
         </com.google.android.material.textview.MaterialTextView>
 
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemMenuView
+            android:id="@+id/usb_menu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:paddingBottom="8dp"
-            android:orientation="horizontal">
+            app:mainText="@string/when_usb_connected"
+            app:requirementsText="@string/accessibility_service_required">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:maxLines="1"
-                    android:ellipsize="end"
-                    android:text="@string/when_usb_connected">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/accessibility_service_required">
-
-                </com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/show_usb_menu"
-                android:layout_width="wrap_content"
-                android:gravity="center|end"
-                android:layout_height="match_parent"
-                tools:text="Reboot on connection"
-                android:drawableEnd="@drawable/baseline_unfold_more_24"
-                android:padding="8dp">
-
-            </com.google.android.material.textview.MaterialTextView>
-
-        </LinearLayout>
+        </com.android.aftools.presentation.views.SettingsItemMenuView>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -522,78 +235,20 @@
 
         </com.google.android.material.textview.MaterialTextView>
 
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/bruteforce_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/prevent_bruteforce"
+            app:requirementsText="@string/admin_required">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/prevent_bruteforce">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/admin_required">
-
-                </com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_bruteforce"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemNumberView
             android:id="@+id/allowed_attempts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/allowed_attempts">
-
-            </com.google.android.material.textview.MaterialTextView>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-            </Space>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/attempts_number"
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp">
-
-            </com.google.android.material.textview.MaterialTextView>
-        </LinearLayout>
+            app:itemText="@string/allowed_attempts">
+        </com.android.aftools.presentation.views.SettingsItemNumberView>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -614,111 +269,27 @@
 
         </com.google.android.material.textview.MaterialTextView>
 
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/power_button_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/destroy_on_button"
+            app:requirementsText="@string/accessibility_service_required">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/destroy_on_button">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/accessibility_service_required">
-
-                </com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_power_button"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemNumberView
             android:id="@+id/clicks_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:itemText="@string/clicks_number">
+        </com.android.aftools.presentation.views.SettingsItemNumberView>
 
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/clicks_number">
-
-            </com.google.android.material.textview.MaterialTextView>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-            </Space>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/clicks_number_count"
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp">
-
-            </com.google.android.material.textview.MaterialTextView>
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemNumberView
             android:id="@+id/latency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textview.MaterialTextView
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="8dp"
-                android:text="@string/latency_text">
-
-            </com.google.android.material.textview.MaterialTextView>
-
-            <Space
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_weight="1">
-
-            </Space>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/clicks_latency"
-                style="?attr/textAppearanceTitleLarge"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp">
-
-            </com.google.android.material.textview.MaterialTextView>
-        </LinearLayout>
+            app:itemText="@string/latency_text">
+        </com.android.aftools.presentation.views.SettingsItemNumberView>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -734,85 +305,25 @@
             android:paddingTop="8dp"
             android:paddingEnd="8dp"
             android:text="@string/logd_settings"
-            android:textStyle="bold"></com.google.android.material.textview.MaterialTextView>
+            android:textStyle="bold">
 
-        <LinearLayout
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/logd_on_start_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/logd_on_start"
+            app:requirementsText="@string/root_only">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/logd_on_start"></com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/root_only"></com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_logd_on_start"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/logd_on_boot_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal"
-            android:paddingBottom="8dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/logd_on_boot">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/root_only">
-
-                </com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.materialswitch.MaterialSwitch
-                android:id="@+id/switch_logd_on_boot"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp" />
-        </LinearLayout>
+            app:mainText="@string/logd_on_boot"
+            app:requirementsText="@string/root_only">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -834,134 +345,32 @@
 
         </com.google.android.material.textview.MaterialTextView>
 
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemImageView
             android:id="@+id/set_multiuser_ui"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/multiuser_ui"
+            app:requirementsText="@string/root_only">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
+        </com.android.aftools.presentation.views.SettingsItemImageView>
 
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/multiuser_ui">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/root_only">
-
-                </com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/multiuser_ui_icon"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp"
-                app:icon="@drawable/ic_baseline_settings_24" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemImageView
             android:id="@+id/set_user_switcher_ui"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/switch_user_ui"
+            app:requirementsText="@string/root_only_android10">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
+        </com.android.aftools.presentation.views.SettingsItemImageView>
 
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/switch_user_ui">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/root_only_android10">
-
-                </com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/user_switcher_ui_icon"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp"
-                app:icon="@drawable/ic_baseline_settings_24" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemImageView
             android:id="@+id/switch_user_permission"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/switch_user_permission"
+            app:requirementsText="@string/root_and_owner_android9">
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/switch_user_permission">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/root_and_owner_android9">
-
-                </com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/switch_user_permission_icon"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp"
-                app:icon="@drawable/ic_baseline_settings_24" />
-        </LinearLayout>
+        </com.android.aftools.presentation.views.SettingsItemImageView>
 
         <LinearLayout
             android:id="@+id/users_limit"
@@ -988,7 +397,9 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:paddingStart="8dp"
-                android:text="@string/root_only"></com.google.android.material.textview.MaterialTextView>
+                android:text="@string/root_only">
+
+            </com.google.android.material.textview.MaterialTextView>
         </LinearLayout>
 
         <com.google.android.material.divider.MaterialDivider
@@ -1011,47 +422,13 @@
 
         </com.google.android.material.textview.MaterialTextView>
 
-        <LinearLayout
+        <com.android.aftools.presentation.views.SettingsItemImageView
             android:id="@+id/set_safe_boot"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="start"
-            android:orientation="horizontal">
+            app:mainText="@string/safe_boot_status"
+            app:requirementsText="@string/root_and_owner">
 
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="start"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingStart="8dp"
-                    android:text="@string/safe_boot_status">
-
-                </com.google.android.material.textview.MaterialTextView>
-
-                <com.google.android.material.textview.MaterialTextView
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:paddingStart="8dp"
-                    android:text="@string/root_and_owner">
-
-                </com.google.android.material.textview.MaterialTextView>
-            </LinearLayout>
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/safe_boot_icon"
-                style="@style/Widget.Material3.Button.IconButton"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:padding="8dp"
-                app:icon="@drawable/ic_baseline_settings_24" />
-        </LinearLayout>
+        </com.android.aftools.presentation.views.SettingsItemImageView>
     </LinearLayout>
 </ScrollView>

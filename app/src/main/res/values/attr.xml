@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="settingsSwitchItem">
+        <attr name="mainText" format="string" />
+        <attr name="requirementsText" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="settingsDigitItem">
+        <attr name="itemText" format="string" />
+    </declare-styleable>
+</resources>
