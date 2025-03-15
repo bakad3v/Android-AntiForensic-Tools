@@ -4,9 +4,10 @@ import android.content.Context
 import android.net.Uri
 import androidx.datastore.dataStore
 import androidx.documentfile.provider.DocumentFile
+import com.android.aftools.data.encryption.EncryptedSerializer
 import com.android.aftools.data.entities.FileDatastore
+import com.android.aftools.data.entities.FilesList
 import com.android.aftools.data.mappers.FileMapper
-import com.android.aftools.data.serializers.FilesSerializer
 import com.android.aftools.domain.entities.FileDomain
 import com.android.aftools.domain.entities.FileType
 import com.android.aftools.domain.entities.FilesSortOrder
@@ -29,7 +30,7 @@ class FilesRepositoryImpl @Inject constructor(
   @ApplicationContext private val context: Context,
   private val mapper: FileMapper,
   private val sortOrderFlow: MutableStateFlow<FilesSortOrder>,
-  filesSerializer: FilesSerializer
+  filesSerializer: EncryptedSerializer<FilesList>
 ) : FilesRepository {
 
 

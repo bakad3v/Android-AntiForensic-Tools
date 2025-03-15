@@ -19,6 +19,7 @@ import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.QuestionDialog
 import com.android.aftools.presentation.states.ActivityState
 import com.android.aftools.presentation.states.RootState
+import com.android.aftools.presentation.utils.booleanToVisibility
 import com.android.aftools.presentation.viewmodels.RootVM
 import com.android.aftools.presentation.viewmodels.RootVM.Companion.ENABLE_ROOT_COMMANDS_DIALOG
 import com.android.aftools.presentation.viewmodels.RootVM.Companion.NO_SUPERUSER
@@ -45,8 +46,6 @@ class RootFragment : Fragment() {
     ): View {
         _binding =
             RootFragmentBinding.inflate(inflater, container, false)
-        binding.viewmodel = viewModel
-        binding.lifecycleOwner = viewLifecycleOwner
         return binding.root
     }
 
@@ -89,24 +88,48 @@ class RootFragment : Fragment() {
             viewModel.rootState.collect {
                 with(binding) {
                     when (it) {
-                        is RootState.Loading, RootState.ViewData -> {
+                        is RootState.Loading -> {
+                            setupDataVisibility(false)
                             setupMenu(false)
+                            setupTextInput(false)
+                        }
+                        RootState.ViewData -> {
+                            setupDataVisibility(true)
+                            setupMenu(false)
+                            setupTextInput(false)
                         }
                         is RootState.NoRoot -> {
+                            setupDataVisibility(true)
                             viewModel.showNoRootRightsDialog()
                             setupMenu(false)
+                            setupTextInput(false)
                         }
                         is RootState.LoadCommand -> {
+                            setupDataVisibility(true)
                             rootText.setText(it.commands)
                             setupMenu(false)
+                            setupTextInput(false)
                         }
                         is RootState.EditData -> {
+                            setupDataVisibility(true)
                             setupMenu(true)
+                            setupTextInput(true)
                         }
                     }
                 }
             }
         }
+    }
+
+    private fun setupDataVisibility(visible: Boolean) {
+        with(binding) {
+            rootTextLayout.visibility = booleanToVisibility(visible)
+            progressBar.visibility = booleanToVisibility(!visible)
+        }
+    }
+
+    private fun setupTextInput(enabled: Boolean) {
+        binding.rootText.isEnabled = enabled
     }
 
     private suspend fun Menu.drawEnabledButton() {

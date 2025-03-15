@@ -2,20 +2,23 @@ package com.android.aftools.data.repositories
 
 import android.content.Context
 import android.content.pm.PackageManager
+import com.android.aftools.data.encryption.EncryptedSerializer
+import com.android.aftools.data.entities.AppList
 import com.android.aftools.data.mappers.AppsMapper
-import com.android.aftools.data.serializers.AppsSerializer
 import com.android.aftools.datastoreDBA.dataStoreDirectBootAware
 import com.android.aftools.domain.entities.AppDomain
 import com.android.aftools.domain.repositories.AppsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class AppsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     private val appsMapper: AppsMapper,
-    appsSerializer: AppsSerializer
+    appsSerializer: EncryptedSerializer<AppList>
 ) : AppsRepository {
 
     private val Context.appsDatastore by dataStoreDirectBootAware(DATASTORE_NAME, appsSerializer)

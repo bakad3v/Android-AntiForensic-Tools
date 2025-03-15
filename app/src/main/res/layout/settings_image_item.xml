@@ -18,7 +18,7 @@
             style="?attr/textAppearanceTitleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp">
+            android:paddingStart="@dimen/margin_normal">
 
         </com.google.android.material.textview.MaterialTextView>
 
@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:paddingStart="8dp">
+            android:paddingStart="@dimen/margin_normal">
 
         </com.google.android.material.textview.MaterialTextView>
     </LinearLayout>
@@ -38,7 +38,7 @@
         style="@style/Widget.Material3.Button.IconButton"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:padding="8dp"
+        android:padding="@dimen/margin_normal"
         app:icon="@drawable/ic_baseline_settings_24" />
 
 </LinearLayout>

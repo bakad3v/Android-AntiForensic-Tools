@@ -8,7 +8,7 @@ import com.android.aftools.domain.usecases.profiles.RefreshProfilesUseCase
 import com.android.aftools.domain.usecases.profiles.SetProfileDeletionStatusUseCase
 import com.android.aftools.domain.usecases.settings.GetSettingsUseCase
 import com.android.aftools.domain.usecases.settings.SetDeleteProfilesUseCase
-import com.android.aftools.presentation.actions.DialogActions
+import com.android.aftools.presentation.dialogs.DialogActions
 import com.android.aftools.presentation.states.ProfilesDataState
 import com.android.aftools.presentation.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -79,7 +79,7 @@ class ProfilesVM @Inject constructor(
         }
     }
 
-    fun showNoSuperuserRightsDialog() {
+    private fun showNoSuperuserRightsDialog() {
         viewModelScope.launch {
             dialogActionsChannel.send(
                 DialogActions.ShowQuestionDialog(

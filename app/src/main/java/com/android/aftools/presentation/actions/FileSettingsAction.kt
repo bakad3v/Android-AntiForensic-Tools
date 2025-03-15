@@ -1,5 +1,6 @@
 package com.android.aftools.presentation.actions
 
+import com.android.aftools.presentation.dialogs.DialogActions
 import com.android.aftools.presentation.utils.UIText
 
 sealed class FileSettingsAction {

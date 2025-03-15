@@ -13,6 +13,11 @@ import kotlinx.serialization.descriptors.serialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/**
+ * Class for representing log entries.
+ *
+ * Why do I use encrypted DataStore instead of encrypted database for storing lists of items? SQLCypher, the library for database encryption, encrypts and decrypts data using encryption key stored in the RAM. On some devices it's possible to dump RAM without the root rights and extract the encryption key, as demonstrated in this [post](https://cellebrite.com/en/decrypting-databases-using-ram-dump-health-data/) by the Cellebrite. On the other hand, in this app data is encrypted and decrypted in Android KeyStore, isolated environment where cryptographic operations may be executed safely and keys can't be extracted. It's easier to implement such an encryption with Datastore than with database.
+ */
 @Serializable
 data class LogList(
     @Serializable(with = LogListSerializer::class)
@@ -23,15 +28,15 @@ data class LogList(
     }
 
     fun getLogsForDay(day: Long): LogList {
-        return LogList(list.mutate { mutableList -> mutableList.filter { it.day== day } })
+        return LogList(list.mutate { mutableList -> mutableList.retainAll { it.day == day } })
     }
 
-    fun deleteLogsForDays(days: List<Long>): LogList {
-        return LogList(list.mutate {  mutableList -> mutableList.filter { it.day !in days } })
+    fun deleteLogsForDays(days: Set<Long>): LogList {
+        return LogList(list.mutate { mutableList -> mutableList.retainAll { it.day !in days } })
     }
 
     fun insertLogEntry(logEntry: LogDatastore): LogList {
-        return LogList(list.add(logEntry.copy(id= list.lastOrNull()?.id?.plus(1) ?: 1)))
+        return LogList(list.add(logEntry.copy(id = list.lastOrNull()?.id?.plus(1) ?: 1)))
     }
 }
 

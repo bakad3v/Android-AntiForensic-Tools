@@ -1,18 +1,20 @@
 package com.android.aftools.data.dataMigrations
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataMigration
-import androidx.datastore.dataStoreFile
-import com.android.aftools.data.serializers.UsbSettingsSerializerV1
+import com.android.aftools.data.encryption.EncryptedSerializer
 import com.android.aftools.datastoreDBA.dataStoreDirectBootAware
 import com.android.aftools.datastoreDBA.dataStoreFileDBA
 import com.android.aftools.domain.entities.UsbSettings
+import com.android.aftools.domain.entities.UsbSettingsV1
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class USBMigrationV1 @Inject constructor(@ApplicationContext private val context: Context, usbSettingsSerializerV1: UsbSettingsSerializerV1): DataMigration<UsbSettings> {
+/**
+ * Migration between v1 USB settings and v2 settings
+ */
+class USBMigrationV1 @Inject constructor(@ApplicationContext private val context: Context, usbSettingsSerializerV1: EncryptedSerializer<UsbSettingsV1>): DataMigration<UsbSettings> {
 
     private val Context.oldDatastore by dataStoreDirectBootAware(OLD_USB, usbSettingsSerializerV1)
     override suspend fun cleanUp() {

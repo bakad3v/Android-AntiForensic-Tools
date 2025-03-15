@@ -1,8 +1,9 @@
 package com.android.aftools.data.repositories
 
 import android.content.Context
+import com.android.aftools.data.encryption.EncryptedSerializer
+import com.android.aftools.data.entities.IntList
 import com.android.aftools.data.mappers.ProfilesMapper
-import com.android.aftools.data.serializers.ProfilesSerializer
 import com.android.aftools.datastoreDBA.dataStoreDirectBootAware
 import com.android.aftools.domain.entities.ProfileDomain
 import com.android.aftools.domain.repositories.ProfilesRepository
@@ -24,7 +25,7 @@ class ProfilesRepositoryImpl @Inject constructor(
     private val superUserManager: SuperUserManager,
     private val profilesOnDevice: MutableSharedFlow<List<ProfileDomain>?>,
     private val coroutineScope: CoroutineScope,
-    profilesSerializer: ProfilesSerializer
+    profilesSerializer: EncryptedSerializer<IntList>
 ) : ProfilesRepository {
 
     private val Context.profilesDatastore by dataStoreDirectBootAware(

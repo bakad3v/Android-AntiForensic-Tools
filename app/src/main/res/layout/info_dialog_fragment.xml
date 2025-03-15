@@ -4,7 +4,7 @@
   android:layout_height="wrap_content"
   android:linksClickable="true"
   android:textIsSelectable="true"
-  android:paddingStart="22dp"
-  android:paddingEnd="22dp">
+  android:paddingStart="@dimen/padding_dialog"
+  android:paddingEnd="@dimen/padding_dialog">
 
 </TextView>

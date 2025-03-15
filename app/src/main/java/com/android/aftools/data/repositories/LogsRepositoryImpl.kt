@@ -4,10 +4,10 @@ package com.android.aftools.data.repositories
 import android.content.Context
 import com.android.aftools.TopLevelFunctions.getEpochDays
 import com.android.aftools.TopLevelFunctions.getMillis
+import com.android.aftools.data.encryption.EncryptedSerializer
 import com.android.aftools.data.entities.LogDatastore
+import com.android.aftools.data.entities.LogList
 import com.android.aftools.data.mappers.LogMapper
-import com.android.aftools.data.serializers.LogsDataSerializer
-import com.android.aftools.data.serializers.LogsSerializer
 import com.android.aftools.domain.entities.LogEntity
 import com.android.aftools.domain.entities.LogsData
 import com.android.aftools.domain.repositories.LogsRepository
@@ -28,8 +28,8 @@ class LogsRepositoryImpl @Inject constructor(
   @ApplicationContext private val context: Context,
   private val dayFlow: MutableStateFlow<Long>,
   private val mapper: LogMapper,
-  logsDataSerializer: LogsDataSerializer,
-  logsSerializer: LogsSerializer
+  logsDataSerializer: EncryptedSerializer<LogsData>,
+  logsSerializer: EncryptedSerializer<LogList>
 ) : LogsRepository {
 
   private val Context.logsDataStore by dataStoreDirectBootAware(ENTRIES_DATASTORE_NAME, logsSerializer)
@@ -53,13 +53,13 @@ class LogsRepositoryImpl @Inject constructor(
       val availableDays = context.logsDataStore.data.first().getAvailableDays()
       val period = context.logsDataDataStore.data.first().logsAutoRemovePeriod
       val currentDay = dayFlow.value
-      val toDelete = availableDays.filter { it < currentDay - period }
+      val toDelete = availableDays.filter { it < currentDay - period }.toSet()
       context.logsDataStore.updateData { it.deleteLogsForDays(toDelete) }
   }
 
 
   override suspend fun clearLogsForDay(day: String) {
-    context.logsDataStore.updateData { it.deleteLogsForDays(listOf(LocalDate.parse(day).toEpochDay())) }
+    context.logsDataStore.updateData { it.deleteLogsForDays(setOf(LocalDate.parse(day).toEpochDay())) }
   }
 
 

@@ -21,7 +21,6 @@ import com.android.aftools.presentation.receivers.DeviceAdminReceiver
 import com.android.aftools.presentation.utils.UIText
 import com.android.aftools.superuser.superuser.SuperUser
 import com.android.aftools.superuser.superuser.SuperUserException
-import com.anggrayudi.storage.extension.toInt
 import com.rosan.dhizuku.api.Dhizuku
 import com.rosan.dhizuku.api.Dhizuku.binderWrapper
 import com.rosan.dhizuku.api.DhizukuBinderWrapper

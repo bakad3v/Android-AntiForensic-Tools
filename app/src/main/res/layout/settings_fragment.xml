@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="?attr/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -17,9 +15,9 @@
             style="?attr/textAppearanceSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
             android:text="@string/ui_settings"
             android:textStyle="bold">
 
@@ -33,6 +31,13 @@
 
         </com.android.aftools.presentation.views.SettingsItemMenuView>
 
+        <com.android.aftools.presentation.views.SettingsItemSwitchView
+            android:id="@+id/allow_screenshots"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/allow_screenshots">
+        </com.android.aftools.presentation.views.SettingsItemSwitchView>
+
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -44,9 +49,9 @@
             style="?attr/textAppearanceSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
             android:text="@string/actions_settings"
             android:textStyle="bold">
 
@@ -115,9 +120,9 @@
             style="?attr/textAppearanceSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
             android:text="@string/permissions"
             android:textStyle="bold">
 
@@ -161,10 +166,10 @@
             style="?attr/textAppearanceSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp"
-            android:text="@string/password_settings"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/triggers_settings"
             android:textStyle="bold">
 
         </com.google.android.material.textview.MaterialTextView>
@@ -177,35 +182,6 @@
             app:requirementsText="@string/accessibility_service_required">
         </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-        <com.google.android.material.textview.MaterialTextView
-            style="?attr/textAppearanceTitleLarge"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="8dp"
-            android:id="@+id/setupPassword"
-            android:text="@string/change_password">
-
-        </com.google.android.material.textview.MaterialTextView>
-
-
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </com.google.android.material.divider.MaterialDivider>
-
-        <com.google.android.material.textview.MaterialTextView
-            style="?attr/textAppearanceSubtitle1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp"
-            android:text="@string/usb_settings"
-            android:textStyle="bold">
-
-        </com.google.android.material.textview.MaterialTextView>
-
         <com.android.aftools.presentation.views.SettingsItemMenuView
             android:id="@+id/usb_menu"
             android:layout_width="match_parent"
@@ -215,26 +191,6 @@
 
         </com.android.aftools.presentation.views.SettingsItemMenuView>
 
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </com.google.android.material.divider.MaterialDivider>
-
-
-        <com.google.android.material.textview.MaterialTextView
-            style="?attr/textAppearanceSubtitle1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-
-            android:paddingEnd="8dp"
-            android:text="@string/bruteforce_defense"
-            android:textStyle="bold">
-
-        </com.google.android.material.textview.MaterialTextView>
-
         <com.android.aftools.presentation.views.SettingsItemSwitchView
             android:id="@+id/bruteforce_item"
             android:layout_width="match_parent"
@@ -243,31 +199,12 @@
             app:requirementsText="@string/admin_required">
         </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-        <com.android.aftools.presentation.views.SettingsItemNumberView
+        <com.android.aftools.presentation.views.PlainTextSettingView
             android:id="@+id/allowed_attempts"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:itemText="@string/allowed_attempts">
-        </com.android.aftools.presentation.views.SettingsItemNumberView>
-
-        <com.google.android.material.divider.MaterialDivider
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-        </com.google.android.material.divider.MaterialDivider>
-
-        <com.google.android.material.textview.MaterialTextView
-            style="?attr/textAppearanceSubtitle1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-
-            android:paddingEnd="8dp"
-            android:text="@string/power_button_settings"
-            android:textStyle="bold">
-
-        </com.google.android.material.textview.MaterialTextView>
+            app:settingsItemText="@string/allowed_attempts">
+        </com.android.aftools.presentation.views.PlainTextSettingView>
 
         <com.android.aftools.presentation.views.SettingsItemSwitchView
             android:id="@+id/power_button_item"
@@ -277,19 +214,19 @@
             app:requirementsText="@string/accessibility_service_required">
         </com.android.aftools.presentation.views.SettingsItemSwitchView>
 
-        <com.android.aftools.presentation.views.SettingsItemNumberView
+        <com.android.aftools.presentation.views.PlainTextSettingView
             android:id="@+id/clicks_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:itemText="@string/clicks_number">
-        </com.android.aftools.presentation.views.SettingsItemNumberView>
+            app:settingsItemText="@string/clicks_number">
+        </com.android.aftools.presentation.views.PlainTextSettingView>
 
-        <com.android.aftools.presentation.views.SettingsItemNumberView
+        <com.android.aftools.presentation.views.PlainTextSettingView
             android:id="@+id/latency"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:itemText="@string/latency_text">
-        </com.android.aftools.presentation.views.SettingsItemNumberView>
+            app:settingsItemText="@string/latency_text">
+        </com.android.aftools.presentation.views.PlainTextSettingView>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -301,9 +238,9 @@
             style="?attr/textAppearanceSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-            android:paddingEnd="8dp"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
             android:text="@string/logd_settings"
             android:textStyle="bold">
 
@@ -336,10 +273,9 @@
             style="?attr/textAppearanceSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-
-            android:paddingEnd="8dp"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
             android:text="@string/multiuser_settings"
             android:textStyle="bold">
 
@@ -378,15 +314,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:orientation="vertical"
-            android:paddingBottom="8dp">
+            android:paddingBottom="@dimen/margin_normal">
 
             <com.google.android.material.textview.MaterialTextView
                 style="?attr/textAppearanceTitleLarge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingLeft="8dp"
-                android:paddingTop="8dp"
-                android:paddingRight="8dp"
+                android:paddingLeft="@dimen/margin_normal"
+                android:paddingTop="@dimen/margin_normal"
+                android:paddingRight="@dimen/margin_normal"
                 android:text="@string/users_limit">
 
             </com.google.android.material.textview.MaterialTextView>
@@ -396,7 +332,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:paddingStart="8dp"
+                android:paddingStart="@dimen/margin_normal"
                 android:text="@string/root_only">
 
             </com.google.android.material.textview.MaterialTextView>
@@ -413,10 +349,9 @@
             style="?attr/textAppearanceSubtitle1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:paddingTop="8dp"
-
-            android:paddingEnd="8dp"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
             android:text="@string/safeboot_settings"
             android:textStyle="bold">
 
@@ -430,5 +365,25 @@
             app:requirementsText="@string/root_and_owner">
 
         </com.android.aftools.presentation.views.SettingsItemImageView>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/dangerous_settings"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.android.aftools.presentation.views.PlainTextSettingView
+            android:id="@+id/destroy_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/destroy_data"
+            app:settingsTextColor="?attr/colorError">
+        </com.android.aftools.presentation.views.PlainTextSettingView>
     </LinearLayout>
 </ScrollView>

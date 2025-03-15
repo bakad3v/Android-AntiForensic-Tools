@@ -7,9 +7,13 @@ import com.android.aftools.R
  */
 class SimplePasswordValidator(private val password: String): BaseValidator() {
   override fun validate(): ValidateResult {
-    if (password.length < 8) {
+    if (password.length < MIN_PASS_LENGTH) {
       return ValidateResult(false, R.string.short_password)
     }
     return ValidateResult(true)
+  }
+
+  companion object {
+    private const val MIN_PASS_LENGTH = 4
   }
 }

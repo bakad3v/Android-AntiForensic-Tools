@@ -3,6 +3,7 @@ package com.android.aftools.presentation.services
 import android.content.Context
 import androidx.documentfile.provider.DocumentFile
 import com.android.aftools.R
+import com.android.aftools.di.DispatchersModule.Companion.IO_DISPATCHER
 import com.android.aftools.domain.entities.FileDomain
 import com.android.aftools.domain.entities.FileType
 import com.android.aftools.domain.entities.Settings
@@ -17,9 +18,9 @@ import com.android.aftools.superuser.superuser.SuperUser
 import com.android.aftools.superuser.superuser.SuperUserException
 import com.android.aftools.superuser.superuser.SuperUserManager
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -30,6 +31,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Singleton
 
 /**
@@ -44,7 +46,8 @@ class AFUActivitiesRunner @Inject constructor(
     private val getSettingsUseCase: GetSettingsUseCase,
     private val getPermissionsUseCase: GetPermissionsUseCase,
     private val superUserManager: SuperUserManager,
-    private val getLogsDataUseCase: GetLogsDataUseCase
+    private val getLogsDataUseCase: GetLogsDataUseCase,
+    @Named(IO_DISPATCHER) private val ioDispatcher: CoroutineDispatcher
 ) {
 
     private val mutex = Mutex()
@@ -94,7 +97,9 @@ class AFUActivitiesRunner @Inject constructor(
                         writeToLogs(e.messageForLogs)
                     }
                 }
-                context.clearData(false)
+                context.clearData(false) {
+
+                }
             }
             return
         }
@@ -105,7 +110,9 @@ class AFUActivitiesRunner @Inject constructor(
         }
         try {
             writeToLogs(R.string.uninstalling_itself)
-            context.destroyApp(settings,context,superUser,permissions.isAdmin,superUserManager)
+            context.destroyApp(settings,superUser,permissions.isAdmin,superUserManager) {
+                writeToLogs(R.string.uninstallation_failed, it)
+            }
         } catch (e: Exception) {
             writeToLogs(R.string.uninstallation_failed, e.stackTraceToString())
         }
@@ -164,7 +171,7 @@ class AFUActivitiesRunner @Inject constructor(
      * Preprocessing and carrying out file or folder removal and analyzing results
      */
     private fun removeFile(coroutineScope: CoroutineScope, file: FileDomain): Job {
-        return coroutineScope.launch(Dispatchers.IO) {
+        return coroutineScope.launch(ioDispatcher) {
             val name = file.name
             val isDirectory = file.fileType == FileType.DIRECTORY
             val id = if (isDirectory) {
@@ -198,7 +205,7 @@ class AFUActivitiesRunner @Inject constructor(
             df.listFiles().forEach {
                 if (it.isDirectory) {
                     resultDirs += coroutineScope {
-                        async(Dispatchers.IO) {
+                        async(ioDispatcher) {
                             deleteFile(
                                 it,
                                 it.name ?: "Unknown",

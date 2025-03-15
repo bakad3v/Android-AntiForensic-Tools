@@ -1,7 +1,7 @@
 package com.android.aftools.data.repositories
 
 import android.content.Context
-import com.android.aftools.data.serializers.BruteforceSettingsSerializer
+import com.android.aftools.data.encryption.EncryptedSerializer
 import com.android.aftools.datastoreDBA.dataStoreDirectBootAware
 import com.android.aftools.domain.entities.BruteforceSettings
 import com.android.aftools.domain.repositories.BruteforceRepository
@@ -10,7 +10,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class BruteforceSettingsRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context, bruteforceSettingsSerializer: BruteforceSettingsSerializer):
+class BruteforceSettingsRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context, bruteforceSettingsSerializer: EncryptedSerializer<BruteforceSettings>):
     BruteforceRepository {
     private val Context.bruteforceDataStore by dataStoreDirectBootAware(
         DATASTORE_NAME,

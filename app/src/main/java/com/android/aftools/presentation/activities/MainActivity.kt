@@ -30,8 +30,7 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
-        observeTheme()
+        observeAppUISettings()
         _mainBinding =
             MainActivityBinding.inflate(layoutInflater)
         val navHostFragment =
@@ -43,13 +42,25 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
     }
 
     /**
-     * Function for changing app theme according to user's settings
+     * Function for changing app UI settings
      */
-    private fun observeTheme() {
+    private fun observeAppUISettings() {
         launchLifecycleAwareCoroutine {
-            viewModel.theme.collect {
-                AppCompatDelegate.setDefaultNightMode(it.asMode())
+            viewModel.uiSettings.collect {
+                setupScreenshots(it.allowScreenshots)
+                AppCompatDelegate.setDefaultNightMode(it.theme.asMode())
             }
+        }
+    }
+
+    /**
+     * Allow or disable screenshots for the app.
+     */
+    private fun setupScreenshots(screenshotsAllowed: Boolean) {
+        if (!screenshotsAllowed) {
+            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+        } else {
+            window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
     }
 
@@ -107,8 +118,9 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
         if (mainBinding.bigLayout == null) {
             val conf = AppBarConfiguration(
                 setOf(
-                    R.id.settingsFragment,
+                    R.id.settingsGraph,
                     R.id.profilesFragment,
+                    R.id.setupPassFragment,
                     R.id.rootFragment,
                     R.id.setupFilesFragment,
                     R.id.logsFragment,

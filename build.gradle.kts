@@ -6,3 +6,13 @@ plugins {
     id("org.jetbrains.kotlin.plugin.serialization") version "1.9.10" apply false
     id("org.jetbrains.kotlin.kapt") version "2.0.0-Beta4" apply false
 }
+
+buildscript {
+    repositories {
+        google()
+    }
+    dependencies {
+        val navVer = "2.7.7"
+        classpath ("androidx.navigation:navigation-safe-args-gradle-plugin:$navVer")
+    }
+}

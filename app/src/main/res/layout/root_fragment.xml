@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <data>
-
-        <variable
-            name="viewmodel"
-            type="com.android.aftools.presentation.viewmodels.RootVM" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_height="match_parent" android:layout_width="match_parent">
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -20,8 +12,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/scrollView2"
-        app:controlProgressVisibility="@{viewmodel.rootState}"/>
+        app:layout_constraintTop_toTopOf="@+id/scrollView2" />
 
     <ScrollView
         android:id="@+id/scrollView2"
@@ -37,12 +28,11 @@
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_marginEnd="@dimen/margin_normal"
             android:inputType="textMultiLine"
             app:boxStrokeColor="@null"
-            app:hintEnabled="false"
-            app:visibilityFromRootState="@{viewmodel.rootState}">
+            app:hintEnabled="false">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/rootText"
@@ -51,14 +41,12 @@
                 android:background="#00000000"
                 android:ellipsize="start"
                 android:gravity="top"
+                android:hint="@string/enter_root_commands"
                 android:paddingStart="0dp"
-                android:paddingTop="4dp"
+                android:paddingTop="@dimen/margin_small"
                 android:paddingEnd="0dp"
                 android:paddingBottom="0dp"
-                android:hint="@string/enter_root_commands"
-                android:textCursorDrawable="@drawable/cursor_color"
-                app:enabledFromRootState="@{viewmodel.rootState}"/>
+                android:textCursorDrawable="@drawable/cursor_color" />
         </com.google.android.material.textfield.TextInputLayout>
     </ScrollView>
 </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>

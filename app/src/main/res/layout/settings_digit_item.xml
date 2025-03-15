@@ -10,14 +10,14 @@
         style="?attr/textAppearanceTitleLarge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
+        android:padding="@dimen/margin_normal"
         android:text="@string/allowed_attempts">
 
     </com.google.android.material.textview.MaterialTextView>
 
     <Space
         android:layout_width="0dp"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1">
 
     </Space>
@@ -26,8 +26,8 @@
         android:id="@+id/digit_field"
         style="?attr/textAppearanceTitleLarge"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:padding="8dp">
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_normal">
 
     </com.google.android.material.textview.MaterialTextView>
 

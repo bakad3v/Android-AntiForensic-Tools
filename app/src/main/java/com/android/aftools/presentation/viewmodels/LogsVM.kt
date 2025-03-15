@@ -12,7 +12,7 @@ import com.android.aftools.domain.usecases.logs.GetAvailableDaysUseCase
 import com.android.aftools.domain.usecases.logs.GetLogsDataUseCase
 import com.android.aftools.domain.usecases.logs.GetLogsUseCase
 import com.android.aftools.domain.usecases.logs.LookLogsForDayUseCase
-import com.android.aftools.presentation.actions.DialogActions
+import com.android.aftools.presentation.dialogs.DialogActions
 import com.android.aftools.presentation.actions.LogsActions
 import com.android.aftools.presentation.states.LogsDataState
 import com.android.aftools.presentation.utils.DateValidatorAllowed
@@ -122,7 +122,6 @@ class LogsVM @Inject constructor(
 
   fun buildCalendar() {
     viewModelScope.launch {
-      //Log
       logsActionsChannel.send(
         LogsActions.ShowDatePicker(
           DateValidatorAllowed(getAvailableDaysUseCase().first().toSet()),
@@ -157,7 +156,7 @@ class LogsVM @Inject constructor(
           DialogActions.ShowQuestionDialog(
             UIText.StringResource(R.string.clear_logs_question),
             UIText.StringResource(R.string.logs_clear_warning, state.date.formatDate()),
-            CHANGE_TIMEOUT_REQUEST
+            CLEAR_LOGS_REQUEST
           )
         )
       )
@@ -178,7 +177,7 @@ class LogsVM @Inject constructor(
   }
 
   companion object {
-    const val CHANGE_TIMEOUT_REQUEST = "change_timeout_request"
+    const val CLEAR_LOGS_REQUEST = "clear_logs_request"
     const val CHANGE_LOGS_ENABLED_REQUEST = "change_logs_enabled_request"
     const val CHANGE_TIMEOUT = "change_timeout"
   }

@@ -7,4 +7,8 @@
     <declare-styleable name="settingsDigitItem">
         <attr name="itemText" format="string" />
     </declare-styleable>
+    <declare-styleable name="settingsText">
+        <attr name="settingsItemText" format="string" />
+        <attr name="settingsTextColor" format="reference" />
+    </declare-styleable>
 </resources>

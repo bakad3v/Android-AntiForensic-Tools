@@ -1,15 +1,15 @@
 package com.android.aftools.data.repositories
 
 import android.content.Context
-import com.android.aftools.data.serializers.ButtonSettingsSerializer
+import com.android.aftools.data.encryption.EncryptedSerializer
 import com.android.aftools.datastoreDBA.dataStoreDirectBootAware
 import com.android.aftools.domain.entities.ButtonClicksData
+import com.android.aftools.domain.entities.ButtonSettings
 import com.android.aftools.domain.repositories.ButtonSettingsRepository
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
-class ButtonSettingsRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context, buttonSettingsSerializer: ButtonSettingsSerializer) : ButtonSettingsRepository {
+class ButtonSettingsRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context, buttonSettingsSerializer: EncryptedSerializer<ButtonSettings>) : ButtonSettingsRepository {
     private var buttonClicksData = ButtonClicksData()
     private val Context.buttonDataStore by dataStoreDirectBootAware(DATASTORE_NAME, buttonSettingsSerializer)
 

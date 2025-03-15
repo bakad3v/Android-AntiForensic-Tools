@@ -18,7 +18,7 @@
             style="?attr/textAppearanceTitleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
+            android:paddingStart="@dimen/margin_normal"
             android:maxLines="1"
             android:ellipsize="end"
             android:text="@string/when_usb_connected">
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingStart="8dp"
+            android:paddingStart="@dimen/margin_normal"
             android:text="@string/accessibility_service_required">
 
         </com.google.android.material.textview.MaterialTextView>
@@ -44,7 +44,7 @@
         android:layout_height="match_parent"
         tools:text="Reboot on connection"
         android:drawableEnd="@drawable/baseline_unfold_more_24"
-        android:padding="8dp">
+        android:padding="@dimen/margin_normal">
 
     </com.google.android.material.textview.MaterialTextView>
 

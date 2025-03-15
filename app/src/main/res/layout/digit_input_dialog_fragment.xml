@@ -3,8 +3,8 @@
   android:id="@+id/inputLayout"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:paddingStart="22dp"
-  android:paddingEnd="22dp">
+  android:paddingStart="@dimen/padding_dialog"
+  android:paddingEnd="@dimen/padding_dialog">
 
   <com.google.android.material.textfield.TextInputEditText
     android:id="@+id/inputEditText"

@@ -17,8 +17,10 @@
             style="?attr/textAppearanceTitleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="8dp"
-            android:text="@string/remove_itself"></com.google.android.material.textview.MaterialTextView>
+            android:paddingStart="@dimen/margin_normal"
+            android:text="@string/remove_itself">
+
+        </com.google.android.material.textview.MaterialTextView>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/requirements_text"
@@ -26,13 +28,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ellipsize="end"
-            android:paddingStart="8dp"
-            android:text="@string/root_recommended"></com.google.android.material.textview.MaterialTextView>
+            android:paddingStart="@dimen/margin_normal"
+            android:text="@string/root_recommended">
+
+        </com.google.android.material.textview.MaterialTextView>
     </LinearLayout>
 
     <com.google.android.material.materialswitch.MaterialSwitch
         android:id="@+id/switch_button"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:padding="8dp" />
+        android:padding="@dimen/margin_normal" />
 </LinearLayout>

@@ -33,6 +33,7 @@ import com.android.aftools.presentation.dialogs.InputDigitDialog
 import com.android.aftools.presentation.dialogs.QuestionDialog
 import com.android.aftools.presentation.states.ActivityState
 import com.android.aftools.presentation.states.DeletionDataState
+import com.android.aftools.presentation.utils.booleanToVisibility
 import com.android.aftools.presentation.viewmodels.UsualFilesSettingsVM
 import com.android.aftools.presentation.viewmodels.UsualFilesSettingsVM.Companion.CHANGE_FILES_DELETION_REQUEST
 import com.android.aftools.presentation.viewmodels.UsualFilesSettingsVM.Companion.CONFIRM_CLEAR_REQUEST
@@ -51,11 +52,11 @@ class SetupFilesFragment : Fragment() {
   private var allFabsVisible = true
   private val binding
     get() = _binding ?: throw RuntimeException("DeletionSettingsFragmentBinding == null")
-  private val contentResolver by lazy { requireContext().contentResolver }
   private val takeFlags by lazy {
     Intent.FLAG_GRANT_READ_URI_PERMISSION or
       Intent.FLAG_GRANT_WRITE_URI_PERMISSION
   }
+  private val dialogLauncher by lazy { DialogLauncher(parentFragmentManager, context) }
 
   @Inject
   lateinit var myFileAdapter: FileAdapter
@@ -129,8 +130,6 @@ class SetupFilesFragment : Fragment() {
   ): View {
     _binding =
       SetupUsualFilesFragmentBinding.inflate(inflater, container, false)
-    binding.lifecycleOwner = viewLifecycleOwner
-    binding.viewmodel = viewModel
     return binding.root
   }
 
@@ -167,7 +166,7 @@ class SetupFilesFragment : Fragment() {
    * Setting up sorting text
    */
   private fun observeSortOrder() {
-    launchLifecycleAwareCoroutine {
+    viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.sortOrderFlow.collect {
         binding.sort.text = when (it) {
           FilesSortOrder.NAME_ASC -> resources.getString(R.string.alphabet)
@@ -209,7 +208,7 @@ class SetupFilesFragment : Fragment() {
   private fun setupMenu() {
     requireActivity().addMenuProvider(object : MenuProvider {
       override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-        launchLifecycleAwareCoroutine {
+        viewLifecycleOwner.launchLifecycleAwareCoroutine {
           menuInflater.inflate(R.menu.files_menu, menu)
           menu.drawSwitchFileDeletionStatusButton()
         }
@@ -242,7 +241,6 @@ class SetupFilesFragment : Fragment() {
    * Setting up dialog launcher
    */
   private fun setupActionsListener() {
-    val dialogLauncher = DialogLauncher(parentFragmentManager, context)
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.deletionSettingsActionFlow.collect {
         when (it) {
@@ -280,10 +278,21 @@ class SetupFilesFragment : Fragment() {
   private fun setupFilesListListener() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.autoDeletionDataState.collect {
-        if (it is DeletionDataState.ViewData) {
-          myFileAdapter.submitList(it.items)
+        when(it) {
+          is DeletionDataState.ViewData -> {
+            setFilesVisibility(true)
+            myFileAdapter.submitList(it.items)
+          }
+          is DeletionDataState.Loading -> setFilesVisibility(false)
         }
       }
+    }
+  }
+
+  private fun setFilesVisibility(visible: Boolean) {
+    with(binding) {
+      items.visibility = booleanToVisibility(visible)
+      progressBar2.visibility = booleanToVisibility(!visible)
     }
   }
 

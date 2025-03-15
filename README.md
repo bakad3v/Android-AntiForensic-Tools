@@ -57,7 +57,10 @@ Coming soon...
 ## App usage
 **It is recommended to test the work of the application at least once, especially the speed of data deletion along with self-destruction.**
 
-When you launch the app, you'll need to enter your password. This password will be used to unlock the app, the same password will be used as a duress password, when you enter it, your data will be deleted. Try to make it strong and similar to the real password from your device so that you can tell that you entered the wrong password because of a typo.
+When you launch the app, you'll need to enter your password. This password will be used both to unlock the application and to delete your data. If you configure the app properly, entering this password on the lock screen will perform the destructive actions you specify with your data. Here are some tips:
+* Enter a strong password. App will help you to find strong password that would be hard to break.
+* The Android system places some restrictions on the passwords that can be used on the lock screen. Typically, a password must be between 4 and 16 characters long (including borders) and must not contain any non-English alphabet letters. Some firmware has different rules, that's why I can't set these restrictions programmatically. You need to explore that by yourself.
+* Enter a password that is similar to your actual device password. If these passwords are similar, the adversary is more likely to believe that you entered the wrong password by mistake.
 ### Usage scenarios
 Depending on which threat model you think is more realistic, I recommend different settings for the app:
 * If you fear hackers attacking your device or you think you won't face consequences if your adversary discovers that the app has deleted your data, then don't give the app root permissions. Configure the app to delete all of your device's data or to delete some of your data and hide app from your device's launcher.

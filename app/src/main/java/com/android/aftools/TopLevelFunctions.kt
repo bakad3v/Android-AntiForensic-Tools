@@ -8,21 +8,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import kotlinx.coroutines.launch
 import kotlinx.datetime.toJavaLocalDateTime
-import java.nio.CharBuffer
-import java.nio.charset.Charset
 import java.time.LocalDateTime
 import java.time.OffsetDateTime
 import java.time.ZoneId.systemDefault
 import java.time.format.DateTimeFormatter
 
 object TopLevelFunctions {
-  fun CharArray.toByteArray(): ByteArray {
-    val result = ByteArray(size)
-    val buffer = CharBuffer.wrap(this)
-    Charset.forName("UTF-8").encode(buffer).get(result)
-    this.fill(Char(1))
-    return result
-  }
 
   fun LocalDateTime.formatDate(): String = this.toLocalDate().toString()
 

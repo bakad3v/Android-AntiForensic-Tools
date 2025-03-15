@@ -53,4 +53,12 @@
   <color name="md_theme_dark_inverseOnSurface">#1E1B16</color>
   <color name="md_theme_dark_inverseSurface">#E9E1D9</color>
   <color name="md_theme_dark_inversePrimary">#785A00</color>
+
+  <!--STRENGTH METER COLORS-->
+  <color name="defaultColor">#B2B2B2</color>
+  <color name="worstMeterColor">#E53935</color>
+  <color name="weakMeterColor">#FB8C00</color>
+  <color name="mediumMeterColor">#FDD835</color>
+  <color name="strongMeterColor">#7CB342</color>
+  <color name="excellentMeterColor">#43A047</color>
 </resources>

@@ -6,33 +6,43 @@ import com.android.aftools.superuser.superuser.SuperUser
 import com.android.aftools.superuser.superuser.SuperUserException
 import com.android.aftools.superuser.superuser.SuperUserManager
 
-suspend fun Context.destroyApp(settings: Settings, context: Context, superUser: SuperUser,isAdmin: Boolean=false,superUserManager: SuperUserManager) {
+suspend fun Context.destroyApp(
+    settings: Settings,
+    superUser: SuperUser,
+    isAdmin: Boolean = false,
+    superUserManager: SuperUserManager,
+    handleException: suspend (e: String) -> Unit
+) {
     if (settings.removeItself) {
-        superUser.uninstallApp(context.packageName)
+        superUser.uninstallApp(packageName)
     }
     if (settings.clearItself) {
-        superUser.clearAppData(context.packageName)
+        superUser.clearAppData(packageName)
     }
     if (settings.clearData) {
         if (isAdmin) {
             try {
                 superUserManager.removeAdminRights()
             } catch (e: SuperUserException) {
+                handleException(e.messageForLogs.asString(this))
             }
         }
-        context.clearData(settings.hideItself)
+        clearData(settings.hideItself) {
+            handleException(it)
+        }
     }
     if (settings.hideItself) {
-        superUser.hideApp(context.packageName)
+        superUser.hideApp(packageName)
     }
 }
 
-fun Context.clearData(hideItself: Boolean) {
+suspend fun Context.clearData(hideItself: Boolean, handleException: suspend (e: String) -> Unit) {
     val dpsContext = createDeviceProtectedStorageContext()
-    dpsContext.dataDir.listFiles().forEach {  it.deleteRecursively() }
+    dpsContext.dataDir.listFiles()?.forEach { it.deleteRecursively() }
     try {
-        dataDir.listFiles().forEach { it.deleteRecursively() }
+        dataDir.listFiles()?.forEach { it.deleteRecursively() }
     } catch (e: Exception) {
+        handleException(e.stackTraceToString())
     }
     if (!hideItself) {
         android.os.Process.killProcess(android.os.Process.myPid())

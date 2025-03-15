@@ -7,6 +7,8 @@ import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.text.HtmlCompat
+import androidx.core.text.HtmlCompat.FROM_HTML_MODE_LEGACY
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -21,11 +23,13 @@ import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.InputDigitDialog
 import com.android.aftools.presentation.dialogs.QuestionDialog
 import com.android.aftools.presentation.states.ActivityState
+import com.android.aftools.presentation.states.LogsDataState
 import com.android.aftools.presentation.utils.DateValidatorAllowed
+import com.android.aftools.presentation.utils.booleanToVisibility
 import com.android.aftools.presentation.viewmodels.LogsVM
 import com.android.aftools.presentation.viewmodels.LogsVM.Companion.CHANGE_LOGS_ENABLED_REQUEST
 import com.android.aftools.presentation.viewmodels.LogsVM.Companion.CHANGE_TIMEOUT
-import com.android.aftools.presentation.viewmodels.LogsVM.Companion.CHANGE_TIMEOUT_REQUEST
+import com.android.aftools.presentation.viewmodels.LogsVM.Companion.CLEAR_LOGS_REQUEST
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,6 +45,8 @@ class LogsFragment : Fragment() {
   private var _logBinding: LogsFragmentBinding? = null
   private val logBinding
     get() = _logBinding ?: throw RuntimeException("LogsFragmentBinding == null")
+  private val dialogLauncher by lazy { DialogLauncher(parentFragmentManager, context) }
+
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -49,8 +55,6 @@ class LogsFragment : Fragment() {
   ): View {
     _logBinding =
       LogsFragmentBinding.inflate(inflater, container, false)
-    logBinding.viewmodel = viewModel
-    logBinding.lifecycleOwner = viewLifecycleOwner
     return logBinding.root
   }
 
@@ -98,7 +102,6 @@ class LogsFragment : Fragment() {
    * Launching dialogs or Datepicker
    */
   private fun setupActionsListener() {
-    val dialogLauncher = DialogLauncher(parentFragmentManager, context)
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.logsActionFlow.collect {
         when (it) {
@@ -147,7 +150,7 @@ class LogsFragment : Fragment() {
   private fun setDialogsListeners() {
     QuestionDialog.setupListener(
       parentFragmentManager,
-      CHANGE_TIMEOUT_REQUEST,
+      CLEAR_LOGS_REQUEST,
       viewLifecycleOwner
     ) {
       viewModel.clearLogsForDay()
@@ -192,15 +195,44 @@ class LogsFragment : Fragment() {
   private fun setupActionBar() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.logsState.collect {
-        val activity = requireActivity()
-        if (activity is ActivityStateHolder) {
-          activity.setActivityState(
-            ActivityState.NormalActivityState(
-              it.date.formatDate()
-            )
-          )
+        setupActionBar(it.date.formatDate())
+        when (it) {
+          is LogsDataState.ViewLogs -> {
+            setupDataVisibility(true)
+            logBinding.data.text = HtmlCompat.fromHtml(it.logs.asString(context), FROM_HTML_MODE_LEGACY)
+            scrollToBottom()
+          }
+          is LogsDataState.Loading -> {
+            setupDataVisibility(false)
+          }
         }
       }
+    }
+  }
+
+  private fun scrollToBottom() {
+    with(logBinding.scrollView3) {
+      post {
+        run {
+          fullScroll(View.FOCUS_DOWN)
+        }
+      }
+    }
+  }
+
+  private fun setupDataVisibility(visible: Boolean) {
+    with(logBinding) {
+      progressBar3.visibility = booleanToVisibility(!visible)
+      scrollView3.visibility = booleanToVisibility(visible)
+    }
+  }
+
+  private fun setupActionBar(date: String) {
+    val activity = requireActivity()
+    if (activity is ActivityStateHolder) {
+      activity.setActivityState(
+        ActivityState.NormalActivityState(date)
+      )
     }
   }
 

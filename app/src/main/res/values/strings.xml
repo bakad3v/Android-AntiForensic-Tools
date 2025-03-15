@@ -25,11 +25,11 @@
   <string name="sizesmall">Size: smallest first</string>
   <string name="change_password">Change password</string>
   <string name="clear">Clear list</string>
-  <string name="settings">Settings</string>
+  <string name="settings">Settings</string>8.1 After the update
   <string name="about">About app</string>
   <string name="file_deletion_settings">Files deletion settings</string>
   <string name="wrong_password">Wrong password</string>
-  <string name="create_password">Create password</string>
+  <string name="create_password">Setup password</string>
   <string name="enter_password">Enter password</string>
   <string name="app_entered">Someone entered app</string>
   <string name="priority">Priority: %1$d</string>
@@ -53,18 +53,14 @@
   <string name="enter_timeout_logs">Enter timeout for logs autodeletion (in days)</string>
   <string name="timeout_logs_long">Logs older than n days would be cleared to free space.</string>
   <string name="enable_logs_long"><![CDATA[Do you really want to enable logging? If adversary would get access to application password he can get data about deleted files. <strong>It is highly recommended to enable logs only for application testing.</strong>]]></string>
-  <string name="disable_logs_long">Do you want to disable logging?</string>
-  <string name="about_long"><![CDATA[<p>Android AntiForensic Tools is a free and open-source app designed to protect your personal data from a powerful adversary who can put pressure on you and force you to unlock your device. It allows you to delete user profiles and personal files when a fake password is entered, a USB device connected or the wrong password is entered several times. An app provides additional options to protect your device from being researched by advanced adversaries: it can uninstall itself, run TRIM after data deletion to prevent deleted data recovery, disable logs before data deletion to leave no traces of it\'s actions and disable safe boot mode.</p><p>Read more on <a target="_blank" rel="noopener noreferrer" href="https://github.com/bakad3v/Android-AntiForensic-Tools">GitHub</a>.</p><p>You can support me with Monero: 88Z5fsVK6FP4oVNjo2BrHydAEa5Y1gTPi5d7BN68sjVDZ9dTn8wPb89WmUxrxf3T37bRGSR5dekkU9aQ7j8ErWcBJ2GZojC</p><p>Special thanks to:</p><p>x13a, the developer of the Wasted app which inspired me to create this app.</p><p>iamr0s, the developer of the Dhizuku application. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p><p>BinTianqi, the developer of the Owndroid app, who wrote the code to connect to the Dhizuku service.</p>]]></string>
+  <string name="about_long"><![CDATA[<p>Android AntiForensic Tools is a free and open-source app designed to protect your personal data from a powerful adversary who can put pressure on you and force you to unlock your device. It allows you to delete user profiles and personal files when a fake password is entered, a USB device connected or the wrong password is entered several times. An app provides additional options to protect your device from being researched by advanced adversaries: it can uninstall itself, run TRIM after data deletion to prevent deleted data recovery, disable logs before data deletion to leave no traces of it\'s actions and disable safe boot mode.</p><p>Read more on <a target="_blank" rel="noopener noreferrer" href="https://github.com/bakad3v/Android-AntiForensic-Tools">GitHub</a>.</p><p>You can support me with crypto</p><p>Monero: 88Z5fsVK6FP4oVNjo2BrHydAEa5Y1gTPi5d7BN68sjVDZ9dTn8wPb89WmUxrxf3T37bRGSR5dekkU9aQ7j8ErWcBJ2GZojC</p><p>LTC: ltc1qtfhun6yzt0qlpa9d6s8gr2yd70sg0kx755u3se</p><p>BTC: bc1qn9a9eyy2vgrz8yvhk0654d63dt56pxhpn6q4xl</p><p>BTC lightning: dualwhorl66@walletofsatoshi.com</p><p>Special thanks to:</p><p>x13a, the developer of the Wasted app which inspired me to create this app.</p><p>iamr0s, the developer of the Dhizuku application. &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;</p><p>BinTianqi, the developer of the Owndroid app, who wrote the code for connecting to the Dhizuku service.</p>]]></string>
   <string name="entertext">Enter text here</string>
   <string name="disable_files_deletion">Disable deletion</string>
   <string name="system_theme">System theme</string>
   <string name="dark_theme">Dark theme</string>
   <string name="light_theme">Light theme</string>
-  <string name="do_you_want_to_enable_deletion">Do you want ot enable deletion?</string>
   <string name="enable_deletion_long"><![CDATA[<p>If you activate triggers, selected files would be deleted.</p>\n<p><strong>Important: files deletion doesn\'t work in BFU mode. If you enter duress password in BFU mode, files deletion will be launched after phone unlocking. If you set up app to destroy itself, it will destroy itself only when all files will be deleted. That\'s why it\'s recommended to avoid using this mode and delete profile with your secret files instead if you can grant app enough privileges.</strong></p>]]></string>
-  <string name="enter_password_long">Enter your new password. It should not be shorter than 8 characters. Try to make it strong and similar to your device\'s password to be able to claim that you typed a duress password accidentally due to a typo.</string>
-  <string name="about_settings">Settings</string>
-  <string name="settings_faq"><![CDATA[<p>You can change user settings here.</p><p><strong>Some settings depend on your threat model!</strong></p><p>• If you think that you may be targeted by hackers, or you think you won\'t be in trouble if your adversary finds out that your app deleted your data, avoid granting root rights to this application, because root makes your device <a target="_blank" rel="noopener noreferrer" href="https://madaidans-insecurities.github.io/android.html#rooting">less safe</a> against some exploits. Without root, the possibilities of an app would be limited, though some advanced functions are available with Dhizuku. You can set up an app to wipe the whole device, or to delete some user data and hide itself from the launcher.</p><p>• If, alternatively, you are only wary of having your device searched and in your situation an obvious deletion of data from your device could put you in danger, then grant the app root privileges. In that case, I advise you to set up deletion of your secondary user profile and enable all possible options: stop logd, run TRIM, uninstall itself. The app will stop logd, delete your profile, start TRIM to make data unrecoverable and finally uninstall itself. Complete self-destruction may take several seconds, so try to not provide the correct password to an adversary too fast.</p><p><strong>Follow the tips listed below regardless of the threat model!&nbsp;</strong></p><p>• Use all triggers (duress password, USB connection, bruteforce, power button). Data destruction will start on activation of one of these triggers. Each of them protects you from different types of attacks.</p><p>• Set up a strong password and make it similar to your device\'s password to be able to claim that you typed a duress password accidentally due to a typo.</p><p>• Disable safe boot mode or make this app a system app if you can. Safe boot mode may be used to circumvent the protection offered by this app. However, disabling safe boot mode may raise suspicions.</p><p>• If you set up this app to delete data in the specified user profile, disable UI for switching between users when you doesn\'t need it, because otherwise an adversary may use the pull-down settings menu to get a list of your profiles from the lockscreen.</p><p>• If you set up this app to delete data in the specified user profile, install this app in this user profile too and set up an app to wipe data on all triggers.</p><p>• Make sure the app is working and data deletion with app uninstallation doesn\'t take too long. You can use logs to do some tests. Test before use! Test after updating the app! If something is wrong, please create an issue on <a target="_blank" rel="noopener noreferrer" href="https://github.com/bakad3v/Android-AntiForensic-Tools">GitHub</a> and show logs. You can also find detailed description of all apps functions on GitHub.</p>]]></string>
+  <string name="settings_faq"><![CDATA[<p>You can change user settings here.</p><p><strong>Some settings depend on your threat model!</strong></p><p>• If you think that you may be targeted by hackers, or you think you won\'t be in trouble if your adversary finds out that your app deleted your data, avoid granting root rights to this application, because root makes your device <a target="_blank" rel="noopener noreferrer" href="https://madaidans-insecurities.github.io/android.html#rooting">less safe</a> against some exploits. Without root, the possibilities of an app would be limited, though some advanced functions are available with Dhizuku. You can set up an app to wipe the whole device, or to delete some user data and hide itself from the launcher.</p><p>• If, alternatively, you are only wary of having your device searched and in your situation an obvious deletion of data from your device could put you in danger, then grant the app root privileges. In that case, I advise you to set up deletion of your secondary user profile and enable all possible options: stop logd, run TRIM, uninstall itself. The app will stop logd, delete your profile, start TRIM to make data unrecoverable and finally uninstall itself. Complete self-destruction may take several seconds, so try to not provide the correct password to an adversary too fast.</p><p><strong>Follow the tips listed below regardless of the threat model!&nbsp;</strong></p><p>• Use all triggers (duress password, USB connection, bruteforce, power button). Data destruction will start on activation of one of these triggers. Each of them protects you from different types of attacks.</p><p>• Disable safe boot mode or make this app a system app if you can. Safe boot mode may be used to circumvent the protection offered by this app. However, disabling safe boot mode may raise suspicions.</p><p>• If you set up this app to delete data in the specified user profile, disable UI for switching between users when you doesn\'t need it, because otherwise an adversary may use the pull-down settings menu to get a list of your profiles from the lockscreen.</p><p>• If you set up this app to delete data in the specified user profile, install this app in this user profile too and set up an app to wipe data on all triggers.</p><p>• Make sure the app is working and data deletion with app uninstallation doesn\'t take too long. You can use logs to do some tests. Test before use! Test after updating the app! If something is wrong, please create an issue on <a target="_blank" rel="noopener noreferrer" href="https://github.com/bakad3v/Android-AntiForensic-Tools">GitHub</a> and show logs. You can also find detailed description of all apps functions on GitHub.</p>]]></string>
   <string name="deletion_started">Files deletion started</string>
   <string name="deletion_folder">Folder %1$s is deleting</string>
   <string name="deletion_file">File %1$s is deleting</string>
@@ -78,14 +74,8 @@
   <string name="access_denied">You denied access to files, it may cause some bugs.</string>
   <string name="logo_background">Background of logotype</string>
   <string name="prominent_disclosure_message">The app uses accessibility service to listen for a duress password on the lockscreen and listen for usb connections.</string>
-  <string name="start_accessibility_service">Start accessibility service</string>
-  <string name="grant_admin_rights">Grant admin rights</string>
-  <string name="stop_accessibility_service">Stop accessibility service</string>
-  <string name="revoke_admin_rights">Revoke admin rights</string>
   <string name="accessibility_service_long"><![CDATA[This app requires accessibility service for various actions. Click \"ok\" and go to \"Installed Services>Android AntiForensic Tools\" if you want to enable/disable accessibility service.]]></string>
   <string name="accessibility_service_title">Open accessibility service settings</string>
-  <string name="admin_settings_title">Open admin settings</string>
-  <string name="admin_settings_long"><![CDATA[<p>This application needs admin rights to be able to:</p><ul><li>Wipe device data</li><li>Observe wrong password attempts</li></ul><p>Press "ok" and then press "Activate" to grant this application admin rights.</p>]]></string>
   <string name="device_admin_error">Device admin rights are not enough to perform operations.</string>
   <string name="no_admin_rights">App doesn\'t have admin rights.</string>
   <string name="unknow_admin_error">Device admin action failed for some reason: %1$s</string>
@@ -95,8 +85,7 @@
   <string name="no_root_rights">App doesn\'t have root rights</string>
   <string name="no_superuser_rights">You don\'t have superuser rights</string>
     <string name="deletion_completed">File deletion completed</string>
-    <string name="general_settings">General settings</string>
-    <string name="actions_settings">Actions settings</string>
+  <string name="actions_settings">Actions settings</string>
     <string name="run_trim">Run TRIM</string>
   <string name="wipe_data">Wipe data</string>
   <string name="remove_itself">Remove itself</string>
@@ -173,16 +162,13 @@
     <string name="user_settings_disabled">Multiuser settings are not found on this device.</string>
     <string name="user_settings_disabled_long">It seems like your device does not support multiple users. If you have root rights, you can enable multiuser UI in settings tab.</string>
     <string name="root_recommended">Requires root or dhizuku, root recommended</string>
-    <string name="clear_and_hide"><![CDATA[Clear & hide]]></string>
   <string name="hide_long"><![CDATA[<p>App will hide itself after end of all operations. Requires Dhizuku permission or root.</p>\n<p><strong>Important: if used without root, this option just hides app from launcher, but app remains visible in settings! This option is incompatible with device admin rights if used with dhizuku rights.</strong></p>]]></string>
   <string name="root_or_dhizuku_api">Requires root or dhizuku, Android 9+</string>
   <string name="users_limit">Maximum number of users</string>
-  <string name="allow_multiuser_ui">Enable multiuser UI</string>
   <string name="multiuser_ui">Multiuser UI</string>
   <string name="multiuser_settings">Multiuser settings</string>
 
   <string name="user_limit_not_changed">User limit wasn\'t changed</string>
-  <string name="edit_accounts_limit">Edit accounts limit</string>
   <string name="cant_get_user_limit">Getting user limit failed</string>
   <string name="number_not_found">Number not found</string>
   <string name="set_users_limit">Set users limit</string>
@@ -191,10 +177,9 @@
   <string name="multiuser_ui_unlocked_long">You can open users settings now</string>
     <string name="safeboot_disabled">"Safe boot disabled "</string>
   <string name="safeboot_disabled_long">Device can\'t be booted in safe mode now</string>
-  <string name="safeboot_not_disabled">"Safe boot not disabled    "</string>
   <string name="safeboot_settings">Safe boot settings</string>
   <string name="disable_safe_boot">Disable safe boot</string>
-  <string name="duress_password">The same password will be used as a duress password. Try to make it similar to device password.</string>
+  <string name="duress_password"><![CDATA[<p>This password will be used both to unlock the application and to delete your data. If you configure the app properly, entering this password on the lock screen will perform the destructive actions you specify with your data. Here are some tips:</p><p>• Enter a strong password.</p></p>• The Android system places some restrictions on the passwords that can be used on the lock screen. Typically, a password must be between 4 and 16 characters long (including borders) and must not contain any non-English alphabet letters. Some firmware has different rules, that\'s why I can\'t set these restrictions programmatically. You need to explore that by yourself.</p><p>• Enter a password that is similar to your actual device password. If these passwords are similar, the adversary is more likely to believe that you entered the wrong password by mistake.</p>]]></string>
   <string name="ui_settings">UI settings</string>
   <string name="password_settings">Password settings</string>
   <string name="run_on_password">Run on duress password</string>
@@ -237,18 +222,13 @@
     <string name="save_command">Save root command</string>
     <string name="root_command_settings">Root command settings</string>
     <string name="disable_root_command">Disable custom root commands</string>
-    <string name="edit_root_command">Edit root command</string>
-  <string name="save_root_command">Save root command</string>
-    <string name="edit_command">Edit root command</string>
+  <string name="edit_command">Edit root command</string>
     <string name="enter_root_commands">Enter root commands here</string>
     <string name="enable_root_command_long">If you activate trigger, these commands will run after data deletion.</string>
   <string name="no_root_rights_commands">You need root rights to run root commands</string>
     <string name="running_root_command">Running root command: %1$s</string>
     <string name="root_command_failed">Root command failed: %1$s</string>
     <string name="clear_itself">Clear itself</string>
-  <string name="clearing">Clearing itself</string>
-  <string name="clearing_complete">App cleared itself</string>
-  <string name="clearing_failed">App clearing itself failed: %1$s</string>
   <string name="hide_app">Hide app</string>
   <string name="clear_data">Clear app\'s data</string>
   <string name="clear_itself_long"><![CDATA[<p>App will clear itself after ending of all operations. Requires Dhizuku permission or root.</p>\n<p><strong>Important: app will remain installed on device! This option is incompatible with device admin rights if used with dhizuku rights.</strong></p>]]></string>
@@ -262,8 +242,7 @@
   <string name="button_latency_long">Setup max latency between clicks in one sequence of clicks (in milliseconds). Default: 1000ms.</string>
   <string name="change_clicks_number">Set power button clicks number</string>
   <string name="clicks_number_long">Setup number of power button clicks in row for launching data destruction</string>
-    <string name="reboot_on_connection">Reboot on connection</string>
-    <string name="destroy_on_button_title">Destroy data on power button clicks?</string>
+  <string name="destroy_on_button_title">Destroy data on power button clicks?</string>
     <string name="destroy_on_button_long"><![CDATA[<p>If you activate this option, pressing the phone\'s power off button a certain number of times in a row will delete the data. <strong>Warning: any switching on/off of the screen is counted as a click, so be careful!</strong> Requires accessibility service.</p>]]></string>
     <string name="reboot_on_usb">Reboot on usb connection?</string>
   <string name="reboot_on_usb_long">If you activate this option, the device will reboot on usb connection, thus entering BFU mode and making it more difficult to hack the device. Requires root or dhizuku.</string>
@@ -274,5 +253,22 @@
     <string name="provide_root_or_dhizuku">You need to provide root or dhizuku rights to enable this function</string>
   <string name="grant_root_rights">Do you want to grant root rights?</string>
   <string name="warning_root_rights"><![CDATA[<p>App needs root rights to perform the most restricted operations - for example, uninstall itself silently. </p>\n<p><strong>Warning: granting root rights make the data destruction much more stealthy, but unlocking the bootloader and rooting your device can make it <a target="_blank" rel="noopener noreferrer" href="https://madaidans-insecurities.github.io/android.html#rooting">less secure</a> against attacks by advanced hackers. If you think that you may be targeted by ones or you don\'t really need stealthy data deletion, then don\'t grant root permissions to the app. If, however, you are only wary of having your device searched and in your situation an obvious deletion of data from your device could put you in danger, then grant the app root privileges and configure it to stealthily delete your data.<strong></p>]]></string>
+    <string name="dangerous_settings">Dangerous settings</string>
+    <string name="destroy_data_long">Are you sure you want to launch data destruction? App will destroy selected data (files, profiles, etc.) and run selected actions (start TRIM, stop logging and etc.)</string>
+  <string name="allow_screenshots">Allow screenshots</string>
+    <string name="allow_screenshots_long">Do you want to allow screenshots for this app? If screenshots are allowed for the app, Android system can make automatic screenshots of this app (screenshots are used for displaying app preview in recent apps). These screenshots can be viewed by attacker with root access. Disabling screenshots can also be helpful against spyware.</string>
+  <string name="worst">Worst</string>
+  <string name="weak">Weak</string>
+  <string name="medium">Medium</string>
+  <string name="good">Good</string>
+  <string name="excellent">Excellent</string>
+  <string name="empty">Empty</string>
+    <string name="password_strength">Password strength: %1$s</string>
+  <string name="empty_password">Password is empty</string>
+  <string name="crack_time_undefined">Time to crack: not applicable</string>
+    <string name="password_changed">Password changed</string>
+  <string name="crack_time_offline">Time to crack (offline): %1$s</string>
+  <string name="crack_time_online">Time to crack (via lock screen interface): %1$s</string>
+  <string name="triggers_settings">Triggers settings</string>
 
 </resources>

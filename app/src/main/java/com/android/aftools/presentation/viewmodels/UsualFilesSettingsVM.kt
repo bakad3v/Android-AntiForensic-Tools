@@ -18,7 +18,7 @@ import com.android.aftools.domain.usecases.settings.SetDeleteFilesUseCase
 import com.android.aftools.presentation.states.DeletionDataState
 import com.android.aftools.presentation.utils.UIText
 import com.android.aftools.presentation.actions.FileSettingsAction
-import com.android.aftools.presentation.actions.DialogActions
+import com.android.aftools.presentation.dialogs.DialogActions
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted

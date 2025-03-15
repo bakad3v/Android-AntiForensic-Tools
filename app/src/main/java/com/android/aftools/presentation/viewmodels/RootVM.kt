@@ -7,7 +7,7 @@ import com.android.aftools.domain.usecases.rootCommand.GetRootCommandUseCase
 import com.android.aftools.domain.usecases.rootCommand.SetRootCommandUseCase
 import com.android.aftools.domain.usecases.settings.GetSettingsUseCase
 import com.android.aftools.domain.usecases.settings.SetRunRootUseCase
-import com.android.aftools.presentation.actions.DialogActions
+import com.android.aftools.presentation.dialogs.DialogActions
 import com.android.aftools.presentation.states.RootState
 import com.android.aftools.presentation.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel

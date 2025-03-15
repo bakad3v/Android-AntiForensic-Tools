@@ -1,7 +1,7 @@
 package com.android.aftools.data.repositories
 
 import android.content.Context
-import com.android.aftools.data.serializers.PasswordStatusSerializer
+import com.android.aftools.data.encryption.EncryptedSerializer
 import com.android.aftools.datastoreDBA.dataStoreDirectBootAware
 import com.android.aftools.domain.entities.PasswordStatus
 import com.android.aftools.domain.repositories.PasswordManager
@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class PasswordManagerImpl @Inject constructor(
   @ApplicationContext private val context: Context,
-  passwordStatusSerializer: PasswordStatusSerializer
+  passwordStatusSerializer: EncryptedSerializer<PasswordStatus>
 ) : PasswordManager {
   private val Context.passwordPrefs by dataStoreDirectBootAware(PREFERENCES_NAME,passwordStatusSerializer)
 

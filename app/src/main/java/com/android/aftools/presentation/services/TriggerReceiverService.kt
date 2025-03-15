@@ -10,6 +10,7 @@ import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.UserManager
 import android.view.accessibility.AccessibilityEvent
+import com.android.aftools.di.DispatchersModule.Companion.IO_DISPATCHER
 import com.android.aftools.domain.entities.UsbSettings
 import com.android.aftools.domain.usecases.button.ButtonClickUseCase
 import com.android.aftools.domain.usecases.passwordManager.CheckPasswordUseCase
@@ -20,8 +21,8 @@ import com.android.aftools.domain.usecases.settings.SetServiceStatusUseCase
 import com.android.aftools.domain.usecases.usb.GetUsbSettingsUseCase
 import com.android.aftools.superuser.superuser.SuperUserManager
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.first
@@ -29,6 +30,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Named
 
 /**
  * Accessibility service for password interception and usb connections monitoring. Thanks x13a for idea.
@@ -73,6 +75,10 @@ class TriggerReceiverService : AccessibilityService() {
 
     @Inject
     lateinit var buttonClicksUseCase: ButtonClickUseCase
+
+    @Inject
+    @Named(IO_DISPATCHER)
+    lateinit var ioDispatcher: CoroutineDispatcher
 
     override fun onCreate() {
         super.onCreate()
@@ -138,7 +144,7 @@ class TriggerReceiverService : AccessibilityService() {
             UsbSettings.RUN_ON_CONNECTION -> runActions()
             UsbSettings.REBOOT_ON_CONNECTION -> try {
                 superUserManager.getSuperUser().reboot()
-            } catch (e: Exception) {}
+            } catch (_: Exception) {}
             UsbSettings.DO_NOTHING -> {}
         }
     }
@@ -152,7 +158,7 @@ class TriggerReceiverService : AccessibilityService() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 coroutineScope.launch {
                     if (getSettingsUseCase().first().runOnBoot) {
-                        withContext(Dispatchers.IO) {
+                        withContext(ioDispatcher) {
                             delay(2000) //for some reason, file deletion doesn't work without delay after unlocking
                             runnerAFU.runTask()
                         }
@@ -172,7 +178,7 @@ class TriggerReceiverService : AccessibilityService() {
         if (settings.stopLogdOnBoot) {
             try {
                 superUserManager.getSuperUser().stopLogd()
-            } catch (e: Exception) {
+            } catch (_: Exception) {
 
             }
         }
@@ -191,7 +197,7 @@ class TriggerReceiverService : AccessibilityService() {
      * Run in background thread actions that can be started before the device is unlocked. If the device remains locked, it postpones other actions until unlocked, otherwise it performs them immediately.
      */
     private suspend fun runActions() {
-        withContext(Dispatchers.IO) {
+        withContext(ioDispatcher) {
             runnerBFU.runTask()
             if (userManager.isUserUnlocked) {
                 runnerAFU.runTask()
@@ -217,9 +223,7 @@ class TriggerReceiverService : AccessibilityService() {
         } else {
             try {
                 password[index] = text[index]
-            } catch (e: java.lang.IndexOutOfBoundsException) {
-
-            }
+            } catch (_: java.lang.IndexOutOfBoundsException) { }
         }
     }
 

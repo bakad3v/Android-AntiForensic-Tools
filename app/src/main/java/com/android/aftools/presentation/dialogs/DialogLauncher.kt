@@ -2,7 +2,6 @@ package com.android.aftools.presentation.dialogs
 
 import android.content.Context
 import androidx.fragment.app.FragmentManager
-import com.android.aftools.presentation.actions.DialogActions
 
 /**
  * Class for launching dialog depending on the type of dialogAction
@@ -24,9 +23,6 @@ class DialogLauncher (
       is DialogActions.ShowInputDigitDialog -> with(action) {
         showDigitInputDialog(title.asString(context), hint, message.asString(context), range, requestKey)
       }
-      is DialogActions.ShowInputPasswordDialog -> with(action) {
-        showPasswordInputDialog(title.asString(context),hint,message.asString(context))
-      }
     }
   }
   private fun showInfoDialog(title: String, message: String) {
@@ -42,18 +38,5 @@ class DialogLauncher (
 
   private fun showDigitInputDialog(title: String, hint: String, message: String, range: IntRange, requestKey: String) {
     InputDigitDialog.show(fragmentManager,title,hint,message,range, requestKey)
-  }
-
-  private fun showSelectItemDialog(title: String, message: String, selected: Int, items: ArrayList<String>) {
-    SelectItemDialog.show(fragmentManager, title, message, selected, items)
-  }
-
-  private fun showPasswordInputDialog(title: String, hint: String, message: String) {
-    PasswordInputDialog.show(
-      fragmentManager,
-      title,
-      hint,
-      message
-    )
   }
 }

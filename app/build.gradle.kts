@@ -4,6 +4,7 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     kotlin("plugin.serialization")
     id("com.google.dagger.hilt.android")
+    id ("androidx.navigation.safeargs.kotlin")
 }
 
 android {
@@ -13,9 +14,9 @@ android {
     defaultConfig {
         applicationId = "com.android.aftools"
         minSdk = 26
-        targetSdk = 34
-        versionCode = 4
-        versionName = "1.3.0"
+        targetSdk = 35
+        versionCode = 5
+        versionName = "1.4.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -37,7 +38,6 @@ android {
     }
 
   buildFeatures {
-    dataBinding = true
     viewBinding = true
   }
 
@@ -102,8 +102,9 @@ dependencies {
     implementation ("io.github.iamr0s:Dhizuku-API:$dhizukuVersion")
 
     // Additional dependencies for your project
+    implementation("com.nulab-inc:zxcvbn:1.9.0")
+    implementation("joda-time:joda-time:2.13.1")
     implementation("org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
     implementation("com.github.topjohnwu.libsu:core:5.0.0")
     implementation("com.anggrayudi:storage:1.5.5")
-
 }

@@ -28,14 +28,16 @@ import com.android.aftools.presentation.actions.SettingsAction
 import com.android.aftools.presentation.activities.ActivityStateHolder
 import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.InputDigitDialog
-import com.android.aftools.presentation.dialogs.PasswordInputDialog
 import com.android.aftools.presentation.dialogs.QuestionDialog
+import com.android.aftools.presentation.services.MyJobIntentService
 import com.android.aftools.presentation.states.ActivityState
 import com.android.aftools.presentation.viewmodels.SettingsVM
+import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.ALLOW_SCREENSHOTS_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.BRUTEFORCE_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.CHANGE_USER_LIMIT_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.CLEAR_DATA_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.CLEAR_DIALOG
+import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.DESTROY_DATA_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.DISABLE_MULTIUSER_UI_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.DISABLE_SAFE_BOOT_RESTRICTION_DIALOG
 import com.android.aftools.presentation.viewmodels.SettingsVM.Companion.DISABLE_SWITCH_USER_RESTRICTION_DIALOG
@@ -75,6 +77,7 @@ class SettingsFragment : Fragment() {
   private var _binding: SettingsFragmentBinding? = null
   private val binding
     get() = _binding ?: throw RuntimeException("SettingsFragmentBinding == null")
+  private val dialogLauncher by lazy { DialogLauncher(parentFragmentManager, context) }
 
   override fun onCreateView(
     inflater: LayoutInflater,
@@ -128,7 +131,7 @@ class SettingsFragment : Fragment() {
   private fun requestAdminRights() {
     startActivity(viewModel.adminRightsIntent())
   }
-  val switchWipeListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchWipeListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setWipe(false)
       return@OnCheckedChangeListener
@@ -137,7 +140,7 @@ class SettingsFragment : Fragment() {
     viewModel.showWipeDialog()
   }
 
-  val switchTrimListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchTrimListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setRunTRIM(false)
       return@OnCheckedChangeListener
@@ -146,7 +149,7 @@ class SettingsFragment : Fragment() {
     viewModel.showTRIMDialog()
   }
 
-  val switchBruteforceListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchBruteforceListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setBruteforceProtection(false)
       return@OnCheckedChangeListener
@@ -155,7 +158,7 @@ class SettingsFragment : Fragment() {
     viewModel.showBruteforceDialog()
   }
 
-  val switchSelfDestructListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchSelfDestructListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setRemoveItself(false)
       return@OnCheckedChangeListener
@@ -164,7 +167,7 @@ class SettingsFragment : Fragment() {
     viewModel.showSelfDestructionDialog()
   }
 
-  val switchRootListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchRootListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.showRootDisableDialog()
       return@OnCheckedChangeListener
@@ -173,7 +176,7 @@ class SettingsFragment : Fragment() {
     viewModel.showRootWarningDialog()
   }
 
-  val switchAdminListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchAdminListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.disableAdmin()
       return@OnCheckedChangeListener
@@ -182,17 +185,17 @@ class SettingsFragment : Fragment() {
     requestAdminRights()
   }
 
-  val switchAccessibilityServiceListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchAccessibilityServiceListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     switch.isChecked = !checked
     viewModel.showAccessibilityServiceDialog()
   }
 
-  val switchDhizukuListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchDhizukuListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     switch.isChecked = !checked
     viewModel.askDhizuku()
   }
 
-  val switchLogdOnStartListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchLogdOnStartListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setLogdOnStartStatus(false)
       return@OnCheckedChangeListener
@@ -201,7 +204,7 @@ class SettingsFragment : Fragment() {
     viewModel.showLogdOnStartDialog()
   }
 
-  val switchLogdOnBootListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchLogdOnBootListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setLogdOnBootStatus(false)
       return@OnCheckedChangeListener
@@ -210,7 +213,7 @@ class SettingsFragment : Fragment() {
     viewModel.showLogdOnBootDialog()
   }
 
-  val switchHideListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchHideListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setHide(false)
       return@OnCheckedChangeListener
@@ -219,7 +222,16 @@ class SettingsFragment : Fragment() {
     viewModel.showHideDialog()
   }
 
-  val switchClearListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchScreenshotsListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setScreenShotsStatus(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.showAllowScreenShotsDialog()
+  }
+
+  private val switchClearListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setClear(false)
       return@OnCheckedChangeListener
@@ -228,7 +240,7 @@ class SettingsFragment : Fragment() {
     viewModel.showClearDialog()
   }
 
-  val switchClearDataListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchClearDataListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setClearData(false)
       return@OnCheckedChangeListener
@@ -237,7 +249,7 @@ class SettingsFragment : Fragment() {
     viewModel.showClearDataDialog()
   }
 
-  val switchRunOnDuressPasswordListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchRunOnDuressPasswordListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setRunOnDuressPassword(false)
       return@OnCheckedChangeListener
@@ -246,7 +258,7 @@ class SettingsFragment : Fragment() {
     viewModel.showRunOnDuressPasswordDialog()
   }
 
-  val switchTriggerOnButtonListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+  private val switchTriggerOnButtonListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setTriggerOnButton(false)
       return@OnCheckedChangeListener
@@ -269,9 +281,6 @@ class SettingsFragment : Fragment() {
 
   private fun setupClickableElements() {
     with(binding) {
-      setupPassword.setOnClickListener {
-        viewModel.showPasswordInput()
-      }
       usersLimit.setOnClickListener {
         viewModel.showChangeUserLimitDialog()
       }
@@ -295,6 +304,9 @@ class SettingsFragment : Fragment() {
       }
       allowedAttempts.setOnClickListener {
         viewModel.editMaxPasswordAttemptsDialog()
+      }
+      destroyData.setOnClickListener {
+        viewModel.destroyDataDialog()
       }
       }
   }
@@ -400,12 +412,13 @@ class SettingsFragment : Fragment() {
           )
           hideAppItem.setCheckedProgrammatically(it.hideItself, switchHideListener)
           clearItselfItem.setCheckedProgrammatically(it.clearItself, switchClearListener)
+          allowScreenshots.setCheckedProgrammatically(it.uiSettings.allowScreenshots, switchScreenshotsListener)
           clearDataItem.setCheckedProgrammatically(it.clearData, switchClearDataListener)
           runOnPasswordItem.setCheckedProgrammatically(
             it.runOnDuressPassword,
             switchRunOnDuressPasswordListener
           )
-          val text = when (it.theme) {
+          val text = when (it.uiSettings.theme) {
             Theme.SYSTEM_THEME -> requireContext().getString(R.string.system_theme)
             Theme.DARK_THEME -> requireContext().getString(R.string.dark_theme)
             Theme.LIGHT_THEME -> requireContext().getString(R.string.light_theme)
@@ -432,7 +445,7 @@ class SettingsFragment : Fragment() {
   private fun createProfile() {
     try {
       startActivity(Intent("android.settings.USER_SETTINGS"))
-    } catch (e: ActivityNotFoundException) {
+    } catch (_: ActivityNotFoundException) {
     }
   }
 
@@ -450,12 +463,6 @@ class SettingsFragment : Fragment() {
    * Listening for dialog result
    */
   private fun listenDialogResults() {
-    PasswordInputDialog.setupListener(
-      parentFragmentManager,
-      viewLifecycleOwner
-    ) {
-      viewModel.setPassword(it)
-    }
     listenQuestionDialog(
       MOVE_TO_ACCESSIBILITY_SERVICE,
     ) {
@@ -611,6 +618,15 @@ class SettingsFragment : Fragment() {
       viewModel.setRebootOnUSB()
     }
     listenQuestionDialog(
+      ALLOW_SCREENSHOTS_DIALOG
+    ) {
+      viewModel.setScreenShotsStatus(true)
+    }
+    listenQuestionDialog(DESTROY_DATA_DIALOG
+    ) {
+      MyJobIntentService.start(requireContext())
+    }
+    listenQuestionDialog(
       ROOT_WARNING_DIALOG
     ) {
       viewModel.askRoot()
@@ -621,7 +637,6 @@ class SettingsFragment : Fragment() {
    * Setting up dialog launcher
    */
   private fun setupDialogs() {
-    val dialogLauncher = DialogLauncher(parentFragmentManager, context)
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.settingsActionsFlow.collect {
         when(it) {

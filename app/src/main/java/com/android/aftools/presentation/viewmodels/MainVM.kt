@@ -18,7 +18,7 @@ class MainVM @Inject constructor(
   getSettingsUseCase: GetSettingsUseCase): ViewModel() {
   val activityState: StateFlow<ActivityState> get() = _activityState.asStateFlow()
 
-  val theme = getSettingsUseCase().map { it.theme }
+  val uiSettings = getSettingsUseCase().map { it.uiSettings }
 
   fun setActivityState(state: ActivityState) {
     viewModelScope.launch {

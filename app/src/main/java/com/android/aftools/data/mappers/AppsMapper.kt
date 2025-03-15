@@ -23,7 +23,7 @@ class AppsMapper @Inject constructor(){
         return (ai.flags and mask) != 0
     }
 
-    fun mapDtToDatastore(appDomain: AppDomain): AppDatastore = AppDatastore(
+    private fun mapDtToDatastore(appDomain: AppDomain): AppDatastore = AppDatastore(
         packageName = appDomain.packageName,
         appName = appDomain.appName,
         system = appDomain.system,
@@ -37,7 +37,7 @@ class AppsMapper @Inject constructor(){
         apps.map { mapDtToDatastore(it) }
 
 
-    fun mapDatastoreToDt(context: Context, appDatastore: AppDatastore): AppDomain = AppDomain(
+    private fun mapDatastoreToDt(context: Context, appDatastore: AppDatastore): AppDomain = AppDomain(
         packageName = appDatastore.packageName,
         appName = appDatastore.appName,
         system = appDatastore.system,

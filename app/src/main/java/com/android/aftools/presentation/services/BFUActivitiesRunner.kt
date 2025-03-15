@@ -206,7 +206,9 @@ class BFUActivitiesRunner @Inject constructor(
         writeToLogs(R.string.got_data)
         if (!permissions.isRoot && !permissions.isOwner && !permissions.isAdmin) {
             if (!settings.deleteFiles && settings.clearData) {
-                context.clearData(false)
+                context.clearData(false) {
+                    writeToLogs(it)
+                }
             }
             return
         }
@@ -228,7 +230,9 @@ class BFUActivitiesRunner @Inject constructor(
                 } catch (e: SuperUserException) {
                     writeToLogs(e.messageForLogs)
                 }
-                context.clearData(false)
+                context.clearData(false) {
+                    writeToLogs(it)
+                }
             }
             return
         }
@@ -270,7 +274,9 @@ class BFUActivitiesRunner @Inject constructor(
         }
         try {
             writeToLogs(R.string.uninstalling_itself)
-            context.destroyApp(settings,context,superUser,permissions.isAdmin,superUserManager)
+            context.destroyApp(settings,superUser,permissions.isAdmin,superUserManager) {
+                writeToLogs(R.string.uninstallation_failed, it)
+            }
         } catch (e: Exception) {
             writeToLogs(R.string.uninstallation_failed, e.stackTraceToString())
         }

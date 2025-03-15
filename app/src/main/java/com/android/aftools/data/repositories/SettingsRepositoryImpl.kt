@@ -1,7 +1,8 @@
 package com.android.aftools.data.repositories
 
 import android.content.Context
-import com.android.aftools.data.serializers.SettingsSerializer
+import com.android.aftools.data.dataMigrations.SettingsMigrationV1
+import com.android.aftools.data.encryption.EncryptedSerializer
 import com.android.aftools.datastoreDBA.dataStoreDirectBootAware
 import com.android.aftools.domain.entities.Settings
 import com.android.aftools.domain.entities.Theme
@@ -16,24 +17,34 @@ import javax.inject.Inject
  */
 class SettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    settingsSerializer: SettingsSerializer,
+    settingsSerializer: EncryptedSerializer<Settings>,
+    settingsMigrationV1: SettingsMigrationV1,
     private val superUserManager: SuperUserManager
 ) : SettingsRepository {
 
     private val Context.settingsDatastore by dataStoreDirectBootAware(
         DATASTORE_NAME,
-        settingsSerializer
+        produceMigrations = {
+            context -> listOf<SettingsMigrationV1>(settingsMigrationV1)
+        },
+        serializer = settingsSerializer
     )
 
     companion object {
-        private const val DATASTORE_NAME = "settings_datastore.json"
+        private const val DATASTORE_NAME = "settings_datastore_v2.json"
     }
 
     override val settings: Flow<Settings> = context.settingsDatastore.data
 
     override suspend fun setTheme(theme: Theme) {
         context.settingsDatastore.updateData {
-            it.copy(theme = theme)
+            it.copy(uiSettings = it.uiSettings.copy(theme = theme))
+        }
+    }
+
+    override suspend fun setScreenshotsStatus(status: Boolean) {
+        context.settingsDatastore.updateData {
+            it.copy(uiSettings = it.uiSettings.copy(allowScreenshots = status))
         }
     }
 

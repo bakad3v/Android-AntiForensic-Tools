@@ -4,7 +4,7 @@
   style="?attr/materialCardViewElevatedStyle"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:layout_marginTop="8dp">
+  android:layout_marginTop="@dimen/margin_normal">
 
 
   <LinearLayout
@@ -39,8 +39,8 @@
           android:layout_height="wrap_content"
           android:ellipsize="start"
           android:maxLines="2"
-          android:paddingStart="8dp"
-          android:paddingEnd="8dp"
+          android:paddingStart="@dimen/margin_normal"
+          android:paddingEnd="@dimen/margin_normal"
           android:textColor="?attr/colorOnSecondaryContainer" />
 
         <com.google.android.material.textview.MaterialTextView
@@ -48,7 +48,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:maxLines="1"
-          android:padding="8dp"
+          android:padding="@dimen/margin_normal"
           android:ellipsize="end"
           android:textColor="?attr/colorOnSecondaryContainer"
           style="?attr/textAppearanceBodyMedium">

@@ -1,7 +1,7 @@
 package com.android.aftools.data.repositories
 
 import android.content.Context
-import com.android.aftools.data.serializers.PermissionsSerializer
+import com.android.aftools.data.encryption.EncryptedSerializer
 import com.android.aftools.datastoreDBA.dataStoreDirectBootAware
 import com.android.aftools.domain.entities.Permissions
 import com.android.aftools.domain.repositories.PermissionsRepository
@@ -9,7 +9,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class PermissionsRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context, permissionsSerializer: PermissionsSerializer): PermissionsRepository {
+class PermissionsRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context, permissionsSerializer: EncryptedSerializer<Permissions>): PermissionsRepository {
     private val Context.permissionsDatastore by dataStoreDirectBootAware(
         DATASTORE_NAME,
         permissionsSerializer

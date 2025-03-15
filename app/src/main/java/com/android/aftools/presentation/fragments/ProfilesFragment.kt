@@ -23,6 +23,7 @@ import com.android.aftools.presentation.dialogs.DialogLauncher
 import com.android.aftools.presentation.dialogs.QuestionDialog
 import com.android.aftools.presentation.states.ActivityState
 import com.android.aftools.presentation.states.ProfilesDataState
+import com.android.aftools.presentation.utils.booleanToVisibility
 import com.android.aftools.presentation.viewmodels.ProfilesVM
 import com.android.aftools.presentation.viewmodels.ProfilesVM.Companion.CHANGE_PROFILES_DELETION_ENABLED
 import com.android.aftools.presentation.viewmodels.ProfilesVM.Companion.NO_SUPERUSER
@@ -54,8 +55,6 @@ class ProfilesFragment: Fragment() {
     ): View {
         _binding =
             SetupProfilesFragmentBinding.inflate(inflater, container, false)
-        binding.lifecycleOwner = viewLifecycleOwner
-        binding.viewmodel = viewModel
         return binding.root
     }
 
@@ -152,10 +151,26 @@ class ProfilesFragment: Fragment() {
     private fun setupProfilesDataListener() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.profiles.collect {
-                if (it is ProfilesDataState.ViewData) {
-                    myProfileAdapter.submitList(it.items)
+                when(it) {
+                    is ProfilesDataState.ViewData -> {
+                        setupListVisibility(true)
+                        myProfileAdapter.submitList(it.items)
+                    }
+                    is ProfilesDataState.Loading -> {
+                        setupListVisibility(false)
+                    }
+                    is ProfilesDataState.SuperUserAbsent -> {
+                        setupListVisibility(true)
+                    }
                 }
             }
+        }
+    }
+
+    private fun setupListVisibility(visible: Boolean) {
+        with(binding) {
+            items.visibility = booleanToVisibility(visible)
+            progressBar2.visibility = booleanToVisibility(!visible)
         }
     }
 

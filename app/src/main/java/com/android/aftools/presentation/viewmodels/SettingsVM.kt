@@ -17,7 +17,6 @@ import com.android.aftools.domain.usecases.button.GetButtonSettingsUseCase
 import com.android.aftools.domain.usecases.button.SetClicksNumberUseCase
 import com.android.aftools.domain.usecases.button.SetLatencyUseCase
 import com.android.aftools.domain.usecases.button.SetTriggerOnButtonUseCase
-import com.android.aftools.domain.usecases.passwordManager.SetPasswordUseCase
 import com.android.aftools.domain.usecases.permissions.GetPermissionsUseCase
 import com.android.aftools.domain.usecases.permissions.SetOwnerActiveUseCase
 import com.android.aftools.domain.usecases.permissions.SetRootActiveUseCase
@@ -36,6 +35,7 @@ import com.android.aftools.domain.usecases.settings.SetLogdOnStartUseCase
 import com.android.aftools.domain.usecases.settings.SetRemoveItselfUseCase
 import com.android.aftools.domain.usecases.settings.SetRunOnDuressUseCase
 import com.android.aftools.domain.usecases.settings.SetSafeBootRestrictionUseCase
+import com.android.aftools.domain.usecases.settings.SetScreenshotsStatusUseCase
 import com.android.aftools.domain.usecases.settings.SetThemeUseCase
 import com.android.aftools.domain.usecases.settings.SetTrimUseCase
 import com.android.aftools.domain.usecases.settings.SetUserLimitUseCase
@@ -44,7 +44,7 @@ import com.android.aftools.domain.usecases.settings.SetUserSwitcherUseCase
 import com.android.aftools.domain.usecases.settings.SetWipeUseCase
 import com.android.aftools.domain.usecases.usb.GetUsbSettingsUseCase
 import com.android.aftools.domain.usecases.usb.SetUsbSettingsUseCase
-import com.android.aftools.presentation.actions.DialogActions
+import com.android.aftools.presentation.dialogs.DialogActions
 import com.android.aftools.presentation.actions.SettingsAction
 import com.android.aftools.presentation.utils.UIText
 import com.android.aftools.superuser.superuser.SuperUserException
@@ -61,7 +61,6 @@ import javax.inject.Inject
 class SettingsVM @Inject constructor(
     getSettingsUseCase: GetSettingsUseCase,
     private val setThemeUseCase: SetThemeUseCase,
-    private val setPasswordUseCase: SetPasswordUseCase,
     private val settingsActionChannel: Channel<SettingsAction>,
     private val setRemoveItselfUseCase: SetRemoveItselfUseCase,
     private val setTrimUseCase: SetTrimUseCase,
@@ -91,6 +90,7 @@ class SettingsVM @Inject constructor(
     private val setLatencyUseCase: SetLatencyUseCase,
     private val setClicksNumberUseCase: SetClicksNumberUseCase,
     private val setTriggerOnButtonUseCase: SetTriggerOnButtonUseCase,
+    private val setScreenshotsStatusUseCase: SetScreenshotsStatusUseCase,
     getPermissionsUseCase: GetPermissionsUseCase,
     getUSBSettingsUseCase: GetUsbSettingsUseCase,
     getBruteforceSettingsUseCase: GetBruteforceSettingsUseCase,
@@ -655,27 +655,6 @@ class SettingsVM @Inject constructor(
         }
     }
 
-
-    fun showPasswordInput() {
-        viewModelScope.launch {
-            settingsActionChannel.send(
-                SettingsAction.ShowDialog(
-                    DialogActions.ShowInputPasswordDialog(
-                        title = UIText.StringResource(R.string.change_password),
-                        hint = "",
-                        message = UIText.StringResource(R.string.enter_password_long)
-                    )
-                )
-            )
-        }
-    }
-
-    fun setPassword(password: String) {
-        viewModelScope.launch {
-            setPasswordUseCase(password.toCharArray())
-        }
-    }
-
     fun showAccessibilityServiceDialog() {
         showQuestionDialog(
             title = UIText.StringResource(R.string.accessibility_service_title),
@@ -817,6 +796,20 @@ class SettingsVM @Inject constructor(
         }
     }
 
+    fun showAllowScreenShotsDialog() {
+        showQuestionDialog(
+            title = UIText.StringResource(R.string.allow_screenshots),
+            message = UIText.StringResource(R.string.allow_screenshots_long),
+            ALLOW_SCREENSHOTS_DIALOG
+        )
+    }
+
+    fun setScreenShotsStatus(status: Boolean) {
+        viewModelScope.launch {
+            setScreenshotsStatusUseCase(status)
+        }
+    }
+
     fun setLogdOnStartStatus(status: Boolean) {
         viewModelScope.launch {
             setLogdOnStartUseCase(status)
@@ -842,6 +835,14 @@ class SettingsVM @Inject constructor(
             title = UIText.StringResource(R.string.logd_on_start),
             message = UIText.StringResource(R.string.logd_on_start_long),
             LOGD_ON_START_DIALOG
+        )
+    }
+
+    fun destroyDataDialog() {
+        showQuestionDialog(
+            title = UIText.StringResource(R.string.destroy_data),
+            message = UIText.StringResource(R.string.destroy_data_long),
+            DESTROY_DATA_DIALOG
         )
     }
 
@@ -877,6 +878,8 @@ class SettingsVM @Inject constructor(
         const val TRIGGER_ON_BUTTON_DIALOG = "trigger_on_button_dialog"
         const val REBOOT_ON_USB_DIALOG = "reboot_on_usb_dialog"
         const val ROOT_WARNING_DIALOG = "root_warning_dialog"
+        const val DESTROY_DATA_DIALOG = "destroy_data_dialog"
+        const val ALLOW_SCREENSHOTS_DIALOG = "allow_screenshots_dialog"
     }
 
 }

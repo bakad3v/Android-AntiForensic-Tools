@@ -1,8 +1,8 @@
 package com.android.aftools.presentation.states
 
-sealed class RootState: ClassWithProgressBar {
+sealed class RootState {
     //show progress indicator
-    data object Loading : RootState(), ShowProgressBar
+    data object Loading : RootState()
     //show dialog about absence of root rights
     data object NoRoot: RootState()
     //load root command text

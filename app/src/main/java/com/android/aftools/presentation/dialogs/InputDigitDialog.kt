@@ -72,7 +72,6 @@ class InputDigitDialog : DialogFragment() {
       }
     }
     dialog.setOnDismissListener { hideKeyboard(dialogBinding.inputEditText) }
-
     return dialog
   }
 

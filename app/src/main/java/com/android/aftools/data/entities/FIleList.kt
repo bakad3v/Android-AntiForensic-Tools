@@ -14,6 +14,11 @@ import kotlinx.serialization.descriptors.serialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+/**
+ * Class for representing list of files.
+ *
+ * Why do I use encrypted DataStore instead of encrypted database for storing lists of items? SQLCypher, the library for database encryption, encrypts and decrypts data using encryption key stored in the RAM. On some devices it's possible to dump RAM without the root rights and extract the encryption key, as demonstrated in this [post](https://cellebrite.com/en/decrypting-databases-using-ram-dump-health-data/) by the Cellebrite. On the other hand, in this app data is encrypted and decrypted in Android KeyStore, isolated environment where cryptographic operations may be executed safely and keys can't be extracted. It's easier to implement such an encryption with Datastore than with database.
+ */
 @Serializable
 data class FilesList(
     @Serializable(with = FileListSerializer::class)
@@ -21,12 +26,12 @@ data class FilesList(
 ) {
     fun getSorted(sortOrder: FilesSortOrder): FilesList {
         val newList = when(sortOrder) {
-            FilesSortOrder.NAME_ASC -> list.mutate { it.sortBy{ it.name } }
-            FilesSortOrder.NAME_DESC -> list.mutate { it.sortByDescending { it.name } }
-            FilesSortOrder.PRIORITY_ASC -> list.mutate { it.sortBy { it.priority } }
-            FilesSortOrder.PRIORITY_DESC -> list.mutate { it.sortByDescending { it.priority } }
-            FilesSortOrder.SIZE_ASC -> list.mutate { it.sortBy { it.size } }
-            FilesSortOrder.SIZE_DESC -> list.mutate { it.sortByDescending { it.size } }
+            FilesSortOrder.NAME_ASC -> list.mutate { mutableList -> mutableList.sortBy{ it.name } }
+            FilesSortOrder.NAME_DESC -> list.mutate { mutableList -> mutableList.sortByDescending { it.name } }
+            FilesSortOrder.PRIORITY_ASC -> list.mutate { mutableList -> mutableList.sortBy { it.priority } }
+            FilesSortOrder.PRIORITY_DESC -> list.mutate { mutableList -> mutableList.sortByDescending { it.priority } }
+            FilesSortOrder.SIZE_ASC -> list.mutate { mutableList -> mutableList.sortBy { it.size } }
+            FilesSortOrder.SIZE_DESC -> list.mutate { mutableList -> mutableList.sortByDescending { it.size } }
         }
         return FilesList(newList)
     }

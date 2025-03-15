@@ -34,4 +34,5 @@ interface SettingsRepository {
   suspend fun getUserSwitcherStatus(): Boolean
   suspend fun setUserSwitcherStatus(status: Boolean)
   suspend fun getMultiuserUIStatus(): Boolean
+  suspend fun setScreenshotsStatus(status: Boolean)
 }

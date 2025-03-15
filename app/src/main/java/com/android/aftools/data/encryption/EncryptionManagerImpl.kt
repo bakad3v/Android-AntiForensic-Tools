@@ -1,9 +1,7 @@
 package com.android.aftools.data.encryption
 
-import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.InputStream
 import java.io.OutputStream
 import java.security.KeyStore
@@ -13,7 +11,7 @@ import javax.crypto.SecretKey
 import javax.crypto.spec.IvParameterSpec
 import javax.inject.Inject
 
-class EncryptionManagerImpl @Inject constructor(@ApplicationContext private val context: Context): EncryptionManager {
+class EncryptionManagerImpl @Inject constructor(): EncryptionManager {
 
     private val keyStore = KeyStore.getInstance("AndroidKeyStore").apply {
         load(null)

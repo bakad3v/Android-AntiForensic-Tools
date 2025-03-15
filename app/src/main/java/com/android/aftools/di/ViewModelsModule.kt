@@ -1,12 +1,12 @@
 package com.android.aftools.di
 
-import com.android.aftools.presentation.actions.DialogActions
+import com.android.aftools.presentation.dialogs.DialogActions
 import com.android.aftools.presentation.actions.FileSettingsAction
 import com.android.aftools.presentation.actions.LogsActions
 import com.android.aftools.presentation.actions.SettingsAction
 import com.android.aftools.presentation.states.ActivityState
 import com.android.aftools.presentation.states.LogsDataState
-import com.android.aftools.presentation.states.PasswordState
+import com.android.aftools.presentation.states.EnterPasswordState
 import com.android.aftools.presentation.states.RootState
 import dagger.Module
 import dagger.Provides
@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 class ViewModelsModule {
 
   @Provides
-  fun providePasswordStateFlow(): MutableSharedFlow<PasswordState> = MutableSharedFlow()
+  fun providePasswordStateFlow(): MutableSharedFlow<EnterPasswordState> = MutableSharedFlow()
 
   @Provides
   fun provideDeletionSettingsActionChannel(): Channel<FileSettingsAction> = Channel()
