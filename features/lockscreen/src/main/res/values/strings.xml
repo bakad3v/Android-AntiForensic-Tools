@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="enter_password">Enter password</string>
+    <string name="wrong_password">Wrong password</string>
+    <string name="app_entered">Someone entered app</string>
+
+</resources>

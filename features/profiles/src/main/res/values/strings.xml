@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="file_photo_description">File icon</string>
+    <string name="not_delete">Do not delete</string>
+    <string name="profile_id">Profile id: %1$d\n</string>
+    <string name="profiles_faq">There you can select profiles for deletion or create new ones. Don\'t forget to enable profiles deletion by clicking on enable icon in top bar!</string>
+    <string name="profiles">Profiles</string>
+    <string name="no_superuser_rights_profiles">You need superuser rights to be able to manage profiles</string>
+    <string name="user_settings_disabled">Multiuser settings are not found on this device.</string>
+    <string name="user_settings_disabled_long">It seems like your device does not support multiple users. If you have root rights, you can enable multiuser UI in settings tab.</string>
+    <string name="enable_profile_deletion_long">All profiles marked for deletion will be deleted if you activate some trigger</string>
+    <string name="enable_profile_deletion">Enable profile deletion</string>
+    <string name="refresh_profiles">Refresh profiles</string>
+    <string name="add_profile">Add profile</string>
+    <string name="disable_profile_deletion">Disable profile deletion</string>
+    <string name="profiles_deletion_settings">Profiles deletion settings</string>
+
+</resources>

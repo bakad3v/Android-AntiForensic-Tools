@@ -4,7 +4,7 @@
     app:startDestination="@id/splashFragment">
   <fragment
     android:id="@+id/passFragmentNav"
-    android:name="com.android.aftools.presentation.fragments.EnterPassFragment">
+    android:name="com.sonozaki.lockscreen.presentation.fragment.EnterPassFragment">
     <action
         android:id="@+id/action_passFragmentNav_to_settingsFragment"
         app:destination="@id/settingsGraph"
@@ -13,22 +13,22 @@
   </fragment>
   <fragment
     android:id="@+id/setupFilesFragment"
-    android:name="com.android.aftools.presentation.fragments.SetupFilesFragment" />
+    android:name="com.sonozaki.files.presentation.fragment.SetupFilesFragment" />
   <fragment
     android:id="@+id/logsFragment"
-    android:name="com.android.aftools.presentation.fragments.LogsFragment" />
+    android:name="com.sonozaki.logs.presentation.fragment.LogsFragment" />
   <fragment
       android:id="@+id/aboutFragment"
-      android:name="com.android.aftools.presentation.fragments.AboutFragment" />
+      android:name="com.sonozaki.aboutapp.AboutFragment" />
   <fragment
       android:id="@+id/profilesFragment"
-      android:name="com.android.aftools.presentation.fragments.ProfilesFragment" />
+      android:name="com.sonozaki.profiles.presentation.fragment.ProfilesFragment" />
   <fragment
       android:id="@+id/rootFragment"
-      android:name="com.android.aftools.presentation.fragments.RootFragment" />
+      android:name="com.sonozaki.rootcommands.presentation.fragment.RootFragment" />
   <fragment
       android:id="@+id/splashFragment"
-      android:name="com.android.aftools.presentation.fragments.SplashFragment">
+      android:name="com.sonozaki.splash.presentation.fragment.SplashFragment">
     <action
         android:id="@+id/action_splashFragment_to_setupPassFragment"
         app:destination="@id/setupPassFragment"
@@ -46,7 +46,7 @@
   </fragment>
   <fragment
       android:id="@+id/setupPassFragment"
-      android:name="com.android.aftools.presentation.fragments.SetupPassFragment">
+      android:name="com.sonozaki.passwordsetup.presentation.fragment.SetupPassFragment">
     <action
         android:id="@+id/action_setupPassFragment_to_settingsFragment"
         app:destination="@id/settingsGraph"

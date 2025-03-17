@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="no_root_rights">App doesn\'t have root rights</string>
+    <string name="number_not_found">Number not found</string>
+    <string name="no_superuser_rights">You don\'t have superuser rights</string>
+    <string name="help">Help</string>
+    <string name="delete">Delete</string>
+</resources>

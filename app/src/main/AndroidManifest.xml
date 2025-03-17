@@ -5,7 +5,6 @@
   <uses-feature android:name="android.software.device_admin" android:required="false" />
   <uses-feature android:name="android.hardware.usb.host"/>
   <uses-feature android:name="android.hardware.usb.accessory"/>
-    <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
       tools:ignore="QueryAllPackagesPermission" />
     <uses-permission android:name="android.permission.USB_PERMISSION" />
@@ -36,7 +35,7 @@
        </intent-filter>
      </activity>
      <service
-       android:name=".presentation.services.TriggerReceiverService"
+       android:name="com.sonozaki.triggerreceivers.services.TriggerReceiverService"
        android:exported="true"
        android:directBootAware="true"
        android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
@@ -48,13 +47,13 @@
          android:resource="@xml/accessibility_service_config" />
      </service>
       <service
-          android:name=".presentation.services.MyJobIntentService"
+          android:name="com.sonozaki.services.services.MyJobIntentService"
           android:exported="false"
           android:directBootAware="true"
           android:permission="android.permission.BIND_JOB_SERVICE">
       </service>
      <receiver
-       android:name=".presentation.receivers.DeviceAdminReceiver"
+       android:name="com.sonozaki.triggerreceivers.services.DeviceAdminReceiver"
        android:permission="android.permission.BIND_DEVICE_ADMIN"
        android:exported="true"
        android:directBootAware="true"

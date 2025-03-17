@@ -1,7 +1,8 @@
 package com.android.aftools.di
 
-import com.android.aftools.data.encryption.EncryptionManager
-import com.android.aftools.data.encryption.EncryptionManagerImpl
+
+import com.sonozaki.encrypteddatastore.encryption.EncryptionManager
+import com.sonozaki.encrypteddatastore.encryption.EncryptionManagerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn

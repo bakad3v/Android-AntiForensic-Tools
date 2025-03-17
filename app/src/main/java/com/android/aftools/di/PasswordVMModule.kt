@@ -1,6 +1,6 @@
 package com.android.aftools.di
 
-import com.android.aftools.presentation.states.SetupPasswordState
+import com.sonozaki.passwordsetup.presentation.states.SetupPasswordState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

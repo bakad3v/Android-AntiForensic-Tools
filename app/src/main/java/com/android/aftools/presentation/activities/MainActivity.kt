@@ -12,10 +12,12 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
 import com.android.aftools.R
-import com.android.aftools.TopLevelFunctions.launchLifecycleAwareCoroutine
 import com.android.aftools.databinding.MainActivityBinding
-import com.android.aftools.presentation.states.ActivityState
 import com.android.aftools.presentation.viewmodels.MainVM
+import com.sonozaki.activitystate.ActivityState
+import com.sonozaki.activitystate.ActivityStateHolder
+import com.sonozaki.entities.Theme
+import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -70,6 +72,14 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
     private fun setupDrawer() {
         mainBinding.navigationView.inflateMenu(R.menu.main_menu)
         mainBinding.navigationView.setupWithNavController(controller)
+    }
+
+    private fun Theme.asMode(): Int {
+        return when(this) {
+            Theme.DARK_THEME -> AppCompatDelegate.MODE_NIGHT_YES
+            Theme.LIGHT_THEME -> AppCompatDelegate.MODE_NIGHT_NO
+            Theme.SYSTEM_THEME -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
+        }
     }
 
     /**

@@ -30,10 +30,5 @@
     <item name="colorPrimaryInverse">@color/md_theme_light_inversePrimary</item>
   </style>
 
-  <style name="LoginTextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-    <item name="boxStrokeColor">@color/text_input_box_stroke</item>
-    <item name="colorPrimary">@color/md_theme_light_primary</item>
-  </style>
-
 
 </resources>

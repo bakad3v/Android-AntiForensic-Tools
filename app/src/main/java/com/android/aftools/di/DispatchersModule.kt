@@ -1,5 +1,7 @@
 package com.android.aftools.di
 
+import com.sonozaki.resources.DEFAULT_DISPATCHER
+import com.sonozaki.resources.IO_DISPATCHER
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -22,9 +24,4 @@ class DispatchersModule {
     @Named(DEFAULT_DISPATCHER)
     @Singleton
     fun provideDefaultDispatcher(): CoroutineDispatcher = Dispatchers.Default
-
-    companion object {
-        const val IO_DISPATCHER ="io_dispatcher"
-        const val DEFAULT_DISPATCHER ="default_dispatcher"
-    }
 }

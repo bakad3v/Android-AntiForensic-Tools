@@ -9,7 +9,7 @@ plugins {
 
 android {
     namespace = "com.android.aftools"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.android.aftools"
@@ -48,6 +48,22 @@ dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
     implementation("com.google.android.material:material:1.12.0")
+    implementation(project(":core:activityState"))
+    implementation(project(":core:dialogs"))
+    implementation(project(":features:rootCommands"))
+    implementation(project(":features:settings"))
+    implementation(project(":core:entities"))
+    implementation(project(":features:triggerReceivers"))
+    implementation(project(":features:splash"))
+    implementation(project(":features:lockscreen"))
+    implementation(project(":features:services"))
+    implementation(project(":core:encryptedDatastore"))
+    implementation(project(":data:password"))
+    implementation(project(":data:files"))
+    implementation(project(":data:logs"))
+    implementation(project(":data:settings"))
+    implementation(project(":data:profiles"))
+    implementation(project(":data:root"))
 
     // Testing libraries
     testImplementation("junit:junit:4.13.2")
@@ -107,4 +123,15 @@ dependencies {
     implementation("org.lsposed.hiddenapibypass:hiddenapibypass:4.3")
     implementation("com.github.topjohnwu.libsu:core:5.0.0")
     implementation("com.anggrayudi:storage:1.5.5")
+
+    //Project modules dependencies
+    implementation(project(":core:validators"))
+    implementation(project(":core:passwordStrength"))
+    implementation(project(":core:resources"))
+    implementation(project(":core:utils"))
+    implementation(project(":features:passwordSetup"))
+    implementation(project(":features:profiles"))
+    implementation(project(":features:files"))
+    implementation(project(":features:logs"))
+    implementation(project(":features:aboutApp"))
 }

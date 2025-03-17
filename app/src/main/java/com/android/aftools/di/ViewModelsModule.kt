@@ -1,13 +1,13 @@
 package com.android.aftools.di
 
-import com.android.aftools.presentation.dialogs.DialogActions
-import com.android.aftools.presentation.actions.FileSettingsAction
-import com.android.aftools.presentation.actions.LogsActions
-import com.android.aftools.presentation.actions.SettingsAction
-import com.android.aftools.presentation.states.ActivityState
-import com.android.aftools.presentation.states.LogsDataState
-import com.android.aftools.presentation.states.EnterPasswordState
-import com.android.aftools.presentation.states.RootState
+import com.sonozaki.activitystate.ActivityState
+import com.sonozaki.dialogs.DialogActions
+import com.sonozaki.files.presentation.actions.FileSettingsAction
+import com.sonozaki.logs.presentation.actions.LogsActions
+import com.sonozaki.settings.presentation.actions.SettingsAction
+import com.sonozaki.logs.presentation.state.LogsDataState
+import com.sonozaki.lockscreen.presentation.state.EnterPasswordState
+import com.sonozaki.rootcommands.presentation.state.RootState
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,7 +33,8 @@ class ViewModelsModule {
   fun provideLogsActionChannel(): Channel<LogsActions> = Channel()
 
   @Provides
-  fun provideActivityStateFlow(): MutableStateFlow<ActivityState> = MutableStateFlow(ActivityState.NoActionBarActivityState)
+  fun provideActivityStateFlow(): MutableStateFlow<ActivityState> = MutableStateFlow(
+      ActivityState.NoActionBarActivityState)
 
   @Provides
   fun provideDialogActionsChannel(): Channel<DialogActions> = Channel()

@@ -1,25 +1,23 @@
 package com.android.aftools.di
 
-import com.android.aftools.data.repositories.AppsRepositoryImpl
-import com.android.aftools.data.repositories.BruteforceSettingsRepositoryImpl
-import com.android.aftools.data.repositories.ButtonSettingsRepositoryImpl
-import com.android.aftools.data.repositories.FilesRepositoryImpl
-import com.android.aftools.data.repositories.LogsRepositoryImpl
-import com.android.aftools.data.repositories.PermissionsRepositoryImpl
-import com.android.aftools.data.repositories.ProfilesRepositoryImpl
-import com.android.aftools.data.repositories.RootRepositoryImpl
-import com.android.aftools.data.repositories.SettingsRepositoryImpl
-import com.android.aftools.data.repositories.USBSettingsRepositoryImpl
-import com.android.aftools.domain.repositories.AppsRepository
-import com.android.aftools.domain.repositories.BruteforceRepository
-import com.android.aftools.domain.repositories.ButtonSettingsRepository
-import com.android.aftools.domain.repositories.FilesRepository
-import com.android.aftools.domain.repositories.LogsRepository
-import com.android.aftools.domain.repositories.PermissionsRepository
-import com.android.aftools.domain.repositories.ProfilesRepository
-import com.android.aftools.domain.repositories.RootRepository
-import com.android.aftools.domain.repositories.SettingsRepository
-import com.android.aftools.domain.repositories.UsbSettingsRepository
+import com.sonozaki.files.repository.FilesRepository
+import com.sonozaki.files.repository.FilesRepositoryImpl
+import com.sonozaki.logs.repository.LogsRepository
+import com.sonozaki.logs.repository.LogsRepositoryImpl
+import com.sonozaki.profiles.repository.ProfilesRepository
+import com.sonozaki.profiles.repository.ProfilesRepositoryImpl
+import com.sonozaki.root.repository.RootRepositoryImpl
+import com.sonozaki.rootcommands.domain.repository.RootScreenRepository
+import com.sonozaki.settings.repositories.BruteforceRepository
+import com.sonozaki.settings.repositories.BruteforceSettingsRepositoryImpl
+import com.sonozaki.settings.repositories.ButtonSettingsRepository
+import com.sonozaki.settings.repositories.ButtonSettingsRepositoryImpl
+import com.sonozaki.settings.repositories.PermissionsRepository
+import com.sonozaki.settings.repositories.PermissionsRepositoryImpl
+import com.sonozaki.settings.repositories.SettingsRepository
+import com.sonozaki.settings.repositories.SettingsRepositoryImpl
+import com.sonozaki.settings.repositories.USBSettingsRepositoryImpl
+import com.sonozaki.settings.repositories.UsbSettingsRepository
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -29,10 +27,6 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 abstract class RepositoriesModule {
-    @Binds
-    @Singleton
-    abstract fun bindAppsRepository(appsRepositoryImpl: AppsRepositoryImpl): AppsRepository
-
     @Binds
     @Singleton
     abstract fun bindFilesRepository(filesRepositoryImpl: FilesRepositoryImpl): FilesRepository
@@ -63,7 +57,7 @@ abstract class RepositoriesModule {
 
     @Binds
     @Singleton
-    abstract fun provideRootRepository(rootRepositoryImpl: RootRepositoryImpl): RootRepository
+    abstract fun provideRootRepository(rootRepositoryImpl: RootRepositoryImpl): RootScreenRepository
 
     @Binds
     @Singleton
