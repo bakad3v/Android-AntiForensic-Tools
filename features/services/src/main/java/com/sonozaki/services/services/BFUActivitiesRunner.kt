@@ -19,12 +19,10 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
-import javax.inject.Singleton
 
 /**
  * Class for running tasks that can be completed before the device is unlocked
  */
-@Singleton
 class BFUActivitiesRunner @Inject constructor(
     @ApplicationContext private val context: Context,
     private val getSettingsUseCase: GetSettingsUseCase,
@@ -37,13 +35,13 @@ class BFUActivitiesRunner @Inject constructor(
     private val getPermissionsUseCase: GetPermissionsUseCase,
     private val getLogsDataUseCase: GetLogsDataUseCase,
     private val getRootCommandUseCase: GetRootCommandUseCase
-) {
+): ActivityRunner {
 
     private var logsAllowed: Boolean? = null
     private val mutex = Mutex()
     private var isRunning = false
 
-    suspend fun runTask() {
+    override suspend fun runTask() {
         mutex.withLock {
             if (isRunning) {
                 return

@@ -1,8 +1,8 @@
 package com.android.aftools.adapters
 
 import com.android.aftools.domain.repository.MainActivityRepository
+import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.entities.UISettings
-import com.sonozaki.settings.repositories.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

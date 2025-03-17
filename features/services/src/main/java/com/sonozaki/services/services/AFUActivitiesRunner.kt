@@ -31,12 +31,10 @@ import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 import javax.inject.Named
-import javax.inject.Singleton
 
 /**
  * Class for running tasks requiring phone's unlock safely
  */
-@Singleton
 class AFUActivitiesRunner @Inject constructor(
     @ApplicationContext private val context: Context,
     private val writeToLogsUseCase: WriteToLogsUseCase,
@@ -47,13 +45,13 @@ class AFUActivitiesRunner @Inject constructor(
     private val superUserManager: SuperUserManager,
     private val getLogsDataUseCase: GetLogsDataUseCase,
     @Named(IO_DISPATCHER) private val ioDispatcher: CoroutineDispatcher
-) {
+): ActivityRunner {
 
     private val mutex = Mutex()
     private var isRunning = false
     private var logsAllowed: Boolean? = null
 
-    suspend fun runTask() {
+    override suspend fun runTask() {
         mutex.withLock {
             if (isRunning) {
                 return

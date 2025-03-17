@@ -1,9 +1,9 @@
 package com.android.aftools.adapters
 
+import com.sonozaki.data.profiles.repository.ProfilesRepository
+import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.entities.ProfileDomain
 import com.sonozaki.profiles.domain.repository.ProfilesScreenRepository
-import com.sonozaki.profiles.repository.ProfilesRepository
-import com.sonozaki.settings.repositories.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject

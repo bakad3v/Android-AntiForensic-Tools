@@ -2,16 +2,16 @@ package com.android.aftools.adapters
 
 import android.net.Uri
 import com.android.aftools.mappers.FileMapper
+import com.sonozaki.data.files.repository.FilesRepository
+import com.sonozaki.data.profiles.repository.ProfilesRepository
+import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.entities.App
 import com.sonozaki.entities.LogsData
 import com.sonozaki.entities.Settings
-import com.sonozaki.files.repository.FilesRepository
-import com.sonozaki.logs.repository.LogsRepository
-import com.sonozaki.profiles.repository.ProfilesRepository
+import com.sonozaki.data.logs.repository.LogsRepository
 import com.sonozaki.root.repository.RootRepository
 import com.sonozaki.services.domain.entities.FileDomain
 import com.sonozaki.services.domain.repository.ServicesRepository
-import com.sonozaki.settings.repositories.SettingsRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 

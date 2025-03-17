@@ -1,10 +1,9 @@
 package com.sonozaki.triggerreceivers.services.domain.repository
 
-import com.android.aftools.domain.entities.ButtonClicksData
-import com.android.aftools.domain.entities.ButtonSettings
+import com.sonozaki.entities.ButtonClicksData
+import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.UsbSettings
-import kotlinx.coroutines.flow.Flow
 
 interface ReceiversRepository {
     suspend fun getPasswordStatus(): Boolean

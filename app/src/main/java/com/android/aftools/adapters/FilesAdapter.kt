@@ -2,11 +2,11 @@ package com.android.aftools.adapters
 
 import android.net.Uri
 import com.android.aftools.mappers.FileMapper
+import com.sonozaki.data.files.repository.FilesRepository
+import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.entities.FilesSortOrder
 import com.sonozaki.files.domain.entities.FileInfo
 import com.sonozaki.files.domain.repository.FilesScreenRepository
-import com.sonozaki.files.repository.FilesRepository
-import com.sonozaki.settings.repositories.SettingsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.map

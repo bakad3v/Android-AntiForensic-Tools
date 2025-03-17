@@ -15,6 +15,7 @@ import androidx.navigation.fragment.findNavController
 import com.sonozaki.lockscreen.R
 import com.sonozaki.lockscreen.databinding.EnterPassFragmentBinding
 import com.sonozaki.lockscreen.domain.router.LockScreenRouter
+import com.sonozaki.lockscreen.presentation.state.EnterPasswordState
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
@@ -83,11 +84,11 @@ class EnterPassFragment: Fragment() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.passwordStatus.collect {
         when(it) {
-          is com.sonozaki.lockscreen.presentation.state.EnterPasswordState.CheckEnterPasswordResults -> handlePasswordEntered(it.rightPassword)
-          is com.sonozaki.lockscreen.presentation.state.EnterPasswordState.EnteringText -> setupError(null)
-          is com.sonozaki.lockscreen.presentation.state.EnterPasswordState.Initial -> setupError(null)
+          is EnterPasswordState.CheckEnterPasswordResults -> handlePasswordEntered(it.rightPassword)
+          is EnterPasswordState.EnteringText -> setupError(null)
+          is EnterPasswordState.Initial -> setupError(null)
         }
-        if (it is com.sonozaki.lockscreen.presentation.state.EnterPasswordState.CheckEnterPasswordResults && it.rightPassword) {
+        if (it is EnterPasswordState.CheckEnterPasswordResults && it.rightPassword) {
           moveToNextScreen()
         }
       }
@@ -100,7 +101,7 @@ class EnterPassFragment: Fragment() {
   private fun setupError(errorText: String?) {
     with(binding.passwordField) {
       error = errorText
-      isErrorEnabled = errorText == null
+      isErrorEnabled = errorText != null
     }
   }
 

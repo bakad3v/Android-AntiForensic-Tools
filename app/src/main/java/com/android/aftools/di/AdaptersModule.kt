@@ -11,6 +11,7 @@ import com.android.aftools.adapters.RootAdapter
 import com.android.aftools.adapters.ServicesAdapter
 import com.android.aftools.adapters.SettingsAdapter
 import com.android.aftools.adapters.SplashAdapter
+import com.android.aftools.adapters.SuperUserAdapter
 import com.android.aftools.domain.repository.MainActivityRepository
 import com.sonozaki.files.domain.repository.FilesScreenRepository
 import com.sonozaki.lockscreen.domain.repository.LockScreenRepository
@@ -21,6 +22,7 @@ import com.sonozaki.rootcommands.domain.repository.RootScreenRepository
 import com.sonozaki.services.domain.repository.ServicesRepository
 import com.sonozaki.settings.domain.repository.SettingsScreenRepository
 import com.sonozaki.splash.domain.repository.SplashRepository
+import com.sonozaki.superuser.domain.repository.SuperUserRepository
 import com.sonozaki.triggerreceivers.services.domain.repository.ReceiversRepository
 import dagger.Binds
 import dagger.Module
@@ -74,4 +76,8 @@ abstract class AdaptersModule {
     @Binds
     @Singleton
     abstract fun bindMainScreenAdapter(mainActivityAdapter: MainActivityAdapter): MainActivityRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindSuperUserAdapter(superUserAdapter: SuperUserAdapter): SuperUserRepository
 }

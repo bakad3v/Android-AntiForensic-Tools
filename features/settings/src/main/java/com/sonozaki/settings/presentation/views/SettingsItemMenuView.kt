@@ -28,7 +28,7 @@ class SettingsItemMenuView : LinearLayout {
 
     val menu get() = binding.showMenu
 
-    fun init(): SettingsMenuItemBinding {
+    private fun init(): SettingsMenuItemBinding {
         val root = inflate(context, R.layout.settings_menu_item,this)
         return SettingsMenuItemBinding.bind(root)
     }

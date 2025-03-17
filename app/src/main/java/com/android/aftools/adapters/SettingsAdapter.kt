@@ -1,17 +1,17 @@
 package com.android.aftools.adapters
 
-import com.android.aftools.domain.entities.ButtonSettings
+import com.sonozaki.entities.ButtonSettings
+import com.sonozaki.data.settings.repositories.BruteforceRepository
+import com.sonozaki.data.settings.repositories.ButtonSettingsRepository
+import com.sonozaki.data.settings.repositories.PermissionsRepository
+import com.sonozaki.data.settings.repositories.SettingsRepository
+import com.sonozaki.data.settings.repositories.UsbSettingsRepository
 import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.settings.domain.repository.SettingsScreenRepository
-import com.sonozaki.settings.repositories.BruteforceRepository
-import com.sonozaki.settings.repositories.ButtonSettingsRepository
-import com.sonozaki.settings.repositories.PermissionsRepository
-import com.sonozaki.settings.repositories.SettingsRepository
-import com.sonozaki.settings.repositories.UsbSettingsRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 

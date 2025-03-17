@@ -110,7 +110,6 @@
     <string name="admin_rights">Admin rights</string>
     <string name="device_owner">Dhizuku</string>
     <string name="root">Root rights</string>
-    <string name="usb_settings">USB settings</string>
     <string name="prevent_bruteforce">Prevent bruteforce</string>
     <string name="accessibility_service">Accessibility service</string>
     <string name="admin_required">Requires admin rights</string>

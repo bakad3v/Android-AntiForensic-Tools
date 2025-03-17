@@ -6,8 +6,9 @@ import androidx.navigation.fragment.navArgs
 import com.android.aftools.R
 import com.sonozaki.passwordsetup.domain.router.PasswordSetupRouter
 import com.sonozaki.passwordsetup.presentation.fragment.SetupPassFragmentArgs
+import javax.inject.Inject
 
-class PasswordSetupRouterImpl: PasswordSetupRouter {
+class PasswordSetupRouterImpl @Inject constructor(): PasswordSetupRouter {
     override fun getFromSplash(fragment: Fragment): Boolean {
         return fragment.navArgs<SetupPassFragmentArgs>().value.fromSplash
     }

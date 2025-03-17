@@ -1,6 +1,6 @@
 package com.sonozaki.settings.domain.repository
 
-import com.android.aftools.domain.entities.ButtonSettings
+import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.Settings

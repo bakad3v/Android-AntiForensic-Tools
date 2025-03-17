@@ -1,9 +1,9 @@
 package com.android.aftools.mappers
 
 import android.net.Uri
+import com.sonozaki.data.files.entities.FileDatastore
+import com.sonozaki.data.files.entities.FilesList
 import com.sonozaki.files.domain.entities.FileInfo
-import com.sonozaki.files.entities.FileDatastore
-import com.sonozaki.files.entities.FilesList
 import com.sonozaki.services.domain.entities.FileDomain
 import javax.inject.Inject
 

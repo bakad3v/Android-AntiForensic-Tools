@@ -13,7 +13,6 @@ import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
 import com.google.android.material.snackbar.Snackbar
 import com.sonozaki.passwordsetup.R
 import com.sonozaki.passwordsetup.databinding.SetupPassFragmentBinding

@@ -1,8 +1,9 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("org.jetbrains.kotlin.kapt")
-    id("com.google.dagger.hilt.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.dependency.analysis)
 }
 
 android {
@@ -35,21 +36,16 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.material:material:1.12.0")
     implementation(project(":core:resources"))
     implementation(project(":superuser"))
     implementation(project(":core:entities"))
     implementation(project(":core:entities"))
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
 
     // Dagger Hilt for dependency injection
-    val daggerVersion = "2.49"
-    implementation("com.google.dagger:hilt-android:$daggerVersion")
-    kapt("com.google.dagger:hilt-compiler:$daggerVersion")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
 
 }

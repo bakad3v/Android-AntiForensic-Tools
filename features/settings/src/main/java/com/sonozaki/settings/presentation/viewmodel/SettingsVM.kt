@@ -3,7 +3,7 @@ package com.sonozaki.settings.presentation.viewmodel
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.aftools.domain.entities.ButtonSettings
+import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.dialogs.DialogActions
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.Settings
@@ -196,7 +196,7 @@ class SettingsVM @Inject constructor(
                                                     requestKey: String)  {
         settingsActionChannel.send(
             SettingsAction.ShowDialog(
-                com.sonozaki.dialogs.DialogActions.ShowInputDigitDialog(
+                DialogActions.ShowInputDigitDialog(
                     title = title,
                     message = message,
                     hint = hint,

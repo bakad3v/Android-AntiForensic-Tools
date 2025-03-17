@@ -1,4 +1,4 @@
-package com.android.aftools.domain.entities
+package com.sonozaki.entities
 
 import kotlinx.serialization.Serializable
 

@@ -1,13 +1,14 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
-    id("com.google.dagger.hilt.android")
-    id("org.jetbrains.kotlin.kapt")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.kotlin.kapt)
     kotlin("plugin.serialization")
+    alias(libs.plugins.dependency.analysis)
 }
 
 android {
-    namespace = "com.sonozaki.profiles"
+    namespace = "com.sonozaki.data.profiles"
     compileSdk = 35
 
     defaultConfig {
@@ -40,17 +41,14 @@ dependencies {
     implementation(project(":superuser"))
     implementation(project(":core:encryptedDatastore"))
     implementation(project(":core:encryptedDatastore"))
-    val daggerVersion = "2.49"
-    implementation("com.google.dagger:hilt-android:$daggerVersion")
-    kapt("com.google.dagger:hilt-compiler:$daggerVersion")
-    implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.material:material:1.12.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.core.ktx)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
     // Serialization
-    val serializeVersion = "1.6.2"
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializeVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-collections-immutable:0.3.7")
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.collections.immutable)
+    implementation(libs.datastore.preferences)
 }

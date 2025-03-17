@@ -3,8 +3,7 @@ package com.android.aftools.adapters
 import com.sonozaki.entities.LogEntity
 import com.sonozaki.entities.LogsData
 import com.sonozaki.logs.domain.repository.LogsScreenRepository
-import com.sonozaki.logs.repository.LogsRepository
-import com.sonozaki.settings.repositories.SettingsRepository
+import com.sonozaki.data.logs.repository.LogsRepository
 import kotlinx.coroutines.flow.Flow
 import java.time.LocalDateTime
 import javax.inject.Inject

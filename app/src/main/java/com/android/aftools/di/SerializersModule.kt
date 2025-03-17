@@ -1,6 +1,11 @@
 package com.android.aftools.di
 
-import com.android.aftools.domain.entities.ButtonSettings
+import com.sonozaki.entities.ButtonSettings
+import com.sonozaki.data.files.entities.FilesList
+import com.sonozaki.data.logs.entities.LogList
+import com.sonozaki.data.profiles.entities.IntList
+import com.sonozaki.data.settings.entities.SettingsV1
+import com.sonozaki.data.settings.entities.UsbSettingsV1
 import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
 import com.sonozaki.encrypteddatastore.encryption.EncryptionManager
@@ -9,14 +14,9 @@ import com.sonozaki.entities.LogsData
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.UsbSettings
-import com.sonozaki.files.entities.FilesList
-import com.sonozaki.logs.entities.LogList
 import com.sonozaki.password.entities.PasswordStatus
-import com.sonozaki.profiles.entities.IntList
 import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.root.entities.RootDomain
-import com.sonozaki.settings.entities.SettingsV1
-import com.sonozaki.settings.entities.UsbSettingsV1
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

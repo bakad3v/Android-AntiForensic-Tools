@@ -1,6 +1,6 @@
 package com.sonozaki.settings.domain.usecases.button
 
-import com.android.aftools.domain.entities.ButtonSettings
+import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.settings.domain.repository.SettingsScreenRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject

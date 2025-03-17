@@ -5,7 +5,7 @@ import com.sonozaki.entities.Permissions
 
 interface SuperUserRepository {
     suspend fun getPermissions(): Permissions
-    fun setRootInactive()
-    fun setOwnerInactive()
-    fun setAdminInactive()
+    suspend fun setRootInactive()
+    suspend fun setOwnerInactive()
+    suspend fun setAdminInactive()
 }

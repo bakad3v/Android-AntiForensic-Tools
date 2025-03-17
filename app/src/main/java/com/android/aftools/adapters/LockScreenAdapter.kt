@@ -2,7 +2,7 @@ package com.android.aftools.adapters
 
 import com.sonozaki.entities.LogsData
 import com.sonozaki.lockscreen.domain.repository.LockScreenRepository
-import com.sonozaki.logs.repository.LogsRepository
+import com.sonozaki.data.logs.repository.LogsRepository
 import com.sonozaki.password.repository.PasswordManager
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject

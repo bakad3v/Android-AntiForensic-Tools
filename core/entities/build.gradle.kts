@@ -1,6 +1,7 @@
 plugins {
-    id("java-library")
-    id("org.jetbrains.kotlin.jvm")
+    alias(libs.plugins.java.library)
+    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.dependency.analysis)
     kotlin("plugin.serialization")
 }
 java {
@@ -15,6 +16,5 @@ kotlin {
 
 dependencies {
     // Serialization
-    val serializeVersion = "1.6.2"
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializeVersion")
+    implementation(libs.kotlinx.serialization.json)
 }

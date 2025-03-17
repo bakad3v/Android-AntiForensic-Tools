@@ -1,11 +1,10 @@
 package com.sonozaki.superuser.domain.usecases
 
-import com.sonozaki.entities.Permissions
 import com.sonozaki.superuser.domain.repository.SuperUserRepository
 import javax.inject.Inject
 
 class SetOwnerInactiveUseCase @Inject constructor(private val repository: SuperUserRepository) {
-    operator fun invoke() {
+    suspend operator fun invoke() {
         return repository.setOwnerInactive()
     }
 }

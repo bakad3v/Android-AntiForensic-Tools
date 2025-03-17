@@ -1,6 +1,7 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.dependency.analysis)
 }
 
 android {
@@ -33,17 +34,12 @@ android {
 }
 
 dependencies {
-
-    implementation("androidx.core:core-ktx:1.15.0")
-    implementation("androidx.appcompat:appcompat:1.7.0")
-    implementation("com.google.android.material:material:1.12.0")
-    testImplementation("junit:junit:4.13.2")
-    androidTestImplementation("androidx.test.ext:junit:1.2.1")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
-    val datastoreVersion = "1.1.1"
-    implementation("androidx.datastore:datastore-preferences:$datastoreVersion")
+    implementation(libs.core.ktx)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    implementation(libs.datastore.preferences)
     // Serialization
-    val serializeVersion = "1.6.2"
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:$serializeVersion")
-    implementation("javax.inject:javax.inject:1")
+    implementation(libs.kotlinx.serialization.json)
+    implementation(libs.javax.inject)
 }

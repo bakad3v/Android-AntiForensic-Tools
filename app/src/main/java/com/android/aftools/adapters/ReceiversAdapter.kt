@@ -1,15 +1,15 @@
 package com.android.aftools.adapters
 
-import com.android.aftools.domain.entities.ButtonClicksData
-import com.android.aftools.domain.entities.ButtonSettings
+import com.sonozaki.entities.ButtonClicksData
+import com.sonozaki.entities.ButtonSettings
+import com.sonozaki.data.settings.repositories.BruteforceRepository
+import com.sonozaki.data.settings.repositories.ButtonSettingsRepository
+import com.sonozaki.data.settings.repositories.PermissionsRepository
+import com.sonozaki.data.settings.repositories.SettingsRepository
+import com.sonozaki.data.settings.repositories.UsbSettingsRepository
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.password.repository.PasswordManager
-import com.sonozaki.settings.repositories.BruteforceRepository
-import com.sonozaki.settings.repositories.ButtonSettingsRepository
-import com.sonozaki.settings.repositories.PermissionsRepository
-import com.sonozaki.settings.repositories.SettingsRepository
-import com.sonozaki.settings.repositories.UsbSettingsRepository
 import com.sonozaki.triggerreceivers.services.domain.repository.ReceiversRepository
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject

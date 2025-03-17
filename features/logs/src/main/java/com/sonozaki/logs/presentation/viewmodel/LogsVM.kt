@@ -57,7 +57,7 @@ class LogsVM @Inject constructor(
     getLogsUseCase().map {
       LogsDataState.ViewLogs(
         it.today,
-        com.sonozaki.utils.UIText.ColoredHTMLText(it.logs, com.google.android.material.R.attr.colorPrimary, com.google.android.material.R.attr.colorOnBackground)
+        UIText.ColoredHTMLText(it.logs, com.google.android.material.R.attr.colorPrimary, com.google.android.material.R.attr.colorOnBackground)
       )
     }.mergeWith(updateStatesFlow).stateIn(
       scope = viewModelScope,
