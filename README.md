@@ -109,6 +109,14 @@ You can run custom root commands after profiles deletion and before TRIM/app sel
 * User switcher UI. You can enable or disable the GUI to switch between users. This setting can help you in case it is hidden in your Android settings. Requires root and Android 10 or higher.
 * Switch user permission. Set up for the same purpose for Android 9. It is recommended to use only if the setting above did not work. Requires root or dhizuku and Android 9 or higher.
 * Maximum number of users. You can change the maximum number of profiles. Root rights are required.
+
+## Known issues
+
+### App doesn't react on duress password
+Lock screens on different android devices may use different package names. Application can receive text only from number of predefined packages, listed in file [accessibility_service_config.xml](app/src/main/res/xml/accessibility_service_config.xml). You can check package name of your lock screen: connect your device to ADB, open lock screen and enter command "[path-to]/adb[.exe] exec-out uiautomator dump /dev/tty | grep "android.widget.EditText"". You will see some items like this: package="com.android.keyguard". If your package name is different from ones listed in accessibility service configuration, app will not react on password. Please write about this in github issues, I will add your package name to accessibility service configuration in the new version.
+
+Please report all other issues in [github issues](https://github.com/bakad3v/Android-AntiForensic-Tools/issues) section.
+
 ## Acknowledgements
 x13a, developer of the Wasted
 
