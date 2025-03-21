@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="allowed_attempts">Allowed wrong attempts</string>
+    <string name="allowed_attempts">Wrong attempts</string>
     <string name="accessibility_service_required">Requires accessibility service</string>
     <string name="when_usb_connected">When USB connected...</string>
     <string name="remove_itself">Remove itself</string>
@@ -80,7 +80,7 @@
     <string name="run_on_usb_connection_long">App will start to destroy data when usb device or usb accessory connected. Connecting device to computer in charging only mode will be counted too. This option will protect you from attacks. Don\'t forget to disable this option if you want to connect any USB device without losing data! Requires running accessibility service.</string>
     <string name="bruteforce_defense">Bruteforce defense</string>
     <string name="bruteforce_defence_long">After reaching maximum number of wrong password attempts (default: 5), app will start to destroy your data. Requires device admin rights.</string>
-    <string name="password_attempts_number">Select maximum number of wrong password attempts before clearing the data. Enabling this option will protect device against bruteforce. Default number: 10</string>
+    <string name="password_attempts_number">Select number of wrong password attempts in row to start clearing the data. Enabling this option will protect device against bruteforce. Default number: 10</string>
     <string name="change_button_latency">Change button latency\n</string>
     <string name="button_latency_long">Setup max latency between clicks in one sequence of clicks (in milliseconds). Default: 1000ms.</string>
     <string name="change_clicks_number">Set power button clicks number</string>
