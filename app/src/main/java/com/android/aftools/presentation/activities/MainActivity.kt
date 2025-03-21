@@ -3,9 +3,12 @@ package com.android.aftools.presentation.activities
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -32,9 +35,11 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         observeAppUISettings()
         _mainBinding =
             MainActivityBinding.inflate(layoutInflater)
+        setupInsets()
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.navHostFragment)
                     as NavHostFragment
@@ -60,7 +65,10 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
      */
     private fun setupScreenshots(screenshotsAllowed: Boolean) {
         if (!screenshotsAllowed) {
-            window.setFlags(WindowManager.LayoutParams.FLAG_SECURE, WindowManager.LayoutParams.FLAG_SECURE)
+            window.setFlags(
+                WindowManager.LayoutParams.FLAG_SECURE,
+                WindowManager.LayoutParams.FLAG_SECURE
+            )
         } else {
             window.clearFlags(WindowManager.LayoutParams.FLAG_SECURE)
         }
@@ -75,7 +83,7 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
     }
 
     private fun Theme.asMode(): Int {
-        return when(this) {
+        return when (this) {
             Theme.DARK_THEME -> AppCompatDelegate.MODE_NIGHT_YES
             Theme.LIGHT_THEME -> AppCompatDelegate.MODE_NIGHT_NO
             Theme.SYSTEM_THEME -> AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM
@@ -122,6 +130,23 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
             setupDrawer()
             drawerReady = true
         }
+    }
+
+    private fun setupInsets() {
+        ViewCompat.setOnApplyWindowInsetsListener(mainBinding.myAppBarLayout) { view, insets ->
+            val statusBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars() + WindowInsetsCompat.Type.displayCutout())
+            // Adjust padding to avoid overlap
+            view.setPadding(0, statusBarInsets.top, statusBarInsets.right, statusBarInsets.bottom)
+            insets
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(mainBinding.navigationView) { view, insets ->
+            val statusBarInsets =
+                insets.getInsets(WindowInsetsCompat.Type.systemBars() + WindowInsetsCompat.Type.displayCutout())
+            // Adjust padding to avoid overlap
+            view.setPadding(statusBarInsets.left, 0, 0, statusBarInsets.bottom)
+            insets
+        }
+
     }
 
     private fun setupToolbarMenu() {

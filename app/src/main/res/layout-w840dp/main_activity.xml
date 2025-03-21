@@ -1,40 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.drawerlayout.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
-  xmlns:app="http://schemas.android.com/apk/res-auto"
-  xmlns:tools="http://schemas.android.com/tools"
-  android:id="@+id/drawer"
-  android:layout_height="match_parent"
-  android:layout_width="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
 
   <androidx.constraintlayout.widget.ConstraintLayout
-    android:id="@+id/big_layout"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.MainActivity">
+      android:id="@+id/big_layout"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      tools:context=".presentation.MainActivity">
 
-    <com.google.android.material.appbar.MaterialToolbar
-      android:id="@+id/toolbar2"
-      android:layout_height="?attr/actionBarSize"
+  <com.google.android.material.appbar.AppBarLayout
       android:layout_width="0dp"
+      android:layout_height="match_parent"
       app:layout_constraintEnd_toEndOf="parent"
       app:layout_constraintStart_toEndOf="@+id/navigation_view"
-      app:layout_constraintTop_toTopOf="parent" />
+      app:layout_constraintTop_toTopOf="parent"
+      app:layout_constraintBottom_toBottomOf="parent"
+      android:id="@+id/myAppBarLayout">
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize" />
+
 
 
     <androidx.fragment.app.FragmentContainerView
-      android:id="@+id/navHostFragment"
-      android:name="androidx.navigation.fragment.NavHostFragment"
-      android:layout_width="0dp"
-      android:layout_height="0dp"
-      app:defaultNavHost="true"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintEnd_toEndOf="parent"
-      app:layout_constraintStart_toEndOf="@+id/navigation_view"
-      app:layout_constraintTop_toBottomOf="@+id/toolbar2"
-      app:navGraph="@navigation/navgraph"
-      tools:context=".presentation.MainActivity" />
+        android:id="@+id/navHostFragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/navgraph"
+        tools:context=".presentation.MainActivity" />
 
-    <com.google.android.material.navigation.NavigationView
+
+  </com.google.android.material.appbar.AppBarLayout>
+
+
+  <com.google.android.material.navigation.NavigationView
       android:id="@+id/navigation_view"
       android:layout_width="300dp"
       android:layout_height="match_parent"
@@ -42,6 +50,4 @@
       app:layout_constraintStart_toStartOf="parent"
       app:layout_constraintTop_toTopOf="parent" />
   </androidx.constraintlayout.widget.ConstraintLayout>
-
-
 </androidx.drawerlayout.widget.DrawerLayout>

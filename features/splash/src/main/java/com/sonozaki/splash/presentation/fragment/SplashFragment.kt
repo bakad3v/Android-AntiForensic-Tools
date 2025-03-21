@@ -36,6 +36,7 @@ class SplashFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupActivity()
         moveToNextScreen()
     }
 
@@ -48,6 +49,15 @@ class SplashFragment: Fragment() {
                    router.createPassword(controller)
                 }
             }
+        }
+    }
+
+    private fun setupActivity() {
+        val activity = requireActivity()
+        if (activity is ActivityStateHolder) {
+            activity.setActivityState(
+                ActivityState.NoActionBarNoDrawerActivityState
+            )
         }
     }
 }
