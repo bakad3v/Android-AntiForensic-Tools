@@ -22,7 +22,7 @@ class EnterPasswordVM @Inject constructor(
 ) : ViewModel() {
     val passwordStatus = enterPasswordState.stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
+        SharingStarted.WhileSubscribed(0, 0),
         EnterPasswordState.Initial
     )
 

@@ -14,16 +14,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.sonozaki.activitystate.ActivityState
+import com.sonozaki.activitystate.ActivityStateHolder
 import com.sonozaki.passwordsetup.R
 import com.sonozaki.passwordsetup.databinding.SetupPassFragmentBinding
 import com.sonozaki.passwordsetup.domain.router.PasswordSetupRouter
+import com.sonozaki.passwordsetup.presentation.states.SetupPasswordState
+import com.sonozaki.passwordsetup.presentation.viewmodel.SetupPasswordVM
+import com.sonozaki.passwordstrength.PasswordStrength
+import com.sonozaki.passwordstrength.PasswordStrengthData
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class SetupPassFragment : Fragment() {
-    private val viewModel: com.sonozaki.passwordsetup.presentation.viewmodel.SetupPasswordVM by viewModels()
+    private val viewModel: SetupPasswordVM by viewModels()
     private var _binding: SetupPassFragmentBinding? = null
     private val controller by lazy { findNavController() }
     private val binding
@@ -34,7 +40,7 @@ class SetupPassFragment : Fragment() {
 
     private val fromSplash by lazy { router.getFromSplash(this) }
 
-        override fun onCreateView(
+    override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -46,23 +52,35 @@ class SetupPassFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.passwordHint.text = Html.fromHtml(requireContext().getString(R.string.duress_password), Html.FROM_HTML_MODE_LEGACY)
+        binding.passwordHint.text = Html.fromHtml(
+            requireContext().getString(R.string.duress_password),
+            Html.FROM_HTML_MODE_LEGACY
+        )
         binding.password.imeOptions = IME_FLAG_NO_PERSONALIZED_LEARNING + IME_ACTION_SEND
         setupActivityAndText()
         observePasswordEntered()
         observePasswordCreated()
         observeState()
+        awaitPasswordCreation()
+    }
+
+    private fun awaitPasswordCreation() {
+        viewLifecycleOwner.launchLifecycleAwareCoroutine {
+            viewModel.passwordCreatedFlow.collect {
+                handlePasswordCreation()
+            }
+        }
     }
 
     private fun setupActivityAndText() {
         val activity = requireActivity()
-        if (activity is com.sonozaki.activitystate.ActivityStateHolder) {
+        if (activity is ActivityStateHolder) {
             if (fromSplash) {
-                activity.setActivityState(com.sonozaki.activitystate.ActivityState.NoActionBarNoDrawerActivityState)
+                activity.setActivityState(ActivityState.NoActionBarNoDrawerActivityState)
             } else {
                 binding.setupPassword.visibility = View.GONE
                 activity.setActivityState(
-                    com.sonozaki.activitystate.ActivityState.NormalActivityState(
+                    ActivityState.NormalActivityState(
                         requireContext().getString(
                             R.string.change_password
                         )
@@ -77,14 +95,11 @@ class SetupPassFragment : Fragment() {
             viewModel.passwordState.collect {
                 displayPasswordStrength(it.passwordStrength)
                 when (it) {
-                    is com.sonozaki.passwordsetup.presentation.states.SetupPasswordState.CheckEnterPasswordResults -> {
-                        if (it.validateResult.isSuccess) {
-                            handlePasswordCreation()
-                        } else {
-                            displayError(it.validateResult.message)
-                        }
+                    is SetupPasswordState.DisplayError -> {
+                        displayError(it.errorMessage)
                     }
-                    is com.sonozaki.passwordsetup.presentation.states.SetupPasswordState.PasswordStrengthCheck -> {
+
+                    is SetupPasswordState.PasswordStrengthCheck -> {
                         displayError(null)
                     }
                 }
@@ -102,23 +117,23 @@ class SetupPassFragment : Fragment() {
             hideKeyboard()
             router.openNextScreen(controller)
         } else {
-            Snackbar.make(binding.root,R.string.password_changed, Snackbar.LENGTH_SHORT).show()
+            Snackbar.make(binding.root, R.string.password_changed, Snackbar.LENGTH_SHORT).show()
         }
     }
 
-    private fun displayPasswordStrength(passwordStrength: com.sonozaki.passwordstrength.PasswordStrengthData) {
+    private fun displayPasswordStrength(passwordStrength: PasswordStrengthData) {
         setupStrengthText(passwordStrength)
         setupStrengthIndicator(passwordStrength)
     }
 
-    private fun setupStrengthIndicator(passwordStrength: com.sonozaki.passwordstrength.PasswordStrengthData) {
+    private fun setupStrengthIndicator(passwordStrength: PasswordStrengthData) {
         binding.strengthIndicator.setTrackColor(passwordStrength.strength.color)
         binding.strengthIndicator.setTracksProgress(passwordStrength.strength.ordinal)
     }
 
-    private fun setupStrengthText(passwordStrengthData: com.sonozaki.passwordstrength.PasswordStrengthData) {
+    private fun setupStrengthText(passwordStrengthData: PasswordStrengthData) {
         with(binding) {
-            if (passwordStrengthData.strength == com.sonozaki.passwordstrength.PasswordStrength.EMPTY) {
+            if (passwordStrengthData.strength == PasswordStrength.EMPTY) {
                 passwordStrength.text = requireContext().getString(R.string.empty_password)
                 timeToCrackOffline.text =
                     requireContext().getString(R.string.crack_time_undefined)
@@ -129,10 +144,17 @@ class SetupPassFragment : Fragment() {
             val strengthText = requireContext().getString(passwordStrengthData.strength.commentary)
             passwordStrength.text =
                 requireContext().getString(R.string.password_strength, strengthText)
-            timeToCrackOnline.text = requireContext().getString(R.string.crack_time_online, passwordStrengthData.timeToCrackOnline)
-            timeToCrackOffline.text = requireContext().getString(R.string.crack_time_offline, passwordStrengthData.timeToCrackOffline)
+            timeToCrackOnline.text = requireContext().getString(
+                R.string.crack_time_online,
+                passwordStrengthData.timeToCrackOnline
+            )
+            timeToCrackOffline.text = requireContext().getString(
+                R.string.crack_time_offline,
+                passwordStrengthData.timeToCrackOffline
+            )
         }
     }
+
 
     private fun observePasswordEntered() {
         binding.password.doOnTextChanged { text, _, _, _ ->

@@ -38,6 +38,7 @@ android {
 
 dependencies {
     implementation(project(":core:encryptedDatastore"))
+    implementation(project(":core:bedatastore"))
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.core.ktx)

@@ -30,6 +30,9 @@ class ViewModelsModule {
   fun provideLogsStateFlow(): MutableSharedFlow<LogsDataState> = MutableSharedFlow()
 
   @Provides
+  fun provideFABSFlow(): MutableStateFlow<Boolean> = MutableStateFlow(false)
+
+  @Provides
   fun provideLogsActionChannel(): Channel<LogsActions> = Channel()
 
   @Provides
@@ -41,6 +44,9 @@ class ViewModelsModule {
 
   @Provides
   fun provideSettingsActionsChannel(): Channel<SettingsAction> = Channel()
+
+  @Provides
+  fun providePasswordCreatedChannel(): Channel<Unit> = Channel()
 
   @Provides
   fun provideRootState(): MutableStateFlow<RootState> = MutableStateFlow(RootState.Loading)

@@ -8,7 +8,9 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class LogMapper @Inject constructor() {
   fun mapDataStoreToDt(logs: LogList, day: Long): LogEntity {
     val logsFormatted = logs.list.joinToString("\n") {

@@ -1,18 +1,25 @@
 package com.sonozaki.root.repository
 
 import android.content.Context
+import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreDirectBootAware
+import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
 import com.sonozaki.root.entities.RootDomain
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class RootRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context, rootSerializer: EncryptedSerializer<RootDomain>):
+class RootRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
+    rootSerializer: BaseSerializer<RootDomain>):
     RootRepository {
-       private val Context.rootCommandDatastore by dataStoreDirectBootAware(
+       private val Context.rootCommandDatastore by encryptedDataStore(
            NAME,
-           rootSerializer
+           rootSerializer,
+           alias = EncryptionAlias.DATASTORE.name,
+           isDBA = true
        )
 
     override fun getRootCommand() = context.rootCommandDatastore.data.map { it.rootCommand }

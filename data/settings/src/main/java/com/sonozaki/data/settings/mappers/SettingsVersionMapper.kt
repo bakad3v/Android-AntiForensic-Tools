@@ -4,7 +4,9 @@ import com.sonozaki.entities.Settings
 import com.sonozaki.data.settings.entities.SettingsV1
 import com.sonozaki.entities.UISettings
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SettingsVersionMapper @Inject constructor() {
     fun mapOldSettingsToNew(old: SettingsV1): Settings = Settings(
         uiSettings = UISettings(allowScreenshots = false, theme = old.theme),

@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.dialogs.DialogActions
+import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
@@ -51,6 +52,8 @@ import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.onCompletion
+import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -100,32 +103,32 @@ class SettingsVM @Inject constructor(
 
     val buttonsSettingsState = getButtonSettingsUseCase().stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
+        SharingStarted.WhileSubscribed(0, 0),
         ButtonSettings()
     )
 
     val settingsState = getSettingsUseCase().stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
+        SharingStarted.WhileSubscribed(0, 0),
         Settings()
     )
 
     val usbSettingState = getUSBSettingsUseCase().stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
+        SharingStarted.WhileSubscribed(0, 0),
         UsbSettings.DO_NOTHING
     )
 
     val permissionsState = getPermissionsUseCase().stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
+        SharingStarted.WhileSubscribed(0, 0),
         Permissions()
     )
 
     val bruteforceProtectionState = getBruteforceSettingsUseCase().stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        com.sonozaki.entities.BruteforceSettings()
+        SharingStarted.WhileSubscribed(0, 0),
+        BruteforceSettings()
     )
 
     fun adminRightsIntent(): Intent {

@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
   xmlns:tools="http://schemas.android.com/tools"
   >
-  <uses-feature android:name="android.software.device_admin" android:required="false" />
   <uses-feature android:name="android.hardware.usb.host"/>
   <uses-feature android:name="android.hardware.usb.accessory"/>
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"

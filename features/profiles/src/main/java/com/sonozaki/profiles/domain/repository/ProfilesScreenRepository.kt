@@ -8,7 +8,7 @@ interface ProfilesScreenRepository {
     suspend fun setDeleteProfiles(new: Boolean)
     suspend fun setProfileDeletionStatus(id: Int, status: Boolean)
 
-    val profiles: Flow<List<ProfileDomain>?>
+    fun getProfiles(): Flow<List<ProfileDomain>?>
 
     val deleteProfiles: Flow<Boolean>
 }

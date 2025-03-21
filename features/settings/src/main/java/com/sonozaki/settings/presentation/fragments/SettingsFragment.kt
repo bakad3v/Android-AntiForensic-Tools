@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.activitystate.ActivityStateHolder
+import com.sonozaki.dialogs.DialogLauncher
 import com.sonozaki.entities.Theme
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.SettingsFragmentBinding
@@ -61,6 +62,8 @@ import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.WIPE_DI
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
+import androidx.core.net.toUri
+import com.sonozaki.settings.presentation.actions.SettingsAction
 
 
 /**
@@ -74,7 +77,7 @@ class SettingsFragment : Fragment() {
   private val binding
     get() = _binding ?: throw RuntimeException("SettingsFragmentBinding == null")
   private val dialogLauncher by lazy {
-      com.sonozaki.dialogs.DialogLauncher(
+      DialogLauncher(
           parentFragmentManager,
           context
       )
@@ -135,6 +138,7 @@ class SettingsFragment : Fragment() {
   private fun requestAdminRights() {
     startActivity(viewModel.adminRightsIntent())
   }
+
   private val switchWipeListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setWipe(false)
@@ -442,7 +446,7 @@ class SettingsFragment : Fragment() {
   }
 
   private fun openDhizukuLink() {
-    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/iamr0s/Dhizuku"))
+    val browserIntent = Intent(Intent.ACTION_VIEW, "https://github.com/iamr0s/Dhizuku".toUri())
     startActivity(browserIntent)
   }
 
@@ -644,8 +648,8 @@ class SettingsFragment : Fragment() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.settingsActionsFlow.collect {
         when(it) {
-          is com.sonozaki.settings.presentation.actions.SettingsAction.ShowDialog -> dialogLauncher.launchDialogFromAction(it.value)
-          is com.sonozaki.settings.presentation.actions.SettingsAction.ShowFaq -> findNavController().navigate(R.id.action_settingsFragment_to_aboutSettingsFragment)
+          is SettingsAction.ShowDialog -> dialogLauncher.launchDialogFromAction(it.value)
+          is SettingsAction.ShowFaq -> findNavController().navigate(R.id.action_settingsFragment_to_aboutSettingsFragment)
         }
       }
     }

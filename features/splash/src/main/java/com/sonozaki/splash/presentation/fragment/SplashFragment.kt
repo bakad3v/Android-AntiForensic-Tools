@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.sonozaki.activitystate.ActivityState
+import com.sonozaki.activitystate.ActivityStateHolder
 import com.sonozaki.splash.databinding.SplashScreenBinding
 import com.sonozaki.splash.domain.router.SplashRouter
 import com.sonozaki.splash.presentation.viewmodel.SplashVM

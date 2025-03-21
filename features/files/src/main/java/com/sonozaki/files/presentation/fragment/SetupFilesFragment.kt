@@ -21,8 +21,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sonozaki.dialogs.QuestionDialog
+import com.sonozaki.entities.FilesSortOrder
 import com.sonozaki.files.R
 import com.sonozaki.files.databinding.SetupUsualFilesFragmentBinding
+import com.sonozaki.files.presentation.adapter.FileAdapter
+import com.sonozaki.files.presentation.state.FileDataState
 import com.sonozaki.files.presentation.viewmodel.UsualFilesSettingsVM
 import com.sonozaki.files.presentation.viewmodel.UsualFilesSettingsVM.Companion.CHANGE_FILES_DELETION_REQUEST
 import com.sonozaki.files.presentation.viewmodel.UsualFilesSettingsVM.Companion.CONFIRM_CLEAR_REQUEST
@@ -39,7 +43,6 @@ import javax.inject.Inject
 class SetupFilesFragment : Fragment() {
   private val viewModel: UsualFilesSettingsVM by viewModels()
   private var _binding: SetupUsualFilesFragmentBinding? = null
-  private var allFabsVisible = true
   private val binding
     get() = _binding ?: throw RuntimeException("DeletionSettingsFragmentBinding == null")
   private val takeFlags by lazy {
@@ -54,7 +57,15 @@ class SetupFilesFragment : Fragment() {
   }
 
   @Inject
-  lateinit var myFileAdapter: com.sonozaki.files.presentation.adapter.FileAdapter
+  lateinit var myFileAdapterFactory: FileAdapter.Factory
+
+  private val myFileAdapter: FileAdapter by lazy {
+    myFileAdapterFactory.create(
+      onMoreClickListener = { viewModel.showFileInfo(it) },
+      onDeleteItemClickListener = { viewModel.removeFileFromDb(it) },
+      onEditItemClickListener = { viewModel.showPriorityEditor(it) }
+    )
+  }
 
 
   private val fileSelectionLauncher =
@@ -79,7 +90,7 @@ class SetupFilesFragment : Fragment() {
         )
           .show()
       }
-      changeVisibility()
+      viewModel.changeFABsVisibility()
     }
 
   private val folderSelectionLauncher =
@@ -103,7 +114,7 @@ class SetupFilesFragment : Fragment() {
         )
           .show()
       }
-      changeVisibility()
+      viewModel.changeFABsVisibility()
     }
 
   private val requestFilesPermissionLauncher =
@@ -164,12 +175,12 @@ class SetupFilesFragment : Fragment() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.sortOrderFlow.collect {
         binding.sort.text = when (it) {
-          com.sonozaki.entities.FilesSortOrder.NAME_ASC -> resources.getString(R.string.alphabet)
-          com.sonozaki.entities.FilesSortOrder.NAME_DESC -> resources.getString(R.string.disalphabet)
-          com.sonozaki.entities.FilesSortOrder.PRIORITY_ASC -> resources.getString(R.string.minpr)
-          com.sonozaki.entities.FilesSortOrder.PRIORITY_DESC -> resources.getString(R.string.maxpr)
-          com.sonozaki.entities.FilesSortOrder.SIZE_DESC -> resources.getString(R.string.sizebig)
-          com.sonozaki.entities.FilesSortOrder.SIZE_ASC -> resources.getString(R.string.sizesmall)
+          FilesSortOrder.NAME_ASC -> resources.getString(R.string.alphabet)
+          FilesSortOrder.NAME_DESC -> resources.getString(R.string.disalphabet)
+          FilesSortOrder.PRIORITY_ASC -> resources.getString(R.string.minpr)
+          FilesSortOrder.PRIORITY_DESC -> resources.getString(R.string.maxpr)
+          FilesSortOrder.SIZE_DESC -> resources.getString(R.string.sizebig)
+          FilesSortOrder.SIZE_ASC -> resources.getString(R.string.sizesmall)
         }
       }
     }
@@ -273,12 +284,13 @@ class SetupFilesFragment : Fragment() {
   private fun setupFilesListListener() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.autoFileDataState.collect {
+        changeFABSVisibility(it.expandedFABS)
         when(it) {
-          is com.sonozaki.files.presentation.state.FileDataState.ViewData -> {
+          is FileDataState.ViewData -> {
             setFilesVisibility(true)
             myFileAdapter.submitList(it.items)
           }
-          is com.sonozaki.files.presentation.state.FileDataState.Loading -> setFilesVisibility(false)
+          is FileDataState.Loading -> setFilesVisibility(false)
         }
       }
     }
@@ -301,14 +313,14 @@ class SetupFilesFragment : Fragment() {
     ) { uri: Uri, priority: Int ->
       viewModel.changeFilePriority(priority, uri)
     }
-    com.sonozaki.dialogs.QuestionDialog.setupListener(
+    QuestionDialog.setupListener(
       parentFragmentManager,
       CONFIRM_CLEAR_REQUEST,
       viewLifecycleOwner
     ) {
       viewModel.clearFilesDb()
     }
-    com.sonozaki.dialogs.QuestionDialog.setupListener(
+    QuestionDialog.setupListener(
       parentFragmentManager,
       CHANGE_FILES_DELETION_REQUEST,
       viewLifecycleOwner
@@ -322,23 +334,12 @@ class SetupFilesFragment : Fragment() {
       showSortingMenu()
     }
   }
-
-  /**
-   * Setting recyclerview buttons listeners
-   */
-  private fun com.sonozaki.files.presentation.adapter.FileAdapter.setRecyclerViewListeners() {
-    onMoreClickListener = { viewModel.showFileInfo(it) }
-    onDeleteItemClickListener = { viewModel.removeFileFromDb(it) }
-    onEditItemClickListener = { viewModel.showPriorityEditor(it) }
-  }
-
   /**
    * Setting recyclerview
    */
   private fun setupRecyclerView() {
     with(binding.items) {
       layoutManager = LinearLayoutManager(context)
-      myFileAdapter.setRecyclerViewListeners()
       adapter = myFileAdapter
     }
   }
@@ -347,16 +348,14 @@ class SetupFilesFragment : Fragment() {
    * Setting up floating action buttons
    */
   private fun setupFABs() {
-    changeVisibility()
     binding.add.setOnClickListener {
-      changeVisibility()
+      viewModel.changeFABsVisibility()
     }
     setupAddFolderButton()
     setupAddFileButton()
   }
 
   private fun setupAddFileButton() {
-
     binding.addFile.setOnClickListener {
       fileSelectionLauncher.launch(arrayOf("*/*"))
     }
@@ -378,8 +377,8 @@ class SetupFilesFragment : Fragment() {
   /**
    * Changing visibility of additional floating action buttons
    */
-  private fun changeVisibility() {
-    if (allFabsVisible) {
+  private fun changeFABSVisibility(extended: Boolean) {
+    if (!extended) {
       binding.addFile.hide()
       binding.addFolder.hide()
       binding.add.shrink()
@@ -388,7 +387,6 @@ class SetupFilesFragment : Fragment() {
       binding.addFile.show()
       binding.addFolder.show()
     }
-    allFabsVisible = !allFabsVisible
   }
 
   /**
@@ -405,11 +403,11 @@ class SetupFilesFragment : Fragment() {
 
         R.id.alphabet -> com.sonozaki.entities.FilesSortOrder.NAME_ASC
 
-        R.id.desalphabet -> com.sonozaki.entities.FilesSortOrder.NAME_DESC
+        R.id.desalphabet -> FilesSortOrder.NAME_DESC
 
-        R.id.maxsize -> com.sonozaki.entities.FilesSortOrder.SIZE_DESC
+        R.id.maxsize -> FilesSortOrder.SIZE_DESC
 
-        R.id.minsize -> com.sonozaki.entities.FilesSortOrder.SIZE_ASC
+        R.id.minsize -> FilesSortOrder.SIZE_ASC
 
         else -> throw RuntimeException("Wrong priority in priority sorting")
       }

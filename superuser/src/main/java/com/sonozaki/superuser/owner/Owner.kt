@@ -31,8 +31,7 @@ import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
-class
-Owner @Inject constructor(@ApplicationContext private val context: Context, private val profilesMapper: ProfilesMapper, private val setOwnerInactiveUseCase: SetOwnerInactiveUseCase, private val appDPM: DevicePolicyManager, private val userManager: UserManager):
+class Owner @Inject constructor(@ApplicationContext private val context: Context, private val profilesMapper: ProfilesMapper, private val setOwnerInactiveUseCase: SetOwnerInactiveUseCase, private val appDPM: DevicePolicyManager, private val userManager: UserManager):
     SuperUser {
 
     private var initialized: Boolean = false

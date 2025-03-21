@@ -7,6 +7,6 @@ import javax.inject.Inject
 
 class GetProfilesUseCase @Inject constructor(private val profilesScreenRepository: ProfilesScreenRepository) {
     operator fun invoke(): Flow<List<ProfileDomain>?> {
-        return profilesScreenRepository.profiles
+        return profilesScreenRepository.getProfiles()
     }
 }

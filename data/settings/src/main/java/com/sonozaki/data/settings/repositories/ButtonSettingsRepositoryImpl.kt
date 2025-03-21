@@ -1,17 +1,26 @@
 package com.sonozaki.data.settings.repositories
 
 import android.content.Context
+import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import com.sonozaki.encrypteddatastore.BaseSerializer
+import com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreDirectBootAware
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
+import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
 import com.sonozaki.entities.ButtonClicksData
 import com.sonozaki.entities.ButtonSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
-class ButtonSettingsRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context, buttonSettingsSerializer: com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer<ButtonSettings>) :
+class ButtonSettingsRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
+    buttonSettingsSerializer: BaseSerializer<ButtonSettings>) :
     ButtonSettingsRepository {
     private var buttonClicksData = ButtonClicksData()
-    private val Context.buttonDataStore by com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreDirectBootAware(
+    private val Context.buttonDataStore by encryptedDataStore(
         DATASTORE_NAME,
-        buttonSettingsSerializer
+        buttonSettingsSerializer,
+        alias = EncryptionAlias.DATASTORE.name,
+        isDBA = true
     )
 
     override val buttonSettings = context.buttonDataStore.data

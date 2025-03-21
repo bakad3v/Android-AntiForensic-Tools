@@ -15,11 +15,19 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.MaterialDatePicker
+import com.sonozaki.activitystate.ActivityState
+import com.sonozaki.activitystate.ActivityStateHolder
+import com.sonozaki.dialogs.DialogLauncher
+import com.sonozaki.dialogs.QuestionDialog
 import com.sonozaki.logs.R
 import com.sonozaki.logs.databinding.LogsFragmentBinding
+import com.sonozaki.logs.presentation.actions.LogsActions
+import com.sonozaki.logs.presentation.state.LogsDataState
+import com.sonozaki.logs.presentation.viewmodel.LogsVM
 import com.sonozaki.logs.presentation.viewmodel.LogsVM.Companion.CHANGE_LOGS_ENABLED_REQUEST
 import com.sonozaki.logs.presentation.viewmodel.LogsVM.Companion.CHANGE_TIMEOUT
 import com.sonozaki.logs.presentation.viewmodel.LogsVM.Companion.CLEAR_LOGS_REQUEST
+import com.sonozaki.utils.DateValidatorAllowed
 import com.sonozaki.utils.TopLevelFunctions.formatDate
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,12 +39,12 @@ import kotlinx.coroutines.withContext
  */
 @AndroidEntryPoint
 class LogsFragment : Fragment() {
-  private val viewModel: com.sonozaki.logs.presentation.viewmodel.LogsVM by viewModels()
+  private val viewModel: LogsVM by viewModels()
   private var _logBinding: LogsFragmentBinding? = null
   private val logBinding
     get() = _logBinding ?: throw RuntimeException("LogsFragmentBinding == null")
   private val dialogLauncher by lazy {
-      com.sonozaki.dialogs.DialogLauncher(
+      DialogLauncher(
           parentFragmentManager,
           context
       )
@@ -100,8 +108,8 @@ class LogsFragment : Fragment() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.logsActionFlow.collect {
         when (it) {
-          is com.sonozaki.logs.presentation.actions.LogsActions.ShowUsualDialog -> dialogLauncher.launchDialogFromAction(it.value)
-          is com.sonozaki.logs.presentation.actions.LogsActions.ShowDatePicker -> with(it) { buildCalendar(dateValidator, selection) }
+          is LogsActions.ShowUsualDialog -> dialogLauncher.launchDialogFromAction(it.value)
+          is LogsActions.ShowDatePicker -> with(it) { buildCalendar(dateValidator, selection) }
         }
       }
     }
@@ -110,7 +118,7 @@ class LogsFragment : Fragment() {
   /**
    * Building calendar for Datepicker
    */
-  private fun buildCalendar(dateValidatorAllowed: com.sonozaki.utils.DateValidatorAllowed, selection: Long) {
+  private fun buildCalendar(dateValidatorAllowed: DateValidatorAllowed, selection: Long) {
     val constraintsBuilder =
       getConstraints(dateValidatorAllowed) //Настраиваем ограничения для date picker, разрешаем выбирать те дни, за которые доступны логи.
     val datePicker =
@@ -133,7 +141,7 @@ class LogsFragment : Fragment() {
       .setCalendarConstraints(constraintsBuilder.build())
       .build()
 
-  private fun getConstraints(dateValidatorAllowed: com.sonozaki.utils.DateValidatorAllowed) =
+  private fun getConstraints(dateValidatorAllowed: DateValidatorAllowed) =
     CalendarConstraints.Builder()
       .setValidator(
         dateValidatorAllowed
@@ -143,14 +151,14 @@ class LogsFragment : Fragment() {
    * Listening for dialogs results
    */
   private fun setDialogsListeners() {
-    com.sonozaki.dialogs.QuestionDialog.setupListener(
+    QuestionDialog.setupListener(
       parentFragmentManager,
       CLEAR_LOGS_REQUEST,
       viewLifecycleOwner
     ) {
       viewModel.clearLogsForDay()
     }
-    com.sonozaki.dialogs.QuestionDialog.setupListener(
+    QuestionDialog.setupListener(
       parentFragmentManager,
       CHANGE_LOGS_ENABLED_REQUEST,
       viewLifecycleOwner
@@ -192,12 +200,12 @@ class LogsFragment : Fragment() {
       viewModel.logsState.collect {
         setupActionBar(it.date.formatDate())
         when (it) {
-          is com.sonozaki.logs.presentation.state.LogsDataState.ViewLogs -> {
+          is LogsDataState.ViewLogs -> {
             setupDataVisibility(true)
             logBinding.data.text = HtmlCompat.fromHtml(it.logs.asString(context), FROM_HTML_MODE_LEGACY)
             scrollToBottom()
           }
-          is com.sonozaki.logs.presentation.state.LogsDataState.Loading -> {
+          is LogsDataState.Loading -> {
             setupDataVisibility(false)
           }
         }
@@ -224,9 +232,9 @@ class LogsFragment : Fragment() {
 
   private fun setupActionBar(date: String) {
     val activity = requireActivity()
-    if (activity is com.sonozaki.activitystate.ActivityStateHolder) {
+    if (activity is ActivityStateHolder) {
       activity.setActivityState(
-        com.sonozaki.activitystate.ActivityState.NormalActivityState(date)
+        ActivityState.NormalActivityState(date)
       )
     }
   }

@@ -2,6 +2,7 @@ package com.sonozaki.encrypteddatastore.datastoreDBA
 
 import androidx.datastore.dataStoreFile
 import android.content.Context
+import android.util.Log
 import androidx.annotation.GuardedBy
 import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
@@ -92,6 +93,8 @@ internal class DataStoreSingletonDelegateFixed<T> internal constructor(
      */
     override fun getValue(thisRef: Context, property: KProperty<*>): DataStore<T> {
         val deviceContext =  thisRef.createDeviceProtectedStorageContext()
+        Log.w("path",File(deviceContext.filesDir, "datastore/$fileName").absolutePath)
+        Log.w("pathTrue", fileName + File(deviceContext.filesDir, "datastore/$fileName").exists().toString())
         return INSTANCE ?: synchronized(lock) {
             if (INSTANCE == null) {
                 INSTANCE = DataStoreFactory.create(

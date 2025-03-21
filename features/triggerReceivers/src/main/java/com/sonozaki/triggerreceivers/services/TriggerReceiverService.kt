@@ -9,6 +9,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.UserManager
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.resources.IO_DISPATCHER
@@ -78,6 +79,7 @@ class TriggerReceiverService : AccessibilityService() {
     lateinit var ioDispatcher: CoroutineDispatcher
 
     override fun onCreate() {
+        Log.w("update","start")
         super.onCreate()
         coroutineScope.launch {
             if (!getPasswordStatusUseCase()) {
@@ -85,6 +87,7 @@ class TriggerReceiverService : AccessibilityService() {
                stopSelf()
                return@launch
             }
+            Log.w("update","service")
             setServiceStatusUseCase(true)
             setLogdServiceStatus()
         }

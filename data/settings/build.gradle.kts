@@ -40,6 +40,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(project(":core:entities"))
     implementation(project(":core:encryptedDatastore"))
+    implementation(project(":core:bedatastore"))
     implementation(project(":superuser"))
     implementation(libs.datastore.core.android)
     testImplementation(libs.junit)

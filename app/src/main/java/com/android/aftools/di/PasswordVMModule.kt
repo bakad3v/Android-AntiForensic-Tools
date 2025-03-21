@@ -12,9 +12,6 @@ import kotlinx.coroutines.flow.MutableSharedFlow
 @Module
 @InstallIn(ViewModelComponent::class)
 class PasswordVMModule {
-    @Provides
-    @ViewModelScoped
-    fun providePasswordEnteredActionChannel(): Channel<Unit> = Channel()
 
     @Provides
     @ViewModelScoped

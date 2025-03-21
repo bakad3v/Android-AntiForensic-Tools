@@ -6,7 +6,9 @@ import com.sonozaki.data.files.entities.FilesList
 import com.sonozaki.files.domain.entities.FileInfo
 import com.sonozaki.services.domain.entities.FileDomain
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class FileMapper @Inject constructor() {
   private fun mapDatastoreToInfoModel(fileDatastore: FileDatastore) =
     FileInfo(

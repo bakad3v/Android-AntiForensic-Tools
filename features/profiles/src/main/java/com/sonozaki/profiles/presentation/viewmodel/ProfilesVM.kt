@@ -15,6 +15,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -40,13 +41,15 @@ class ProfilesVM @Inject constructor(
         ProfilesDataState.ViewData(it)
     }.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.WhileSubscribed(0, 0),
         initialValue = ProfilesDataState.Loading
-    )
+    ).onSubscription {
+        refreshProfilesUseCase()
+    }
 
     val profileDeletionEnabled = getDeleteProfilesUseCase().stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.WhileSubscribed(0, 0),
         initialValue = false
     )
 

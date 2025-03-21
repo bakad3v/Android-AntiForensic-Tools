@@ -10,19 +10,18 @@ import com.google.android.material.color.MaterialColors
 import com.sonozaki.entities.ProfileDomain
 import com.sonozaki.profiles.R
 import com.sonozaki.profiles.databinding.ProfileCardviewBinding
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import javax.inject.Inject
 
 /**
  * Recycler view adapter for profiles
  */
-class ProfileAdapter @Inject constructor(
+class ProfileAdapter @AssistedInject constructor(
     diffCallback: MyProfileAdapterDiffCallback,
+    @Assisted private val onDeleteItemClickListener: ((Int, Boolean) -> Unit)
 ) : ListAdapter<ProfileDomain, MyProfileViewHolder>(diffCallback) {
-
-  /**
-   * Callbacks which can be set up from activity
-   */
-  var onDeleteItemClickListener: ((Int, Boolean) -> Unit)? = null
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyProfileViewHolder {
     val inflater = LayoutInflater.from(parent.context)
@@ -61,9 +60,14 @@ class ProfileAdapter @Inject constructor(
       id.text = holder.binding.root.context.getString(R.string.profile_id, profile.id)
       delete.setStyle(profile.toDelete)
       delete.setOnClickListener {
-        onDeleteItemClickListener?.invoke(profile.id,!profile.toDelete)
+        onDeleteItemClickListener(profile.id,!profile.toDelete)
       }
     }
+  }
+
+  @AssistedFactory
+  interface Factory {
+      fun create(onDeleteItemClickListener: ((Int, Boolean) -> Unit)): ProfileAdapter
   }
 
 }

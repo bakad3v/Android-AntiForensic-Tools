@@ -2,6 +2,7 @@ package com.sonozaki.files.presentation.viewmodel
 
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sonozaki.dialogs.DialogActions
@@ -18,10 +19,14 @@ import com.sonozaki.files.domain.usecases.GetSortOrderUseCase
 import com.sonozaki.files.domain.usecases.InsertMyFileUseCase
 import com.sonozaki.files.domain.usecases.SetDeleteFilesUseCase
 import com.sonozaki.files.presentation.actions.FileSettingsAction
+import com.sonozaki.files.presentation.state.FileDataState
 import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.getAndUpdate
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -38,30 +43,42 @@ class UsualFilesSettingsVM @Inject constructor(
   private val clearFilesUseCase: ClearFilesUseCase,
   private val deletionSettingsActionChannel: Channel<FileSettingsAction>,
   private val setDeleteFilesUseCase: SetDeleteFilesUseCase,
+  private val buttonsExpandedFlow: MutableStateFlow<Boolean>,
   getSortOrderUseCase: GetSortOrderUseCase,
-  getFilesDeletionEnabledUseCase: GetFilesDeletionEnabledUseCase
+  getFilesDeletionEnabledUseCase: GetFilesDeletionEnabledUseCase,
 ) : ViewModel() {
+
+  var allFabsVisible = false
+
   val deletionSettingsActionFlow = deletionSettingsActionChannel.receiveAsFlow()
 
   val sortOrderFlow = getSortOrderUseCase()
 
   val isFileDeletionEnabled = getFilesDeletionEnabledUseCase().stateIn(
     viewModelScope,
-    SharingStarted.WhileSubscribed(5000),
+    SharingStarted.WhileSubscribed(0, 0),
     false
   )
 
   val autoFileDataState =
-    getFilesUseCase().map { com.sonozaki.files.presentation.state.FileDataState.ViewData(it) }
+    combine(getFilesUseCase(), buttonsExpandedFlow) { files, expandedFABS -> FileDataState.ViewData(files, expandedFABS) }
       .stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        com.sonozaki.files.presentation.state.FileDataState.Loading
+        SharingStarted.WhileSubscribed(0, 0),
+        FileDataState.Loading()
       )
 
   fun removeFileFromDb(uri: Uri) {
     viewModelScope.launch {
       deleteMyFileUseCase(uri)
+    }
+  }
+
+  fun changeFABsVisibility() {
+    viewModelScope.launch {
+      buttonsExpandedFlow.getAndUpdate {
+        !it
+      }
     }
   }
 
@@ -179,6 +196,11 @@ class UsualFilesSettingsVM @Inject constructor(
   companion object {
     const val CONFIRM_CLEAR_REQUEST = "confirm_clear_request"
     const val CHANGE_FILES_DELETION_REQUEST = "change_files_deletion_request"
+  }
+
+  override fun onCleared() {
+    Log.w("cleared","true")
+    super.onCleared()
   }
 
 }

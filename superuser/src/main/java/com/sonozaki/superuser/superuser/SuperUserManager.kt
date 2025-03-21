@@ -1,6 +1,7 @@
 package com.sonozaki.superuser.superuser
 
 import android.content.Intent
+import android.util.Log
 import com.sonozaki.superuser.R
 import com.sonozaki.superuser.admin.DeviceAdmin
 import com.sonozaki.superuser.domain.usecases.GetPermissionsUseCase
@@ -8,11 +9,13 @@ import com.sonozaki.superuser.owner.Owner
 import com.sonozaki.superuser.root.Root
 import com.sonozaki.utils.UIText
 import javax.inject.Inject
+import javax.inject.Singleton
 
 /**
  * Class for retrieving superusers and managing permissions.
  */
-class SuperUserManager @Inject constructor(private val owner: Owner, private val root: Root, private val admin: DeviceAdmin, private val getPermissionsUseCase: GetPermissionsUseCase){
+@Singleton
+class SuperUserManager @Inject constructor(private val owner: Owner, private val root: Root, private val admin: DeviceAdmin, private val getPermissionsUseCase: GetPermissionsUseCase) {
 
     /**
      * Show dialog with root rights request.
@@ -41,7 +44,9 @@ class SuperUserManager @Inject constructor(private val owner: Owner, private val
      * Get the most privileged superuser available
      */
     suspend fun getSuperUser(): SuperUser {
+        Log.w("newData","permissions")
         val permissions = getPermissionsUseCase()
+        Log.w("newData","permissionsEnd")
         if (permissions.isRoot)
             return root
         if (permissions.isOwner)

@@ -1,18 +1,25 @@
 package com.sonozaki.data.settings.repositories
 
 import android.content.Context
+import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreDirectBootAware
 import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
+import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
 import com.sonozaki.entities.Permissions
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class PermissionsRepositoryImpl @Inject constructor(@ApplicationContext private val context: Context, permissionsSerializer: EncryptedSerializer<Permissions>):
+class PermissionsRepositoryImpl @Inject constructor(
+    @ApplicationContext private val context: Context,
+    permissionsSerializer: BaseSerializer<Permissions>):
     PermissionsRepository {
-    private val Context.permissionsDatastore by dataStoreDirectBootAware(
+    private val Context.permissionsDatastore by encryptedDataStore(
         DATASTORE_NAME,
-        permissionsSerializer
+        permissionsSerializer,
+        alias = EncryptionAlias.DATASTORE.name,
+        isDBA = true
     )
 
     companion object {

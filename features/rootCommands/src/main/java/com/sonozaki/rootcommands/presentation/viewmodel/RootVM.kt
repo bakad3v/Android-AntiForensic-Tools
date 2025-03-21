@@ -33,13 +33,13 @@ class RootVM @Inject constructor(
 
     val rootCommandEnabled = getRootEnabledUseCase().stateIn(
             scope = viewModelScope,
-    started = SharingStarted.WhileSubscribed(5000),
+    started = SharingStarted.WhileSubscribed(0, 0),
     initialValue = false
     )
 
     val rootState = _rootState.stateIn(
         scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5000),
+        started = SharingStarted.WhileSubscribed(0, 0),
         initialValue = RootState.Loading
     )
 

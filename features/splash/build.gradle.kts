@@ -43,6 +43,7 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.fragment.ktx)
     implementation(project(":core:utils"))
+    implementation(project(":core:activityState"))
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)

@@ -50,7 +50,7 @@ class LogsVM @Inject constructor(
 
 
   val logsEnabled = getLogsDataUseCase().map { it.logsEnabled }.stateIn(
-    viewModelScope, SharingStarted.WhileSubscribed(5000),false
+    viewModelScope, SharingStarted.WhileSubscribed(0, 0),false
   )
 
   val logsState: StateFlow<LogsDataState> =
@@ -61,7 +61,7 @@ class LogsVM @Inject constructor(
       )
     }.mergeWith(updateStatesFlow).stateIn(
       scope = viewModelScope,
-      started = SharingStarted.WhileSubscribed(5000),
+      started = SharingStarted.WhileSubscribed(0, 0),
       initialValue = LogsDataState.Loading()
     )
 

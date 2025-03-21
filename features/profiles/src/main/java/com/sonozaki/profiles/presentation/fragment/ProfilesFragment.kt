@@ -14,12 +14,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sonozaki.activitystate.ActivityState
+import com.sonozaki.activitystate.ActivityStateHolder
+import com.sonozaki.dialogs.DialogLauncher
+import com.sonozaki.dialogs.QuestionDialog
 import com.sonozaki.profiles.R
 import com.sonozaki.profiles.databinding.SetupProfilesFragmentBinding
+import com.sonozaki.profiles.presentation.adapter.ProfileAdapter
+import com.sonozaki.profiles.presentation.state.ProfilesDataState
 import com.sonozaki.profiles.presentation.viewmodel.ProfilesVM
 import com.sonozaki.profiles.presentation.viewmodel.ProfilesVM.Companion.CHANGE_PROFILES_DELETION_ENABLED
 import com.sonozaki.profiles.presentation.viewmodel.ProfilesVM.Companion.NO_SUPERUSER
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
+import com.sonozaki.utils.booleanToVisibility
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -35,7 +42,7 @@ class ProfilesFragment: Fragment() {
     private val binding
         get() = _binding ?: throw RuntimeException("ProfilesFragment == null")
     private val dialogLauncher by lazy {
-        com.sonozaki.dialogs.DialogLauncher(
+        DialogLauncher(
             parentFragmentManager,
             context
         )
@@ -43,7 +50,13 @@ class ProfilesFragment: Fragment() {
 
 
     @Inject
-    lateinit var myProfileAdapter: com.sonozaki.profiles.presentation.adapter.ProfileAdapter
+    lateinit var profileAdapterFactory: ProfileAdapter.Factory
+
+    private val myProfileAdapter by lazy {
+        profileAdapterFactory.create {
+                id, status -> viewModel.setProfileDeletionStatus(id, status)
+        }
+    }
 
 
     override fun onCreateView(
@@ -67,7 +80,7 @@ class ProfilesFragment: Fragment() {
     }
 
     /**
-     * Rendering button for enabling or disabling file deletion
+     * Rendering button for enabling or disabling profiles deletion
      */
     private suspend fun Menu.drawSwitchProfileDeletionStatusButton() {
         viewModel.profileDeletionEnabled.collect {
@@ -122,9 +135,9 @@ class ProfilesFragment: Fragment() {
 
     private fun setMainActivityState() {
         val activity = requireActivity()
-        if (activity is com.sonozaki.activitystate.ActivityStateHolder)
+        if (activity is ActivityStateHolder)
             activity.setActivityState(
-                com.sonozaki.activitystate.ActivityState.NormalActivityState(
+                ActivityState.NormalActivityState(
                     getString(
                         R.string.profiles_deletion_settings
                     )
@@ -150,14 +163,14 @@ class ProfilesFragment: Fragment() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.profiles.collect {
                 when(it) {
-                    is com.sonozaki.profiles.presentation.state.ProfilesDataState.ViewData -> {
+                    is ProfilesDataState.ViewData -> {
                         setupListVisibility(true)
                         myProfileAdapter.submitList(it.items)
                     }
-                    is com.sonozaki.profiles.presentation.state.ProfilesDataState.Loading -> {
+                    is ProfilesDataState.Loading -> {
                         setupListVisibility(false)
                     }
-                    is com.sonozaki.profiles.presentation.state.ProfilesDataState.SuperUserAbsent -> {
+                    is ProfilesDataState.SuperUserAbsent -> {
                         setupListVisibility(true)
                     }
                 }
@@ -167,16 +180,9 @@ class ProfilesFragment: Fragment() {
 
     private fun setupListVisibility(visible: Boolean) {
         with(binding) {
-            items.visibility = com.sonozaki.utils.booleanToVisibility(visible)
-            progressBar2.visibility = com.sonozaki.utils.booleanToVisibility(!visible)
+            items.visibility = booleanToVisibility(visible)
+            progressBar2.visibility = booleanToVisibility(!visible)
         }
-    }
-
-    /**
-     * Setting recyclerview buttons listeners
-     */
-    private fun com.sonozaki.profiles.presentation.adapter.ProfileAdapter.setRecyclerViewListeners() {
-        onDeleteItemClickListener = { id, status -> viewModel.setProfileDeletionStatus(id, status) }
     }
 
     /**
@@ -185,7 +191,6 @@ class ProfilesFragment: Fragment() {
     private fun setupRecyclerView() {
         with(binding.items) {
             layoutManager = LinearLayoutManager(context)
-            myProfileAdapter.setRecyclerViewListeners()
             adapter = myProfileAdapter
         }
     }
@@ -194,14 +199,14 @@ class ProfilesFragment: Fragment() {
      * Listening to dialogs results
      */
     private fun setupDialogListeners() {
-        com.sonozaki.dialogs.QuestionDialog.setupListener(
+        QuestionDialog.setupListener(
             parentFragmentManager,
             CHANGE_PROFILES_DELETION_ENABLED,
             viewLifecycleOwner
         ) {
             viewModel.changeDeletionEnabled()
         }
-        com.sonozaki.dialogs.QuestionDialog.setupListener(
+        QuestionDialog.setupListener(
             parentFragmentManager,
             NO_SUPERUSER,
             viewLifecycleOwner

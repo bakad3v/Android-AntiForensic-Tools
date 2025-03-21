@@ -46,6 +46,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation(project(":core:bedatastore"))
     // Serialization
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.collections.immutable)

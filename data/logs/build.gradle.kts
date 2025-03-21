@@ -42,6 +42,7 @@ dependencies {
     implementation(project(":core:utils"))
     // Serialization
     implementation(libs.kotlinx.serialization.json)
+    implementation(project(":core:bedatastore"))
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)

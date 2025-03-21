@@ -38,7 +38,7 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:ellipsize="start"
-          android:maxLines="2"
+          android:maxLines="1"
           android:paddingStart="@dimen/margin_normal"
           android:paddingEnd="@dimen/margin_normal"
           android:textColor="?attr/colorOnSecondaryContainer" />

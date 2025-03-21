@@ -2,8 +2,12 @@ package com.sonozaki.data.settings.dataMigration
 
 import android.content.Context
 import androidx.datastore.core.DataMigration
+import com.sonozaki.bedatastore.datastore.encryptedDataStore
 import com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreFileDBA
 import com.sonozaki.data.settings.entities.UsbSettingsV1
+import com.sonozaki.encrypteddatastore.BaseSerializer
+import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.entities.UsbSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -11,26 +15,31 @@ import javax.inject.Inject
 /**
  * Migration between v1 USB settings and v2 settings
  */
-class USBMigrationV1 @Inject constructor(@ApplicationContext private val context: Context, usbSettingsSerializerV1: com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer<UsbSettingsV1>): DataMigration<com.sonozaki.entities.UsbSettings> {
+class USBMigrationV1 @Inject constructor(
+    @ApplicationContext private val context: Context,
+    usbSettingsSerializerV1: BaseSerializer<UsbSettingsV1>
+): DataMigration<UsbSettings> {
 
-    private val Context.oldDatastore by com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreDirectBootAware(
+    private val Context.oldDatastore by encryptedDataStore(
         OLD_USB,
-        usbSettingsSerializerV1
+        usbSettingsSerializerV1,
+        alias = EncryptionAlias.DATASTORE.name,
+        isDBA = true
     )
     override suspend fun cleanUp() {
         context.dataStoreFileDBA(OLD_USB).delete()
     }
 
-    override suspend fun migrate(currentData: com.sonozaki.entities.UsbSettings): com.sonozaki.entities.UsbSettings {
+    override suspend fun migrate(currentData: UsbSettings): UsbSettings {
         val oldData = context.oldDatastore.data.first()
         return if (oldData.runOnConnection)  {
-            com.sonozaki.entities.UsbSettings.RUN_ON_CONNECTION
+            UsbSettings.RUN_ON_CONNECTION
         } else {
-            com.sonozaki.entities.UsbSettings.DO_NOTHING
+            UsbSettings.DO_NOTHING
         }
     }
 
-    override suspend fun shouldMigrate(currentData: com.sonozaki.entities.UsbSettings): Boolean {
+    override suspend fun shouldMigrate(currentData: UsbSettings): Boolean {
         return context.dataStoreFileDBA(OLD_USB).exists()
     }
 
