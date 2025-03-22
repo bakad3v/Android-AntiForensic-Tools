@@ -1,6 +1,4 @@
 package com.sonozaki.superuser.root
-
-import android.app.admin.DeviceAdminReceiver
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
@@ -24,10 +22,9 @@ class Root @Inject constructor(
     private val profilesMapper: ProfilesMapper,
     private val setRootInactiveUseCase: SetRootInactiveUseCase,
     private val dpm: DevicePolicyManager,
-    private val userManager: UserManager
+    private val userManager: UserManager,
+    private val deviceAdmin: ComponentName
 ) : SuperUser {
-
-    private val deviceAdmin by lazy { ComponentName(context, DeviceAdminReceiver::class.java) }
 
     override suspend fun executeRootCommand(command: String): Shell.Result {
         val result = Shell.cmd(command).exec()

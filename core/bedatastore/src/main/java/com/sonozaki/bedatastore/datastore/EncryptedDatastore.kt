@@ -78,8 +78,13 @@ internal class EncryptedDatastore<T>(
                 }
             }
             val newData = transform(data)
+            if (newData == data) {
+                return@withContext data
+            }
+            Log.w("encrypt", "started $data")
+            val result = baseDatastore.updateData { encryptedSerializer.serializeAndEncrypt(newData) }
+            Log.w("encrypt", "ended $result")
             cachedFlow.emit(EncryptedData.Result(newData))
-            baseDatastore.updateData { encryptedSerializer.serializeAndEncrypt(newData) }
             return@withContext newData
         }
     }

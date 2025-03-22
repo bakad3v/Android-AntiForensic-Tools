@@ -9,26 +9,23 @@ import kotlin.coroutines.CoroutineContext
 
 internal class EncryptedMigration<T> internal constructor(
     private val baseMigration: DataMigration<T>,
-    private val encryptedSerializer: EncryptedSerializer<T>,
-    private val coroutineContext: CoroutineContext): DataMigration<ByteArray> {
-    override suspend fun cleanUp() = withContext(coroutineContext) {
-        baseMigration.cleanUp()
-    }
+    private val encryptedSerializer: EncryptedSerializer<T>, ): DataMigration<ByteArray> {
+    override suspend fun cleanUp() = baseMigration.cleanUp()
 
-    override suspend fun shouldMigrate(currentData: ByteArray): Boolean = withContext(coroutineContext) {
-        Log.w("input","baseMigrate")
+
+    override suspend fun shouldMigrate(currentData: ByteArray): Boolean {
         val currentDataDecrypted = encryptedSerializer.decryptAndDeserialize(currentData)
-        return@withContext baseMigration.shouldMigrate(currentDataDecrypted)
+        return baseMigration.shouldMigrate(currentDataDecrypted)
     }
 
-    override suspend fun migrate(currentData: ByteArray): ByteArray = withContext(coroutineContext) {
+    override suspend fun migrate(currentData: ByteArray): ByteArray {
         Log.w("lifecycle","migrationStart")
         val currentDataDecrypted = encryptedSerializer.decryptAndDeserialize(currentData)
         val newData = baseMigration.migrate(currentDataDecrypted)
         Log.w("lifecycle","migrationEnd")
-        return@withContext encryptedSerializer.serializeAndEncrypt(newData)
+        return encryptedSerializer.serializeAndEncrypt(newData)
     }
 }
 
-internal fun <T> getEncryptedMigrations(context: Context, produceMigrations: (Context) -> List<DataMigration<T>>, encryptedSerializer: EncryptedSerializer<T>, coroutineContext: CoroutineContext): List<EncryptedMigration<T>> =
-    produceMigrations(context).map { EncryptedMigration(it, encryptedSerializer, coroutineContext) }
+internal fun <T> getEncryptedMigrations(context: Context, produceMigrations: (Context) -> List<DataMigration<T>>, encryptedSerializer: EncryptedSerializer<T>): List<EncryptedMigration<T>> =
+    produceMigrations(context).map { EncryptedMigration(it, encryptedSerializer) }

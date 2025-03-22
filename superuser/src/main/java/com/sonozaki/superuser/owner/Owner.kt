@@ -1,7 +1,6 @@
 package com.sonozaki.superuser.owner
 
 import android.annotation.SuppressLint
-import android.app.admin.DeviceAdminReceiver
 import android.app.admin.DevicePolicyManager
 import android.app.admin.IDevicePolicyManager
 import android.content.ComponentName
@@ -14,7 +13,6 @@ import android.os.Build
 import android.os.Build.VERSION
 import android.os.Parcel
 import android.os.UserManager
-import com.sonozaki.utils.UIText
 import com.rosan.dhizuku.api.Dhizuku
 import com.rosan.dhizuku.api.Dhizuku.binderWrapper
 import com.rosan.dhizuku.api.DhizukuBinderWrapper
@@ -25,20 +23,26 @@ import com.sonozaki.superuser.domain.usecases.SetOwnerInactiveUseCase
 import com.sonozaki.superuser.mapper.ProfilesMapper
 import com.sonozaki.superuser.superuser.SuperUser
 import com.sonozaki.superuser.superuser.SuperUserException
+import com.sonozaki.utils.UIText
 import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.util.concurrent.Executors
 import javax.inject.Inject
 
-class Owner @Inject constructor(@ApplicationContext private val context: Context, private val profilesMapper: ProfilesMapper, private val setOwnerInactiveUseCase: SetOwnerInactiveUseCase, private val appDPM: DevicePolicyManager, private val userManager: UserManager):
+class Owner @Inject constructor(
+    @ApplicationContext private val context: Context,
+    private val profilesMapper: ProfilesMapper,
+    private val setOwnerInactiveUseCase: SetOwnerInactiveUseCase,
+    private val appDPM: DevicePolicyManager,
+    private val userManager: UserManager,
+    private val deviceAdmin: ComponentName):
     SuperUser {
 
     private var initialized: Boolean = false
     private val dpm by lazy { getDhizukuDPM() }
     private val packageInstaller by lazy { getDhizukuPackageInstaller() }
     private val deviceOwner by lazy { Dhizuku.getOwnerComponent() }
-    private val deviceAdmin by lazy { ComponentName(context, DeviceAdminReceiver::class.java) }
 
     private fun initDhizuku() {
         Dhizuku.init(context)

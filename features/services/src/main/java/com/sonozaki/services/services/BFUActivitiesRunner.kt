@@ -1,6 +1,7 @@
 package com.sonozaki.services.services
 
 import android.content.Context
+import android.util.Log
 import com.sonozaki.services.R
 import com.sonozaki.services.domain.usecases.GetLogsDataUseCase
 import com.sonozaki.services.domain.usecases.GetManagedAppsUseCase
@@ -188,6 +189,7 @@ class BFUActivitiesRunner @Inject constructor(
             logsAllowed = getLogsDataUseCase().logsEnabled
             writeToLogs(R.string.actions_started)
         } catch (e: Exception) {
+            Log.w("logEvent", e.stackTraceToString())
             return
         }
         writeToLogs(R.string.loading_data)

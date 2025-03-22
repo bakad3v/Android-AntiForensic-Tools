@@ -2,6 +2,7 @@ package com.sonozaki.passwordsetup.presentation.fragment
 
 import android.os.Bundle
 import android.text.Html
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -163,7 +164,10 @@ class SetupPassFragment : Fragment() {
     }
 
     private fun observePasswordCreated() {
-        binding.password.setOnEditorActionListener { textView, actionId, _ ->
+        binding.password.setOnEditorActionListener { textView, actionId, event ->
+            if (event == null || event.action != KeyEvent.ACTION_DOWN) {
+                return@setOnEditorActionListener false
+            }
             var handled = false
             if (actionId == IME_ACTION_SEND) {
                 viewModel.createPassword(textView.text.toList().toCharArray())

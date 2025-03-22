@@ -120,9 +120,9 @@ private class EncryptedDatastoreSingletonDelegate<T>(
                 }
                 val encryptionManager = EncryptionManagerFactory.get()
                 val encryptedSerializer = EncryptedSerializer(encryptionManager, serializer, alias)
-                val encryptedCorruptionHandler = encryptedCorruptionHandler(corruptionHandler, encryptedSerializer, scope.coroutineContext)
-                val byteArraySerializer = ByteArraySerializer(serializer.defaultValue, encryptedSerializer, scope.coroutineContext)
-                val encryptedMigrations = getEncryptedMigrations(applicationContext, produceMigrations, encryptedSerializer, scope.coroutineContext)
+                val encryptedCorruptionHandler = encryptedCorruptionHandler(corruptionHandler, encryptedSerializer)
+                val byteArraySerializer = ByteArraySerializer(serializer.defaultValue, encryptedSerializer)
+                val encryptedMigrations = getEncryptedMigrations(applicationContext, produceMigrations, encryptedSerializer)
                 Log.w("input",applicationContext.dataStoreFile(fileName, isDBA).absolutePath)
                 Log.w("input",applicationContext.dataStoreFile(fileName, isDBA).exists().toString())
                 val datastore = DataStoreFactory.create(

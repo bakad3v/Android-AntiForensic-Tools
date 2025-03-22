@@ -66,6 +66,7 @@ internal class EncryptionManagerImpl(): EncryptionManager {
     override fun decrypt(alias: String, data: ByteArray): ByteArray {
         return data.inputStream().use {
             val ivSize = it.read()
+            Log.w("logEventivSize",ivSize.toString())
             val iv = ByteArray(ivSize)
             it.read(iv)
             val encryptedBytes = it.readBytes()

@@ -9,15 +9,12 @@ import kotlin.coroutines.CoroutineContext
 
 internal fun <T> encryptedCorruptionHandler(
     baseHandler: ReplaceFileCorruptionHandler<T>?,
-    encryptedSerializer: EncryptedSerializer<T>,
-    coroutineContext: CoroutineContext
+    encryptedSerializer: EncryptedSerializer<T>
 ): ReplaceFileCorruptionHandler<ByteArray>? {
     return baseHandler?.let {
         ReplaceFileCorruptionHandler { ex: CorruptionException ->
             return@ReplaceFileCorruptionHandler runBlocking {
-                withContext(coroutineContext) {
-                    encryptedSerializer.serializeAndEncrypt(baseHandler.handleCorruption(ex))
-                }
+                encryptedSerializer.serializeAndEncrypt(baseHandler.handleCorruption(ex))
             }
         }
     }
