@@ -17,7 +17,7 @@ import com.sonozaki.dialogs.databinding.DigitInputDialogFragmentBinding
 import com.sonozaki.validators.BaseValidator
 
 /**
- * DialogFragment for requesting digital information from user
+ * DialogFragment for requesting number from user
  */
 class InputDigitDialog : DialogFragment() {
 

@@ -77,6 +77,9 @@ class EnterPassFragment : Fragment() {
         }
     }
 
+    /**
+     * Displaying state as user enters password
+     */
     private fun observePasswordState() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.passwordStatus.collect {
@@ -84,9 +87,6 @@ class EnterPassFragment : Fragment() {
                     is EnterPasswordState.CheckEnterPasswordResults -> handlePasswordEntered(it.rightPassword)
                     is EnterPasswordState.EnteringText -> setupError(null)
                     is EnterPasswordState.Initial -> setupError(null)
-                }
-                if (it is EnterPasswordState.CheckEnterPasswordResults && it.rightPassword) {
-                    moveToNextScreen()
                 }
             }
         }

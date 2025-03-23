@@ -21,16 +21,22 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.sonozaki.activitystate.ActivityState
+import com.sonozaki.activitystate.ActivityStateHolder
+import com.sonozaki.dialogs.InputDigitDialog
 import com.sonozaki.dialogs.QuestionDialog
 import com.sonozaki.entities.FilesSortOrder
 import com.sonozaki.files.R
 import com.sonozaki.files.databinding.SetupUsualFilesFragmentBinding
+import com.sonozaki.files.presentation.actions.FileSettingsAction
+import com.sonozaki.files.presentation.actions.FileSettingsAction.ShowUsualDialog
 import com.sonozaki.files.presentation.adapter.FileAdapter
 import com.sonozaki.files.presentation.state.FileDataState
 import com.sonozaki.files.presentation.viewmodel.UsualFilesSettingsVM
 import com.sonozaki.files.presentation.viewmodel.UsualFilesSettingsVM.Companion.CHANGE_FILES_DELETION_REQUEST
 import com.sonozaki.files.presentation.viewmodel.UsualFilesSettingsVM.Companion.CONFIRM_CLEAR_REQUEST
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
+import com.sonozaki.utils.booleanToVisibility
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -68,6 +74,9 @@ class SetupFilesFragment : Fragment() {
   }
 
 
+  /**
+   * Launcher for file selection. Takes persistent uri permission for operations with file and add file to files repository.
+   */
   private val fileSelectionLauncher =
     registerForActivityResult(ActivityResultContracts.OpenDocument()) { file ->
 
@@ -93,6 +102,9 @@ class SetupFilesFragment : Fragment() {
       viewModel.changeFABsVisibility()
     }
 
+  /**
+   * Launcher for folders selection. Takes persistent uri permission for operations with folder and add file to files repository.
+   */
   private val folderSelectionLauncher =
     registerForActivityResult(ActivityResultContracts.OpenDocumentTree()) { folder ->
       if (folder == null) {
@@ -117,6 +129,9 @@ class SetupFilesFragment : Fragment() {
       viewModel.changeFABsVisibility()
     }
 
+  /**
+   * Permission dialog for receiving access to files.
+   */
   private val requestFilesPermissionLauncher =
     registerForActivityResult(
       ActivityResultContracts.RequestPermission()
@@ -233,9 +248,9 @@ class SetupFilesFragment : Fragment() {
 
   private fun setMainActivityState() {
     val activity = requireActivity()
-    if (activity is com.sonozaki.activitystate.ActivityStateHolder)
+    if (activity is ActivityStateHolder)
       activity.setActivityState(
-        com.sonozaki.activitystate.ActivityState.NormalActivityState(
+       ActivityState.NormalActivityState(
           getString(
             R.string.file_deletion_settings
           )
@@ -244,14 +259,14 @@ class SetupFilesFragment : Fragment() {
   }
 
   /**
-   * Setting up dialog launcher
+   * Listen for user's actions.
    */
   private fun setupActionsListener() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.deletionSettingsActionFlow.collect {
         when (it) {
-          is com.sonozaki.files.presentation.actions.FileSettingsAction.ShowUsualDialog -> dialogLauncher.launchDialogFromAction(it.value)
-          is com.sonozaki.files.presentation.actions.FileSettingsAction.ShowPriorityEditor -> {
+          is ShowUsualDialog -> dialogLauncher.launchDialogFromAction(it.value)
+          is FileSettingsAction.ShowPriorityEditor -> {
             with(it) {
               showPriorityEditor(
                 title.asString(context),
@@ -267,6 +282,9 @@ class SetupFilesFragment : Fragment() {
     }
   }
 
+  /**
+   * Show dialog for altering selected file's priority.
+   */
   private fun showPriorityEditor(
     title: String,
     hint: String,
@@ -274,12 +292,12 @@ class SetupFilesFragment : Fragment() {
     uri: String,
     range: IntRange
   ) {
-    com.sonozaki.dialogs.InputDigitDialog.showPriorityEditor(parentFragmentManager, title, hint, message, uri, range)
+    InputDigitDialog.showPriorityEditor(parentFragmentManager, title, hint, message, uri, range)
   }
 
 
   /**
-   * Sending data to adapter
+   * Sending data to adapter and expanding or reducing FABs.
    */
   private fun setupFilesListListener() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
@@ -298,8 +316,8 @@ class SetupFilesFragment : Fragment() {
 
   private fun setFilesVisibility(visible: Boolean) {
     with(binding) {
-      items.visibility = com.sonozaki.utils.booleanToVisibility(visible)
-      progressBar2.visibility = com.sonozaki.utils.booleanToVisibility(!visible)
+      items.visibility = booleanToVisibility(visible)
+      progressBar2.visibility = booleanToVisibility(!visible)
     }
   }
 
@@ -307,7 +325,7 @@ class SetupFilesFragment : Fragment() {
    * Listening to dialogs results
    */
   private fun setupDialogListeners() {
-    com.sonozaki.dialogs.InputDigitDialog.setupEditPriorityListener(
+    InputDigitDialog.setupEditPriorityListener(
       parentFragmentManager,
       viewLifecycleOwner
     ) { uri: Uri, priority: Int ->

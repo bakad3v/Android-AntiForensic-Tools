@@ -4,7 +4,7 @@ import com.sonozaki.validators.BaseValidator
 import com.sonozaki.validators.ValidateResult
 
 /**
- * User input validator for dialogs requiring digit input
+ * User input validator for dialogs requiring digit input. Asserts whether the number lies in specified bounds.
  */
 class DigitInBoundsValidator(private val digit: String,private val min: Int, private val max: Int):
 BaseValidator() {

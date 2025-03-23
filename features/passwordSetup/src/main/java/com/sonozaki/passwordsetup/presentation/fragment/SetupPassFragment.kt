@@ -38,6 +38,7 @@ class SetupPassFragment : Fragment() {
     @Inject
     lateinit var router: PasswordSetupRouter
 
+    //was this screen opened for password creation or for password altering?
     private val fromSplash by lazy { router.getFromSplash(this) }
 
     override fun onCreateView(
@@ -64,6 +65,9 @@ class SetupPassFragment : Fragment() {
         awaitPasswordCreation()
     }
 
+    /**
+     * Wait for user to create new password
+     */
     private fun awaitPasswordCreation() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.passwordCreatedFlow.collect {
@@ -90,6 +94,9 @@ class SetupPassFragment : Fragment() {
         }
     }
 
+    /**
+     * Change UI to display password entering state.
+     */
     private fun observeState() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.passwordState.collect {
@@ -107,11 +114,17 @@ class SetupPassFragment : Fragment() {
         }
     }
 
+    /**
+     * Display error when entered incorrect password
+     */
     private fun displayError(message: Int?) {
         binding.passwordField.isErrorEnabled = message != null
         binding.passwordField.error = message?.let { requireContext().getString(it) }
     }
 
+    /**
+     * Hide keyboard and move to next screen if password was created successfully
+     */
     private fun handlePasswordCreation() {
         if (fromSplash) {
             hideKeyboard()

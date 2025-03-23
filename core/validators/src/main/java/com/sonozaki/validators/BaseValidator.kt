@@ -1,5 +1,8 @@
 package com.sonozaki.validators
 
+/**
+ * Class for validating multiple constraints
+ */
 abstract class BaseValidator : IValidator {
   companion object {
     fun validate(vararg validators: IValidator): ValidateResult {
