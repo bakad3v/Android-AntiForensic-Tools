@@ -2,7 +2,6 @@ package com.sonozaki.files.presentation.viewmodel
 
 
 import android.net.Uri
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sonozaki.dialogs.DialogActions
@@ -27,7 +26,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.getAndUpdate
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -47,8 +45,6 @@ class UsualFilesSettingsVM @Inject constructor(
   getSortOrderUseCase: GetSortOrderUseCase,
   getFilesDeletionEnabledUseCase: GetFilesDeletionEnabledUseCase,
 ) : ViewModel() {
-
-  var allFabsVisible = false
 
   val deletionSettingsActionFlow = deletionSettingsActionChannel.receiveAsFlow()
 
@@ -197,10 +193,4 @@ class UsualFilesSettingsVM @Inject constructor(
     const val CONFIRM_CLEAR_REQUEST = "confirm_clear_request"
     const val CHANGE_FILES_DELETION_REQUEST = "change_files_deletion_request"
   }
-
-  override fun onCleared() {
-    Log.w("cleared","true")
-    super.onCleared()
-  }
-
 }

@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.dependency.analysis)
 }
 
 android {
@@ -35,10 +36,6 @@ android {
 dependencies {
     api(libs.datastore.core.android)
     api(libs.datastore.preferences)
-    implementation(libs.core.ktx)
-    implementation(libs.appcompat)
-    implementation(libs.material)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
 }

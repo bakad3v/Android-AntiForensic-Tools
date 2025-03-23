@@ -1,11 +1,8 @@
 package com.sonozaki.bedatastore.migration
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataMigration
 import com.sonozaki.bedatastore.encryption.EncryptedSerializer
-import kotlinx.coroutines.withContext
-import kotlin.coroutines.CoroutineContext
 
 internal class EncryptedMigration<T> internal constructor(
     private val baseMigration: DataMigration<T>,
@@ -19,10 +16,8 @@ internal class EncryptedMigration<T> internal constructor(
     }
 
     override suspend fun migrate(currentData: ByteArray): ByteArray {
-        Log.w("lifecycle","migrationStart")
         val currentDataDecrypted = encryptedSerializer.decryptAndDeserialize(currentData)
         val newData = baseMigration.migrate(currentDataDecrypted)
-        Log.w("lifecycle","migrationEnd")
         return encryptedSerializer.serializeAndEncrypt(newData)
     }
 }

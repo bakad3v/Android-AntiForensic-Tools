@@ -1,8 +1,5 @@
 package com.sonozaki.bedatastore.encryption
 
-import java.io.InputStream
-import java.io.OutputStream
-
 /**
  * Class for files encryption.
  */

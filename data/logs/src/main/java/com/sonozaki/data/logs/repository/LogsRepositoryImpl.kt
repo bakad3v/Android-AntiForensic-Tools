@@ -2,17 +2,14 @@ package com.sonozaki.data.logs.repository
 
 
 import android.content.Context
-import android.util.Log
 import com.sonozaki.bedatastore.datastore.encryptedDataStore
-import com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreDirectBootAware
-import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
-import com.sonozaki.entities.LogEntity
-import com.sonozaki.entities.LogsData
 import com.sonozaki.data.logs.entities.LogDatastore
 import com.sonozaki.data.logs.entities.LogList
 import com.sonozaki.data.logs.mapper.LogMapper
 import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.entities.LogEntity
+import com.sonozaki.entities.LogsData
 import com.sonozaki.utils.TopLevelFunctions.getEpochDays
 import com.sonozaki.utils.TopLevelFunctions.getMillis
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -95,7 +92,6 @@ class LogsRepositoryImpl @Inject constructor(
   }
 
   override suspend fun writeToLogs(string: String) {
-    Log.w("logEvent",string)
     val dateTime = LocalDateTime.now()
     val date = dateTime.getMillis()
     val day = dateTime.getEpochDays()

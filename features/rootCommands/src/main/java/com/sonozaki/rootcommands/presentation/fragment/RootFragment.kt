@@ -192,4 +192,9 @@ class RootFragment : Fragment() {
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
     }
 
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
+    }
+
 }

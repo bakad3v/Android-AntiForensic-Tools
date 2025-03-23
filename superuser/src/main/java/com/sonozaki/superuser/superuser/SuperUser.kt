@@ -98,7 +98,7 @@ interface SuperUser {
      * Get multiuser UI status.
      *
      * Requirements: root.
-     * @param status enable or disable multiuser UI
+     * @return is multiuser UI enabled
      */
     @Throws(SuperUserException::class)
     suspend fun getMultiuserUIStatus(): Boolean

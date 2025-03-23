@@ -1,6 +1,5 @@
 package com.sonozaki.bedatastore.datastore
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import com.sonozaki.bedatastore.encryption.EncryptedSerializer
 import com.sonozaki.bedatastore.entities.EncryptedData
@@ -35,11 +34,9 @@ internal class EncryptedDatastore<T>(
         .onSubscription {
             cachedFlow.getAndUpdate {
                 withContext(coroutineContext) {
-                    Log.w("newData", "subscription $it")
                     when(it) {
                         is EncryptedData.EmptyResult -> {
                             val resultData = getInitialData()
-                            Log.w("newData", "resultData $resultData")
                             EncryptedData.Result(resultData)
                         }
                         is EncryptedData.Result -> it
@@ -48,7 +45,6 @@ internal class EncryptedDatastore<T>(
             }
         }
         .onCompletion {
-            Log.w("newData", "completion ${cachedFlow.subscriptionCount.value}")
             if (cachedFlow.subscriptionCount.value == 0) {
                 cachedFlow.emit(EncryptedData.EmptyResult())
             }
@@ -59,9 +55,7 @@ internal class EncryptedDatastore<T>(
         }
 
     private suspend fun getInitialData(): T = mutex1.withLock {
-        Log.w("lifecycle", "create")
         val encryptedData = baseDatastore.data.first()
-        Log.w("lifecycle", "created")
         return encryptedSerializer.decryptAndDeserialize(encryptedData)
     }
 
@@ -81,9 +75,7 @@ internal class EncryptedDatastore<T>(
             if (newData == data) {
                 return@withContext data
             }
-            Log.w("encrypt", "started $data")
-            val result = baseDatastore.updateData { encryptedSerializer.serializeAndEncrypt(newData) }
-            Log.w("encrypt", "ended $result")
+            baseDatastore.updateData { encryptedSerializer.serializeAndEncrypt(newData) }
             cachedFlow.emit(EncryptedData.Result(newData))
             return@withContext newData
         }

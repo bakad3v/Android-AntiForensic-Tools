@@ -2,14 +2,9 @@ package com.sonozaki.bedatastore.serializer
 
 import androidx.datastore.core.Serializer
 import com.sonozaki.bedatastore.encryption.EncryptedSerializer
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
 import java.io.InputStream
 import java.io.OutputStream
-import kotlin.coroutines.CoroutineContext
 
 internal class ByteArraySerializer<T>(
     private val default: T,

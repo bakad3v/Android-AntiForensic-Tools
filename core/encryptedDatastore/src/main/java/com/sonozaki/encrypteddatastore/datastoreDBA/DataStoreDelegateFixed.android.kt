@@ -1,8 +1,6 @@
 package com.sonozaki.encrypteddatastore.datastoreDBA
 
-import androidx.datastore.dataStoreFile
 import android.content.Context
-import android.util.Log
 import androidx.annotation.GuardedBy
 import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
@@ -11,8 +9,7 @@ import androidx.datastore.core.Serializer
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.core.okio.OkioSerializer
 import androidx.datastore.core.okio.OkioStorage
-import kotlin.properties.ReadOnlyProperty
-import kotlin.reflect.KProperty
+import androidx.datastore.dataStoreFile
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -21,6 +18,8 @@ import okio.BufferedSource
 import okio.FileSystem
 import okio.Path.Companion.toPath
 import java.io.File
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 /**
  * **This is a modification of android Datastore with some fixes to make it direct boot aware.**
@@ -93,8 +92,6 @@ internal class DataStoreSingletonDelegateFixed<T> internal constructor(
      */
     override fun getValue(thisRef: Context, property: KProperty<*>): DataStore<T> {
         val deviceContext =  thisRef.createDeviceProtectedStorageContext()
-        Log.w("path",File(deviceContext.filesDir, "datastore/$fileName").absolutePath)
-        Log.w("pathTrue", fileName + File(deviceContext.filesDir, "datastore/$fileName").exists().toString())
         return INSTANCE ?: synchronized(lock) {
             if (INSTANCE == null) {
                 INSTANCE = DataStoreFactory.create(

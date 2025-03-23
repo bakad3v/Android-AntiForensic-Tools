@@ -1,8 +1,6 @@
 package com.sonozaki.superuser.superuser
 
 import android.content.Intent
-import android.util.Log
-import com.sonozaki.superuser.R
 import com.sonozaki.superuser.admin.DeviceAdmin
 import com.sonozaki.superuser.domain.usecases.GetPermissionsUseCase
 import com.sonozaki.superuser.owner.Owner
@@ -44,9 +42,7 @@ class SuperUserManager @Inject constructor(private val owner: Owner, private val
      * Get the most privileged superuser available
      */
     suspend fun getSuperUser(): SuperUser {
-        Log.w("newData","permissions")
         val permissions = getPermissionsUseCase()
-        Log.w("newData","permissionsEnd")
         if (permissions.isRoot)
             return root
         if (permissions.isOwner)

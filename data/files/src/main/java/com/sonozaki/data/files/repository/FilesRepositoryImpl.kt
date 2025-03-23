@@ -2,18 +2,16 @@ package com.sonozaki.data.files.repository
 
 import android.content.Context
 import android.net.Uri
-import androidx.datastore.dataStore
 import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.anggrayudi.storage.file.mimeType
 import com.sonozaki.bedatastore.datastore.encryptedDataStore
-import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
-import com.sonozaki.entities.FileType
-import com.sonozaki.entities.FilesSortOrder
 import com.sonozaki.data.files.entities.FileDatastore
 import com.sonozaki.data.files.entities.FilesList
 import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.entities.FileType
+import com.sonozaki.entities.FilesSortOrder
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow

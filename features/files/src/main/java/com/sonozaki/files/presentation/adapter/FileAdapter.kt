@@ -13,7 +13,6 @@ import com.sonozaki.files.domain.entities.FileInfo
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import javax.inject.Named
 
 /**
  * Recycler view adapter for usual files

@@ -3,8 +3,6 @@ package com.sonozaki.data.settings.repositories
 import android.content.Context
 import com.sonozaki.bedatastore.datastore.encryptedDataStore
 import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreDirectBootAware
-import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
 import com.sonozaki.entities.ButtonClicksData
 import com.sonozaki.entities.ButtonSettings

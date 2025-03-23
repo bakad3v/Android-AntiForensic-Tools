@@ -1,7 +1,6 @@
 package com.sonozaki.lockscreen.presentation.fragment
 
 import android.os.Bundle
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -71,15 +70,10 @@ class EnterPassFragment : Fragment() {
      */
     private fun observePasswordCreation() {
         binding.password.setOnEditorActionListener { textView, actionId, event ->
-            if (event == null || event.action != KeyEvent.ACTION_DOWN) {
-                return@setOnEditorActionListener false
-            }
-            var handled = false
             if (actionId == IME_ACTION_SEND) {
                 viewModel.passwordEntered(textView.text.toList().toCharArray())
-                handled = true
             }
-            return@setOnEditorActionListener handled
+            return@setOnEditorActionListener false
         }
     }
 

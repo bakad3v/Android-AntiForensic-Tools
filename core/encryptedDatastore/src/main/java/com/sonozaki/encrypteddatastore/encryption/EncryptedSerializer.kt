@@ -1,6 +1,5 @@
 package com.sonozaki.encrypteddatastore.encryption
 
-import android.util.Log
 import androidx.datastore.core.Serializer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -20,9 +19,7 @@ open class EncryptedSerializer<T>(private val encryptionManager: EncryptionManag
 
     override suspend fun readFrom(input: InputStream): T = withContext(dispatcherIO) {
         return@withContext try {
-            Log.w("path","decoding")
             val decryptedBytes = encryptionManager.decrypt(alias.name, input)
-            Log.w("path", decryptedBytes.decodeToString())
             Json.decodeFromString(
                 deserializer = serializer,
                 string = decryptedBytes.decodeToString()

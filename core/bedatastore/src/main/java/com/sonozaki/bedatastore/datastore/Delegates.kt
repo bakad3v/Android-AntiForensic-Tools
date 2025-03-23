@@ -1,7 +1,6 @@
 package com.sonozaki.bedatastore.datastore
 
 import android.content.Context
-import android.util.Log
 import androidx.annotation.GuardedBy
 import androidx.datastore.core.DataMigration
 import androidx.datastore.core.DataStore
@@ -10,7 +9,6 @@ import androidx.datastore.core.Serializer
 import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import androidx.datastore.core.okio.OkioSerializer
 import androidx.datastore.core.okio.OkioStorage
-import androidx.datastore.dataStoreFile
 import com.sonozaki.bedatastore.corruptionHandler.encryptedCorruptionHandler
 import com.sonozaki.bedatastore.encryption.EncryptedSerializer
 import com.sonozaki.bedatastore.encryption.EncryptionManagerFactory
@@ -112,7 +110,6 @@ private class EncryptedDatastoreSingletonDelegate<T>(
     override fun getValue(thisRef: Context, property: KProperty<*>): EncryptedDatastore<T> {
         return INSTANCE ?: synchronized(lock) {
             if (INSTANCE == null) {
-                Log.w("lifecycle","startingDatastore")
                 val applicationContext = if (isDBA) {
                     thisRef.applicationContext.createDeviceProtectedStorageContext()
                 } else {
@@ -123,8 +120,6 @@ private class EncryptedDatastoreSingletonDelegate<T>(
                 val encryptedCorruptionHandler = encryptedCorruptionHandler(corruptionHandler, encryptedSerializer)
                 val byteArraySerializer = ByteArraySerializer(serializer.defaultValue, encryptedSerializer)
                 val encryptedMigrations = getEncryptedMigrations(applicationContext, produceMigrations, encryptedSerializer)
-                Log.w("input",applicationContext.dataStoreFile(fileName, isDBA).absolutePath)
-                Log.w("input",applicationContext.dataStoreFile(fileName, isDBA).exists().toString())
                 val datastore = DataStoreFactory.create(
                     storage = OkioStorage(FileSystem.SYSTEM, OkioSerializerWrapper(byteArraySerializer)) {
                         applicationContext.dataStoreFile(fileName, isDBA).absolutePath.toPath()
@@ -133,7 +128,6 @@ private class EncryptedDatastoreSingletonDelegate<T>(
                     migrations = encryptedMigrations,
                     scope = scope
                 )
-                Log.w("lifecycle","creatingDatastore")
                 INSTANCE = EncryptedDatastore(datastore, encryptedSerializer, scope.coroutineContext)
             }
             INSTANCE!!

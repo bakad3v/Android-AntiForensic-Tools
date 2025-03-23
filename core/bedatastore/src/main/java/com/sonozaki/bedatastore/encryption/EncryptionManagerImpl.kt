@@ -2,7 +2,6 @@ package com.sonozaki.bedatastore.encryption
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
-import android.util.Log
 import java.io.ByteArrayOutputStream
 import java.security.KeyStore
 import javax.crypto.Cipher
@@ -17,9 +16,7 @@ internal class EncryptionManagerImpl(): EncryptionManager {
     }
 
     private fun getEncryptCipher(alias: String) = Cipher.getInstance(TRANSFORMATION).apply {
-        Log.w("input","started")
         init(Cipher.ENCRYPT_MODE, getKey(alias))
-        Log.w("input","finished")
     }
 
     private fun getDecryptCipherForIv(alias: String,iv: ByteArray): Cipher {
@@ -66,7 +63,6 @@ internal class EncryptionManagerImpl(): EncryptionManager {
     override fun decrypt(alias: String, data: ByteArray): ByteArray {
         return data.inputStream().use {
             val ivSize = it.read()
-            Log.w("logEventivSize",ivSize.toString())
             val iv = ByteArray(ivSize)
             it.read(iv)
             val encryptedBytes = it.readBytes()

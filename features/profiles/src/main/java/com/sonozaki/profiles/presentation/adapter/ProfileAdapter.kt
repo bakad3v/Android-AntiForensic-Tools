@@ -13,7 +13,6 @@ import com.sonozaki.profiles.databinding.ProfileCardviewBinding
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
-import javax.inject.Inject
 
 /**
  * Recycler view adapter for profiles

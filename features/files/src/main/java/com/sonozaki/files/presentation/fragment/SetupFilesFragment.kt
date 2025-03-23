@@ -397,11 +397,11 @@ class SetupFilesFragment : Fragment() {
     popup.menuInflater.inflate(R.menu.sorting, popup.menu)
     popup.setOnMenuItemClickListener {
       val priority = when (it.itemId) {
-        R.id.maxpriority -> com.sonozaki.entities.FilesSortOrder.PRIORITY_DESC
+        R.id.maxpriority -> FilesSortOrder.PRIORITY_DESC
 
-        R.id.minpriority -> com.sonozaki.entities.FilesSortOrder.PRIORITY_ASC
+        R.id.minpriority -> FilesSortOrder.PRIORITY_ASC
 
-        R.id.alphabet -> com.sonozaki.entities.FilesSortOrder.NAME_ASC
+        R.id.alphabet -> FilesSortOrder.NAME_ASC
 
         R.id.desalphabet -> FilesSortOrder.NAME_DESC
 

@@ -1,17 +1,13 @@
 package com.sonozaki.data.settings.repositories
 
 import android.content.Context
-import android.util.Log
 import com.sonozaki.bedatastore.datastore.encryptedDataStore
-import com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreDirectBootAware
-import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
-import com.sonozaki.entities.UsbSettings
 import com.sonozaki.data.settings.dataMigration.USBMigrationV1
 import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.entities.UsbSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.onCompletion
 import javax.inject.Inject
 
 /**

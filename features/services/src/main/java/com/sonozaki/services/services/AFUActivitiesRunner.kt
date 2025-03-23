@@ -1,7 +1,6 @@
 package com.sonozaki.services.services
 
 import android.content.Context
-import android.util.Log
 import androidx.documentfile.provider.DocumentFile
 import com.sonozaki.entities.FileType
 import com.sonozaki.entities.Settings
@@ -76,7 +75,6 @@ class AFUActivitiesRunner @Inject constructor(
             logsAllowed = getLogsDataUseCase().logsEnabled
             writeToLogs(R.string.deletion_started) //getting log status, trying to write to logs
         } catch (e: Exception) {
-            Log.w("logEvent", e.stackTraceToString())
             return
         }
         try {

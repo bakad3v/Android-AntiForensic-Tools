@@ -2,7 +2,6 @@ package com.sonozaki.settings.presentation.fragments
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -14,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.PopupMenu
+import androidx.core.net.toUri
 import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -26,6 +26,7 @@ import com.sonozaki.entities.Theme
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.SettingsFragmentBinding
 import com.sonozaki.settings.domain.routers.SettingsRouter
+import com.sonozaki.settings.presentation.actions.SettingsAction
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ALLOW_SCREENSHOTS_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.BRUTEFORCE_DIALOG
@@ -62,8 +63,6 @@ import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.WIPE_DI
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
-import androidx.core.net.toUri
-import com.sonozaki.settings.presentation.actions.SettingsAction
 
 
 /**

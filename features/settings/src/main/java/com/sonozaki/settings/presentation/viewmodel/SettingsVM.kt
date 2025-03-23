@@ -3,48 +3,48 @@ package com.sonozaki.settings.presentation.viewmodel
 import android.content.Intent
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.dialogs.DialogActions
 import com.sonozaki.entities.BruteforceSettings
+import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.settings.R
 import com.sonozaki.settings.domain.usecases.bruteforce.GetBruteforceSettingsUseCase
+import com.sonozaki.settings.domain.usecases.bruteforce.SetBruteForceLimitUseCase
+import com.sonozaki.settings.domain.usecases.bruteforce.SetBruteForceStatusUseCase
 import com.sonozaki.settings.domain.usecases.button.GetButtonSettingsUseCase
-import com.sonozaki.settings.domain.usecases.settings.GetMultiuserUIUseCase
+import com.sonozaki.settings.domain.usecases.button.SetClicksNumberUseCase
+import com.sonozaki.settings.domain.usecases.button.SetLatencyUseCase
 import com.sonozaki.settings.domain.usecases.permissions.GetPermissionsUseCase
+import com.sonozaki.settings.domain.usecases.permissions.SetOwnerActiveUseCase
+import com.sonozaki.settings.domain.usecases.permissions.SetRootActiveUseCase
+import com.sonozaki.settings.domain.usecases.settings.GetMultiuserUIUseCase
 import com.sonozaki.settings.domain.usecases.settings.GetSafeBootRestrictionUseCase
 import com.sonozaki.settings.domain.usecases.settings.GetSettingsUseCase
-import com.sonozaki.settings.domain.usecases.usb.GetUsbSettingsUseCase
 import com.sonozaki.settings.domain.usecases.settings.GetUserLimitUseCase
 import com.sonozaki.settings.domain.usecases.settings.GetUserSwitchRestrictionUseCase
 import com.sonozaki.settings.domain.usecases.settings.GetUserSwitcherStatusUseCase
-import com.sonozaki.settings.domain.usecases.bruteforce.SetBruteForceLimitUseCase
-import com.sonozaki.settings.domain.usecases.bruteforce.SetBruteForceStatusUseCase
-import com.sonozaki.settings.domain.usecases.button.SetClicksNumberUseCase
-import com.sonozaki.settings.domain.usecases.button.SetLatencyUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetCleaItselfUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetClearDataUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetHideUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetLogdOnBootUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetLogdOnStartUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetMultiuserUIUseCase
-import com.sonozaki.settings.domain.usecases.permissions.SetOwnerActiveUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetRemoveItselfUseCase
-import com.sonozaki.settings.domain.usecases.permissions.SetRootActiveUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetRunOnDuressUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetSafeBootRestrictionUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetScreenshotsStatusUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetThemeUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetTriggerOnButtonUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetTrimUseCase
-import com.sonozaki.settings.domain.usecases.usb.SetUsbSettingsUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetUserLimitUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetUserSwitchRestrictionUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetUserSwitcherUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetWipeUseCase
+import com.sonozaki.settings.domain.usecases.usb.GetUsbSettingsUseCase
+import com.sonozaki.settings.domain.usecases.usb.SetUsbSettingsUseCase
 import com.sonozaki.settings.presentation.actions.SettingsAction
 import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.superuser.superuser.SuperUserManager
@@ -52,8 +52,6 @@ import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.onCompletion
-import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
@@ -634,13 +632,13 @@ class SettingsVM @Inject constructor(
 
     fun setRunOnUsbConnection() {
         viewModelScope.launch {
-            setUsbSettingsUseCase(com.sonozaki.entities.UsbSettings.RUN_ON_CONNECTION)
+            setUsbSettingsUseCase(UsbSettings.RUN_ON_CONNECTION)
         }
     }
 
     fun setDoNothingOnUsbConnection() {
         viewModelScope.launch {
-            setUsbSettingsUseCase(com.sonozaki.entities.UsbSettings.DO_NOTHING)
+            setUsbSettingsUseCase(UsbSettings.DO_NOTHING)
         }
     }
 
@@ -743,7 +741,7 @@ class SettingsVM @Inject constructor(
 
     fun setRebootOnUSB() {
         viewModelScope.launch {
-            setUsbSettingsUseCase(com.sonozaki.entities.UsbSettings.REBOOT_ON_CONNECTION)
+            setUsbSettingsUseCase(UsbSettings.REBOOT_ON_CONNECTION)
         }
     }
 

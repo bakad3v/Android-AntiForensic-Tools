@@ -1,6 +1,5 @@
 package com.sonozaki.bedatastore.encryption
 
-import android.util.Log
 import androidx.datastore.core.Serializer
 import java.io.ByteArrayOutputStream
 
@@ -16,11 +15,9 @@ internal class EncryptedSerializer<T>(
     }
 
     suspend fun serializeAndEncrypt(newData: T): ByteArray {
-        Log.w("input",newData.toString())
         val outputStream = ByteArrayOutputStream()
         serializer.writeTo(newData, outputStream)
         val result = outputStream.toByteArray()
-        Log.w("input",newData.toString())
         return encryptionManager.encrypt(alias, result)
     }
 }

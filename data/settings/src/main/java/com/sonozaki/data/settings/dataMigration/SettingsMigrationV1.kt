@@ -1,19 +1,14 @@
 package com.sonozaki.data.settings.dataMigration
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.core.DataMigration
-import androidx.datastore.core.handlers.ReplaceFileCorruptionHandler
 import com.sonozaki.bedatastore.datastore.dataStoreFile
 import com.sonozaki.bedatastore.datastore.encryptedDataStore
-import com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreDirectBootAware
-import com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreFileDBA
-import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
-import com.sonozaki.entities.Settings
 import com.sonozaki.data.settings.entities.SettingsV1
 import com.sonozaki.data.settings.mappers.SettingsVersionMapper
 import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.entities.Settings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -44,7 +39,6 @@ class SettingsMigrationV1 @Inject constructor(
     }
 
     override suspend fun shouldMigrate(currentData: Settings): Boolean {
-        Log.w("input",context.dataStoreFile(OLD_SETTINGS, true).exists().toString() + "migrate")
         return context.dataStoreFile(OLD_SETTINGS, true).exists()
     }
 

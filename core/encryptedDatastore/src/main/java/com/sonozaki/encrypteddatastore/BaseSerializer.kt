@@ -1,6 +1,5 @@
 package com.sonozaki.encrypteddatastore
 
-import android.util.Log
 import androidx.datastore.core.Serializer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
@@ -14,9 +13,7 @@ import javax.inject.Inject
 class BaseSerializer<T> @Inject constructor(private val dispatcherIO: CoroutineDispatcher, private val serializer: KSerializer<T>, override val defaultValue: T): Serializer<T> {
     override suspend fun readFrom(input: InputStream): T = withContext(dispatcherIO) {
         return@withContext try {
-            Log.w("input","started")
             val inputBytes = input.readBytes().decodeToString()
-            Log.w("input",inputBytes)
             Json.decodeFromString(
                 deserializer = serializer,
                 string = inputBytes
