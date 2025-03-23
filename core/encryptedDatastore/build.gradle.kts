@@ -38,7 +38,7 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation(libs.datastore.preferences)
+    implementation(libs.better.datastore)
     // Serialization
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.javax.inject)

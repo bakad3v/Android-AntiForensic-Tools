@@ -33,7 +33,7 @@
     <string name="clear_itself_long"><![CDATA[<p>App will clear itself after ending of all operations. Requires Dhizuku permission or root.</p>\n<p><strong>Important: app will remain installed on device! This option is incompatible with device admin rights if used with dhizuku rights.</strong></p>]]></string>
     <string name="clear_data_long">App will clear it\'s data after end of all operations. After clearing app\'s data app can only hide itself (see \"Hide itself option\"). In contrast with \"Clear itself\" option, app\'s permissions will be left intact.</string>
     <string name="run_on_password">Run on duress password</string>
-    <string name="run_on_password_long">App will start to destroy your data when you enter duress password - the same password you use to unlock this app. Requires running accessibility service.</string>
+    <string name="run_on_password_long">App will start to destroy your data when you enter duress password (NOT PIN-CODE) - the same password you use to unlock this app. Requires running accessibility service.</string>
     <string name="install_dhizuku">Do you want to install dhizuku?</string>
     <string name="install_dhizuku_long">You need to install dhizuku app and give it device owner rights</string>
     <string name="safeboot_disabled">"Safe boot disabled "</string>

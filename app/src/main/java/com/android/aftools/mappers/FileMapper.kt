@@ -1,6 +1,6 @@
 package com.android.aftools.mappers
 
-import android.net.Uri
+import androidx.core.net.toUri
 import com.sonozaki.data.files.entities.FileDatastore
 import com.sonozaki.data.files.entities.FilesList
 import com.sonozaki.files.domain.entities.FileInfo
@@ -15,7 +15,7 @@ class FileMapper @Inject constructor() {
       size = fileDatastore.size,
       name = fileDatastore.name,
       priority = fileDatastore.priority,
-      uri = Uri.parse(fileDatastore.uri),
+      uri = fileDatastore.uri.toUri(),
       fileType = fileDatastore.fileType,
       sizeFormatted = fileDatastore.sizeFormatted
     )
@@ -23,7 +23,7 @@ class FileMapper @Inject constructor() {
   private fun mapDataStoreToDomainModel(fileDatastore: FileDatastore) = FileDomain(
     name = fileDatastore.name,
     priority = fileDatastore.priority,
-    uri = Uri.parse(fileDatastore.uri),
+    uri = fileDatastore.uri.toUri(),
     fileType = fileDatastore.fileType
   )
 

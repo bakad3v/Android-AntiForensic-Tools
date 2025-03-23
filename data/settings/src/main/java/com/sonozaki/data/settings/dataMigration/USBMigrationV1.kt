@@ -2,8 +2,8 @@ package com.sonozaki.data.settings.dataMigration
 
 import android.content.Context
 import androidx.datastore.core.DataMigration
+import com.sonozaki.bedatastore.datastore.dataStoreFile
 import com.sonozaki.bedatastore.datastore.encryptedDataStore
-import com.sonozaki.encrypteddatastore.datastoreDBA.dataStoreFileDBA
 import com.sonozaki.data.settings.entities.UsbSettingsV1
 import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
@@ -27,7 +27,7 @@ class USBMigrationV1 @Inject constructor(
         isDBA = true
     )
     override suspend fun cleanUp() {
-        context.dataStoreFileDBA(OLD_USB).delete()
+        context.dataStoreFile(OLD_USB, true).delete()
     }
 
     override suspend fun migrate(currentData: UsbSettings): UsbSettings {
@@ -40,7 +40,7 @@ class USBMigrationV1 @Inject constructor(
     }
 
     override suspend fun shouldMigrate(currentData: UsbSettings): Boolean {
-        return context.dataStoreFileDBA(OLD_USB).exists()
+        return context.dataStoreFile(OLD_USB, true).exists()
     }
 
     companion object {

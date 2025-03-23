@@ -87,12 +87,12 @@ dependencies {
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
 
-    // Additional libraries
-    implementation(libs.datastore.preferences)
-
     implementation(libs.security.crypto.ktx)
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
+
+    //Better Encrypted DataStore
+    implementation(libs.better.datastore)
 
     // LeakCanary (debug only)
     debugImplementation(libs.leakcanary.android)

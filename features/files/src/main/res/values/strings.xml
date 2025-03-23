@@ -15,7 +15,7 @@
     <string name="changePriority">Change file priority</string>
     <string name="about_file_title">About file</string>
     <string name="fileDetails"><![CDATA[<p>Name: %1$s</p><p>Priority: %2$s</p><p>Size: %3$s</p>]]></string>
-    <string name="long_help_files"><![CDATA[<p>You can select files which would be deleted after entering fake password here. In this menu you can choose only files which don\'t <strong>require root rights for deletion</strong>.</p>\n<p>To add new file or folder, tap button <strong>+.&nbsp;</strong></p>\n<p>You can delete file from list, clear list of files or edit file\'s priority. Files with higher priority (lower number of priority) are deleted first. Don\'t forget to enable files deletion by clicking on enable icon in top bar!</p>]]></string>
+    <string name="long_help_files"><![CDATA[<p>You can select files which would be deleted after entering fake password here. In this menu you can choose only files which don\'t <strong>require root rights for deletion</strong>.</p>\n<p>To add new file or folder, tap button <strong>+.&nbsp;</strong></p>\n<p>You can delete file from list, clear list of files or edit file\'s priority. Files with higher priority (higher number of priority) are deleted first. Don\'t forget to enable files deletion by clicking on enable icon in top bar!</p>]]></string>
     <string name="file_removal_unsuccessfull">File is not removed</string>
     <string name="folder_removal_unsuccessful">Folder not removed</string>
     <string name="access_denied">You denied access to files, it may cause some bugs.</string>

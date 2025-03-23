@@ -6,6 +6,9 @@
 ## Description
 
 Android AntiForensic Tools is a free and open source application designed to protect your personal data from a powerful adversary that can put pressure on you and force you to unlock your device. It allows you to wipe device, user profiles or personal files when a duress password is entered, a USB device is connected, power button is pressed several times in row or the wrong password is entered multiple times. An application offers additional options to protect your device from advanced adversaries: it can uninstall itself, run [TRIM](https://en.wikipedia.org/wiki/Trim_%28computing%29) after data deletion to prevent deleted data recovery, disable logs before data deletion to leave no traces of it's actions and disable safe boot mode.
+
+Your data is protected with [Better Encrypted Datastore](https://github.com/bakad3v/BetterEncryptedDatastore).
+
 ## Features and limitations
 I was inspired to create this app by the [Wasted](https://github.com/x13a/Wasted) app by x13a. It allows you to factory reset the device when a duress password is entered, a USB is connected, or other triggers are triggered. This app is a big step forward for anti-forensics on Android devices, and in some situations it can be useful, but it has some limitations:
 * Resetting device data is obvious to the adversary. This can make them angry and lead to unpredictable consequences for the user.
@@ -79,7 +82,7 @@ After setting a password, you will open the settings. Here you will need to give
 If you are unable to grant root rights to the application, you can grant device ownership rights via [Dhizuku](https://github.com/iamr0s/Dhizuku). For now, Dhizuku from the original repository [doesn't work](https://github.com/iamr0s/Dhizuku/issues/85) until the device is unlocked for the first time. In addition, if you install the apk files posted there and give Dhizuku the rights of the owner of the device, then you will not be able to delete the application. You can download the Dhizuku apk files from my [fork](https://github.com/bakad3v/Dhizuku), where all the bugs are fixes and you can find a removable version of the app. There are also instructions for installing the application and granting it the rights of the device owner.
 ###  Triggers
 Once the permissions are granted, you can configure the triggers. At the moment, the app supports four triggers:
-* Run on duress password. The destruction of data will begin when a duress password is entered (coincides with the password of the application). Accessibility service is required.
+* Run on duress password. The destruction of data will begin when a duress password (**not PIN-code!**) is entered (coincides with the password of the application). Accessibility service is required.
 * Prevent bruteforce. Data destruction will begin when a specified number of incorrect passwords are entered (default - 5). Administrator privileges are required.
 * Run on USB connection. Data destruction will begin when the USB device is connected. Charging from a computer also counts. Accessibility service is required. **Disable this option whenever you want to connect the device via USB.**
 * Run on button clicks. Data destruction will start at the specified number of consecutive power button clicks (default is 5). Clicks are considered consecutive if less than the specified amount of time elapses between them (default is 1000 ms). Any switching on/off of the screen is counted as a click, so be careful!

@@ -38,14 +38,13 @@ android {
 
 dependencies {
     implementation(project(":core:encryptedDatastore"))
-    implementation(project(":core:bedatastore"))
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    implementation(libs.better.datastore)
     implementation(libs.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     // Serialization
     implementation(libs.kotlinx.serialization.json)
-    implementation(libs.datastore.preferences)
 }

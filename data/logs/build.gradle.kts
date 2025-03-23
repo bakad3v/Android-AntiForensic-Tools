@@ -42,7 +42,7 @@ dependencies {
     implementation(project(":core:utils"))
     // Serialization
     implementation(libs.kotlinx.serialization.json)
-    implementation(project(":core:bedatastore"))
+    implementation(libs.better.datastore)
     implementation(libs.kotlinx.collections.immutable)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
@@ -51,5 +51,4 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation(libs.datastore.preferences)
 }

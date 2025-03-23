@@ -40,16 +40,15 @@ dependencies {
     implementation(project(":core:entities"))
     implementation(project(":superuser"))
     implementation(project(":core:encryptedDatastore"))
-    implementation(project(":core:bedatastore"))
     implementation(project(":core:resources"))
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.core.ktx)
     testImplementation(libs.junit)
+    implementation(libs.better.datastore)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     // Serialization
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.kotlinx.collections.immutable)
-    implementation(libs.datastore.preferences)
 }
