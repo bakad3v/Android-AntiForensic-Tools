@@ -1,6 +1,6 @@
 package com.android.aftools.di
 
-import com.android.aftools.TopLevelFunctions.getEpochDays
+import com.sonozaki.utils.TopLevelFunctions.getEpochDays
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

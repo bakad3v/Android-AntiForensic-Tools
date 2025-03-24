@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="fab_text">Add file/folder</string>
+    <string name="add_file">Add file</string>
+    <string name="add_folder">Add folder</string>
+    <string name="file_photo_description">File icon</string>
+    <string name="show_more">Show more</string>
+    <string name="edit_text">Edit</string>
+    <string name="priority">Priority: %1$d</string>
+    <string name="apply">Confirm your action</string>
+    <string name="want_to_clear">You want to clear all list of files</string>
+    <string name="enable_files_deletion">Enable deletion</string>
+    <string name="enable_deletion_long"><![CDATA[<p>If you activate triggers, selected files would be deleted.</p>\n<p><strong>Important: files deletion doesn\'t work in BFU mode. If you enter duress password in BFU mode, files deletion will be launched after phone unlocking. If you set up app to destroy itself, it will destroy itself only when all files will be deleted. That\'s why it\'s recommended to avoid using this mode and delete profile with your secret files instead if you can grant app enough privileges.</strong></p>]]></string>
+    <string name="file">File: %1$s</string>
+    <string name="changePriority">Change file priority</string>
+    <string name="about_file_title">About file</string>
+    <string name="fileDetails"><![CDATA[<p>Name: %1$s</p><p>Priority: %2$s</p><p>Size: %3$s</p>]]></string>
+    <string name="long_help_files"><![CDATA[<p>You can select files which would be deleted after entering fake password here. In this menu you can choose only files which don\'t <strong>require root rights for deletion</strong>.</p>\n<p>To add new file or folder, tap button <strong>+.&nbsp;</strong></p>\n<p>You can delete file from list, clear list of files or edit file\'s priority. Files with higher priority (higher number of priority) are deleted first. Don\'t forget to enable files deletion by clicking on enable icon in top bar!</p>]]></string>
+    <string name="file_removal_unsuccessfull">File is not removed</string>
+    <string name="folder_removal_unsuccessful">Folder not removed</string>
+    <string name="access_denied">You denied access to files, it may cause some bugs.</string>
+    <string name="maxpr">Priority: largest first</string>
+    <string name="minpr">Priority: smallest first</string>
+    <string name="alphabet">Alphabetical order</string>
+    <string name="disalphabet">Reverse alphabetical order</string>
+    <string name="sizebig">Size: largest first</string>
+    <string name="sizesmall">Size: smallest first</string>
+    <string name="disable_files_deletion">Disable deletion</string>
+    <string name="file_deletion_settings">Files deletion settings</string>
+    <string name="clear">Clear list</string>
+    <string name="delete_files">Delete files</string>
+
+</resources>

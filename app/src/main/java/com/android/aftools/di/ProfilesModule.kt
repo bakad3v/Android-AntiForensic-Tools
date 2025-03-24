@@ -1,6 +1,6 @@
 package com.android.aftools.di
 
-import com.android.aftools.domain.entities.ProfileDomain
+import com.sonozaki.entities.ProfileDomain
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

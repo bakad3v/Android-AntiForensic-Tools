@@ -2,8 +2,8 @@ package com.android.aftools.presentation.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.android.aftools.domain.usecases.settings.GetSettingsUseCase
-import com.android.aftools.presentation.states.ActivityState
+import com.sonozaki.activitystate.ActivityState
+import com.sonozaki.settings.domain.usecases.settings.GetSettingsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -14,11 +14,12 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainVM @Inject constructor(
-  private val _activityState: MutableStateFlow<ActivityState>,
-  getSettingsUseCase: GetSettingsUseCase): ViewModel() {
+    private val _activityState: MutableStateFlow<ActivityState>,
+    getSettingsUseCase: GetSettingsUseCase
+): ViewModel() {
   val activityState: StateFlow<ActivityState> get() = _activityState.asStateFlow()
 
-  val theme = getSettingsUseCase().map { it.theme }
+  val uiSettings = getSettingsUseCase().map { it.uiSettings }
 
   fun setActivityState(state: ActivityState) {
     viewModelScope.launch {

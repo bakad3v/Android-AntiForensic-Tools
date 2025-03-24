@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="getting_profiles">Getting profiles data</string>
+    <string name="getting_profiles_failed">Getting profiles data failed</string>
+    <string name="removing_profile">Removing profile %1$s</string>
+    <string name="profile_removed">Profile removed</string>
+    <string name="profile_not_removed">Profile not removed: %1$s</string>
+    <string name="uninstalling_app">Uninstalling app %1$s</string>
+    <string name="app_uninstalled">App uninstalled</string>
+    <string name="app_not_uninstalled">App uninstallation failed: %1$s</string>
+    <string name="clearing_app_data">Clearing data for app %1$s</string>
+    <string name="app_data_cleared">App data cleared</string>
+    <string name="app_data_not_cleared">Failed to clear app data: %1$s</string>
+    <string name="hiding_app">Hiding app %1$s</string>
+    <string name="app_hidden">App hidden</string>
+    <string name="app_not_hidden">App not hidden: %1$s</string>
+    <string name="running_trim">Starting TRIM</string>
+    <string name="trim_runned">TRIM launched</string>
+    <string name="trim_failed">TRIM failed: %1$s</string>
+    <string name="uninstalling_itself">App destroying itself. Goodbye...</string>
+    <string name="uninstallation_failed">Self-destruction failed: %1$s</string>
+    <string name="running_root_command">Running root command: %1$s</string>
+    <string name="root_command_failed">Root command failed: %1$s</string>
+    <string name="actions_started">Data deletion started</string>
+    <string name="loading_data">Loading data and getting superuser</string>
+    <string name="getting_data_error">Error while loading data: %1$s</string>
+    <string name="got_data">Loaded data</string>
+    <string name="wiping_data">Wiping data on device</string>
+    <string name="wiping_data_error">Error while wiping device data: %1$s</string>
+    <string name="data_wiped">Data wiped</string>
+    <string name="stopping_logd">Stoppin logd</string>
+    <string name="logd_stopped">Stopped logd</string>
+    <string name="logd_failed">Logd failed: %1$s</string>
+    <string name="deletion_started">Files deletion started</string>
+    <string name="deletion_completed">File deletion completed</string>
+    <string name="deletion_folder">Folder %1$s is deleting</string>
+    <string name="deletion_file">File %1$s is deleting</string>
+    <string name="access_error">File inaccessible</string>
+    <string name="folder_deletion_error">Error %2$s while deleting folder %1$s</string>
+    <string name="file_deletion_error">Error %2$s while deleting file %1$s</string>
+    <string name="folder_deletion_success">Folder %1$s deleted: %2$s percents of files removed</string>
+    <string name="folder_deletion_failed">Folder %1$s is not deleted: %2$s percents of files deleted.</string>
+    <string name="deletion_success">File %1$s deleted</string>
+    <string name="deletion_failed">File %1$s is not deleted</string>
+</resources>

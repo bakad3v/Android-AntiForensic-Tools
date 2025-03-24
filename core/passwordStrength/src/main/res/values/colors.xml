@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="defaultColor">#B2B2B2</color>
+    <color name="worstMeterColor">#E53935</color>
+    <color name="weakMeterColor">#FB8C00</color>
+    <color name="mediumMeterColor">#FDD835</color>
+    <color name="strongMeterColor">#7CB342</color>
+    <color name="excellentMeterColor">#43A047</color>
+</resources>

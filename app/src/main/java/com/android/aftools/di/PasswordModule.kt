@@ -1,7 +1,7 @@
 package com.android.aftools.di
 
-import com.android.aftools.data.repositories.PasswordManagerImpl
-import com.android.aftools.domain.repositories.PasswordManager
+import com.sonozaki.password.repository.PasswordManager
+import com.sonozaki.password.repository.PasswordManagerImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -15,4 +15,5 @@ abstract class PasswordModule {
     @Binds
     @Singleton
     abstract fun bindPasswordManager(passwordManagerImpl: PasswordManagerImpl): PasswordManager
+
 }

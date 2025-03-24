@@ -3,40 +3,40 @@
   xmlns:app="http://schemas.android.com/apk/res-auto"
   xmlns:tools="http://schemas.android.com/tools"
   android:id="@+id/drawer"
-  android:layout_height="match_parent" android:layout_width="match_parent">
+  android:layout_height="match_parent"
+  android:layout_width="match_parent">
 
-  <androidx.constraintlayout.widget.ConstraintLayout
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".presentation.MainActivity">
+
+  <com.google.android.material.appbar.AppBarLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/myAppBarLayout">
 
     <com.google.android.material.appbar.MaterialToolbar
-      android:id="@+id/toolbar2"
-      android:layout_width="match_parent"
-      android:layout_height="?attr/actionBarSize"
-      app:layout_constraintTop_toTopOf="parent" />
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize" />
+
 
 
     <androidx.fragment.app.FragmentContainerView
       android:id="@+id/navHostFragment"
       android:name="androidx.navigation.fragment.NavHostFragment"
       android:layout_width="match_parent"
-      android:layout_height="0dp"
+      android:layout_height="match_parent"
       app:defaultNavHost="true"
-      app:layout_constraintBottom_toBottomOf="parent"
-      app:layout_constraintTop_toBottomOf="@+id/toolbar2"
       app:navGraph="@navigation/navgraph"
       tools:context=".presentation.MainActivity" />
 
 
-  </androidx.constraintlayout.widget.ConstraintLayout>
+  </com.google.android.material.appbar.AppBarLayout>
 
   <com.google.android.material.navigation.NavigationView
-    android:id="@+id/navigation_view"
-    android:layout_width="wrap_content"
-    android:backgroundTintMode="add"
-    android:backgroundTint="#000"
-    android:layout_height="match_parent"
-    android:layout_gravity="start"
-    app:headerLayout="@layout/navigation_header"/>
+      android:id="@+id/navigation_view"
+      android:layout_width="wrap_content"
+      android:backgroundTintMode="add"
+      android:backgroundTint="#000"
+      android:layout_height="match_parent"
+      android:layout_gravity="start"
+      app:headerLayout="@layout/navigation_header"/>
 </androidx.drawerlayout.widget.DrawerLayout>

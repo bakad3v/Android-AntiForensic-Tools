@@ -1,0 +1,77 @@
+[versions]
+appcompatVersion = "1.7.0"
+coilVersion = "2.7.0"
+core = "5.0.0"
+coreKtxVersion = "1.15.0"
+coroutinesVersion = "1.9.0"
+daggerVersion = "2.55"
+desugaringVersion = "2.1.5"
+dhizukuVersion = "2.5.3"
+espressoCoreVersion = "3.6.1"
+fragmentKtx = "1.8.6"
+hiddenapibypass = "4.3"
+javaxInject = "1"
+jodaTime = "2.13.1"
+junit = "1.2.1"
+junitVersion = "4.13.2"
+kotlinxCollectionsImmutableVersion = "0.3.8"
+kotlinxDatetimeJvmVersion = "0.4.0"
+leakCanaryVersion = "2.14"
+lifecycleVersion = "2.8.7"
+materialVersion = "1.12.0"
+navigationVersion = "2.8.9"
+securityVersion = "1.1.0-alpha06"
+serializeVersion = "1.7.3"
+serialization = "2.1.10"
+storage = "1.5.5"
+zxcvbn = "1.9.0"
+agp = "8.8.2"
+kotlin = "2.1.10"
+jetbrainsKotlinJvm = "2.1.0"
+kapt = "2.1.0"
+dependencyAnalysis = "2.12.0"
+betterDatastore = "1.0.0-alpha"
+
+[libraries]
+appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
+coil = { module = "io.coil-kt:coil", version.ref = "coilVersion" }
+core = { module = "com.github.topjohnwu.libsu:core", version.ref = "core" }
+core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
+better-datastore = { module = "com.github.bakad3v:BetterEncryptedDatastore", version.ref = "betterDatastore"  }
+desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaringVersion" }
+dhizuku-api = { module = "io.github.iamr0s:Dhizuku-API", version.ref = "dhizukuVersion" }
+espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }
+ext-junit = { module = "androidx.test.ext:junit", version.ref = "junit" }
+fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragmentKtx" }
+hiddenapibypass = { module = "org.lsposed.hiddenapibypass:hiddenapibypass", version.ref = "hiddenapibypass" }
+hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "daggerVersion" }
+hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "daggerVersion" }
+javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
+joda-time = { module = "joda-time:joda-time", version.ref = "jodaTime" }
+junit = { module = "junit:junit", version.ref = "junitVersion" }
+kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "kotlinxCollectionsImmutableVersion" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "coroutinesVersion" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutinesVersion" }
+kotlinx-datetime-jvm = { module = "org.jetbrains.kotlinx:kotlinx-datetime-jvm", version.ref = "kotlinxDatetimeJvmVersion" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "serializeVersion" }
+leakcanary-android = { module = "com.squareup.leakcanary:leakcanary-android", version.ref = "leakCanaryVersion" }
+lifecycle-livedata-ktx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "lifecycleVersion" }
+lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "lifecycleVersion" }
+material = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationVersion" }
+navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationVersion" }
+navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationVersion" }
+security-crypto-ktx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityVersion" }
+storage = { module = "com.anggrayudi:storage", version.ref = "storage" }
+zxcvbn = { module = "com.nulab-inc:zxcvbn", version.ref = "zxcvbn" }
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+java-library = { id = "java-library" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+android-library = { id = "com.android.library", version.ref = "agp" }
+jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kapt" }
+navigation-safeargs = { id = "androidx.navigation.safeargs.kotlin" }
+hiltAndroid = { id = "com.google.dagger.hilt.android", version.ref = "daggerVersion" }
+dependency-analysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
+serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "serialization"}

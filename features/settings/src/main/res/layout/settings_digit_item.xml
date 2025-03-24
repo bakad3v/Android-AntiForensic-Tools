@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_gravity="start"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/main_text"
+        style="?attr/textAppearanceTitleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_normal"
+        android:text="@string/allowed_attempts">
+
+    </com.google.android.material.textview.MaterialTextView>
+
+    <Space
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1">
+
+    </Space>
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/digit_field"
+        style="?attr/textAppearanceTitleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/margin_normal">
+
+    </com.google.android.material.textview.MaterialTextView>
+
+</LinearLayout>

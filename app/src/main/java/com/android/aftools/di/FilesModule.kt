@@ -1,6 +1,6 @@
 package com.android.aftools.di
 
-import com.android.aftools.domain.entities.FilesSortOrder
+import com.sonozaki.entities.FilesSortOrder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
