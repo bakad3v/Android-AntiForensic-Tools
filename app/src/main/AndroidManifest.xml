@@ -12,7 +12,7 @@
     android:maxSdkVersion="32" />
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <application
-    android:name=".AndroidAntiForensicTools"
+    android:name="com.oasisfeng.island.AndroidAntiForensicTools"
     android:allowBackup="true"
     android:dataExtractionRules="@xml/data_extraction_rules"
     android:fullBackupContent="@xml/backup_rules"
@@ -25,7 +25,7 @@
     android:testOnly="true">
 
     <activity
-      android:name=".presentation.activities.MainActivity"
+      android:name="com.oasisfeng.island.presentation.activities.MainActivity"
         android:exported="true">
       <intent-filter>
            <action android:name="android.intent.action.MAIN" />
