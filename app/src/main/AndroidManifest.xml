@@ -21,8 +21,7 @@
     android:roundIcon="@mipmap/ic_launcher_round"
     android:supportsRtl="true"
     android:theme="@style/Theme.SyrenaPass"
-    tools:targetApi="35"
-    android:testOnly="true">
+    tools:targetApi="35">
 
     <activity
       android:name=".presentation.activities.MainActivity"

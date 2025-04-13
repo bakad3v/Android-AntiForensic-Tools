@@ -30,6 +30,34 @@ android {
             )
         }
     }
+
+    flavorDimensions += listOf("name", "testOnly")
+
+    productFlavors {
+        create("original") {
+            dimension = "name"
+            applicationId = "com.android.aftools"
+        }
+
+        create("island") {
+            dimension = "name"
+            applicationId = "com.oasisfeng.island"
+        }
+
+        create("shelter") {
+            dimension = "name"
+            applicationId = "net.typeblog.shelter"
+        }
+
+        create("normal") {
+            dimension = "testOnly"
+        }
+
+        create("adb") {
+            dimension = "testOnly"
+        }
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
@@ -49,23 +77,6 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
-    implementation(project(":core:activityState"))
-    implementation(project(":core:dialogs"))
-    implementation(project(":features:rootCommands"))
-    implementation(project(":features:settings"))
-    implementation(project(":core:entities"))
-    implementation(project(":features:triggerReceivers"))
-    implementation(project(":features:splash"))
-    implementation(project(":features:lockscreen"))
-    implementation(project(":features:services"))
-    implementation(project(":core:encryptedDatastore"))
-    implementation(project(":data:password"))
-    implementation(project(":data:root"))
-    implementation(project(":superuser"))
-    implementation(project(":data:settings"))
-    implementation(project(":data:files"))
-    implementation(project(":data:logs"))
-    implementation(project(":data:profiles"))
 
     // Testing libraries
     testImplementation(libs.junit)
@@ -125,4 +136,21 @@ dependencies {
     implementation(project(":features:files"))
     implementation(project(":features:logs"))
     implementation(project(":features:aboutApp"))
+    implementation(project(":core:activityState"))
+    implementation(project(":core:dialogs"))
+    implementation(project(":features:rootCommands"))
+    implementation(project(":features:settings"))
+    implementation(project(":core:entities"))
+    implementation(project(":features:triggerReceivers"))
+    implementation(project(":features:splash"))
+    implementation(project(":features:lockscreen"))
+    implementation(project(":features:services"))
+    implementation(project(":core:encryptedDatastore"))
+    implementation(project(":data:password"))
+    implementation(project(":data:root"))
+    implementation(project(":superuser"))
+    implementation(project(":data:settings"))
+    implementation(project(":data:files"))
+    implementation(project(":data:logs"))
+    implementation(project(":data:profiles"))
 }
