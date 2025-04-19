@@ -21,22 +21,29 @@ My app is designed to address these shortcomings. It allows you to wipe all data
 
 Unfortunately, there are limits to the stealthiness of deleting data, although deleting data is still much more stealthy than resetting the device to factory defaults. After deleting data in various places in the system (logs, cache, statistics, etc.) remains a lot of evidence that this data existed. It is almost impossible to erase all these traces, and an advanced adversary with full access to the device will be able to detect them. Fortunately, some of these traces are harmless - you can make up whatever you want about a deleted Android profile. However, some traces allow to find out that you have recently deleted data using this application, that will make the adversary much more interested in extracting the truth from you. I try to fight with such traces. The app includes some additional options that will allow you to hide its existence on the device, traces of your data and role of an app in erasing data from your device. However, the study of traces of deleted data is still far from complete.
 
-Another disadvantage of the app is that the most advanced features of the app, including the app self-destruction, require root permissions. Granting root privileges is usually accompanied by unlocking the bootloader, although some devices can [use root privileges with a locked bootloader](https://github.com/chenxiaolong/avbroot). Both root permissions and an unlocked bootloader [make](https://madaidans-insecurities.github.io/android.html) the device more vulnerable to some other types of attacks. Instead of root permissions, you can use app with device owner rights via Dhizuku, but in that case the Android system will show a notification if the app attempts to self-destruct, making the self-destruct option virtually useless when used without root permissions. Without root permissions, you can hide the app from the launcher and erase its data, plus the app masquerades as other apps, but it will still be possible to reveal the presence of the app on the device.
+Another disadvantage of the app is that the most advanced features of the app, including the app self-destruction, require root permissions. Granting root privileges is usually accompanied by unlocking the bootloader, although some devices can [use root privileges with a locked bootloader](https://github.com/chenxiaolong/avbroot). Both root permissions and an unlocked bootloader (especially the last one) [make](https://madaidans-insecurities.github.io/android.html) the device more vulnerable to some other types of attacks. Instead of root permissions, you can use app with device owner rights via Dhizuku, but in that case the Android system will show a notification if the app attempts to self-destruct, making the self-destruct option virtually useless when used without root permissions. Without root permissions, you can hide the app from the launcher and erase its data, plus the app masquerades as other apps, but it will still be possible to reveal the presence of the app on the device.
 
 ## Installation
-In the "Releases" section, you can download 5 versions of the app. 2 of them can be installed as regular APKs, and 3 need to be installed via ADB. The ADB installation process will be described below. Versions that can be installed as regular APKs have the drawback that the self-destruct option is not compatible with administrator privileges, and administrator privileges are required to protect against passwords brute-force. Therefore, they are called "NOT_RECOMMENDED" and their installation is not recommended.
+In the "Releases" section, you can download 5 versions of the app. 2 of them can be installed as regular APKs, and 3 need to be installed via ADB or using root. Installation process for those apps will be described below. Versions that can be installed as usual APKs have the drawback that the self-destruct option is not compatible with administrator privileges, and administrator privileges are required to protect against passwords brute-force. Therefore, they are called "NOT_RECOMMENDED" and their installation is not recommended.
 
 4 versions of the app are disguised as other apps - [Island](https://github.com/oasisfeng/island) and [Shelter](https://gitea.angry.im/PeterCxy/Shelter). They have changed the package name, icon, and name. This is to ensure that after app uninstallation or self-destruction for an adversary examining the system it looks as if you uninstalled one of those apps from the device, not Android AntiForensic Tools. However, it is possible that even renaming the package will not prevent traces of the application from being detected by an advanced adversary; further research is required to verify this. These apps were chosen for cloaking because they're open source, and you're unlikely to use both apps at the same time. If you have one of these installed on your device, install a version of Android AntiForensic Tools that masquerades as the other.
 
 Ideally, I recommend changing the package name yourself before installing. When renaming, select the package name used by an existing app that isn't on your device. The process of renaming a package will be described below.
 
 ### Apps versions
-* AFTools_original_ADB_NOT_RECOMMENDED - app version with original package name. **Do not install without modifying the package name!**
-* AFTools_island_NOT_RECOMMENDED - a version of the app masquerading as the Island app. Can be installed without ADB, but **installation is not recommended.**
-* AFTools_shelter_NOT_RECOMMENDED - a version of the app masquerading as the Shelter app. Can be installed without ADB, but **installation is not recommended.**
-* AFTools_island_ADB - a version of the app masquerading as the Island app. **Requires ADB for installation!**
-* AFTools_shelter_ADB - a version of the app masquerading as the Shelter app. **Requires ADB for installation!**
-### Installation via ADB
+* AFTools_original_TESTONLY_NOT_RECOMMENDED - app version with original package name. **Do not install without modifying the package name!**
+* AFTools_island_NOT_RECOMMENDED - a version of the app masquerading as the Island app. Can be installed without ADB or root rights, but **installation is not recommended.**
+* AFTools_shelter_NOT_RECOMMENDED - a version of the app masquerading as the Shelter app. Can be installed without ADB or root rights, but **installation is not recommended.**
+* AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB or root for installation!**
+* AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB or root for installation!**"
+### Installation of testOnly apps
+#### Installation with root rights
+1. Open terminal on your android device
+2. Enter "su"
+3. Enter command "сat \<path to apk\> | pm install -t -S $(stat -c %s \<path to apk\>)"
+4. If you install the new version of an app, enter the command "сat \<path to apk\> | pm install -t -r -S $(stat -c %s \<path to apk\>)".
+5. After the update, restart the application accessibility service if it has stopped working
+#### Installation via ADB
 1. Download [SDK Platform tools](https://developer.android.com/tools/releases/platform-tools) on your PC
 2. Unzip the archive
 3. Download the version of the application that requires installation via ADB to your computer
@@ -45,8 +52,7 @@ Ideally, I recommend changing the package name yourself before installing. When 
 6. Connect devices and allow USB debugging for your PC
 7. Open the command prompt and enter the command \<path to platform-tools folder\>/adb[.exe] install -t \<path to apk file\>.
 8. If you install the new version of an app, enter the command \<path to platform-tools folder\>/adb[.exe] install -t -r \<path to apk file\>.
-
-8.1 After the update, restart the application accessibility service if it has stopped working
+9. After the update, restart the application accessibility service if it has stopped working
 ### Changing app's package name
 #### Via Android Studio
 1. Install [Android Studio](https://developer.android.com/studio).
