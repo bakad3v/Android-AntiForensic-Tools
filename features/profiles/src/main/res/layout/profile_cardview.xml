@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="?attr/materialCardViewElevatedStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_normal">
+    android:layout_marginTop="@dimen/margin_normal"
+    android:layout_marginHorizontal="@dimen/margin_normal">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,6 +33,7 @@
                 app:srcCompat="@drawable/baseline_account_box_24" />
 
             <LinearLayout
+                android:id="@id/layout"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
@@ -38,8 +45,8 @@
                     style="?attr/textAppearanceTitleLarge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="start"
-                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:paddingStart="@dimen/margin_normal"
                     android:paddingEnd="@dimen/margin_normal"
                     android:textColor="?attr/colorOnSecondaryContainer" />
@@ -48,41 +55,73 @@
                     style="?attr/textAppearanceLabelLarge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:ellipsize="start"
-                    android:maxLines="2"
+                    android:ellipsize="end"
+                    android:maxLines="1"
                     android:paddingStart="@dimen/margin_normal"
                     android:paddingEnd="@dimen/margin_normal"
                     android:textColor="?attr/colorOnSecondaryContainer" />
 
-                <com.google.android.material.divider.MaterialDivider
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                </com.google.android.material.divider.MaterialDivider>
-
-                <LinearLayout
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/status"
+                    style="?attr/textAppearanceLabelLarge"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:ellipsize="start"
+                    android:maxLines="1"
+                    android:paddingStart="@dimen/margin_normal"
+                    android:paddingEnd="@dimen/margin_normal"
+                    android:textColor="?attr/colorOnSecondaryContainer" />
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/delete"
-                        style="?attr/materialButtonOutlinedStyle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:textColor="?attr/colorTertiary"
-                        app:icon="@drawable/ic_baseline_delete_24"
-                        app:iconTint="?attr/colorError"
-                        app:strokeColor="?attr/colorError" />
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1">
-
-                    </Space>
-                </LinearLayout>
+                </Space>
             </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="parent">
+
+    </com.google.android.material.divider.MaterialDivider>
+
+    <LinearLayout
+        android:paddingStart="@dimen/margin_normal"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/delete"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="?attr/colorError"
+            app:icon="@drawable/ic_baseline_delete_24"
+            app:iconTint="?attr/colorError"
+            tools:text="@string/enable_deletion"
+            app:strokeColor="?attr/colorError" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/stop"
+            android:layout_marginStart="@dimen/margin_normal"
+            style="?attr/materialButtonOutlinedStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textColor="?attr/colorError"
+            app:icon="@drawable/ic_baseline_pause_24"
+            app:iconTint="?attr/colorError"
+            android:text="@string/stop_user"
+            app:strokeColor="?attr/colorError" />
+
+    </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

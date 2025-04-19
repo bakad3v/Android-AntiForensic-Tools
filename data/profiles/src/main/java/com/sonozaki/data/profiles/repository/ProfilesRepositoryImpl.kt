@@ -49,6 +49,10 @@ class ProfilesRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun stopProfile(id: Int, isCurrent: Boolean) {
+        superUserManager.getSuperUser().stopProfile(id, isCurrent)
+    }
+
     @Throws(SuperUserException::class)
     override suspend fun refreshDeviceProfiles() {
         withContext(coroutineDispatcher) {

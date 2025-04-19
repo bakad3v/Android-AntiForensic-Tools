@@ -36,7 +36,8 @@ class Owner @Inject constructor(
     private val setOwnerInactiveUseCase: SetOwnerInactiveUseCase,
     private val appDPM: DevicePolicyManager,
     private val userManager: UserManager,
-    private val deviceAdmin: ComponentName):
+    private val deviceAdmin: ComponentName
+) :
     SuperUser {
 
     private var initialized: Boolean = false
@@ -58,8 +59,12 @@ class Owner @Inject constructor(
         if (!initialized) {
             initDhizuku()
         }
-        val dhizukuContext = context.createPackageContext(Dhizuku.getOwnerComponent().packageName, Context.CONTEXT_IGNORE_SECURITY)
-        val manager = dhizukuContext.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
+        val dhizukuContext = context.createPackageContext(
+            Dhizuku.getOwnerComponent().packageName,
+            Context.CONTEXT_IGNORE_SECURITY
+        )
+        val manager =
+            dhizukuContext.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
         val field = manager.javaClass.getDeclaredField("mService")
         field.isAccessible = true
         val oldInterface = field[manager] as IDevicePolicyManager
@@ -79,7 +84,10 @@ class Owner @Inject constructor(
         if (!initialized) {
             initDhizuku()
         }
-        val context = context.createPackageContext(Dhizuku.getOwnerComponent().packageName, Context.CONTEXT_IGNORE_SECURITY)
+        val context = context.createPackageContext(
+            Dhizuku.getOwnerComponent().packageName,
+            Context.CONTEXT_IGNORE_SECURITY
+        )
         val installer = context.packageManager.packageInstaller
         val field = installer.javaClass.getDeclaredField("mInstaller")
         field.isAccessible = true
@@ -106,10 +114,15 @@ class Owner @Inject constructor(
     private suspend fun handleException(e: Exception): Nothing {
         if (!checkOwner()) {
             setOwnerInactiveUseCase()
-            throw SuperUserException(NO_OWNER_RIGHTS, UIText.StringResource(R.string.no_admin_rights))
+            throw SuperUserException(
+                NO_OWNER_RIGHTS,
+                UIText.StringResource(R.string.no_admin_rights)
+            )
         }
-        throw SuperUserException(e.stackTraceToString(),
-            UIText.StringResource(R.string.unknow_owner_error,e.stackTraceToString()))
+        throw SuperUserException(
+            e.stackTraceToString(),
+            UIText.StringResource(R.string.unknow_owner_error, e.stackTraceToString())
+        )
     }
 
 
@@ -137,7 +150,6 @@ class Owner @Inject constructor(
     }
 
 
-
     override suspend fun wipe() {
         var flags = 0
         if (VERSION.SDK_INT >= Build.VERSION_CODES.Q)
@@ -161,7 +173,11 @@ class Owner @Inject constructor(
                 } else {
                     throw SuperUserException(
                         ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
-                        UIText.StringResource(R.string.wrong_android_version,Build.VERSION_CODES.P.toString()))
+                        UIText.StringResource(
+                            R.string.wrong_android_version,
+                            Build.VERSION_CODES.P.toString()
+                        )
+                    )
                 }
             return userHandles.map { profilesMapper.mapUserHandleToProfile(it) }
         } catch (e: Exception) {
@@ -210,7 +226,11 @@ class Owner @Inject constructor(
             } else {
                 throw SuperUserException(
                     ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
-                    UIText.StringResource(R.string.wrong_android_version,Build.VERSION_CODES.P.toString()))
+                    UIText.StringResource(
+                        R.string.wrong_android_version,
+                        Build.VERSION_CODES.P.toString()
+                    )
+                )
             }
         } catch (e: Exception) {
             handleException(e)
@@ -232,9 +252,13 @@ class Owner @Inject constructor(
         if (VERSION.SDK_INT < Build.VERSION_CODES.P)
             throw SuperUserException(
                 ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
-                UIText.StringResource(R.string.wrong_android_version,Build.VERSION_CODES.P.toString()))
+                UIText.StringResource(
+                    R.string.wrong_android_version,
+                    Build.VERSION_CODES.P.toString()
+                )
+            )
         if (status)
-            dpm.addUserRestriction(deviceOwner,UserManager.DISALLOW_USER_SWITCH)
+            dpm.addUserRestriction(deviceOwner, UserManager.DISALLOW_USER_SWITCH)
         else
             dpm.clearUserRestriction(deviceOwner, UserManager.DISALLOW_USER_SWITCH)
     }
@@ -243,7 +267,11 @@ class Owner @Inject constructor(
         if (VERSION.SDK_INT < Build.VERSION_CODES.P)
             throw SuperUserException(
                 ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
-                UIText.StringResource(R.string.wrong_android_version,Build.VERSION_CODES.P.toString()))
+                UIText.StringResource(
+                    R.string.wrong_android_version,
+                    Build.VERSION_CODES.P.toString()
+                )
+            )
         return dpm.getUserRestrictions(deviceOwner).getBoolean(UserManager.DISALLOW_USER_SWITCH)
     }
 
@@ -251,48 +279,97 @@ class Owner @Inject constructor(
         dpm.reboot(deviceOwner)
     }
 
+
+    override suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean {
+        if (userId == 0) {
+            throw SuperUserException(PRIMARY_USER_LOGOUT,
+                UIText.StringResource(R.string.cant_logout_from_primary_user))
+        }
+        if (VERSION.SDK_INT < Build.VERSION_CODES.P) {
+            throw SuperUserException(
+                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
+                UIText.StringResource(
+                    R.string.wrong_android_version,
+                    Build.VERSION_CODES.P.toString()
+                )
+            )
+        }
+        if (isCurrent) {
+            return dpm.logoutUser(deviceOwner) == UserManager.USER_OPERATION_SUCCESS
+        }
+        return dpm.stopUser(deviceOwner, profilesMapper.mapIdToUserHandle(userId)) == UserManager.USER_OPERATION_SUCCESS
+    }
+
     override suspend fun runTrim() {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
     }
 
     override suspend fun executeRootCommand(command: String): Shell.Result {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
     }
 
     override suspend fun stopLogd() {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
     }
 
     override suspend fun setMultiuserUI(status: Boolean) {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
     }
 
     override suspend fun setUsersLimit(limit: Int) {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
     }
 
     override suspend fun getUserLimit(): Int? {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
     }
 
     override suspend fun getMultiuserUIStatus(): Boolean {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
     }
 
     override suspend fun setUserSwitcherStatus(status: Boolean) {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
-       // dpm.setGlobalSetting(deviceOwner, "user_switcher_enabled",status.toInt().toString())
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
+        // dpm.setGlobalSetting(deviceOwner, "user_switcher_enabled",status.toInt().toString())
     }
 
     override suspend fun getUserSwitcherStatus(): Boolean {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
     }
-
 
 
     companion object {
         private const val NO_OWNER_RIGHTS = "App doesn't have owner rights."
-        private const val ANDROID_VERSION_INCORRECT = "Wrong android version, SDK version %s or higher required"
+        private const val ANDROID_VERSION_INCORRECT =
+            "Wrong android version, SDK version %s or higher required"
+        private const val PRIMARY_USER_LOGOUT = "You can't logout from primary user"
         private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
     }
 

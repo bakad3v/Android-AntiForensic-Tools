@@ -19,7 +19,8 @@ import dagger.assisted.AssistedInject
  */
 class ProfileAdapter @AssistedInject constructor(
     diffCallback: MyProfileAdapterDiffCallback,
-    @Assisted private val onDeleteItemClickListener: ((Int, Boolean) -> Unit)
+    @Assisted(ON_DELETE_ITEM_LISTENER) private val onDeleteItemClickListener: ((Int, Boolean) -> Unit),
+    @Assisted(ON_STOP_ITEM_LISTENER) private val onStopItemClickListener: ((Int, Boolean) -> Unit)
 ) : ListAdapter<ProfileDomain, MyProfileViewHolder>(diffCallback) {
 
   override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyProfileViewHolder {
@@ -41,7 +42,7 @@ class ProfileAdapter @AssistedInject constructor(
         strokeColor = ColorStateList.valueOf(color)
         return
       }
-      setText(com.sonozaki.resources.R.string.delete)
+      setText(com.sonozaki.resources.R.string.enable_deletion)
       setIconResource(com.sonozaki.resources.R.drawable.ic_baseline_delete_24)
       val color = MaterialColors.getColor(context, com.google.android.material.R.attr.colorError, Color.GRAY)
       setTextColor(color)
@@ -56,17 +57,43 @@ class ProfileAdapter @AssistedInject constructor(
     val profile = getItem(position)
     with(holder.binding) {
       name.text = profile.name
-      id.text = holder.binding.root.context.getString(R.string.profile_id, profile.id)
+      id.text = root.context.getString(R.string.profile_id, profile.id)
+      val current = if (profile.current) {
+          root.context.getString(R.string.current)
+      } else {
+          null
+      }
+      val running = when (profile.running) {
+          true -> root.context.getString(R.string.running)
+          false -> root.context.getString(R.string.not_running)
+          null -> root.context.getString(R.string.unknown)
+      }
+      status.text = if (current != null) {
+          "$running, $current"
+      } else {
+          running
+      }
       delete.setStyle(profile.toDelete)
       delete.setOnClickListener {
         onDeleteItemClickListener(profile.id,!profile.toDelete)
+      }
+      stop.setOnClickListener {
+          onStopItemClickListener(profile.id, profile.current)
       }
     }
   }
 
   @AssistedFactory
   interface Factory {
-      fun create(onDeleteItemClickListener: ((Int, Boolean) -> Unit)): ProfileAdapter
+      fun create(
+          @Assisted(ON_DELETE_ITEM_LISTENER) onDeleteItemClickListener: ((Int, Boolean) -> Unit),
+          @Assisted(ON_STOP_ITEM_LISTENER) onStopItemClickListener: ((Int, Boolean) -> Unit)
+      ): ProfileAdapter
+  }
+
+  companion object {
+      private const val ON_DELETE_ITEM_LISTENER = "on_delete_item_listener"
+      private const val ON_STOP_ITEM_LISTENER = "on_stop_item_listener"
   }
 
 }

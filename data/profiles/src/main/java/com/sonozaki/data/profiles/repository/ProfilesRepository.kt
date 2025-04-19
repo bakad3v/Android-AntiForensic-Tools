@@ -14,6 +14,11 @@ interface ProfilesRepository {
     fun getProfiles(): Flow<List<ProfileDomain>?>
 
     /**
+     * Function for stopping selected profile
+     */
+    suspend fun stopProfile(id: Int, isCurrent: Boolean)
+
+    /**
      * Function for marking or unmarking profiles for deletion.
      */
     suspend fun setProfileDeletionStatus(id: Int, status: Boolean)

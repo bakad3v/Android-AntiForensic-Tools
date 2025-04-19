@@ -36,7 +36,7 @@ import javax.inject.Inject
  * Fragment for storing profiles data
  */
 @AndroidEntryPoint
-class ProfilesFragment: Fragment() {
+class ProfilesFragment : Fragment() {
     private val viewModel: ProfilesVM by viewModels()
     private var _binding: SetupProfilesFragmentBinding? = null
     private val binding
@@ -53,9 +53,12 @@ class ProfilesFragment: Fragment() {
     lateinit var profileAdapterFactory: ProfileAdapter.Factory
 
     private val myProfileAdapter by lazy {
-        profileAdapterFactory.create {
-                id, status -> viewModel.setProfileDeletionStatus(id, status)
-        }
+        profileAdapterFactory.create(
+            { id, status ->
+                viewModel.setProfileDeletionStatus(id, status)
+            },
+            { id, isCurrent -> viewModel.stopProfile(id, isCurrent) }
+        )
     }
 
 
@@ -146,8 +149,8 @@ class ProfilesFragment: Fragment() {
     }
 
     /**
-    * Setting up dialog launcher
-    */
+     * Setting up dialog launcher
+     */
     private fun setupActionsListener() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.profileActions.collect {
@@ -162,14 +165,16 @@ class ProfilesFragment: Fragment() {
     private fun setupProfilesDataListener() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.profiles.collect {
-                when(it) {
+                when (it) {
                     is ProfilesDataState.ViewData -> {
                         setupListVisibility(true)
                         myProfileAdapter.submitList(it.items)
                     }
+
                     is ProfilesDataState.Loading -> {
                         setupListVisibility(false)
                     }
+
                     is ProfilesDataState.SuperUserAbsent -> {
                         setupListVisibility(true)
                     }

@@ -156,6 +156,18 @@ class Root @Inject constructor(
         executeRootCommand("reboot")
     }
 
+    override suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean {
+        if (userId == 0) {
+            throw SuperUserException(PRIMARY_USER_LOGOUT,
+                UIText.StringResource(R.string.cant_logout_from_primary_user))
+        }
+        if (isCurrent) {
+            executeRootCommand("am switch-user 0")
+            return executeRootCommand("am stop-user -w $userId").isSuccess
+        }
+        return executeRootCommand("am stop-user -w $userId").isSuccess
+    }
+
 
     override suspend fun getSafeBootStatus(): Boolean {
         val result = executeRootCommand("settings get global safe_boot_disallowed").out[0]
@@ -208,6 +220,7 @@ class Root @Inject constructor(
         private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
         private const val ANDROID_VERSION_INCORRECT =
             "Wrong android version, SDK version %s or higher required"
+        private const val PRIMARY_USER_LOGOUT = "You can't logout from primary user"
         private const val NUMBER_NOT_RECOGNISED = "Number not recognised"
     }
 }

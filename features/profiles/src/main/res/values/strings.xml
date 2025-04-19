@@ -14,5 +14,10 @@
     <string name="add_profile">Add profile</string>
     <string name="disable_profile_deletion">Disable profile deletion</string>
     <string name="profiles_deletion_settings">Profiles deletion settings</string>
+    <string name="current">Current</string>
+    <string name="running">Running</string>
+    <string name="not_running">Not running</string>
+    <string name="unknown">Unknown</string>
+    <string name="stop_user">Stop user</string>
 
 </resources>

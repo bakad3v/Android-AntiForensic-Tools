@@ -5,4 +5,5 @@
     <string name="no_superuser_rights">You don\'t have superuser rights</string>
     <string name="help">Help</string>
     <string name="delete">Delete</string>
+    <string name="enable_deletion">Enable deletion</string>
 </resources>
