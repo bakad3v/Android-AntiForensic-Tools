@@ -16,6 +16,8 @@ interface ServicesRepository {
 
     fun getManagedApps(): List<App>
 
+    suspend fun getRebootEnabled(): Boolean
+
     suspend fun getRootCommand(): String
 
     suspend fun getProfilesToDelete(): List<Int>

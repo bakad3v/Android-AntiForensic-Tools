@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="disabling_multiuser_ui">Disabling multiuser UI</string>
+    <string name="disabling_muliuser_ui_failed">Disabling multiuser UI failed: %1$s</string>
+    <string name="rebooting">Rebooting device</string>
+    <string name="rebooting_failed">Rebooting device failed: %1$s</string>
+    <string name="stopping_logs">Stopping logs</string>
+    <string name="stopping_logs_failed">Stopping logs failed: %1$s</string>
+</resources>

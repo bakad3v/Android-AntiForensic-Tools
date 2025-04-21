@@ -22,7 +22,10 @@ import androidx.navigation.fragment.findNavController
 import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.activitystate.ActivityStateHolder
 import com.sonozaki.dialogs.DialogLauncher
+import com.sonozaki.dialogs.InputDigitDialog
+import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.Theme
+import com.sonozaki.entities.UsbSettings
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.SettingsFragmentBinding
 import com.sonozaki.settings.domain.routers.SettingsRouter
@@ -35,9 +38,12 @@ import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.CLEAR_D
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.CLEAR_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DESTROY_DATA_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_MULTIUSER_UI_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_MULTIUSER_UI_ON_BOOT
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_MULTIUSER_UI_ON_LOCK
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_SAFE_BOOT_RESTRICTION_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_SWITCH_USER_RESTRICTION_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_USER_SWITCHER_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_BFU_DELAY_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_CLICK_NUMBER_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_LATENCY_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_MULTIUSER_UI_DIALOG
@@ -51,6 +57,7 @@ import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.LOGD_ON
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.MAX_PASSWORD_ATTEMPTS_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.MOVE_TO_ACCESSIBILITY_SERVICE
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.MOVE_TO_ADMIN_SETTINGS
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.MOVE_TO_BFU_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.OPEN_MULTIUSER_SETTINGS_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.REBOOT_ON_USB_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ROOT_WARNING_DIALOG
@@ -100,10 +107,17 @@ class SettingsFragment : Fragment() {
     setupActivity()
     setupThemesMenu()
     setupUsbMenu()
+    setupDisableMultiuserUIMenu()
     listenDialogResults()
     setupDialogs()
     setupMenu()
     setupButtonsAndSwitches()
+  }
+
+  private fun setupDisableMultiuserUIMenu() {
+    binding.disableMultiuserUi.setOnClickListener {
+      changeDisableMultiuserUIMenu()
+    }
   }
 
   private fun setupUsbMenu() {
@@ -274,6 +288,17 @@ class SettingsFragment : Fragment() {
     viewModel.showSetTriggerOnButtonDialog()
   }
 
+  private val switchMoveToBFUAutomaticallyListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    if (!checked) {
+      viewModel.setMoveToBFU(false)
+      return@OnCheckedChangeListener
+    }
+    switch.isChecked = false
+    viewModel.moveDeviceToBFUAutomaticallyDialog()
+  }
+
+
+
   /**
    * Setting up buttons and switches. Switches are disabled if user doesn't provide enough rights.
    */
@@ -283,11 +308,35 @@ class SettingsFragment : Fragment() {
     listenBruteforceProtectionSettings()
     checkPermissions()
     listenUsbSettings()
+    listenDeviceProtectionSettings()
     setupClickableElements()
+  }
+
+  private fun multiuserUiProtectionDescription(multiuserUIProtection: MultiuserUIProtection): String {
+    return when(multiuserUIProtection) {
+      MultiuserUIProtection.NEVER -> requireContext().getString(R.string.never)
+      MultiuserUIProtection.ON_REBOOT -> requireContext().getString(R.string.device_booted)
+      MultiuserUIProtection.ON_SCREEN_OFF -> requireContext().getString(R.string.device_locked)
+    }
+  }
+
+  private fun listenDeviceProtectionSettings() {
+    viewLifecycleOwner.launchLifecycleAwareCoroutine {
+      viewModel.deviceProtectionSettingsState.collect {
+        with(binding) {
+          disableMultiuserUi.setText(multiuserUiProtectionDescription(it.multiuserUIProtection))
+          moveToBfuDelay.setDigit(it.rebootDelay.toString())
+          moveToBfu.setCheckedProgrammatically(it.rebootOnLock, switchMoveToBFUAutomaticallyListener)
+        }
+      }
+    }
   }
 
   private fun setupClickableElements() {
     with(binding) {
+      moveToBfuDelay.setOnClickListener {
+        viewModel.showMovingToBFUDelayDialog()
+      }
       usersLimit.setOnClickListener {
         viewModel.showChangeUserLimitDialog()
       }
@@ -322,9 +371,9 @@ class SettingsFragment : Fragment() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.usbSettingState.collect {
         val textId = when(it) {
-          com.sonozaki.entities.UsbSettings.DO_NOTHING -> R.string.do_nothing
-          com.sonozaki.entities.UsbSettings.RUN_ON_CONNECTION -> R.string.destroy_data
-          com.sonozaki.entities.UsbSettings.REBOOT_ON_CONNECTION -> R.string.reboot
+          UsbSettings.DO_NOTHING -> R.string.do_nothing
+          UsbSettings.RUN_ON_CONNECTION -> R.string.destroy_data
+          UsbSettings.REBOOT_ON_CONNECTION -> R.string.reboot
         }
             binding.usbMenu.setText(requireContext().getString(textId))
       }
@@ -334,12 +383,15 @@ class SettingsFragment : Fragment() {
   private fun checkPermissions() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.permissionsState.collect {
+        val serviceWorking = viewModel.settingsState.value.serviceWorking
         val rootOrDhizuku = it.isRoot || it.isOwner
         with(binding) {
           runTrimItem.setSwitchEnabled(it.isRoot)
           wipeItem.setSwitchEnabled(
             rootOrDhizuku || it.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
           )
+          disableMultiuserUi.isClickable = rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && serviceWorking
+          moveToBfu.setSwitchEnabled(rootOrDhizuku && serviceWorking)
           removeItselfItem.setSwitchEnabled(rootOrDhizuku)
           hideAppItem.setSwitchEnabled(
             rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
@@ -396,7 +448,11 @@ class SettingsFragment : Fragment() {
   private fun listenSettings() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.settingsState.collect {
+        val permissions = viewModel.permissionsState.value
+        val rootOrDhizuku = permissions.isRoot || permissions.isOwner
         with(binding) {
+          disableMultiuserUi.isClickable = rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && it.serviceWorking
+          moveToBfu.setSwitchEnabled(rootOrDhizuku && it.serviceWorking)
           runOnPasswordItem.setSwitchEnabled(it.serviceWorking)
           powerButtonItem.setSwitchEnabled(it.serviceWorking)
           wipeItem.setCheckedProgrammatically(it.wipe, switchWipeListener)
@@ -475,6 +531,15 @@ class SettingsFragment : Fragment() {
     ) {
       startAccessibilityService()
     }
+    listenQuestionDialog(MOVE_TO_BFU_DIALOG) {
+      viewModel.setMoveToBFU(true)
+    }
+    listenQuestionDialog(DISABLE_MULTIUSER_UI_ON_BOOT) {
+      viewModel.setMultiUserUIProtection(MultiuserUIProtection.ON_REBOOT)
+    }
+    listenQuestionDialog(DISABLE_MULTIUSER_UI_ON_LOCK) {
+      viewModel.setMultiUserUIProtection(MultiuserUIProtection.ON_SCREEN_OFF)
+    }
     listenQuestionDialog(
       INSTALL_DIZUKU_DIALOG,
     ) {
@@ -525,14 +590,22 @@ class SettingsFragment : Fragment() {
     ) {
       viewModel.setHide(true)
     }
-    com.sonozaki.dialogs.InputDigitDialog.setupListener(
+    InputDigitDialog.setupListener(
       parentFragmentManager,
       viewLifecycleOwner,
       MAX_PASSWORD_ATTEMPTS_DIALOG
     ) { limit ->
       viewModel.setBruteForceLimit(limit)
     }
-    com.sonozaki.dialogs.InputDigitDialog.setupListener(
+    InputDigitDialog.setupListener(
+      parentFragmentManager,
+      viewLifecycleOwner,
+      EDIT_BFU_DELAY_DIALOG
+    ) {
+      delay ->
+      viewModel.changeMoveToBFUDelay(delay)
+    }
+    InputDigitDialog.setupListener(
       parentFragmentManager,
       viewLifecycleOwner,
       CHANGE_USER_LIMIT_DIALOG
@@ -600,7 +673,7 @@ class SettingsFragment : Fragment() {
     ) {
       viewModel.setClearData(true)
     }
-    com.sonozaki.dialogs.InputDigitDialog.setupListener(
+    InputDigitDialog.setupListener(
       parentFragmentManager,
       viewLifecycleOwner,
       EDIT_LATENCY_DIALOG
@@ -608,7 +681,7 @@ class SettingsFragment : Fragment() {
         latency ->
       viewModel.setLatency(latency)
     }
-    com.sonozaki.dialogs.InputDigitDialog.setupListener(
+    InputDigitDialog.setupListener(
       parentFragmentManager,
       viewLifecycleOwner,
       EDIT_CLICK_NUMBER_DIALOG
@@ -663,6 +736,32 @@ class SettingsFragment : Fragment() {
         )
       )
   }
+
+  /**
+   * Changing disable multiuser UI strategy
+   */
+  private fun changeDisableMultiuserUIMenu() {
+    val popup = PopupMenu(context, binding.disableMultiuserUi.menu)
+    popup.menuInflater.inflate(R.menu.multiuser_ui_menu, popup.menu)
+    popup.setOnMenuItemClickListener {
+      when (it.itemId) {
+        R.id.never -> {
+          viewModel.setMultiUserUIProtection(MultiuserUIProtection.NEVER)
+        }
+        R.id.device_booted -> {
+          viewModel.disableMultiuserUIOnBootDialog()
+        }
+
+        R.id.device_locked-> {
+          viewModel.disableMultiuserUIonLockDialog()
+        }
+        else -> throw RuntimeException("Wrong multiuser UI setting")
+      }
+      return@setOnMenuItemClickListener true
+    }
+    popup.show()
+  }
+
 
   /**
    * Changing app's theme

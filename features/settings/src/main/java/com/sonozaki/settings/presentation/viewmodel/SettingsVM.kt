@@ -6,6 +6,8 @@ import androidx.lifecycle.viewModelScope
 import com.sonozaki.dialogs.DialogActions
 import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.ButtonSettings
+import com.sonozaki.entities.DeviceProtectionSettings
+import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
@@ -17,6 +19,10 @@ import com.sonozaki.settings.domain.usecases.bruteforce.SetBruteForceStatusUseCa
 import com.sonozaki.settings.domain.usecases.button.GetButtonSettingsUseCase
 import com.sonozaki.settings.domain.usecases.button.SetClicksNumberUseCase
 import com.sonozaki.settings.domain.usecases.button.SetLatencyUseCase
+import com.sonozaki.settings.domain.usecases.deviceProtection.GetDeviceProtectionSettingsUseCase
+import com.sonozaki.settings.domain.usecases.deviceProtection.SetMultiuserUIProtectionUseCase
+import com.sonozaki.settings.domain.usecases.deviceProtection.SetRebootDelayUseCase
+import com.sonozaki.settings.domain.usecases.deviceProtection.SetRebootOnLockStatusUseCase
 import com.sonozaki.settings.domain.usecases.permissions.GetPermissionsUseCase
 import com.sonozaki.settings.domain.usecases.permissions.SetOwnerActiveUseCase
 import com.sonozaki.settings.domain.usecases.permissions.SetRootActiveUseCase
@@ -91,6 +97,10 @@ class SettingsVM @Inject constructor(
     private val setClicksNumberUseCase: SetClicksNumberUseCase,
     private val setTriggerOnButtonUseCase: SetTriggerOnButtonUseCase,
     private val setScreenshotsStatusUseCase: SetScreenshotsStatusUseCase,
+    private val setMultiuserUIProtectionUseCase: SetMultiuserUIProtectionUseCase,
+    private val setRebootDelayUseCase: SetRebootDelayUseCase,
+    private val setRebootOnLockStatusUseCase: SetRebootOnLockStatusUseCase,
+    getDeviceProtectionSettingsUseCase: GetDeviceProtectionSettingsUseCase,
     getPermissionsUseCase: GetPermissionsUseCase,
     getUSBSettingsUseCase: GetUsbSettingsUseCase,
     getBruteforceSettingsUseCase: GetBruteforceSettingsUseCase,
@@ -103,6 +113,12 @@ class SettingsVM @Inject constructor(
         viewModelScope,
         SharingStarted.WhileSubscribed(0, 0),
         ButtonSettings()
+    )
+
+    val deviceProtectionSettingsState = getDeviceProtectionSettingsUseCase().stateIn(
+        viewModelScope,
+        SharingStarted.WhileSubscribed(0, 0),
+        DeviceProtectionSettings()
     )
 
     val settingsState = getSettingsUseCase().stateIn(
@@ -723,6 +739,58 @@ class SettingsVM @Inject constructor(
         )
     }
 
+    fun showMovingToBFUDelayDialog() {
+        showInputDigitDialog(
+            title = UIText.StringResource(R.string.change_moving_to_bfu_delay),
+            message = UIText.StringResource(R.string.change_moving_to_bfu_delay_long),
+            hint = deviceProtectionSettingsState.value.rebootDelay.toString(),
+            range = 1..1000000,
+            requestKey = EDIT_BFU_DELAY_DIALOG
+        )
+    }
+
+    fun moveDeviceToBFUAutomaticallyDialog() {
+        showQuestionDialog(
+            title = UIText.StringResource(R.string.auto_move_to_bfu),
+            message = UIText.StringResource(R.string.move_to_bfu_long),
+            requestKey = MOVE_TO_BFU_DIALOG
+        )
+    }
+
+    fun disableMultiuserUIOnBootDialog() {
+        showQuestionDialog(
+            title = UIText.StringResource(R.string.disable_multiuser_ui_automatically_dialog),
+            message = UIText.StringResource(R.string.disable_multiuser_ui_automatically_on_boot_long),
+            requestKey = DISABLE_MULTIUSER_UI_ON_BOOT
+        )
+    }
+
+    fun disableMultiuserUIonLockDialog() {
+        showQuestionDialog(
+            title = UIText.StringResource(R.string.disable_multiuser_ui_automatically_dialog),
+            message = UIText.StringResource(R.string.disable_multiuser_ui_automatically_on_lock_long),
+            requestKey = DISABLE_MULTIUSER_UI_ON_LOCK
+        )
+    }
+
+    fun changeMoveToBFUDelay(delay: Int) {
+        viewModelScope.launch {
+            setRebootDelayUseCase(delay)
+        }
+    }
+
+    fun setMoveToBFU(status: Boolean) {
+        viewModelScope.launch {
+            setRebootOnLockStatusUseCase(status)
+        }
+    }
+
+    fun setMultiUserUIProtection(multiuserUIProtection: MultiuserUIProtection) {
+        viewModelScope.launch {
+            setMultiuserUIProtectionUseCase(multiuserUIProtection)
+        }
+    }
+
     fun editClicksNumberDialog() {
         showInputDigitDialog(
             title = UIText.StringResource(R.string.change_clicks_number),
@@ -884,6 +952,10 @@ class SettingsVM @Inject constructor(
         const val ROOT_WARNING_DIALOG = "root_warning_dialog"
         const val DESTROY_DATA_DIALOG = "destroy_data_dialog"
         const val ALLOW_SCREENSHOTS_DIALOG = "allow_screenshots_dialog"
+        const val EDIT_BFU_DELAY_DIALOG = "edit_bfu_delay_dialog"
+        const val MOVE_TO_BFU_DIALOG = "move_device_to_bfu_dialog"
+        const val DISABLE_MULTIUSER_UI_ON_BOOT = "disable_multiuser_ui_on_boot"
+        const val DISABLE_MULTIUSER_UI_ON_LOCK = "disable_multiuser_ui_on_lock"
     }
 
 }

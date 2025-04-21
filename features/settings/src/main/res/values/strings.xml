@@ -123,4 +123,20 @@
     <string name="root_and_owner_android9">Requires root or dhizuku, Android 9+</string>
     <string name="safe_boot_status">Safe boot status</string>
     <string name="settings">Settings</string>
+    <string name="device_protection">Device protection</string>
+    <string name="move_to_bfu">BFU after lock</string>
+    <string name="moving_to_bfu_delay">Moving to BFU delay (s)</string>
+    <string name="disable_multiuser_ui_automatically">Disable multiuser UI when...</string>
+    <string name="never">Never</string>
+    <string name="device_booted">Device booted</string>
+    <string name="device_locked">Device locked</string>
+    <string name="change_moving_to_bfu_delay">Change moving to BFU delay</string>
+    <string name="change_moving_to_bfu_delay_long">Setup delay between locking phone\'s screen and rebooting. Phone reboot will move it in BFU and erase encryption keys from memory.</string>
+    <string name="move_to_bfu_long">When locked, device will wait for some time for you to unlock it. If you will not unlock it, device will reboot. That will move device in BFU mode and remove encryption keys from memory, making your device safer.</string>
+    <string name="auto_move_to_bfu">Move device to BFU on lock</string>
+    <string name="disable_multiuser_ui_automatically_dialog">Disable multiuser UI automatically</string>
+    <string name="disable_multiuser_ui_automatically_on_boot_long">UI for switching users would be disabled automatically on your device on boot. It will prevent discovery of your profiles via pull-down settings menu.</string>
+    <string name="disable_multiuser_ui_automatically_on_lock_long">UI for switching users would be disabled automatically on your device on screen lock. It will prevent discovery of your profiles via pull-down settings menu.</string>
+    <string name="root_and_owner_android9_acessibility">Requires root or dhizuku, accessibility service, Android 9+</string>
+    <string name="root_and_owner_accessibility">Requires root or dhizuku + accessibility service</string>
 </resources>

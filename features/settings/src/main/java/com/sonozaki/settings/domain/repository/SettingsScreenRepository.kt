@@ -2,6 +2,8 @@ package com.sonozaki.settings.domain.repository
 
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.BruteforceSettings
+import com.sonozaki.entities.DeviceProtectionSettings
+import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
@@ -14,6 +16,7 @@ interface SettingsScreenRepository {
     val usbSettings: Flow<UsbSettings>
     val bruteForceSettings: Flow<BruteforceSettings>
     val buttonSettings: Flow<ButtonSettings>
+    val deviceProtectionSettings: Flow<DeviceProtectionSettings>
 
     suspend fun sendBroadcast(status: Boolean)
     suspend fun setClearItself(status: Boolean)
@@ -48,4 +51,7 @@ interface SettingsScreenRepository {
     suspend fun updateLatency(latency: Int)
     suspend fun updateAllowedClicks(allowedClicks: Int)
     suspend fun setTriggerOnButtonStatus(status: Boolean)
+    suspend fun changeRebootDelay(delay: Int)
+    suspend fun changeMultiuserUIProtection(multiuserUIProtection: MultiuserUIProtection)
+    suspend fun changeRebootOnLockStatus(status: Boolean)
 }

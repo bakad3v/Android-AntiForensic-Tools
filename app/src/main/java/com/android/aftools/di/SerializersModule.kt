@@ -8,6 +8,7 @@ import com.sonozaki.data.settings.entities.SettingsV1
 import com.sonozaki.data.settings.entities.UsbSettingsV1
 import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.entities.BruteforceSettings
+import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.LogsData
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.Settings
@@ -77,6 +78,12 @@ class SerializersModule {
     fun bindPermissionsBaseSerializer(@Named(IO_DISPATCHER) ioDispatcher: CoroutineDispatcher) =
         BaseSerializer<Permissions>(ioDispatcher, Permissions.serializer(),
             Permissions())
+
+    @Provides
+    @Singleton
+    fun bindDeviceProtectionSettingsBaseSerializer(@Named(IO_DISPATCHER) ioDispatcher: CoroutineDispatcher) =
+        BaseSerializer<DeviceProtectionSettings>(ioDispatcher, DeviceProtectionSettings.serializer(),
+            DeviceProtectionSettings())
 
     @Provides
     @Singleton

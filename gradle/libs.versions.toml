@@ -31,6 +31,8 @@ jetbrainsKotlinJvm = "2.1.0"
 kapt = "2.1.0"
 dependencyAnalysis = "2.12.0"
 betterDatastore = "1.0.0-alpha"
+workmanager = "2.10.0"
+androidxHiltCompiler = "1.2.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
@@ -46,6 +48,7 @@ fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "fragm
 hiddenapibypass = { module = "org.lsposed.hiddenapibypass:hiddenapibypass", version.ref = "hiddenapibypass" }
 hilt-android = { module = "com.google.dagger:hilt-android", version.ref = "daggerVersion" }
 hilt-compiler = { module = "com.google.dagger:hilt-compiler", version.ref = "daggerVersion" }
+androidx-hilt-compiler = {group = "androidx.hilt", name = "hilt-compiler", version.ref = "androidxHiltCompiler" }
 javax-inject = { module = "javax.inject:javax.inject", version.ref = "javaxInject" }
 joda-time = { module = "joda-time:joda-time", version.ref = "jodaTime" }
 junit = { module = "junit:junit", version.ref = "junitVersion" }
@@ -64,6 +67,9 @@ navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.
 security-crypto-ktx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityVersion" }
 storage = { module = "com.anggrayudi:storage", version.ref = "storage" }
 zxcvbn = { module = "com.nulab-inc:zxcvbn", version.ref = "zxcvbn" }
+workmanager = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workmanager" }
+hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidxHiltCompiler" }
+
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 java-library = { id = "java-library" }

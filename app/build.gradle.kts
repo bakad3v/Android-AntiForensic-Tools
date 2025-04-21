@@ -86,6 +86,8 @@ dependencies {
     // Dagger Hilt for dependency injection
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    kapt(libs.androidx.hilt.compiler)
+    implementation(libs.hilt.work)
 
     // Lifecycle and coroutines
     implementation(libs.lifecycle.livedata.ktx)

@@ -94,7 +94,7 @@ class Root @Inject constructor(
     override suspend fun setUserSwitcherStatus(status: Boolean) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
             throw SuperUserException(
-                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
+                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.Q),
                 UIText.StringResource(
                     R.string.wrong_android_version,
                     Build.VERSION_CODES.P.toString()
@@ -106,7 +106,7 @@ class Root @Inject constructor(
     override suspend fun getUserSwitcherStatus(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
             throw SuperUserException(
-                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
+                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.Q),
                 UIText.StringResource(
                     R.string.wrong_android_version,
                     Build.VERSION_CODES.P.toString()
