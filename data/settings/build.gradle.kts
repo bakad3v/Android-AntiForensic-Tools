@@ -41,6 +41,7 @@ dependencies {
     implementation(project(":core:entities"))
     implementation(project(":core:encryptedDatastore"))
     implementation(project(":superuser"))
+    implementation(project(":core:resources"))
     testImplementation(libs.junit)
     implementation(libs.better.datastore)
     androidTestImplementation(libs.ext.junit)
