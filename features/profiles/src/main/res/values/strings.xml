@@ -19,5 +19,6 @@
     <string name="not_running">Not running</string>
     <string name="unknown">Unknown</string>
     <string name="stop_user">Stop user</string>
+    <string name="failed_to_stop_profile">Failed to stop profile</string>
 
 </resources>

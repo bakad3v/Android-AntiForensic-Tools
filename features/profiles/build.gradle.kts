@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-
+    implementation(project(":superuser"))
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)

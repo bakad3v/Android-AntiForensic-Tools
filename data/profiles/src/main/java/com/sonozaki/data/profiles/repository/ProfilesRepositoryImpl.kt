@@ -12,7 +12,6 @@ import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.superuser.superuser.SuperUserManager
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.combine
@@ -26,7 +25,6 @@ class ProfilesRepositoryImpl @Inject constructor(
     private val profilesMapper: ProfilesMapper,
     private val superUserManager: SuperUserManager,
     private val profilesOnDevice: MutableSharedFlow<List<ProfileDomain>?>,
-    private val coroutineScope: CoroutineScope,
     @Named(IO_DISPATCHER) private val coroutineDispatcher: CoroutineDispatcher,
     profilesSerializer: BaseSerializer<IntList>
 ) : ProfilesRepository {
