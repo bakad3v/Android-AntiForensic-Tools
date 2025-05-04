@@ -10,6 +10,7 @@ import com.google.android.material.color.MaterialColors
 import com.sonozaki.entities.ProfileDomain
 import com.sonozaki.profiles.R
 import com.sonozaki.profiles.databinding.ProfileCardviewBinding
+import com.sonozaki.utils.booleanToVisibility
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -77,6 +78,7 @@ class ProfileAdapter @AssistedInject constructor(
       delete.setOnClickListener {
         onDeleteItemClickListener(profile.id,!profile.toDelete)
       }
+      stop.visibility = booleanToVisibility(profile.running != false)
       stop.setOnClickListener {
           onStopItemClickListener(profile.id, profile.current)
       }

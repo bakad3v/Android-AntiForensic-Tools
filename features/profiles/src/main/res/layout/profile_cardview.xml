@@ -5,13 +5,8 @@
     style="?attr/materialCardViewElevatedStyle"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/margin_normal"
-    android:layout_marginHorizontal="@dimen/margin_normal">
+    android:layout_marginTop="@dimen/margin_normal">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,96 +27,87 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:srcCompat="@drawable/baseline_account_box_24" />
 
-            <LinearLayout
-                android:id="@id/layout"
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/name"
+                style="?attr/textAppearanceTitleLarge"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="start"
+                android:maxLines="1"
+                android:paddingStart="@dimen/margin_normal"
+                android:paddingEnd="@dimen/margin_normal"
+                android:textColor="?attr/colorOnSecondaryContainer"
+                app:layout_constraintEnd_toStartOf="@+id/stop"
                 app:layout_constraintStart_toEndOf="@+id/imageView2"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/id"
+                style="?attr/textAppearanceLabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="start"
+                android:maxLines="1"
+                android:paddingStart="@dimen/margin_normal"
+                android:paddingEnd="@dimen/margin_normal"
+                android:textColor="?attr/colorOnSecondaryContainer"
+                app:layout_constraintEnd_toStartOf="@+id/stop"
+                app:layout_constraintStart_toStartOf="@+id/name"
+                app:layout_constraintTop_toBottomOf="@+id/name" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/status"
+                style="?attr/textAppearanceLabelLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:ellipsize="start"
+                android:maxLines="1"
+                android:paddingStart="@dimen/margin_normal"
+                android:paddingEnd="@dimen/margin_normal"
+                android:textColor="?attr/colorOnSecondaryContainer"
+                app:layout_constraintEnd_toStartOf="@+id/stop"
+                app:layout_constraintStart_toStartOf="@+id/name"
+                app:layout_constraintTop_toBottomOf="@+id/id" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:id="@+id/materialDivider"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_normal"
                 app:layout_constraintEnd_toEndOf="parent"
-                android:orientation="vertical">
+                app:layout_constraintStart_toStartOf="@+id/name"
+                app:layout_constraintTop_toBottomOf="@+id/status">
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/name"
-                    style="?attr/textAppearanceTitleLarge"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/margin_normal"
-                    android:paddingEnd="@dimen/margin_normal"
-                    android:textColor="?attr/colorOnSecondaryContainer" />
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/id"
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/margin_normal"
-                    android:paddingEnd="@dimen/margin_normal"
-                    android:textColor="?attr/colorOnSecondaryContainer" />
+            </com.google.android.material.divider.MaterialDivider>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/status"
-                    style="?attr/textAppearanceLabelLarge"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:ellipsize="start"
-                    android:maxLines="1"
-                    android:paddingStart="@dimen/margin_normal"
-                    android:paddingEnd="@dimen/margin_normal"
-                    android:textColor="?attr/colorOnSecondaryContainer" />
-                <Space
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1">
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/delete"
+                style="?attr/materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="?attr/colorTertiary"
+                app:icon="@drawable/ic_baseline_delete_24"
+                app:iconTint="?attr/colorError"
+                app:layout_constraintStart_toStartOf="@+id/name"
+                app:layout_constraintTop_toBottomOf="@+id/materialDivider"
+                app:strokeColor="?attr/colorError" />
 
-                </Space>
-            </LinearLayout>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/stop"
+                style="?attr/materialIconButtonStyle"
+                android:layout_width="@dimen/md_icon_size"
+                android:layout_height="@dimen/md_icon_size"
+                android:layout_marginTop="@dimen/margin_normal"
+                android:layout_marginEnd="@dimen/margin_normal"
+                android:layout_marginBottom="@dimen/margin_normal"
+                android:foreground="@drawable/baseline_pause_circle_outline_24"
+                app:layout_constraintBottom_toTopOf="@+id/materialDivider"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </com.google.android.material.button.MaterialButton>
         </androidx.constraintlayout.widget.ConstraintLayout>
-    </LinearLayout>
-    <com.google.android.material.divider.MaterialDivider
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="parent">
-
-    </com.google.android.material.divider.MaterialDivider>
-
-    <LinearLayout
-        android:paddingStart="@dimen/margin_normal"
-        app:layout_constraintTop_toBottomOf="@id/divider"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/delete"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textColor="?attr/colorError"
-            app:icon="@drawable/ic_baseline_delete_24"
-            app:iconTint="?attr/colorError"
-            tools:text="@string/enable_deletion"
-            app:strokeColor="?attr/colorError" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/stop"
-            android:layout_marginStart="@dimen/margin_normal"
-            style="?attr/materialButtonOutlinedStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textColor="?attr/colorError"
-            app:icon="@drawable/ic_baseline_pause_24"
-            app:iconTint="?attr/colorError"
-            android:text="@string/stop_user"
-            app:strokeColor="?attr/colorError" />
-
-    </LinearLayout>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

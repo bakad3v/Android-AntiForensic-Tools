@@ -46,8 +46,13 @@ class Root @Inject constructor(
     }
 
     private suspend fun checkAdminApp(packageName: String) {
-        if (packageName == context.packageName && dpm.isAdminActive(deviceAdmin)) {
-            executeRootCommand("dpm remove-active-admin ${context.packageName}/${deviceAdmin.shortClassName}")
+        if (packageName == context.packageName) {
+            for (profile in getProfiles()) {
+                try {
+                    executeRootCommand("dpm remove-active-admin --user ${profile.id} ${context.packageName}/${deviceAdmin.shortClassName}")
+                } catch (_: SuperUserException) {
+                }
+            }
         }
     }
 

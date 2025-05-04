@@ -10,6 +10,7 @@ import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.UserManager
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.UsbSettings
@@ -73,6 +74,10 @@ class TriggerReceiverService : AccessibilityService() {
     lateinit var getUsbSettingsUseCase: GetUsbSettingsUseCase
 
     @Inject
+    @Named(IO_DISPATCHER)
+    lateinit var dispatcher: CoroutineDispatcher
+
+    @Inject
     lateinit var userManager: UserManager
 
     @Inject
@@ -99,7 +104,7 @@ class TriggerReceiverService : AccessibilityService() {
 
     override fun onCreate() {
         super.onCreate()
-        coroutineScope.launch {
+        coroutineScope.launch(dispatcher) {
             if (!getPasswordStatusUseCase()) {
                 //app will not set service status to true if it's data has been reset.
                 stopSelf()
@@ -159,12 +164,13 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     private suspend fun handleScreenStateChanged(action: String) {
+        Log.w("screen_state", "changed")
         if (buttonClicksUseCase()) {
             runActions()
         }
         if (action == Intent.ACTION_SCREEN_OFF) {
             val deviceProtectionSettings = getDeviceProtectionSettings()
-            if (deviceProtectionSettings.rebootOnLock) {
+            if (deviceProtectionSettings.rebootOnLock && userManager.isUserUnlocked) {
                 activitiesLauncher.enqueueReboot(deviceProtectionSettings.rebootDelay)
             }
             if (deviceProtectionSettings.multiuserUIProtection == MultiuserUIProtection.ON_SCREEN_OFF) {
@@ -178,7 +184,7 @@ class TriggerReceiverService : AccessibilityService() {
             IntentFilter(Intent.ACTION_SCREEN_ON).apply { addAction(Intent.ACTION_SCREEN_OFF) }
         val buttonClickedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                coroutineScope.launch {
+                coroutineScope.launch(dispatcher) {
                     handleScreenStateChanged(intent?.action ?: "")
                 }
             }
@@ -196,14 +202,14 @@ class TriggerReceiverService : AccessibilityService() {
         val usbReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent?.action == UsbManager.ACTION_USB_ACCESSORY_ATTACHED || intent?.action == UsbManager.ACTION_USB_DEVICE_ATTACHED) {
-                    coroutineScope.launch {
+                    coroutineScope.launch(dispatcher) {
                         runOnUSBConnected()
                     }
                     return
                 }
                 val manager = getSystemService(USB_SERVICE) as UsbManager
                 if (intent?.extras?.getBoolean("connected") == true && (manager.deviceList?.size != 0 || manager.accessoryList?.size != 0)) {
-                    coroutineScope.launch {
+                    coroutineScope.launch(dispatcher) {
                         runOnUSBConnected()
                     }
                 }
@@ -239,7 +245,7 @@ class TriggerReceiverService : AccessibilityService() {
         val userUnlockedFilter = IntentFilter(Intent.ACTION_USER_UNLOCKED)
         val userUnlockedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                coroutineScope.launch {
+                coroutineScope.launch(dispatcher) {
                     if (getSettingsUseCase().runOnBoot) {
                         withContext(ioDispatcher) {
                             delay(2000) //for some reason, file deletion doesn't work without delay after unlocking
@@ -274,7 +280,7 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     private fun checkPassword(pass: CharArray) {
-        coroutineScope.launch {
+        coroutineScope.launch(dispatcher) {
             if (getSettingsUseCase().runOnDuressPassword && checkPasswordUseCase(pass)) {
                 runActions()
             }
