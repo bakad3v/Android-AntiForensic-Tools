@@ -37,6 +37,7 @@ android {
 
 dependencies {
     implementation(project(":core:resources"))
+    implementation(project(":core:utils"))
     implementation(project(":superuser"))
     implementation(project(":core:entities"))
     implementation(project(":core:entities"))

@@ -46,8 +46,13 @@ class Root @Inject constructor(
     }
 
     private suspend fun checkAdminApp(packageName: String) {
-        if (packageName == context.packageName && dpm.isAdminActive(deviceAdmin)) {
-            executeRootCommand("dpm remove-active-admin ${context.packageName}/${deviceAdmin.shortClassName}")
+        if (packageName == context.packageName) {
+            for (profile in getProfiles()) {
+                try {
+                    executeRootCommand("dpm remove-active-admin --user ${profile.id} ${context.packageName}/${deviceAdmin.shortClassName}")
+                } catch (_: SuperUserException) {
+                }
+            }
         }
     }
 
@@ -94,7 +99,7 @@ class Root @Inject constructor(
     override suspend fun setUserSwitcherStatus(status: Boolean) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
             throw SuperUserException(
-                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
+                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.Q),
                 UIText.StringResource(
                     R.string.wrong_android_version,
                     Build.VERSION_CODES.P.toString()
@@ -106,7 +111,7 @@ class Root @Inject constructor(
     override suspend fun getUserSwitcherStatus(): Boolean {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
             throw SuperUserException(
-                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
+                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.Q),
                 UIText.StringResource(
                     R.string.wrong_android_version,
                     Build.VERSION_CODES.P.toString()
@@ -154,6 +159,18 @@ class Root @Inject constructor(
 
     override suspend fun reboot() {
         executeRootCommand("reboot")
+    }
+
+    override suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean {
+        if (userId == 0) {
+            throw SuperUserException(PRIMARY_USER_LOGOUT,
+                UIText.StringResource(R.string.cant_logout_from_primary_user))
+        }
+        if (isCurrent) {
+            executeRootCommand("am switch-user 0")
+            return executeRootCommand("am stop-user -w $userId").isSuccess
+        }
+        return executeRootCommand("am stop-user -w $userId").isSuccess
     }
 
 
@@ -208,6 +225,7 @@ class Root @Inject constructor(
         private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
         private const val ANDROID_VERSION_INCORRECT =
             "Wrong android version, SDK version %s or higher required"
+        private const val PRIMARY_USER_LOGOUT = "You can't logout from primary user"
         private const val NUMBER_NOT_RECOGNISED = "Number not recognised"
     }
 }

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/never"
+        android:title="@string/never" />
+    <item android:id="@+id/device_booted"
+        android:title="@string/device_booted" />
+    <item android:id="@+id/device_locked"
+        android:title="@string/device_locked" />
+</menu>

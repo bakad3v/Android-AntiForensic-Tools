@@ -42,4 +42,5 @@
     <string name="folder_deletion_failed">Folder %1$s is not deleted: %2$s percents of files deleted.</string>
     <string name="deletion_success">File %1$s deleted</string>
     <string name="deletion_failed">File %1$s is not deleted</string>
+    <string name="reboot_started">Reboot started</string>
 </resources>

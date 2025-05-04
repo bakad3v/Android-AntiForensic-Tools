@@ -8,19 +8,28 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.usb.UsbManager
+import android.os.Build
 import android.os.UserManager
+import android.util.Log
 import android.view.accessibility.AccessibilityEvent
+import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.resources.IO_DISPATCHER
+import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.superuser.superuser.SuperUserManager
+import com.sonozaki.triggerreceivers.R
 import com.sonozaki.triggerreceivers.services.domain.router.ActivitiesLauncher
 import com.sonozaki.triggerreceivers.services.domain.usecases.ButtonClickUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.CheckPasswordUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.GetDeviceProtectionSettings
+import com.sonozaki.triggerreceivers.services.domain.usecases.GetLogsEnabledUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetPasswordStatusUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.GetPermissionsUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetSettingsUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetUsbSettingsUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.SetRunOnBootUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.SetServiceStatusUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.WriteLogsUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -65,6 +74,10 @@ class TriggerReceiverService : AccessibilityService() {
     lateinit var getUsbSettingsUseCase: GetUsbSettingsUseCase
 
     @Inject
+    @Named(IO_DISPATCHER)
+    lateinit var dispatcher: CoroutineDispatcher
+
+    @Inject
     lateinit var userManager: UserManager
 
     @Inject
@@ -74,39 +87,109 @@ class TriggerReceiverService : AccessibilityService() {
     lateinit var buttonClicksUseCase: ButtonClickUseCase
 
     @Inject
+    lateinit var getDeviceProtectionSettings: GetDeviceProtectionSettings
+
+    @Inject
+    lateinit var getLogsEnabledUseCase: GetLogsEnabledUseCase
+
+    @Inject
+    lateinit var writeLogsUseCase: WriteLogsUseCase
+
+    @Inject
+    lateinit var getPermissionsUseCase: GetPermissionsUseCase
+
+    @Inject
     @Named(IO_DISPATCHER)
     lateinit var ioDispatcher: CoroutineDispatcher
 
     override fun onCreate() {
         super.onCreate()
-        coroutineScope.launch {
+        coroutineScope.launch(dispatcher) {
             if (!getPasswordStatusUseCase()) {
-               //app will not set service status to true if it's data has been reset.
-               stopSelf()
-               return@launch
+                //app will not set service status to true if it's data has been reset.
+                stopSelf()
+                return@launch
             }
             setServiceStatusUseCase(true)
+            protectMultiuserUI()
             setLogdServiceStatus()
         }
-        listenButtonClicked()
+        listenScreenStateChange()
+        listenScreenUnlocked()
         listenUserUnlocked()
         listenUsbConnection()
         keyguardManager = getSystemService(KeyguardManager::class.java)
     }
 
-    private fun listenButtonClicked() {
+    private suspend fun writeLogs(text: String) {
+        if (getLogsEnabledUseCase()) {
+            writeLogsUseCase(text)
+        }
+    }
+
+
+    private fun listenScreenUnlocked() {
+        val screenUnlockedFilter = IntentFilter(Intent.ACTION_USER_PRESENT)
+        val screenUnlockedReceiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                activitiesLauncher.stopReboot()
+            }
+        }
+        registerReceiver(screenUnlockedReceiver, screenUnlockedFilter)
+    }
+
+    private suspend fun disableMultiuserUI() {
+        val permissions = getPermissionsUseCase()
+        try {
+            writeLogs(baseContext.getString(R.string.disabling_multiuser_ui))
+            if (permissions.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                superUserManager.getSuperUser().setUserSwitcherStatus(false)
+            } else {
+                superUserManager.getSuperUser().setSwitchUserRestriction(true)
+            }
+        } catch (e: SuperUserException) {
+            writeLogs(
+                baseContext.getString(
+                    R.string.disabling_muliuser_ui_failed,
+                    e.messageForLogs.asString(baseContext)
+                )
+            )
+        }
+    }
+
+    private suspend fun protectMultiuserUI() {
+        if (getDeviceProtectionSettings().multiuserUIProtection == MultiuserUIProtection.ON_REBOOT) {
+            disableMultiuserUI()
+        }
+    }
+
+    private suspend fun handleScreenStateChanged(action: String) {
+        Log.w("screen_state", "changed")
+        if (buttonClicksUseCase()) {
+            runActions()
+        }
+        if (action == Intent.ACTION_SCREEN_OFF) {
+            val deviceProtectionSettings = getDeviceProtectionSettings()
+            if (deviceProtectionSettings.rebootOnLock && userManager.isUserUnlocked) {
+                activitiesLauncher.enqueueReboot(deviceProtectionSettings.rebootDelay)
+            }
+            if (deviceProtectionSettings.multiuserUIProtection == MultiuserUIProtection.ON_SCREEN_OFF) {
+                disableMultiuserUI()
+            }
+        }
+    }
+
+    private fun listenScreenStateChange() {
         val screenStateChangedFilter =
             IntentFilter(Intent.ACTION_SCREEN_ON).apply { addAction(Intent.ACTION_SCREEN_OFF) }
         val buttonClickedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                coroutineScope.launch {
-                    if (buttonClicksUseCase()) {
-                        runActions()
-                    }
+                coroutineScope.launch(dispatcher) {
+                    handleScreenStateChanged(intent?.action ?: "")
                 }
             }
         }
-        registerReceiver(buttonClickedReceiver,screenStateChangedFilter)
+        registerReceiver(buttonClickedReceiver, screenStateChangedFilter)
     }
 
     /**
@@ -119,14 +202,14 @@ class TriggerReceiverService : AccessibilityService() {
         val usbReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 if (intent?.action == UsbManager.ACTION_USB_ACCESSORY_ATTACHED || intent?.action == UsbManager.ACTION_USB_DEVICE_ATTACHED) {
-                    coroutineScope.launch {
+                    coroutineScope.launch(dispatcher) {
                         runOnUSBConnected()
                     }
                     return
                 }
                 val manager = getSystemService(USB_SERVICE) as UsbManager
                 if (intent?.extras?.getBoolean("connected") == true && (manager.deviceList?.size != 0 || manager.accessoryList?.size != 0)) {
-                    coroutineScope.launch {
+                    coroutineScope.launch(dispatcher) {
                         runOnUSBConnected()
                     }
                 }
@@ -137,11 +220,20 @@ class TriggerReceiverService : AccessibilityService() {
 
     private suspend fun runOnUSBConnected() {
         val settings = getUsbSettingsUseCase()
-        when(settings) {
+        when (settings) {
             UsbSettings.RUN_ON_CONNECTION -> runActions()
             UsbSettings.REBOOT_ON_CONNECTION -> try {
+                writeLogs(baseContext.getString(R.string.rebooting))
                 superUserManager.getSuperUser().reboot()
-            } catch (_: Exception) {}
+            } catch (e: SuperUserException) {
+                writeLogs(
+                    baseContext.getString(
+                        R.string.rebooting_failed,
+                        e.messageForLogs.asString(baseContext)
+                    )
+                )
+            }
+
             UsbSettings.DO_NOTHING -> {}
         }
     }
@@ -153,7 +245,7 @@ class TriggerReceiverService : AccessibilityService() {
         val userUnlockedFilter = IntentFilter(Intent.ACTION_USER_UNLOCKED)
         val userUnlockedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                coroutineScope.launch {
+                coroutineScope.launch(dispatcher) {
                     if (getSettingsUseCase().runOnBoot) {
                         withContext(ioDispatcher) {
                             delay(2000) //for some reason, file deletion doesn't work without delay after unlocking
@@ -174,15 +266,21 @@ class TriggerReceiverService : AccessibilityService() {
         val settings = getSettingsUseCase()
         if (settings.stopLogdOnBoot) {
             try {
+                writeLogs(baseContext.getString(R.string.stopping_logs))
                 superUserManager.getSuperUser().stopLogd()
-            } catch (_: Exception) {
-
+            } catch (e: SuperUserException) {
+                writeLogs(
+                    baseContext.getString(
+                        R.string.stopping_logs_failed,
+                        e.messageForLogs.asString(baseContext)
+                    )
+                )
             }
         }
     }
 
     private fun checkPassword(pass: CharArray) {
-        coroutineScope.launch {
+        coroutineScope.launch(dispatcher) {
             if (getSettingsUseCase().runOnDuressPassword && checkPasswordUseCase(pass)) {
                 runActions()
             }
@@ -220,12 +318,12 @@ class TriggerReceiverService : AccessibilityService() {
         } else {
             try {
                 password[index] = text[index]
-            } catch (_: java.lang.IndexOutOfBoundsException) { }
+            } catch (_: java.lang.IndexOutOfBoundsException) {
+            }
         }
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-
         if (keyguardManager?.isDeviceLocked != true ||
             event?.isEnabled != true
         ) return
@@ -247,7 +345,7 @@ class TriggerReceiverService : AccessibilityService() {
 
     override fun onUnbind(intent: Intent?): Boolean {
         runBlocking {
-           setServiceStatusUseCase(false)
+            setServiceStatusUseCase(false)
         }
         return super.onUnbind(intent)
     }

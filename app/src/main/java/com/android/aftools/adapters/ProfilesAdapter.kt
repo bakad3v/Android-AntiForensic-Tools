@@ -24,6 +24,10 @@ class ProfilesAdapter @Inject constructor(
         profilesRepository.setProfileDeletionStatus(id, status)
     }
 
+    override suspend fun stopProfile(id: Int, isCurrent: Boolean) {
+        profilesRepository.stopProfile(id, isCurrent)
+    }
+
     override fun getProfiles(): Flow<List<ProfileDomain>?>
         = profilesRepository.getProfiles()
     override val deleteProfiles: Flow<Boolean>

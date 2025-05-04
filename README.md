@@ -5,7 +5,7 @@
 
 ## Description
 
-Android AntiForensic Tools is a free and open source application designed to protect your personal data from a powerful adversary that can put pressure on you and force you to unlock your device. It allows you to wipe device, user profiles or personal files when a duress password is entered, a USB device is connected, power button is pressed several times in row or the wrong password is entered multiple times. An application offers additional options to protect your device from advanced adversaries: it can uninstall itself, run [TRIM](https://en.wikipedia.org/wiki/Trim_%28computing%29) after data deletion to prevent deleted data recovery, disable logs before data deletion to leave no traces of it's actions and disable safe boot mode.
+Android AntiForensic Tools is a free and open source application designed to protect your personal data from a powerful adversary that can put pressure on you and force you to unlock your device. Its purpose is to irreversibly destroy your sensitive data in the event of danger, to do so completely invisible to the human eye and, as far as possible, **to try** to do so imperceptibly to forensic experts. It allows you to wipe device, user profiles or personal files when a duress password is entered, a USB device is connected, power button is pressed several times in row or the wrong password is entered multiple times. An application offers additional options to protect your device from advanced adversaries: it can uninstall itself, run [TRIM](https://en.wikipedia.org/wiki/Trim_%28computing%29) after data deletion to prevent deleted data recovery, disable logs before data deletion to leave no traces of it's actions and disable safe boot mode.
 
 Your data is protected with [Better Encrypted Datastore](https://github.com/bakad3v/BetterEncryptedDatastore).
 
@@ -21,22 +21,31 @@ My app is designed to address these shortcomings. It allows you to wipe all data
 
 Unfortunately, there are limits to the stealthiness of deleting data, although deleting data is still much more stealthy than resetting the device to factory defaults. After deleting data in various places in the system (logs, cache, statistics, etc.) remains a lot of evidence that this data existed. It is almost impossible to erase all these traces, and an advanced adversary with full access to the device will be able to detect them. Fortunately, some of these traces are harmless - you can make up whatever you want about a deleted Android profile. However, some traces allow to find out that you have recently deleted data using this application, that will make the adversary much more interested in extracting the truth from you. I try to fight with such traces. The app includes some additional options that will allow you to hide its existence on the device, traces of your data and role of an app in erasing data from your device. However, the study of traces of deleted data is still far from complete.
 
-Another disadvantage of the app is that the most advanced features of the app, including the app self-destruction, require root permissions. Granting root privileges is usually accompanied by unlocking the bootloader, although some devices can [use root privileges with a locked bootloader](https://github.com/chenxiaolong/avbroot). Both root permissions and an unlocked bootloader [make](https://madaidans-insecurities.github.io/android.html) the device more vulnerable to some other types of attacks. Instead of root permissions, you can use app with device owner rights via Dhizuku, but in that case the Android system will show a notification if the app attempts to self-destruct, making the self-destruct option virtually useless when used without root permissions. Without root permissions, you can hide the app from the launcher and erase its data, plus the app masquerades as other apps, but it will still be possible to reveal the presence of the app on the device.
+Another disadvantage of the app is that the most advanced features of the app, including the app self-destruction, require root permissions. Granting root privileges is usually accompanied by unlocking the bootloader, although some devices can [use root privileges with a locked bootloader](https://github.com/chenxiaolong/avbroot). Both root permissions and an unlocked bootloader (especially the last one) [make](https://madaidans-insecurities.github.io/android.html) the device more vulnerable to some other types of attacks. Instead of root permissions, you can use app with device owner rights via Dhizuku, but in that case the Android system will show a notification if the app attempts to self-destruct, making the self-destruct option virtually useless when used without root permissions. Without root permissions, you can hide the app from the launcher and erase its data, plus the app masquerades as other apps, but it will still be possible to reveal the presence of the app on the device.
+
+Despite using almost all possible privileges in Android OS, app's possibilities are still limited by user's OS itself. Custom OS like GrapheneOS are capable to fight the most advanced adversaries and patch security holes that can't be patched by my application.
 
 ## Installation
-In the "Releases" section, you can download 5 versions of the app. 2 of them can be installed as regular APKs, and 3 need to be installed via ADB. The ADB installation process will be described below. Versions that can be installed as regular APKs have the drawback that the self-destruct option is not compatible with administrator privileges, and administrator privileges are required to protect against passwords brute-force. Therefore, they are called "NOT_RECOMMENDED" and their installation is not recommended.
+In the "Releases" section, you can download 5 versions of the app. 2 of them can be installed as regular APKs, and 3 need to be installed via ADB or using root. Installation process for those apps will be described below. Versions that can be installed as usual APKs have the drawback that the self-destruct option is not compatible with administrator privileges, and administrator privileges are required to protect against passwords brute-force. Therefore, they are called "NOT_RECOMMENDED" and their installation is not recommended.
 
 4 versions of the app are disguised as other apps - [Island](https://github.com/oasisfeng/island) and [Shelter](https://gitea.angry.im/PeterCxy/Shelter). They have changed the package name, icon, and name. This is to ensure that after app uninstallation or self-destruction for an adversary examining the system it looks as if you uninstalled one of those apps from the device, not Android AntiForensic Tools. However, it is possible that even renaming the package will not prevent traces of the application from being detected by an advanced adversary; further research is required to verify this. These apps were chosen for cloaking because they're open source, and you're unlikely to use both apps at the same time. If you have one of these installed on your device, install a version of Android AntiForensic Tools that masquerades as the other.
 
 Ideally, I recommend changing the package name yourself before installing. When renaming, select the package name used by an existing app that isn't on your device. The process of renaming a package will be described below.
 
 ### Apps versions
-* AFTools_original_ADB_NOT_RECOMMENDED - app version with original package name. **Do not install without modifying the package name!**
-* AFTools_island_NOT_RECOMMENDED - a version of the app masquerading as the Island app. Can be installed without ADB, but **installation is not recommended.**
-* AFTools_shelter_NOT_RECOMMENDED - a version of the app masquerading as the Shelter app. Can be installed without ADB, but **installation is not recommended.**
-* AFTools_island_ADB - a version of the app masquerading as the Island app. **Requires ADB for installation!**
-* AFTools_shelter_ADB - a version of the app masquerading as the Shelter app. **Requires ADB for installation!**
-### Installation via ADB
+* AFTools_original_TESTONLY_NOT_RECOMMENDED - app version with original package name. **Do not install without modifying the package name!**
+* AFTools_island_NOT_RECOMMENDED - a version of the app masquerading as the Island app. Can be installed without ADB or root rights, but **installation is not recommended.**
+* AFTools_shelter_NOT_RECOMMENDED - a version of the app masquerading as the Shelter app. Can be installed without ADB or root rights, but **installation is not recommended.**
+* AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB or root for installation!**
+* AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB or root for installation!**"
+### Installation of testOnly apps
+#### Installation with root rights
+1. Open terminal on your android device
+2. Enter "su"
+3. Enter command "сat \<path to apk\> | pm install -t -S $(stat -c %s \<path to apk\>)"
+4. If you install the new version of an app, enter the command "сat \<path to apk\> | pm install -t -r -S $(stat -c %s \<path to apk\>)".
+5. After the update, restart the application accessibility service if it has stopped working
+#### Installation via ADB
 1. Download [SDK Platform tools](https://developer.android.com/tools/releases/platform-tools) on your PC
 2. Unzip the archive
 3. Download the version of the application that requires installation via ADB to your computer
@@ -45,8 +54,7 @@ Ideally, I recommend changing the package name yourself before installing. When 
 6. Connect devices and allow USB debugging for your PC
 7. Open the command prompt and enter the command \<path to platform-tools folder\>/adb[.exe] install -t \<path to apk file\>.
 8. If you install the new version of an app, enter the command \<path to platform-tools folder\>/adb[.exe] install -t -r \<path to apk file\>.
-
-8.1 After the update, restart the application accessibility service if it has stopped working
+9. After the update, restart the application accessibility service if it has stopped working
 ### Changing app's package name
 #### Via Android Studio
 1. Install [Android Studio](https://developer.android.com/studio).
@@ -73,7 +81,9 @@ Regardless of your usage scenarios, I recommend following these guidelines:
 * Use all triggers (duress password, USB connection, bruteforce, power button). Data destruction will start on activation of one of these triggers. Each of them protects you from different types of attacks.
 * It is recommended to either erase all data on the device or delete the user profile. Files can not be deleted until the device is unlocked for the first time. If the trigger is activated before the device is unlocked for the first time, the deletion of files will begin only after unlocking, and only then can other actions, such as the self-destruction of the application, be started. Therefore, deleting files is only recommended if you do not want or cannot grant special permissions to the application. Better keep your secret files in a separate profile and delete it!
 * Disable safe boot mode or make this app a system app if you can. Safe boot mode may be used to circumvent the protection offered by this app. However, disabling safe boot mode may raise suspicions.
-* If you set up this app to delete data in the specified user profile, disable UI for switching between users when you doesn't need it, because otherwise an adversary may use the pull-down settings menu to get a list of your profiles from the lockscreen.
+* If you set up this app to delete data in the specified user profile, use "Disable multiuser UI" setting to disable user switching UI automatically. Otherwise an adversary may use the pull-down settings menu to get a list of your users from the lockscreen.
+* Stop unused profiles using "Profiles" menu
+* Setup your phone to reboot automatically after some period of time using "BFU after lock" setting
 * If you set up this app to delete data in the specified user profile, install this app in this user profile too and set up an app to wipe data on all triggers.
 * Make sure the app is working and data deletion with app uninstallation doesn't take too long. You can use logs to do some tests. Test before use! Test after updating the app! If something is wrong, please create an issue on GitHub and show logs.
 ### Permissions
@@ -112,7 +122,9 @@ You can run custom root commands after profiles deletion and before TRIM/app sel
 * User switcher UI. You can enable or disable the GUI to switch between users. This setting can help you in case it is hidden in your Android settings. Requires root and Android 10 or higher.
 * Switch user permission. Set up for the same purpose for Android 9. It is recommended to use only if the setting above did not work. Requires root or dhizuku and Android 9 or higher.
 * Maximum number of users. You can change the maximum number of profiles. Root rights are required.
-
+* Profiles settings. You can stop users, running in background, in profiles tab. It will remove encryption keys for these profiles from memory and allow you to save your battery. 
+* BFU after lock. When locked, device will wait for some time for you to unlock it. If you will not unlock it, device will reboot. That will move device in BFU mode and remove encryption keys from memory, making your device safer. Dhizuku or root privileges are required.
+* Disable multiuser UI automatically. UI for switching users would be disabled automatically on your device on boot or when screen locked. You will have to enable it manually in the settings every time you need to log in as new user. It will prevent discovery of your profiles via pull-down settings menu. Dhizuku or root privileges are required.
 ## Known issues
 
 ### App doesn't react on duress password

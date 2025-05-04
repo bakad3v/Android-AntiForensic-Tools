@@ -9,6 +9,7 @@ import com.sonozaki.entities.App
 import com.sonozaki.entities.LogsData
 import com.sonozaki.entities.Settings
 import com.sonozaki.data.logs.repository.LogsRepository
+import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepository
 import com.sonozaki.root.repository.RootRepository
 import com.sonozaki.services.domain.entities.FileDomain
 import com.sonozaki.services.domain.repository.ServicesRepository
@@ -21,6 +22,7 @@ class ServicesAdapter @Inject constructor(
     private val rootRepository: RootRepository,
     private val settingsRepository: SettingsRepository,
     private val filesRepository: FilesRepository,
+    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository,
     private val filesMapper: FileMapper
 ) : ServicesRepository {
     override suspend fun writeToLogs(text: String) {
@@ -37,6 +39,10 @@ class ServicesAdapter @Inject constructor(
 
     override fun getManagedApps(): List<App> {
         return listOf()
+    }
+
+    override suspend fun getRebootEnabled(): Boolean {
+        return deviceProtectionSettingsRepository.deviceProtectionSettings.first().rebootOnLock
     }
 
     override suspend fun getRootCommand(): String {

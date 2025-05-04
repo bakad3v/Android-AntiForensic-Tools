@@ -182,4 +182,10 @@ interface SuperUser {
      */
     @Throws(SuperUserException::class)
     suspend fun reboot()
+
+    /**
+     * Logout specified user. Moves user to SHUTDOWN state, evicts encryption keys. Can't be called for primary user.
+     */
+    @Throws(SuperUserException::class)
+    suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean
 }

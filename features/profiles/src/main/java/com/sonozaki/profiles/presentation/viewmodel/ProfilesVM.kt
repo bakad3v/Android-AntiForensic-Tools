@@ -9,7 +9,9 @@ import com.sonozaki.profiles.domain.usecases.GetDeleteProfilesUseCase
 import com.sonozaki.profiles.domain.usecases.RefreshProfilesUseCase
 import com.sonozaki.profiles.domain.usecases.SetDeleteProfilesUseCase
 import com.sonozaki.profiles.domain.usecases.SetProfileDeletionStatusUseCase
+import com.sonozaki.profiles.domain.usecases.StopProfileUseCase
 import com.sonozaki.profiles.presentation.state.ProfilesDataState
+import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -28,6 +30,7 @@ class ProfilesVM @Inject constructor(
     private val setDeleteProfilesUseCase: SetDeleteProfilesUseCase,
     private val refreshProfilesUseCase: RefreshProfilesUseCase,
     private val dialogActionsChannel: Channel<DialogActions>,
+    private val stopProfileUseCase: StopProfileUseCase,
     getDeleteProfilesUseCase: GetDeleteProfilesUseCase
 ) : ViewModel() {
 
@@ -52,6 +55,22 @@ class ProfilesVM @Inject constructor(
         started = SharingStarted.WhileSubscribed(0, 0),
         initialValue = false
     )
+
+    fun stopProfile(id: Int, isCurrent: Boolean) {
+        viewModelScope.launch {
+            try {
+                stopProfileUseCase(id, isCurrent)
+                refreshProfilesUseCase()
+            } catch (e: SuperUserException) {
+                dialogActionsChannel.send(
+                    DialogActions.ShowInfoDialog(
+                        title = UIText.StringResource(R.string.failed_to_stop_profile),
+                        message = e.messageForLogs
+                    )
+                )
+            }
+        }
+    }
 
     fun setProfileDeletionStatus(id: Int, status: Boolean) {
         viewModelScope.launch {

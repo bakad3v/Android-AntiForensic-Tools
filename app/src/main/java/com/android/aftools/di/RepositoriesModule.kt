@@ -16,6 +16,8 @@ import com.sonozaki.data.settings.repositories.SettingsRepositoryImpl
 import com.sonozaki.data.settings.repositories.USBSettingsRepositoryImpl
 import com.sonozaki.data.settings.repositories.UsbSettingsRepository
 import com.sonozaki.data.logs.repository.LogsRepository
+import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepository
+import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepositoryImpl
 import com.sonozaki.root.repository.RootRepository
 import com.sonozaki.root.repository.RootRepositoryImpl
 import dagger.Binds
@@ -34,6 +36,10 @@ abstract class RepositoriesModule {
     @Binds
     @Singleton
     abstract fun bindLogsRepository(filesRepositoryImpl: LogsRepositoryImpl): LogsRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDeviceProtectionSettingsRepository(deviceProtectionSettingsRepositoryImpl: DeviceProtectionSettingsRepositoryImpl): DeviceProtectionSettingsRepository
 
     @Binds
     @Singleton

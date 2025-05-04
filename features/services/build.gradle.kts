@@ -38,6 +38,8 @@ android {
 dependencies {
     implementation(project(":superuser"))
     implementation(project(":core:utils"))
+    implementation(libs.workmanager)
+    implementation(libs.hilt.work)
     implementation(libs.core.ktx)
     implementation(libs.material)
     implementation(project(":core:resources"))
@@ -48,4 +50,5 @@ dependencies {
     implementation(libs.core)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
+    kapt(libs.androidx.hilt.compiler)
 }

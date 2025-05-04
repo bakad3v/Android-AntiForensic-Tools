@@ -1,17 +1,21 @@
 package com.android.aftools.adapters
 
+import com.sonozaki.data.logs.repository.LogsRepository
 import com.sonozaki.entities.ButtonClicksData
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.data.settings.repositories.BruteforceRepository
 import com.sonozaki.data.settings.repositories.ButtonSettingsRepository
+import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepository
 import com.sonozaki.data.settings.repositories.PermissionsRepository
 import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.data.settings.repositories.UsbSettingsRepository
+import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.password.repository.PasswordManager
 import com.sonozaki.triggerreceivers.services.domain.repository.ReceiversRepository
 import kotlinx.coroutines.flow.first
+import com.sonozaki.entities.Permissions
 import javax.inject.Inject
 
 class ReceiversAdapter @Inject constructor(
@@ -20,8 +24,14 @@ class ReceiversAdapter @Inject constructor(
     private val settingsRepository: SettingsRepository,
     private val buttonSettingsRepository: ButtonSettingsRepository,
     private val bruteforceRepository: BruteforceRepository,
-    private val permissionsRepository: PermissionsRepository
+    private val permissionsRepository: PermissionsRepository,
+    private val logsRepository: LogsRepository,
+    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository
 ) : ReceiversRepository {
+    override suspend fun getDeviceProtectionSettings(): DeviceProtectionSettings {
+        return deviceProtectionSettingsRepository.deviceProtectionSettings.first()
+    }
+
     override suspend fun getPasswordStatus(): Boolean {
         return passwordManager.passwordStatus.first()
     }
@@ -32,6 +42,10 @@ class ReceiversAdapter @Inject constructor(
 
     override suspend fun getSettings(): Settings {
         return settingsRepository.settings.first()
+    }
+
+    override suspend fun getPermissions(): Permissions {
+        return permissionsRepository.permissions.first()
     }
 
     override suspend fun getButtonSettings(): ButtonSettings {
@@ -72,5 +86,13 @@ class ReceiversAdapter @Inject constructor(
 
     override suspend fun setLastTimestamp(timestamp: Long) {
         buttonSettingsRepository.setLastTimestamp(timestamp)
+    }
+
+    override suspend fun writeToLogs(text: String) {
+        logsRepository.writeToLogs(text)
+    }
+
+    override suspend fun areLogsEnabled(): Boolean {
+        return logsRepository.getLogsData().first().logsEnabled
     }
 }

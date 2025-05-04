@@ -2,26 +2,42 @@ package com.sonozaki.superuser.mapper
 
 import android.os.Parcel
 import android.os.UserHandle
+import android.os.Process
 import com.sonozaki.entities.ProfileDomain
 import javax.inject.Inject
 
 class ProfilesMapper @Inject constructor() {
-    fun mapUserHandleToProfile(userHandle: UserHandle): ProfileDomain {
+
+    private val currentId by lazy {
+        mapUserHandleToId(Process.myUserHandle())
+    }
+
+    private fun mapUserHandleToId(userHandle: UserHandle): Int {
         val parcel = Parcel.obtain()
         userHandle.writeToParcel(parcel,0)
         parcel.setDataPosition(0)
-        val id = parcel.readInt()
+        return parcel.readInt()
+    }
+
+    private fun isCurrentUser(id: Int) = currentId == id
+
+    fun mapUserHandleToProfile(userHandle: UserHandle): ProfileDomain {
+        val id = mapUserHandleToId(userHandle)
         val main = id == 0
-        return ProfileDomain(id,"Unknown name",main)
+        val current = isCurrentUser(id)
+        return ProfileDomain(id,"Unknown name",main, current)
     }
 
     fun mapRootOutputToProfile(output: String) : ProfileDomain {
         val info = output.split("{")[1].split(":")
         val id = info[0].toInt()
         val name = info[1]
+        val running = output.endsWith("running")
         return ProfileDomain(id = id,
             name = name,
-            main = id == 0)
+            main = id == 0,
+            current = isCurrentUser(id),
+            running = running)
     }
 
     fun mapIdToUserHandle(id: Int): UserHandle {
