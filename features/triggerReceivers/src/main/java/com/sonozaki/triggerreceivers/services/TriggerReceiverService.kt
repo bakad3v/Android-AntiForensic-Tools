@@ -10,7 +10,6 @@ import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.UserManager
-import android.util.Log
 import android.view.accessibility.AccessibilityEvent
 import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.UsbSettings
@@ -164,7 +163,6 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     private suspend fun handleScreenStateChanged(action: String) {
-        Log.w("screen_state", "changed")
         if (buttonClicksUseCase()) {
             runActions()
         }

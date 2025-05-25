@@ -1,6 +1,5 @@
 package com.sonozaki.triggerreceivers.services.domain.usecases
 
-import android.util.Log
 import com.sonozaki.triggerreceivers.services.domain.repository.ReceiversRepository
 import javax.inject.Inject
 
@@ -22,7 +21,6 @@ class ButtonClickUseCase @Inject constructor(private val buttonSettingsRepositor
                 return false
             }
             if (timestamp - buttonClicksData.lastTimestamp <= buttonSettings.latency) {
-                Log.w("screen_state", "clicks ${buttonClicksData.clicksInRow}")
                 setClicksInRow(buttonClicksData.clicksInRow+1)
                 setLastTimestamp(timestamp)
             } else { //if delay between last clicks and this click is smaller than latency, update number of clicks

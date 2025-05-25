@@ -1,7 +1,6 @@
 package com.sonozaki.services.services
 
 import android.content.Context
-import android.util.Log
 import com.sonozaki.entities.Settings
 import com.sonozaki.superuser.superuser.SuperUser
 import com.sonozaki.superuser.superuser.SuperUserException
@@ -15,7 +14,6 @@ suspend fun Context.destroyApp(
     handleException: suspend (e: String) -> Unit
 ) {
     if (settings.removeItself) {
-        Log.w("CoroutineCheck", packageName)
         superUser.uninstallApp(packageName)
     }
     if (settings.clearItself) {
