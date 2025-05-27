@@ -67,6 +67,7 @@ android {
     }
 
   buildFeatures {
+    buildConfig = true
     viewBinding = true
   }
 
@@ -128,11 +129,16 @@ dependencies {
     implementation(libs.core)
     implementation(libs.storage)
 
+    //Network
+    implementation(libs.retrofit)
+    implementation(libs.converter.scalars)
+
     //Project modules dependencies
     implementation(project(":core:validators"))
     implementation(project(":core:passwordStrength"))
     implementation(project(":core:resources"))
     implementation(project(":core:utils"))
+    implementation(project(":core:network"))
     implementation(project(":features:passwordSetup"))
     implementation(project(":features:profiles"))
     implementation(project(":features:files"))
@@ -155,4 +161,5 @@ dependencies {
     implementation(project(":data:files"))
     implementation(project(":data:logs"))
     implementation(project(":data:profiles"))
+    implementation(project(":data:appUpdater"))
 }

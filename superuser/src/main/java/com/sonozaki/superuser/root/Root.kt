@@ -1,12 +1,15 @@
 package com.sonozaki.superuser.root
+
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.os.Build
 import android.os.UserManager
+import android.util.Log
 import com.anggrayudi.storage.extension.toBoolean
 import com.anggrayudi.storage.extension.toInt
 import com.sonozaki.entities.ProfileDomain
+import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.superuser.R
 import com.sonozaki.superuser.domain.usecases.SetRootInactiveUseCase
 import com.sonozaki.superuser.mapper.ProfilesMapper
@@ -15,7 +18,14 @@ import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
 import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import okio.BufferedSource
+import okio.buffer
+import okio.sink
+import java.io.File
 import javax.inject.Inject
+import javax.inject.Named
 
 class Root @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -23,7 +33,8 @@ class Root @Inject constructor(
     private val setRootInactiveUseCase: SetRootInactiveUseCase,
     private val dpm: DevicePolicyManager,
     private val userManager: UserManager,
-    private val deviceAdmin: ComponentName
+    private val deviceAdmin: ComponentName,
+    @Named(IO_DISPATCHER) private val coroutineDispatcher: CoroutineDispatcher
 ) : SuperUser {
 
     override suspend fun executeRootCommand(command: String): Shell.Result {
@@ -123,7 +134,9 @@ class Root @Inject constructor(
         } catch (e: NumberFormatException) {
             throw SuperUserException(
                 NUMBER_NOT_RECOGNISED, UIText.StringResource(
-                    com.sonozaki.resources.R.string.number_not_found))
+                    com.sonozaki.resources.R.string.number_not_found
+                )
+            )
         }
     }
 
@@ -163,8 +176,10 @@ class Root @Inject constructor(
 
     override suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean {
         if (userId == 0) {
-            throw SuperUserException(PRIMARY_USER_LOGOUT,
-                UIText.StringResource(R.string.cant_logout_from_primary_user))
+            throw SuperUserException(
+                PRIMARY_USER_LOGOUT,
+                UIText.StringResource(R.string.cant_logout_from_primary_user)
+            )
         }
         if (isCurrent) {
             executeRootCommand("am switch-user 0")
@@ -172,6 +187,17 @@ class Root @Inject constructor(
         }
         return executeRootCommand("am stop-user -w $userId").isSuccess
     }
+
+    override suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean =
+        withContext(coroutineDispatcher) {
+            val apkFile = File(context.filesDir, "base.apk")
+            data.use { src -> apkFile.sink().buffer().use { it.writeAll(src); it.flush() } }
+            try {
+                return@withContext executeRootCommand("pm install -t -r ${apkFile.absolutePath}").isSuccess
+            } catch (e: SuperUserException) {
+                return@withContext executeRootCommand("cat \"${apkFile.absolutePath}\" | pm install -t -r -S $length").isSuccess
+            }
+        }
 
 
     override suspend fun getSafeBootStatus(): Boolean {
@@ -196,7 +222,9 @@ class Root @Inject constructor(
         } catch (e: NumberFormatException) {
             throw SuperUserException(
                 NUMBER_NOT_RECOGNISED, UIText.StringResource(
-                    com.sonozaki.resources.R.string.number_not_found))
+                    com.sonozaki.resources.R.string.number_not_found
+                )
+            )
         }
 
     fun askSuperUserRights(): Boolean {

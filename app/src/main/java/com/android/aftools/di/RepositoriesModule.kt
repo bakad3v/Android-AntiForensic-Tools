@@ -1,5 +1,7 @@
 package com.android.aftools.di
 
+import com.bakasoft.appupdater.repository.AppUpdateRepository
+import com.bakasoft.appupdater.repository.AppUpdateRepositoryImpl
 import com.sonozaki.data.files.repository.FilesRepository
 import com.sonozaki.data.files.repository.FilesRepositoryImpl
 import com.sonozaki.data.logs.repository.LogsRepositoryImpl
@@ -29,6 +31,10 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 @Module
 abstract class RepositoriesModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindAppUpdateRepository(impl: AppUpdateRepositoryImpl): AppUpdateRepository
     @Binds
     @Singleton
     abstract fun bindFilesRepository(filesRepositoryImpl: FilesRepositoryImpl): FilesRepository

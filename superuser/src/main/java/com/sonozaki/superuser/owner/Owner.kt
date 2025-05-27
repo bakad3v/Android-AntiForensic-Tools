@@ -1,10 +1,12 @@
 package com.sonozaki.superuser.owner
 
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.app.admin.DevicePolicyManager
 import android.app.admin.IDevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
+import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.IPackageInstaller
 import android.content.pm.PackageInstaller
@@ -18,6 +20,8 @@ import com.rosan.dhizuku.api.Dhizuku.binderWrapper
 import com.rosan.dhizuku.api.DhizukuBinderWrapper
 import com.rosan.dhizuku.api.DhizukuRequestPermissionListener
 import com.sonozaki.entities.ProfileDomain
+import com.sonozaki.resources.IO_DISPATCHER
+import com.sonozaki.superuser.InstallResultReceiver
 import com.sonozaki.superuser.R
 import com.sonozaki.superuser.domain.usecases.SetOwnerInactiveUseCase
 import com.sonozaki.superuser.mapper.ProfilesMapper
@@ -26,9 +30,14 @@ import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
 import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import okio.BufferedSource
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import javax.inject.Named
+import kotlin.coroutines.suspendCoroutine
 
 class Owner @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -36,7 +45,8 @@ class Owner @Inject constructor(
     private val setOwnerInactiveUseCase: SetOwnerInactiveUseCase,
     private val appDPM: DevicePolicyManager,
     private val userManager: UserManager,
-    private val deviceAdmin: ComponentName
+    private val deviceAdmin: ComponentName,
+    @Named(IO_DISPATCHER) private val coroutineDispatcher: CoroutineDispatcher
 ) :
     SuperUser {
 
@@ -298,6 +308,48 @@ class Owner @Inject constructor(
             return dpm.logoutUser(deviceOwner) == UserManager.USER_OPERATION_SUCCESS
         }
         return dpm.stopUser(deviceOwner, profilesMapper.mapIdToUserHandle(userId)) == UserManager.USER_OPERATION_SUCCESS
+    }
+
+    override suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean = withContext(coroutineDispatcher) {
+        val packageInstaller = getDhizukuPackageInstaller()
+
+        // Session for testOnly app
+        val params = PackageInstaller.SessionParams(
+            PackageInstaller.SessionParams.MODE_FULL_INSTALL
+        ).apply {
+            setSize(length)
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            HiddenApiBypass.invoke(PackageInstaller.SessionParams::class.java,params,"setInstallFlagAllowTest")
+        }
+        // Create session
+        val sessionId = packageInstaller.createSession(params)
+        val session = packageInstaller.openSession(sessionId)
+
+        // Copy data into session
+        session.openWrite("base.apk", 0, -1).use { out ->
+            data.inputStream().use { input ->
+                input.copyTo(out, DEFAULT_BUFFER_SIZE)
+            }
+            out.flush()
+            session.fsync(out)
+        }
+
+        val intent = Intent(context, InstallResultReceiver::class.java)
+        val piFlags = PendingIntent.FLAG_UPDATE_CURRENT or
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
+                    PendingIntent.FLAG_MUTABLE
+                else 0
+
+        val pendingIntent = PendingIntent.getBroadcast(context, sessionId, intent, piFlags)
+
+        // Wait for callback
+        suspendCoroutine { cont ->
+            InstallResultReceiver.completions[sessionId] = cont
+            session.commit(pendingIntent.intentSender)
+        }.also {
+            session.close()
+        }
     }
 
     override suspend fun runTrim() {

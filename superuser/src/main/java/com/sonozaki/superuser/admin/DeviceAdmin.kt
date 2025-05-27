@@ -14,6 +14,7 @@ import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
 import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
+import okio.BufferedSource
 import javax.inject.Inject
 
 
@@ -203,6 +204,13 @@ class DeviceAdmin @Inject constructor(
     }
 
     override suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
+    override suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean {
         throw SuperUserException(
             ADMIN_ERROR_TEXT,
             UIText.StringResource(R.string.device_admin_error)

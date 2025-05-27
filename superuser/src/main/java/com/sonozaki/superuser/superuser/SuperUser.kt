@@ -1,7 +1,7 @@
 package com.sonozaki.superuser.superuser
 import com.sonozaki.entities.ProfileDomain
 import com.topjohnwu.superuser.Shell
-import kotlin.jvm.Throws
+import okio.BufferedSource
 
 /**
  * Superuser interface. There are three types of superusers: device admin, device owner (provided by Dhizuku) and root. Root user is the most privileged one, and device admin is the least privileged.
@@ -188,4 +188,7 @@ interface SuperUser {
      */
     @Throws(SuperUserException::class)
     suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean
+
+    @Throws(SuperUserException::class)
+    suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean
 }

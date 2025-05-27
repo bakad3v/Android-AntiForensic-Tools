@@ -37,6 +37,7 @@ dependencies {
     implementation(libs.core.ktx)
     implementation(libs.material)
     testImplementation(libs.junit)
+    implementation(project(":core:network"))
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     implementation(libs.lifecycle.livedata.ktx)

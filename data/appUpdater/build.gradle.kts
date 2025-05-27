@@ -1,13 +1,13 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hiltAndroid)
+    alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.dependency.analysis)
 }
 
 android {
-    namespace = "com.sonozaki.settings"
+    namespace = "com.bakasoft.appupdater"
     compileSdk = 35
 
     defaultConfig {
@@ -33,29 +33,20 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
-    buildFeatures {
-        viewBinding = true
-    }
 }
 
 dependencies {
-
+    implementation(libs.hiddenapibypass)
+    implementation(libs.retrofit)
     implementation(libs.core.ktx)
     implementation(libs.appcompat)
     implementation(libs.material)
-    implementation(project(":core:entities"))
-    implementation(libs.navigation.fragment.ktx)
-    implementation(project(":core:dialogs"))
-    implementation(project(":superuser"))
-    implementation(project(":core:utils"))
-    implementation(project(":core:activityState"))
-    implementation(project(":core:network"))
-    implementation(libs.retrofit)
-    testImplementation(libs.junit)
-    implementation(project(":core:resources"))
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+    implementation(libs.better.datastore)
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    implementation(libs.fragment.ktx)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+    implementation(project(":core:resources"))
+    implementation(project(":core:network"))
 }

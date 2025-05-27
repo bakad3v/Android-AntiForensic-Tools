@@ -139,4 +139,15 @@
     <string name="disable_multiuser_ui_automatically_on_lock_long">UI for switching users would be disabled automatically on your device on screen lock. It will prevent discovery of your profiles via pull-down settings menu.</string>
     <string name="root_and_owner_android9_acessibility">Requires root or dhizuku, accessibility service, Android 9+</string>
     <string name="root_and_owner_accessibility">Requires root or dhizuku + accessibility service</string>
+    <string name="please_install_testonly_version">Test-only app version available!</string>
+    <string name="install_testonly_version_long">You are using not test-only version of the app. It have the drawback that the self-destruct option is not compatible with administrator priveleges. It\'s recommended to install test-only version.</string>
+    <string name="install">Install</string>
+    <string name="ignore_update">Ignore update</string>
+    <string name="empty_response">Empty response</string>
+    <string name="connection_error">Connection error</string>
+    <string name="server_error">Sever error %1$d: %2$s</string>
+    <string name="unknown_error">Unknown error: %1$s</string>
+    <string name="network_error">Network error</string>
+    <string name="superuser_exception">Superuser exception</string>
+    <string name="unknown_exception">Unknown exception</string>
 </resources>

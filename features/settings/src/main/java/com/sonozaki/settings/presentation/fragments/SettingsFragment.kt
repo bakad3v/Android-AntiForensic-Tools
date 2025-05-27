@@ -15,6 +15,7 @@ import android.widget.CompoundButton
 import android.widget.PopupMenu
 import androidx.core.net.toUri
 import androidx.core.view.MenuProvider
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
@@ -303,6 +304,7 @@ class SettingsFragment : Fragment() {
    * Setting up buttons and switches. Switches are disabled if user doesn't provide enough rights.
    */
   private fun setupButtonsAndSwitches() {
+    listenPopup()
     listenSettings()
     listenButtonSettings()
     listenBruteforceProtectionSettings()
@@ -310,6 +312,16 @@ class SettingsFragment : Fragment() {
     listenUsbSettings()
     listenDeviceProtectionSettings()
     setupClickableElements()
+  }
+
+  private fun listenPopup() {
+    viewLifecycleOwner.launchLifecycleAwareCoroutine {
+      viewModel.updatePopupStatusFlow.collect {
+        with(binding) {
+          testOnlyUpdateAlert.isVisible = it
+        }
+      }
+    }
   }
 
   private fun multiuserUiProtectionDescription(multiuserUIProtection: MultiuserUIProtection): String {
@@ -334,6 +346,12 @@ class SettingsFragment : Fragment() {
 
   private fun setupClickableElements() {
     with(binding) {
+      installTestonlyUpdate.setOnClickListener {
+        viewModel.updateApp()
+      }
+      ignoreTestonlyUpdate.setOnClickListener {
+        viewModel.disableUpdatePopup()
+      }
       moveToBfuDelay.setOnClickListener {
         viewModel.showMovingToBFUDelayDialog()
       }

@@ -41,6 +41,7 @@ class BruteforceSettingsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun onWrongPassword(): Boolean {
+
         context.bruteforceDataStore.updateData {
             it.copy(wrongAttempts = it.wrongAttempts+1)
         }
