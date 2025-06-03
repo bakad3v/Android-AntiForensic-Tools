@@ -68,11 +68,12 @@ Ideally, I recommend changing the package name yourself before installing. When 
 #### Via Android Studio
 1. Install [Android Studio](https://developer.android.com/studio).
 2. [Clone the project](https://www.geeksforgeeks.org/how-to-clone-android-project-from-github-in-android-studio/) to yourself from github.
-3. Open the File>Settings>Plugins menu and search for "Android package renamer"
-4. Install the plugin. If installing the plugin is prohibited in your region, use a VPN.
-5. Open the File>Rename package option and enter a new package name.
-6. Go to the Build>Build Bundles/APKs>Build APKS menu and create an apk file.
-## App usage
+3. Open the build.gradle file for app module
+4. Add product flavor "somename" with dimension "name" and applicationId equals to desired package name.
+5. Sync project
+6. Select build variant starting with "somename".
+7. Go to the Build>Build Bundles/APKs>Build APKS menu and create an apk file.
+
 **It is recommended to test the work of the application at least once, especially the speed of data deletion along with self-destruction.**
 
 When you launch the app, you'll need to enter your password. This password will be used both to unlock the application and to delete your data. If you configure the app properly, entering this password on the lock screen will perform the destructive actions you specify with your data. Here are some tips:
