@@ -110,6 +110,16 @@ class Owner @Inject constructor(
         return installer
     }
 
+    private fun getDhizukuContext(): Context {
+        if (!initialized) {
+            initDhizuku()
+        }
+        return context.createPackageContext(
+            Dhizuku.getOwnerComponent().packageName,
+            Context.CONTEXT_IGNORE_SECURITY
+        )
+    }
+
     private fun checkAdminApp(packageName: String) {
         if (packageName == context.packageName && appDPM.isAdminActive(deviceAdmin)) {
             try {
@@ -341,7 +351,7 @@ class Owner @Inject constructor(
                     PendingIntent.FLAG_MUTABLE
                 else 0
 
-        val pendingIntent = PendingIntent.getBroadcast(context, sessionId, intent, piFlags)
+        val pendingIntent = PendingIntent.getBroadcast(getDhizukuContext(), sessionId, intent, piFlags)
 
         // Wait for callback
         suspendCoroutine { cont ->

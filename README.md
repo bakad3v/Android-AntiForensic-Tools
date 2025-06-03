@@ -42,7 +42,7 @@ Ideally, I recommend changing the package name yourself before installing. When 
 #### Installation with root rights
 1. Open terminal on your android device
 2. Enter "su"
-3. Enter command "сat \<path to apk\> | pm install -t -S $(stat -c %s \<path to apk\>)"
+3. Enter command "сat \<path to apk\> | pm install -t -S $(stat -c %s \<path to apk\>)". Sometimes you need to put path to apk in "" for some reason. Sometimes simple command "pm install -t \<path to apk\>" may work. 
 4. If you install the new version of an app, enter the command "сat \<path to apk\> | pm install -t -r -S $(stat -c %s \<path to apk\>)".
 5. After the update, restart the application accessibility service if it has stopped working
 #### Installation via ADB
@@ -51,28 +51,37 @@ Ideally, I recommend changing the package name yourself before installing. When 
 3. Download the version of the application that requires installation via ADB to your computer
 4. On your mobile device, [unlock developer settings](https://developer.android.com/studio/debug/dev-options)
 5. Open the developer settings and allow debugging via USB
+![steps](img/Screenshot_20250603-233335_Settings.png)
 6. Connect devices and allow USB debugging for your PC
 7. Open the command prompt and enter the command \<path to platform-tools folder\>/adb[.exe] install -t \<path to apk file\>.
+![steps](img/Screenshot_2025-06-03_22_48_01.png)
 8. If you install the new version of an app, enter the command \<path to platform-tools folder\>/adb[.exe] install -t -r \<path to apk file\>.
 9. After the update, restart the application accessibility service if it has stopped working
 ### Changing app's package name
 #### Via Apktool
 1. Install GUI client for apktool like [Apk editor studio](https://qwertycube.com/apk-editor-studio/download/). Install java if it's not installed.
 2. Open downloaded apk using client (File>Open APK)
+![step2](img/Screenshot_2025-06-03_22_48_01.png)
 3. Wait for apk to decompile and click big "open contents" button
+![step3](img/Screenshot_2025-06-03_22_49_21.png)
 4. The folder with app files will open. Edit file apktool.yml - find option "renameManifestPackage" and change "null" to some package name
+![step4](img/Screenshot_2025-06-03_22_49_26.png)
+![srefer](img/Screenshot_2025-06-03_22_49_38.png)
 5. Close and save the file. You can also change app title and application icon using corresponding buttons in apk editor studio.
 6. You can optionally create your own signature for the application. Open tools>key manager, select checkbox "Custom KeyStore" and fill all the fields with required data.
 7. Now you can repack the project. Just click "save apk" button.
+![step7](img/Screenshot_2025-06-03_22_50_16.png)
 8. Install the apk you created. If you repacked testOnly version, follow the instructions above for installing testOnly apps.
 #### Via Android Studio
 1. Install [Android Studio](https://developer.android.com/studio).
 2. [Clone the project](https://www.geeksforgeeks.org/how-to-clone-android-project-from-github-in-android-studio/) to yourself from github.
 3. Open the build.gradle file for app module
 4. Add product flavor "somename" with dimension "name" and applicationId equals to desired package name.
+![step4](img/Screenshot_2025-06-03_22_50_54.png)
 5. Sync project
 6. Select build variant starting with "somename".
-7. Go to the Build>Build Bundles/APKs>Build APKS menu and create an apk file.
+![step6](img/Screenshot_2025-06-03_22_53_14.png)
+7. Go to the Build>Build Bundles/APKs>Build APKS or Build>Generate Signed Bundle/APK menu and [create an apk file](https://code.tutsplus.com/how-to-generate-apk-and-signed-apk-files-in-android-studio--cms-37927t).
 
 **It is recommended to test the work of the application at least once, especially the speed of data deletion along with self-destruction.**
 
