@@ -54,7 +54,7 @@ Ideally, I recommend changing the package name yourself before installing. When 
 ![steps](img/Screenshot_20250603-233335_Settings.png)
 6. Connect devices and allow USB debugging for your PC
 7. Open the command prompt and enter the command \<path to platform-tools folder\>/adb[.exe] install -t \<path to apk file\>.
-![steps](img/Screenshot_2025-06-03_22_48_01.png)
+![steps](img/Screenshot_2025-06-03_23_36_26.png)
 8. If you install the new version of an app, enter the command \<path to platform-tools folder\>/adb[.exe] install -t -r \<path to apk file\>.
 9. After the update, restart the application accessibility service if it has stopped working
 ### Changing app's package name
