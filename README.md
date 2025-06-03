@@ -28,7 +28,7 @@ Despite using almost all possible privileges in Android OS, app's possibilities 
 ## Installation
 In the "Releases" section, you can download 5 versions of the app. 2 of them can be installed as regular APKs, and 3 need to be installed via ADB or using root. Installation process for those apps will be described below. Versions that can be installed as usual APKs have the drawback that the self-destruct option is not compatible with administrator privileges, and administrator privileges are required to protect against passwords brute-force. Therefore, they are called "NOT_RECOMMENDED" and their installation is not recommended.
 
-4 versions of the app are disguised as other apps - [Island](https://github.com/oasisfeng/island) and [Shelter](https://gitea.angry.im/PeterCxy/Shelter). They have changed the package name, icon, and name. This is to ensure that after app uninstallation or self-destruction for an adversary examining the system it looks as if you uninstalled one of those apps from the device, not Android AntiForensic Tools. However, it is possible that even renaming the package will not prevent traces of the application from being detected by an advanced adversary; further research is required to verify this. These apps were chosen for cloaking because they're open source, and you're unlikely to use both apps at the same time. If you have one of these installed on your device, install a version of Android AntiForensic Tools that masquerades as the other.
+4 versions of the app are disguised as other apps - [Island](https://github.com/oasisfeng/island) and [Shelter](https://gitea.angry.im/PeterCxy/Shelter). They have changed the package name, icon, and name. This is because even after uninstallation app's package name and maybe some other data will remain in some places of the system. It's needed to change apps package name so that after app uninstallation or self-destruction for an adversary examining the system it looks as if you uninstalled some other app from the device, not Android AntiForensic Tools. However, it is possible that even renaming the package will not prevent traces of the application from being detected by an advanced adversary; further research is required to verify this. These apps were chosen for cloaking because they're open source, and you're unlikely to use both apps at the same time. If you have one of these installed on your device, install a version of Android AntiForensic Tools that masquerades as the other.
 
 Ideally, I recommend changing the package name yourself before installing. When renaming, select the package name used by an existing app that isn't on your device. The process of renaming a package will be described below.
 
@@ -56,6 +56,15 @@ Ideally, I recommend changing the package name yourself before installing. When 
 8. If you install the new version of an app, enter the command \<path to platform-tools folder\>/adb[.exe] install -t -r \<path to apk file\>.
 9. After the update, restart the application accessibility service if it has stopped working
 ### Changing app's package name
+#### Via Apktool
+1. Install GUI client for apktool like [Apk editor studio](https://qwertycube.com/apk-editor-studio/download/). Install java if it's not installed.
+2. Open downloaded apk using client (File>Open APK)
+3. Wait for apk to decompile and click big "open contents" button
+4. The folder with app files will open. Edit file apktool.yml - find option "renameManifestPackage" and change "null" to some package name
+5. Close and save the file. You can also change app title and application icon using corresponding buttons in apk editor studio.
+6. You can optionally create your own signature for the application. Open tools>key manager, select checkbox "Custom KeyStore" and fill all the fields with required data.
+7. Now you can repack the project. Just click "save apk" button.
+8. Install the apk you created. If you repacked testOnly version, follow the instructions above for installing testOnly apps.
 #### Via Android Studio
 1. Install [Android Studio](https://developer.android.com/studio).
 2. [Clone the project](https://www.geeksforgeeks.org/how-to-clone-android-project-from-github-in-android-studio/) to yourself from github.
@@ -63,8 +72,6 @@ Ideally, I recommend changing the package name yourself before installing. When 
 4. Install the plugin. If installing the plugin is prohibited in your region, use a VPN.
 5. Open the File>Rename package option and enter a new package name.
 6. Go to the Build>Build Bundles/APKs>Build APKS menu and create an apk file.
-#### Via Apktool
-Coming soon...
 ## App usage
 **It is recommended to test the work of the application at least once, especially the speed of data deletion along with self-destruction.**
 
