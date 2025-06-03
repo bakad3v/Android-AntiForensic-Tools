@@ -107,7 +107,7 @@ Regardless of your usage scenarios, I recommend following these guidelines:
 ### Permissions
 After setting a password, you will open the settings. Here you will need to give the application certain permissions. For the triggers to work, you will need to enable the Accessibility service and grant device administrator rights. Other actions require either dhizuku privileges (device owner privileges that can be obtained via Dhizuku) or root privileges. Some actions can only be performed with root privileges.
 ###  Using with Dhizuku
-If you are unable to grant root rights to the application, you can grant device ownership rights via [Dhizuku](https://github.com/iamr0s/Dhizuku). For now, Dhizuku from the original repository [doesn't work](https://github.com/iamr0s/Dhizuku/issues/85) until the device is unlocked for the first time. In addition, if you install the apk files posted there and give Dhizuku the rights of the owner of the device, then you will not be able to delete the application. You can download the Dhizuku apk files from my [fork](https://github.com/bakad3v/Dhizuku), where all the bugs are fixes and you can find a removable version of the app. There are also instructions for installing the application and granting it the rights of the device owner.
+If you are unable to grant root rights to the application, you can grant device ownership rights via [Dhizuku](https://github.com/iamr0s/Dhizuku).
 ###  Triggers
 Once the permissions are granted, you can configure the triggers. At the moment, the app supports four triggers:
 * Run on duress password. The destruction of data will begin when a duress password (**not PIN-code!**) is entered (coincides with the password of the application). Accessibility service is required.
