@@ -43,6 +43,7 @@ Ideally, I recommend changing the package name yourself before installing. When 
 1. Install NOT_RECOMMENDED app version
 2. Give it root rights
 3. You will see a notification at the top of the settings screen. Click "install" button and app will update itself to the testOnly version.
+
 ![step3](img/Screenshot_20250604-154158_Shelter.png)
 
 #### Installation with root rights
