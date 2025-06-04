@@ -15,10 +15,9 @@
             android:id="@+id/test_only_update_alert"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/margin_normal"
-            android:paddingTop="@dimen/margin_normal"
-            android:paddingEnd="@dimen/margin_normal"
-            app:strokeColor="?attr/colorError"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginVertical="@dimen/margin_normal"
+            app:cardBackgroundColor="?attr/colorErrorContainer"
             android:visibility="gone"
             tools:visibility="visible">
             <LinearLayout
@@ -47,14 +46,14 @@
                     style="@style/Widget.Material3.Button.TextButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/colorError"
+                    android:textColor="?attr/colorOnErrorContainer"
                     android:text="@string/install"/>
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.Material3.Button.TextButton"
                     android:id="@+id/ignore_testonly_update"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="?attr/colorError"
+                    android:textColor="?attr/colorOnErrorContainer"
                     android:text="@string/ignore_update"/>
             </LinearLayout>
             </LinearLayout>

@@ -120,7 +120,7 @@ class SettingsVM @Inject constructor(
     val settingsActionsFlow = settingsActionChannel.receiveAsFlow()
 
     val updatePopupStatusFlow = getUpdatePopupStatusUseCase().combine(getPermissionsUseCase()) { updatePopup: Boolean, permissions: Permissions ->
-        updatePopup && (permissions.isOwner || permissions.isRoot)
+        updatePopup && permissions.isRoot
     }.stateIn(
         viewModelScope,
         SharingStarted.WhileSubscribed(0, 0),

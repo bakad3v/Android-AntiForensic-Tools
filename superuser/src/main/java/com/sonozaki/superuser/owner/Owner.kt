@@ -4,9 +4,11 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.admin.DevicePolicyManager
 import android.app.admin.IDevicePolicyManager
+import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.IntentSender
 import android.content.pm.IPackageInstaller
 import android.content.pm.PackageInstaller
@@ -15,13 +17,14 @@ import android.os.Build
 import android.os.Build.VERSION
 import android.os.Parcel
 import android.os.UserManager
+import android.util.Log
+import androidx.core.content.ContextCompat
 import com.rosan.dhizuku.api.Dhizuku
 import com.rosan.dhizuku.api.Dhizuku.binderWrapper
 import com.rosan.dhizuku.api.DhizukuBinderWrapper
 import com.rosan.dhizuku.api.DhizukuRequestPermissionListener
 import com.sonozaki.entities.ProfileDomain
 import com.sonozaki.resources.IO_DISPATCHER
-import com.sonozaki.superuser.InstallResultReceiver
 import com.sonozaki.superuser.R
 import com.sonozaki.superuser.domain.usecases.SetOwnerInactiveUseCase
 import com.sonozaki.superuser.mapper.ProfilesMapper
@@ -37,7 +40,6 @@ import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Named
-import kotlin.coroutines.suspendCoroutine
 
 class Owner @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -321,20 +323,29 @@ class Owner @Inject constructor(
     }
 
     override suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean = withContext(coroutineDispatcher) {
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
         val packageInstaller = getDhizukuPackageInstaller()
-
+        Log.w("receiver", "installer")
         // Session for testOnly app
         val params = PackageInstaller.SessionParams(
             PackageInstaller.SessionParams.MODE_FULL_INSTALL
         ).apply {
             setSize(length)
         }
+        Log.w("receiver", "bypass")
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             HiddenApiBypass.invoke(PackageInstaller.SessionParams::class.java,params,"setInstallFlagAllowTest")
         }
+        Log.w("receiver", "create")
+
         // Create session
         val sessionId = packageInstaller.createSession(params)
+        Log.w("receiver", "open")
         val session = packageInstaller.openSession(sessionId)
+        Log.w("receiver", "write")
 
         // Copy data into session
         session.openWrite("base.apk", 0, -1).use { out ->
@@ -345,21 +356,54 @@ class Owner @Inject constructor(
             session.fsync(out)
         }
 
-        val intent = Intent(context, InstallResultReceiver::class.java)
         val piFlags = PendingIntent.FLAG_UPDATE_CURRENT or
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S)
-                    PendingIntent.FLAG_MUTABLE
+                    PendingIntent.FLAG_IMMUTABLE
                 else 0
 
-        val pendingIntent = PendingIntent.getBroadcast(getDhizukuContext(), sessionId, intent, piFlags)
+        Log.w("receiver", "data")
+        val receiver = object : BroadcastReceiver() {
+            override fun onReceive(context: Context, intent: Intent) {
+                Log.w("receiver", "receive")
+                when (intent.getIntExtra(PackageInstaller.EXTRA_STATUS, -1)) {
 
-        // Wait for callback
-        suspendCoroutine { cont ->
-            InstallResultReceiver.completions[sessionId] = cont
-            session.commit(pendingIntent.intentSender)
-        }.also {
-            session.close()
+                    PackageInstaller.STATUS_PENDING_USER_ACTION -> {
+                        val confirm = intent.getParcelableExtra<Intent>(Intent.EXTRA_INTENT)
+                        confirm?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(confirm)
+                    }
+
+                    PackageInstaller.STATUS_SUCCESS -> {}
+
+                    PackageInstaller.STATUS_FAILURE,
+                    PackageInstaller.STATUS_FAILURE_ABORTED,
+                    PackageInstaller.STATUS_FAILURE_INVALID,
+                    PackageInstaller.STATUS_FAILURE_BLOCKED,
+                    PackageInstaller.STATUS_FAILURE_CONFLICT,
+                    PackageInstaller.STATUS_FAILURE_INCOMPATIBLE,
+                    PackageInstaller.STATUS_FAILURE_STORAGE -> {}
+                }
+            }
         }
+
+        ContextCompat.registerReceiver(
+            getDhizukuContext(),
+            receiver,
+            IntentFilter(INSTALL_COMPLETE),
+            ContextCompat.RECEIVER_NOT_EXPORTED
+        )
+        session.commit(createIntentSender(getDhizukuContext(), sessionId, piFlags))
+        return@withContext true
+    }
+
+    private fun createIntentSender(context: Context?, sessionId: Int, piFlags: Int): IntentSender {
+        val pendingIntent = PendingIntent.getBroadcast(
+            getDhizukuContext(),
+            sessionId,
+            Intent(INSTALL_COMPLETE),
+            piFlags
+        )
+        return pendingIntent.intentSender
     }
 
     override suspend fun runTrim() {
@@ -428,6 +472,7 @@ class Owner @Inject constructor(
 
 
     companion object {
+        private const val INSTALL_COMPLETE = "DHIZUKU_INSTALL_COMPLETE"
         private const val NO_OWNER_RIGHTS = "App doesn't have owner rights."
         private const val ANDROID_VERSION_INCORRECT =
             "Wrong android version, SDK version %s or higher required"

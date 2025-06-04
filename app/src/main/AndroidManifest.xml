@@ -46,10 +46,6 @@
           <category android:name="android.intent.category.LAUNCHER" />
        </intent-filter>
      </activity>
-     <receiver
-         android:name="com.sonozaki.superuser.InstallResultReceiver"
-         android:exported="false">
-     </receiver>
      <service
        android:name="com.sonozaki.triggerreceivers.services.TriggerReceiverService"
        android:exported="true"
