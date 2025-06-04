@@ -39,6 +39,12 @@ Ideally, I recommend changing the package name yourself before installing. When 
 * AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB or root for installation!**
 * AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB or root for installation!**"
 ### Installation of testOnly apps
+#### Easiest way (root only)
+1. Install NOT_RECOMMENDED app version
+2. Give it root rights
+3. You will see a notification at the top of the settings screen. Click "install" button and app will update itself to the testOnly version.
+![step3](img/Screenshot_20250604-154158_Shelter.png)
+
 #### Installation with root rights
 1. Open terminal on your android device
 2. Enter "su"
