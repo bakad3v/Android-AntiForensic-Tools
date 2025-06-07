@@ -427,6 +427,13 @@ class Owner @Inject constructor(
         )
     }
 
+    override fun getPowerButtonClicks(callback: (Boolean) -> Unit): () -> Unit {
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
+    }
+
     override suspend fun setMultiuserUI(status: Boolean) {
         throw SuperUserException(
             NO_ROOT_RIGHTS,

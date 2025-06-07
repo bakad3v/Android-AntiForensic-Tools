@@ -47,6 +47,7 @@ import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_BFU_DELAY_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_CLICK_NUMBER_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_LATENCY_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_ROOT_LATENCY_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_MULTIUSER_UI_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_SAFE_BOOT_RESTRICTION_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_SWITCH_USER_RESTRICTION_DIALOG
@@ -361,6 +362,9 @@ class SettingsFragment : Fragment() {
       latency.setOnClickListener {
         viewModel.editButtonLatencyDialog()
       }
+      rootLatency.setOnClickListener {
+        viewModel.editButtonRootLatencyDialog()
+      }
       clicksNumber.setOnClickListener {
         viewModel.editClicksNumberDialog()
       }
@@ -452,7 +456,8 @@ class SettingsFragment : Fragment() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.buttonsSettingsState.collect {
         with(binding) {
-          latency.setDigit(it.latency.toString())
+          rootLatency.setDigit(it.latencyRootMode.toString())
+          latency.setDigit(it.latencyUsualMode.toString())
           clicksNumber.setDigit(it.allowedClicks.toString())
           powerButtonItem.setCheckedProgrammatically(
             it.triggerOnButton,
@@ -698,6 +703,15 @@ class SettingsFragment : Fragment() {
     ) {
         latency ->
       viewModel.setLatency(latency)
+    }
+
+    InputDigitDialog.setupListener(
+      parentFragmentManager,
+      viewLifecycleOwner,
+      EDIT_ROOT_LATENCY_DIALOG
+    ) {
+        latency ->
+      viewModel.setRootLatency(latency)
     }
     InputDigitDialog.setupListener(
       parentFragmentManager,

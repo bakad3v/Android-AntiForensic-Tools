@@ -165,6 +165,10 @@ class SettingsAdapter @Inject constructor(
         buttonSettingsRepository.updateLatency(latency)
     }
 
+    override suspend fun updateRootLatency(latency: Int) {
+        buttonSettingsRepository.updateRootLatency(latency)
+    }
+
     override suspend fun updateAllowedClicks(allowedClicks: Int) {
         buttonSettingsRepository.updateAllowedClicks(allowedClicks)
     }

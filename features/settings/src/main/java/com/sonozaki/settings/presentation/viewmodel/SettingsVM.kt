@@ -24,6 +24,7 @@ import com.sonozaki.settings.domain.usecases.bruteforce.SetBruteForceStatusUseCa
 import com.sonozaki.settings.domain.usecases.button.GetButtonSettingsUseCase
 import com.sonozaki.settings.domain.usecases.button.SetClicksNumberUseCase
 import com.sonozaki.settings.domain.usecases.button.SetLatencyUseCase
+import com.sonozaki.settings.domain.usecases.button.SetRootLatencyUseCase
 import com.sonozaki.settings.domain.usecases.deviceProtection.GetDeviceProtectionSettingsUseCase
 import com.sonozaki.settings.domain.usecases.deviceProtection.SetMultiuserUIProtectionUseCase
 import com.sonozaki.settings.domain.usecases.deviceProtection.SetRebootDelayUseCase
@@ -109,6 +110,7 @@ class SettingsVM @Inject constructor(
     private val setRebootOnLockStatusUseCase: SetRebootOnLockStatusUseCase,
     private val downloadUpdateUseCase: DownloadUpdateUseCase,
     private val disableUpdatePopupStatusUseCase: DisableUpdatePopupUseCase,
+    private val setRootLatencyUseCase: SetRootLatencyUseCase,
     getDeviceProtectionSettingsUseCase: GetDeviceProtectionSettingsUseCase,
     getPermissionsUseCase: GetPermissionsUseCase,
     getUSBSettingsUseCase: GetUsbSettingsUseCase,
@@ -176,6 +178,12 @@ class SettingsVM @Inject constructor(
     fun setLatency(latency: Int) {
         viewModelScope.launch {
             setLatencyUseCase(latency)
+        }
+    }
+
+    fun setRootLatency(latency: Int) {
+        viewModelScope.launch {
+            setRootLatencyUseCase(latency)
         }
     }
 
@@ -797,9 +805,19 @@ class SettingsVM @Inject constructor(
         showInputDigitDialog(
             title = UIText.StringResource(R.string.change_button_latency),
             message = UIText.StringResource(R.string.button_latency_long),
-            hint = buttonsSettingsState.value.latency.toString(),
+            hint = buttonsSettingsState.value.latencyUsualMode.toString(),
             range = 100..100000,
             requestKey = EDIT_LATENCY_DIALOG
+        )
+    }
+
+    fun editButtonRootLatencyDialog() {
+        showInputDigitDialog(
+            title = UIText.StringResource(R.string.change_button_latency_root),
+            message = UIText.StringResource(R.string.button_latency_long_root),
+            hint = buttonsSettingsState.value.latencyRootMode.toString(),
+            range = 100..100000,
+            requestKey = EDIT_ROOT_LATENCY_DIALOG
         )
     }
 
@@ -1010,6 +1028,7 @@ class SettingsVM @Inject constructor(
         const val DISABLE_SWITCH_USER_RESTRICTION_DIALOG = "disable_switch_user_restriction_dialog"
         const val ENABLE_SWITCH_USER_RESTRICTION_DIALOG = "enable_switch_user_restriction_dialog"
         const val EDIT_LATENCY_DIALOG = "edit_latency_dialog"
+        const val EDIT_ROOT_LATENCY_DIALOG = "edit_root_latency_dialog"
         const val EDIT_CLICK_NUMBER_DIALOG = "edit_click_number_dialog"
         const val TRIGGER_ON_BUTTON_DIALOG = "trigger_on_button_dialog"
         const val REBOOT_ON_USB_DIALOG = "reboot_on_usb_dialog"

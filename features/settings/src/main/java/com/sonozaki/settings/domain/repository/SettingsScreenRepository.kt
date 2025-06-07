@@ -52,6 +52,7 @@ interface SettingsScreenRepository {
     suspend fun getSafeBootStatus(): Boolean
     suspend fun getMultiuserUIStatus(): Boolean
     suspend fun updateLatency(latency: Int)
+    suspend fun updateRootLatency(latency: Int)
     suspend fun updateAllowedClicks(allowedClicks: Int)
     suspend fun setTriggerOnButtonStatus(status: Boolean)
     suspend fun changeRebootDelay(delay: Int)

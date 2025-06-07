@@ -2,6 +2,7 @@ package com.sonozaki.data.settings.repositories
 
 import android.content.Context
 import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import com.sonozaki.data.settings.dataMigration.ButtonSettingsMigrationV1
 import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
 import com.sonozaki.entities.ButtonClicksData
@@ -11,12 +12,16 @@ import javax.inject.Inject
 
 class ButtonSettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    buttonSettingsSerializer: BaseSerializer<ButtonSettings>) :
+    buttonSettingsSerializer: BaseSerializer<ButtonSettings>,
+    buttonSettingsMigrationV1: ButtonSettingsMigrationV1) :
     ButtonSettingsRepository {
     private var buttonClicksData = ButtonClicksData()
     private val Context.buttonDataStore by encryptedDataStore(
         DATASTORE_NAME,
         buttonSettingsSerializer,
+        produceMigrations = { context ->
+            listOf<ButtonSettingsMigrationV1>(buttonSettingsMigrationV1)
+        },
         alias = EncryptionAlias.DATASTORE.name,
         isDBA = true
     )
@@ -26,7 +31,13 @@ class ButtonSettingsRepositoryImpl @Inject constructor(
 
     override suspend fun updateLatency(latency: Int) {
         context.buttonDataStore.updateData {
-            it.copy(latency=latency)
+            it.copy(latencyUsualMode=latency)
+        }
+    }
+
+    override suspend fun updateRootLatency(latency: Int) {
+        context.buttonDataStore.updateData {
+            it.copy(latencyRootMode = latency)
         }
     }
 
@@ -55,6 +66,6 @@ class ButtonSettingsRepositoryImpl @Inject constructor(
     }
 
     companion object {
-        private const val DATASTORE_NAME = "button_datastore.json"
+        private const val DATASTORE_NAME = "button_datastore_v2.json"
     }
 }

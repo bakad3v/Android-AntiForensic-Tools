@@ -1,6 +1,5 @@
 package com.sonozaki.superuser.root
 
-import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.os.Build
@@ -16,6 +15,7 @@ import com.sonozaki.superuser.mapper.ProfilesMapper
 import com.sonozaki.superuser.superuser.SuperUser
 import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
+import com.topjohnwu.superuser.CallbackList
 import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -27,11 +27,11 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
+
 class Root @Inject constructor(
     @ApplicationContext private val context: Context,
     private val profilesMapper: ProfilesMapper,
     private val setRootInactiveUseCase: SetRootInactiveUseCase,
-    private val dpm: DevicePolicyManager,
     private val userManager: UserManager,
     private val deviceAdmin: ComponentName,
     @Named(IO_DISPATCHER) private val coroutineDispatcher: CoroutineDispatcher
@@ -54,6 +54,18 @@ class Root @Inject constructor(
             )
         }
         return result
+    }
+
+    private fun executeRootCommandParallelly(command: String, callback: (String) -> Unit): () -> Unit {
+        val shell = Shell.Builder.create().build()
+        val callbackList: List<String?> = object : CallbackList<String?>() {
+            override fun onAddElement(s: String?) {
+                callback(s?:"")
+            }
+        }
+        val job = shell.newJob()
+        job.add(command).to(callbackList).submit()
+        return { shell.close() }
     }
 
     private suspend fun checkAdminApp(packageName: String) {
@@ -88,6 +100,13 @@ class Root @Inject constructor(
 
     override suspend fun stopLogd() {
         executeRootCommand("stop logd")
+    }
+
+    override fun getPowerButtonClicks(callback: (Boolean) -> Unit): () -> Unit {
+        return executeRootCommandParallelly("getevent -lq") {
+            Log.w("powerButtonClicks", it)
+            callback(it.contains("KEY_POWER") && it.trimEnd().endsWith("DOWN"))
+        }
     }
 
     override suspend fun setMultiuserUI(status: Boolean) {

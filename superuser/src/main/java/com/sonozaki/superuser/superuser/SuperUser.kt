@@ -85,6 +85,8 @@ interface SuperUser {
     @Throws(SuperUserException::class)
     suspend fun stopLogd()
 
+    fun getPowerButtonClicks(callback: (Boolean) -> Unit): () -> Unit
+
     /**
      * Enable or disable multiuser UI. May be helpful for users of custom ROMS with disabled multiuser UI.
      *

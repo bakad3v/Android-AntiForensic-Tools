@@ -16,6 +16,7 @@ import com.sonozaki.password.repository.PasswordManager
 import com.sonozaki.triggerreceivers.services.domain.repository.ReceiversRepository
 import kotlinx.coroutines.flow.first
 import com.sonozaki.entities.Permissions
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ReceiversAdapter @Inject constructor(
@@ -54,6 +55,14 @@ class ReceiversAdapter @Inject constructor(
 
     override suspend fun getButtonClicksData(): ButtonClicksData {
         return buttonSettingsRepository.getButtonClicksData()
+    }
+
+    override fun getButtonSettingsFlow(): Flow<ButtonSettings> {
+        return buttonSettingsRepository.buttonSettings
+    }
+
+    override fun getPermissionsFlow(): Flow<Permissions> {
+        return permissionsRepository.permissions
     }
 
     override suspend fun onRightPassword() {

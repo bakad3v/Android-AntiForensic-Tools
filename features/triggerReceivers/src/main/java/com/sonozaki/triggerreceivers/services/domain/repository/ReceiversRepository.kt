@@ -6,6 +6,7 @@ import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.entities.Permissions
+import kotlinx.coroutines.flow.Flow
 
 interface ReceiversRepository {
     suspend fun getDeviceProtectionSettings(): DeviceProtectionSettings
@@ -15,6 +16,8 @@ interface ReceiversRepository {
     suspend fun getPermissions(): Permissions
     suspend fun getButtonSettings(): ButtonSettings
     suspend fun getButtonClicksData(): ButtonClicksData
+    fun getButtonSettingsFlow(): Flow<ButtonSettings>
+    fun getPermissionsFlow(): Flow<Permissions>
     suspend fun onRightPassword()
     suspend fun onWrongPassword(): Boolean
     suspend fun setAdminActive(status: Boolean)

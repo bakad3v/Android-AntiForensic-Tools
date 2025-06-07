@@ -14,9 +14,14 @@ interface ButtonSettingsRepository {
     val buttonSettings: Flow<ButtonSettings>
 
     /**
-     * Setup maximum delay between clicks in row. If delay between clicks is bigger than latency, they are counted as separate clicks and count starts again.
+     * Setup maximum delay between clicks in row for usual mode. If delay between clicks is bigger than latency, they are counted as separate clicks and count starts again.
      */
     suspend fun updateLatency(latency: Int)
+
+    /**
+     * Setup maximum delay between clicks in row for root mode. If delay between clicks is bigger than latency, they are counted as separate clicks and count starts again.
+     */
+    suspend fun updateRootLatency(latency: Int)
 
     /**
      * Setup number of clicks to activate data destruction.

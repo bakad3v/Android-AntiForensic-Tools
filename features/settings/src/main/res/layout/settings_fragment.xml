@@ -277,6 +277,13 @@
             app:settingsItemText="@string/latency_text">
         </com.sonozaki.settings.presentation.views.PlainTextSettingView>
 
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/root_latency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/root_latency_text">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
