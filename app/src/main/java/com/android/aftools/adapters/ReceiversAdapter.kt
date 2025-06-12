@@ -9,6 +9,7 @@ import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepositor
 import com.sonozaki.data.settings.repositories.PermissionsRepository
 import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.data.settings.repositories.UsbSettingsRepository
+import com.sonozaki.entities.ButtonSelected
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.UsbSettings
@@ -53,8 +54,8 @@ class ReceiversAdapter @Inject constructor(
         return buttonSettingsRepository.buttonSettings.first()
     }
 
-    override suspend fun getButtonClicksData(): ButtonClicksData {
-        return buttonSettingsRepository.getButtonClicksData()
+    override suspend fun getButtonClicksData(buttonSelected: ButtonSelected): ButtonClicksData {
+        return buttonSettingsRepository.getButtonClicksData(buttonSelected)
     }
 
     override fun getButtonSettingsFlow(): Flow<ButtonSettings> {
@@ -89,12 +90,12 @@ class ReceiversAdapter @Inject constructor(
         settingsRepository.setRunOnBoot(status)
     }
 
-    override suspend fun setClicksInRow(clicks: Int) {
-        buttonSettingsRepository.setClicksInRow(clicks)
+    override suspend fun setClicksInRow(clicks: Int, buttonSelected: ButtonSelected) {
+        buttonSettingsRepository.setClicksInRow(clicks, buttonSelected)
     }
 
-    override suspend fun setLastTimestamp(timestamp: Long) {
-        buttonSettingsRepository.setLastTimestamp(timestamp)
+    override suspend fun setLastTimestamp(timestamp: Long, buttonSelected: ButtonSelected) {
+        buttonSettingsRepository.setLastTimestamp(timestamp, buttonSelected)
     }
 
     override suspend fun writeToLogs(text: String) {

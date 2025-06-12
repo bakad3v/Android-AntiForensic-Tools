@@ -8,6 +8,7 @@ import com.sonozaki.data.settings.entities.ButtonSettingsV1
 import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
 import com.sonozaki.entities.ButtonSettings
+import com.sonozaki.entities.PowerButtonTriggerOptions
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
@@ -29,7 +30,12 @@ class ButtonSettingsMigrationV1 @Inject constructor(@ApplicationContext private 
 
     override suspend fun migrate(currentData: ButtonSettings): ButtonSettings {
         val oldData = context.oldDatastore.data.first()
-        return ButtonSettings(oldData.triggerOnButton, oldData.latency, oldData.allowedClicks)
+        val oldTriggerOption = if (oldData.triggerOnButton) {
+            PowerButtonTriggerOptions.DEPRECATED_WAY
+        } else {
+            PowerButtonTriggerOptions.IGNORE
+        }
+        return ButtonSettings(oldTriggerOption, oldData.latency, oldData.allowedClicks)
     }
 
     override suspend fun shouldMigrate(currentData: ButtonSettings): Boolean {

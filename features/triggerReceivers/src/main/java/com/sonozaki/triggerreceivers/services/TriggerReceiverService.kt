@@ -1,7 +1,6 @@
 package com.sonozaki.triggerreceivers.services
 
 import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -11,7 +10,12 @@ import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.UserManager
 import android.util.Log
+import android.view.KeyEvent
+import android.view.KeyEvent.ACTION_DOWN
+import android.view.KeyEvent.KEYCODE_VOLUME_DOWN
+import android.view.KeyEvent.KEYCODE_VOLUME_UP
 import android.view.accessibility.AccessibilityEvent
+import com.sonozaki.entities.ButtonClicked
 import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.resources.IO_DISPATCHER
@@ -35,7 +39,6 @@ import com.sonozaki.triggerreceivers.services.domain.usecases.WriteLogsUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -137,11 +140,9 @@ class TriggerReceiverService : AccessibilityService() {
 
     private fun listenForButtonClicksRoot(superUser: SuperUser): () -> Unit {
         return superUser.getPowerButtonClicks {
-            Log.w("powerButtonClicks", it.toString())
             if (!it) return@getPowerButtonClicks
-            Log.w("powerButtonClicks", "start")
             coroutineScope.launch(dispatcher) {
-                if (buttonClicksUseCase(true)) {
+                if (buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
                     runActions()
                 }
             }
@@ -192,7 +193,7 @@ class TriggerReceiverService : AccessibilityService() {
 
     private suspend fun handleScreenStateChanged(action: String) {
         val root = getPermissionsUseCase().isRoot
-        if (!root && buttonClicksUseCase(false)) {
+        if (!root && buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
             runActions()
         }
         if (action == Intent.ACTION_SCREEN_OFF) {
@@ -351,24 +352,33 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (keyguardManager?.isDeviceLocked != true ||
-            event?.isEnabled != true
+        if (event == null || event.packageName !in PACKAGE_NAMES_INTERCEPTED || keyguardManager?.isDeviceLocked != true ||
+            event.isEnabled != true || event.isPassword !=true
         ) return
         updatePassword(event.text.joinToString(""))
+    }
+
+    override fun onKeyEvent(event: KeyEvent?): Boolean {
+        if (event?.action == ACTION_DOWN) {
+            val buttonClicked = if (event.keyCode == KEYCODE_VOLUME_UP) {
+                ButtonClicked.VOLUME_UP
+            } else if (event.keyCode == KEYCODE_VOLUME_DOWN) {
+                ButtonClicked.VOLUME_DOWN
+            } else {
+                return super.onKeyEvent(event)
+            }
+            coroutineScope.launch(dispatcher) {
+                if (buttonClicksUseCase(buttonClicked)) {
+                    runActions()
+                }
+            }
+        }
+        return super.onKeyEvent(event)
     }
 
     override fun onInterrupt() {
     }
 
-
-    override fun onServiceConnected() {
-        super.onServiceConnected()
-        serviceInfo = serviceInfo.apply {
-            eventTypes = AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED or
-                    AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
-            flags = AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
-        }
-    }
 
     override fun onUnbind(intent: Intent?): Boolean {
         runBlocking {
@@ -384,5 +394,6 @@ class TriggerReceiverService : AccessibilityService() {
 
     companion object {
         private const val IGNORE_CHAR = '•'
+        private val PACKAGE_NAMES_INTERCEPTED = setOf("com.android.systemui","com.android.keyguard")
     }
 }

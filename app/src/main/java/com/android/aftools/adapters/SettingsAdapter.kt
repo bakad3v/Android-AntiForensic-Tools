@@ -13,9 +13,11 @@ import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.Permissions
+import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
 import com.sonozaki.entities.UsbSettings
+import com.sonozaki.entities.VolumeButtonTriggerOptions
 import com.sonozaki.settings.domain.repository.SettingsScreenRepository
 import kotlinx.coroutines.flow.Flow
 import okhttp3.ResponseBody
@@ -173,8 +175,20 @@ class SettingsAdapter @Inject constructor(
         buttonSettingsRepository.updateAllowedClicks(allowedClicks)
     }
 
-    override suspend fun setTriggerOnButtonStatus(status: Boolean) {
+    override suspend fun setTriggerOnButtonStatus(status: PowerButtonTriggerOptions) {
         buttonSettingsRepository.setTriggerOnButtonStatus(status)
+    }
+
+    override suspend fun setTriggerOnVolumeButtonStatus(status: VolumeButtonTriggerOptions) {
+        buttonSettingsRepository.setTriggerOnVolumeButtonStatus(status)
+    }
+
+    override suspend fun setTriggerOnVolumeButtonLatency(latency: Int) {
+        buttonSettingsRepository.updateVolumeLatency(latency)
+    }
+
+    override suspend fun setVolumeButtonAllowedClicks(clicks: Int) {
+        buttonSettingsRepository.updateAllowedClicks(clicks)
     }
 
     override suspend fun changeRebootDelay(delay: Int) {

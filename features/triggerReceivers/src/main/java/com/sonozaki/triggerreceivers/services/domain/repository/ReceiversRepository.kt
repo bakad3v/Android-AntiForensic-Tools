@@ -1,6 +1,7 @@
 package com.sonozaki.triggerreceivers.services.domain.repository
 
 import com.sonozaki.entities.ButtonClicksData
+import com.sonozaki.entities.ButtonSelected
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.Settings
@@ -15,7 +16,7 @@ interface ReceiversRepository {
     suspend fun getSettings(): Settings
     suspend fun getPermissions(): Permissions
     suspend fun getButtonSettings(): ButtonSettings
-    suspend fun getButtonClicksData(): ButtonClicksData
+    suspend fun getButtonClicksData(buttonSelected: ButtonSelected): ButtonClicksData
     fun getButtonSettingsFlow(): Flow<ButtonSettings>
     fun getPermissionsFlow(): Flow<Permissions>
     suspend fun onRightPassword()
@@ -24,8 +25,8 @@ interface ReceiversRepository {
     suspend fun checkPassword(password: CharArray): Boolean
     suspend fun setServiceStatus(status: Boolean)
     suspend fun setRunOnBoot(status: Boolean)
-    suspend fun setClicksInRow(clicks: Int)
-    suspend fun setLastTimestamp(timestamp: Long)
+    suspend fun setClicksInRow(clicks: Int, buttonSelected: ButtonSelected)
+    suspend fun setLastTimestamp(timestamp: Long, buttonSelected: ButtonSelected)
     suspend fun writeToLogs(text: String)
     suspend fun areLogsEnabled(): Boolean
 }

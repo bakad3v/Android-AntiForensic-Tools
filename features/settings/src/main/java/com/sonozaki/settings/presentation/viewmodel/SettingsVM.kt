@@ -11,9 +11,11 @@ import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.Permissions
+import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
 import com.sonozaki.entities.UsbSettings
+import com.sonozaki.entities.VolumeButtonTriggerOptions
 import com.sonozaki.settings.R
 import com.sonozaki.settings.domain.usecases.appUpdate.DisableUpdatePopupUseCase
 import com.sonozaki.settings.domain.usecases.appUpdate.DownloadUpdateUseCase
@@ -23,7 +25,9 @@ import com.sonozaki.settings.domain.usecases.bruteforce.SetBruteForceLimitUseCas
 import com.sonozaki.settings.domain.usecases.bruteforce.SetBruteForceStatusUseCase
 import com.sonozaki.settings.domain.usecases.button.GetButtonSettingsUseCase
 import com.sonozaki.settings.domain.usecases.button.SetClicksNumberUseCase
+import com.sonozaki.settings.domain.usecases.button.SetClicksNumberVolumeUseCase
 import com.sonozaki.settings.domain.usecases.button.SetLatencyUseCase
+import com.sonozaki.settings.domain.usecases.button.SetLatencyVolumeUseCase
 import com.sonozaki.settings.domain.usecases.button.SetRootLatencyUseCase
 import com.sonozaki.settings.domain.usecases.deviceProtection.GetDeviceProtectionSettingsUseCase
 import com.sonozaki.settings.domain.usecases.deviceProtection.SetMultiuserUIProtectionUseCase
@@ -49,7 +53,8 @@ import com.sonozaki.settings.domain.usecases.settings.SetRunOnDuressUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetSafeBootRestrictionUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetScreenshotsStatusUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetThemeUseCase
-import com.sonozaki.settings.domain.usecases.settings.SetTriggerOnButtonUseCase
+import com.sonozaki.settings.domain.usecases.button.SetTriggerOnPowerButtonUseCase
+import com.sonozaki.settings.domain.usecases.button.SetTriggerOnVolumeButtonUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetTrimUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetUserLimitUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetUserSwitchRestrictionUseCase
@@ -103,7 +108,7 @@ class SettingsVM @Inject constructor(
     private val setClearItselfUseCase: SetCleaItselfUseCase,
     private val setLatencyUseCase: SetLatencyUseCase,
     private val setClicksNumberUseCase: SetClicksNumberUseCase,
-    private val setTriggerOnButtonUseCase: SetTriggerOnButtonUseCase,
+    private val setTriggerOnPowerButtonUseCase: SetTriggerOnPowerButtonUseCase,
     private val setScreenshotsStatusUseCase: SetScreenshotsStatusUseCase,
     private val setMultiuserUIProtectionUseCase: SetMultiuserUIProtectionUseCase,
     private val setRebootDelayUseCase: SetRebootDelayUseCase,
@@ -111,6 +116,9 @@ class SettingsVM @Inject constructor(
     private val downloadUpdateUseCase: DownloadUpdateUseCase,
     private val disableUpdatePopupStatusUseCase: DisableUpdatePopupUseCase,
     private val setRootLatencyUseCase: SetRootLatencyUseCase,
+    private val setLatencyVolumeUseCase: SetLatencyVolumeUseCase,
+    private val setClicksNumberVolumeUseCase: SetClicksNumberVolumeUseCase,
+    private val setTriggerOnVolumeButtonUseCase: SetTriggerOnVolumeButtonUseCase,
     getDeviceProtectionSettingsUseCase: GetDeviceProtectionSettingsUseCase,
     getPermissionsUseCase: GetPermissionsUseCase,
     getUSBSettingsUseCase: GetUsbSettingsUseCase,
@@ -181,6 +189,18 @@ class SettingsVM @Inject constructor(
         }
     }
 
+    fun setVolumeLatency(latency: Int) {
+        viewModelScope.launch {
+            setLatencyVolumeUseCase(latency)
+        }
+    }
+
+    fun setTriggerOnVolumeButton(state: VolumeButtonTriggerOptions) {
+        viewModelScope.launch {
+            setTriggerOnVolumeButtonUseCase(state)
+        }
+    }
+
     fun setRootLatency(latency: Int) {
         viewModelScope.launch {
             setRootLatencyUseCase(latency)
@@ -190,6 +210,12 @@ class SettingsVM @Inject constructor(
     fun setClicksNumber(clicks: Int) {
         viewModelScope.launch {
             setClicksNumberUseCase(clicks)
+        }
+    }
+
+    fun setClicksNumberVolume(clicks: Int) {
+        viewModelScope.launch {
+            setClicksNumberVolumeUseCase(clicks)
         }
     }
 
@@ -811,6 +837,16 @@ class SettingsVM @Inject constructor(
         )
     }
 
+    fun editVolumeButtonLatencyDialog() {
+        showInputDigitDialog(
+            title = UIText.StringResource(R.string.change_volume_button_latency),
+            message = UIText.StringResource(R.string.button_volume_latency_long),
+            hint = buttonsSettingsState.value.latencyVolumeButton.toString(),
+            range = 100..100000,
+            requestKey = EDIT_VOLUME_LATENCY_DIALOG
+        )
+    }
+
     fun editButtonRootLatencyDialog() {
         showInputDigitDialog(
             title = UIText.StringResource(R.string.change_button_latency_root),
@@ -883,9 +919,19 @@ class SettingsVM @Inject constructor(
         )
     }
 
-    fun setTriggerOnButton(status: Boolean) {
+    fun editClicksNumberVolumeDialog() {
+        showInputDigitDialog(
+            title = UIText.StringResource(R.string.change_clicks_number_volume),
+            message = UIText.StringResource(R.string.clicks_number_volume_long),
+            hint = buttonsSettingsState.value.volumeButtonAllowedClicks.toString(),
+            range = 3..20,
+            requestKey = EDIT_CLICK_NUMBER_VOLUME_DIALOG
+        )
+    }
+
+    fun setTriggerOnButton(status: PowerButtonTriggerOptions) {
         viewModelScope.launch {
-            setTriggerOnButtonUseCase(status)
+            setTriggerOnPowerButtonUseCase(status)
         }
     }
 
@@ -895,11 +941,40 @@ class SettingsVM @Inject constructor(
         }
     }
 
-    fun showSetTriggerOnButtonDialog() {
-        showQuestionDialog(title = UIText.StringResource(R.string.destroy_on_button_title),
-            message = UIText.StringResource(R.string.destroy_on_button_long),
-            requestKey = TRIGGER_ON_BUTTON_DIALOG
+    fun showSetTriggerOnVolumeUpButtonDialog() {
+        showQuestionDialog(
+            title = UIText.StringResource(R.string.destroy_on_button_volume_up_title),
+            message = UIText.StringResource(R.string.destroy_on_button_volume_up_long),
+            requestKey = TRIGGER_ON_VOLUME_UP_DIALOG
         )
+    }
+
+    fun showSetTriggerOnVolumeDownButtonDialog() {
+        showQuestionDialog(
+            title = UIText.StringResource(R.string.destroy_on_button_volume_down_title),
+            message = UIText.StringResource(R.string.destroy_on_button_volume_down_long),
+            requestKey = TRIGGER_ON_VOLUME_DOWN_DIALOG
+        )
+    }
+
+    fun showSetTriggerOnPowerButtonLegacyDialog() {
+        showQuestionDialog(
+            title = UIText.StringResource(R.string.destroy_on_button_legacy_title),
+            message = UIText.StringResource(R.string.destroy_on_button_legacy_long),
+            requestKey = TRIGGER_ON_BUTTON_LEGACY_DIALOG
+        )
+    }
+
+    fun showSetTriggerOnButtonSuperuserDialog() {
+        if (permissionsState.value.isRoot) {
+            showQuestionDialog(
+                title = UIText.StringResource(R.string.destroy_on_button_title),
+                message = UIText.StringResource(R.string.destroy_on_button_long),
+                requestKey = TRIGGER_ON_BUTTON_SUPERUSER_DIALOG
+            )
+        } else {
+            showInfoDialog(UIText.StringResource(com.sonozaki.resources.R.string.no_superuser_rights), UIText.StringResource(R.string.provide_root))
+        }
     }
 
     fun showRebootOnUSBDialog() {
@@ -1029,8 +1104,9 @@ class SettingsVM @Inject constructor(
         const val ENABLE_SWITCH_USER_RESTRICTION_DIALOG = "enable_switch_user_restriction_dialog"
         const val EDIT_LATENCY_DIALOG = "edit_latency_dialog"
         const val EDIT_ROOT_LATENCY_DIALOG = "edit_root_latency_dialog"
+        const val EDIT_VOLUME_LATENCY_DIALOG = "edit_volume_latency_dialog"
         const val EDIT_CLICK_NUMBER_DIALOG = "edit_click_number_dialog"
-        const val TRIGGER_ON_BUTTON_DIALOG = "trigger_on_button_dialog"
+        const val TRIGGER_ON_BUTTON_SUPERUSER_DIALOG = "trigger_on_button_dialog"
         const val REBOOT_ON_USB_DIALOG = "reboot_on_usb_dialog"
         const val ROOT_WARNING_DIALOG = "root_warning_dialog"
         const val DESTROY_DATA_DIALOG = "destroy_data_dialog"
@@ -1039,6 +1115,10 @@ class SettingsVM @Inject constructor(
         const val MOVE_TO_BFU_DIALOG = "move_device_to_bfu_dialog"
         const val DISABLE_MULTIUSER_UI_ON_BOOT = "disable_multiuser_ui_on_boot"
         const val DISABLE_MULTIUSER_UI_ON_LOCK = "disable_multiuser_ui_on_lock"
+        const val TRIGGER_ON_BUTTON_LEGACY_DIALOG = "trigger_on_button_legacy_dialog"
+        const val EDIT_CLICK_NUMBER_VOLUME_DIALOG = "edit_click_number_volume_dialog"
+        const val TRIGGER_ON_VOLUME_UP_DIALOG = "trigger_on_volume_up_dialog"
+        const val TRIGGER_ON_VOLUME_DOWN_DIALOG = "trigger_on_volume_down_dialog"
     }
 
 }

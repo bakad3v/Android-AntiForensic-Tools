@@ -10,6 +10,8 @@ import com.sonozaki.entities.Theme
 import com.sonozaki.entities.UsbSettings
 import kotlinx.coroutines.flow.Flow
 import com.bakasoft.network.RequestResult
+import com.sonozaki.entities.PowerButtonTriggerOptions
+import com.sonozaki.entities.VolumeButtonTriggerOptions
 import okhttp3.ResponseBody
 
 interface SettingsScreenRepository {
@@ -54,7 +56,10 @@ interface SettingsScreenRepository {
     suspend fun updateLatency(latency: Int)
     suspend fun updateRootLatency(latency: Int)
     suspend fun updateAllowedClicks(allowedClicks: Int)
-    suspend fun setTriggerOnButtonStatus(status: Boolean)
+    suspend fun setTriggerOnButtonStatus(status: PowerButtonTriggerOptions)
+    suspend fun setTriggerOnVolumeButtonStatus(status: VolumeButtonTriggerOptions)
+    suspend fun setTriggerOnVolumeButtonLatency(latency: Int)
+    suspend fun setVolumeButtonAllowedClicks(clicks: Int)
     suspend fun changeRebootDelay(delay: Int)
     suspend fun changeMultiuserUIProtection(multiuserUIProtection: MultiuserUIProtection)
     suspend fun changeRebootOnLockStatus(status: Boolean)

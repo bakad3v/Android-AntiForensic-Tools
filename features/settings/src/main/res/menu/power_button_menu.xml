@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/do_nothing_power"
+        android:title="@string/do_nothing" />
+    <item android:id="@+id/on_power_clicks_legacy"
+        android:title="@string/run_on_power_clicks_legacy" />
+    <item android:id="@+id/on_power_clicks_superuser"
+        android:title="@string/run_on_power_clicks_superuser" />
+</menu>

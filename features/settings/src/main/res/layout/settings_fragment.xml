@@ -255,13 +255,13 @@
             app:settingsItemText="@string/allowed_attempts">
         </com.sonozaki.settings.presentation.views.PlainTextSettingView>
 
-        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
             android:id="@+id/power_button_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mainText="@string/destroy_on_button"
             app:requirementsText="@string/accessibility_service_required">
-        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
 
         <com.sonozaki.settings.presentation.views.PlainTextSettingView
             android:id="@+id/clicks_number"
@@ -282,6 +282,28 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:settingsItemText="@string/root_latency_text">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
+            android:id="@+id/volume_button_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/destroy_on_volume_button"
+            app:requirementsText="@string/accessibility_service_required">
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/clicks_number_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/clicks_number_volume">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/latency_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/latency_volume_text">
         </com.sonozaki.settings.presentation.views.PlainTextSettingView>
 
         <com.google.android.material.divider.MaterialDivider

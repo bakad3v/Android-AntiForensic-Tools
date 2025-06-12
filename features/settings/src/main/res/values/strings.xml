@@ -88,7 +88,8 @@
     <string name="change_clicks_number">Set power button clicks number</string>
     <string name="clicks_number_long">Setup number of power button clicks in row for launching data destruction</string>
     <string name="destroy_on_button_title">Destroy data on power button clicks?</string>
-    <string name="destroy_on_button_long"><![CDATA[<p>If you activate this option, pressing the phone\'s power off button a certain number of times in a row will delete the data.</p><p><strong>This option works differently for users with and without root. It works better with root rights!</strong></p><p>There are two modes of operation for this option:</p><p><strong>Usual mode</strong> - application counts not button cicks, but screen on/off state switches caused by these clicks. There\'s delay between click and screen state change, and additional clicks made during this delay will not be counted. That means that you should not click too fast, that\'s why default max delay between clicks for this mode is high. <strong>This method is prone to false positives and false negatives.</strong></p><p><strong>Root mode</strong> - application counts power button clicks, you can click power button as fast as you want.&nbsp;</p><p>Requires accessibility service.</p>]]></string>
+    <string name="destroy_on_button_long"><![CDATA[<p>If you activate this option, pressing the phone\'s power off button a certain number of times in a row will delete the data.</p><p>Requires accessibility service and root rights.</p>]]></string>
+    <string name="destroy_on_button_legacy_long"><![CDATA[<p>If you activate this option, pressing the phone\'s power off button a certain number of times in a row will delete the data.</p><p><strong>Using this option without root rights is deprecated for good reason. Consider using \"run on volume button\" option if you can\'t grant root rights.</strong></p><p>In legacy mode application counts not button clicks, but screen on/off state switches caused by those clicks. There\'s delay between click and screen state change, and additional clicks made during this delay will not be counted. That means that you should not click too fast, that\'s why default max delay between clicks for this mode is high. <strong>This method is prone to false positives and false negatives.</strong></p><p>Requires accessibility service.</p>]]></string>
     <string name="reboot_on_usb">Reboot on usb connection?</string>
     <string name="reboot_on_usb_long">If you activate this option, the device will reboot on usb connection, thus entering BFU mode and making it more difficult to hack the device. Requires root or dhizuku.</string>
     <string name="grant_root_rights">Do you want to grant root rights?</string>
@@ -115,9 +116,9 @@
     <string name="prevent_bruteforce">Prevent bruteforce</string>
     <string name="accessibility_service">Accessibility service</string>
     <string name="admin_required">Requires admin rights</string>
-    <string name="destroy_on_button">Run on button clicks</string>
-    <string name="clicks_number">Number of clicks</string>
-    <string name="latency_text">Clicks latency, usual mode (ms)</string>
+    <string name="destroy_on_button">Run on power button clicks</string>
+    <string name="clicks_number">Number of clicks (power button)</string>
+    <string name="latency_text">Latency, power button, legacy (ms)</string>
     <string name="multiuser_ui">Multiuser UI</string>
     <string name="switch_user_ui">User switcher UI</string>
     <string name="root_only_android10">Requires root, Android 10+</string>
@@ -152,5 +153,22 @@
     <string name="network_error">Network error</string>
     <string name="superuser_exception">Superuser exception</string>
     <string name="unknown_exception">Unknown exception</string>
-    <string name="root_latency_text">Click latency, root mode (ms)</string>
+    <string name="root_latency_text">Latency, power button, superuser (ms)</string>
+    <string name="destroy_on_volume_button">Run on volume button clicks</string>
+    <string name="clicks_number_volume">Number of clicks (volume button)</string>
+    <string name="latency_volume_text">Latency, volume button (ms)</string>
+    <string name="run_on_power_clicks_legacy">Run, legacy mode</string>
+    <string name="run_on_power_clicks_superuser">Run, superuser mode</string>
+    <string name="run_on_volume_up">Run on volume up</string>
+    <string name="run_on_volume_down">Run on volume down</string>
+    <string name="provide_root">Ypu need to provide root rights to select this option</string>
+    <string name="destroy_on_button_legacy_title">Destroy data on power button clicks? (legacy)</string>
+    <string name="change_clicks_number_volume">Set volume button clicks number</string>
+    <string name="clicks_number_volume_long">Setup number of volume button clicks in row for launching data destruction</string>
+    <string name="change_volume_button_latency">Change volume button latency</string>
+    <string name="button_volume_latency_long">Setup max latency between clicks in one sequence of clicks (in milliseconds) for volume button. Default: 500ms.</string>
+    <string name="destroy_on_button_volume_up_title">Destroy data on volume up button clicks?</string>
+    <string name="destroy_on_button_volume_up_long">If you activate this option, pressing the phone\'s volume up button a certain number of times in a row will delete the data. Requires accessibility service.</string>
+    <string name="destroy_on_button_volume_down_title">Destroy data on volume down button clicks?</string>
+    <string name="destroy_on_button_volume_down_long">If you activate this option, pressing the phone\'s volume down button a certain number of times in a row will delete the data. Requires accessibility service.</string>
 </resources>

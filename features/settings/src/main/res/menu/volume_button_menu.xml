@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/do_nothing_volume"
+        android:title="@string/do_nothing" />
+    <item android:id="@+id/on_volume_up"
+        android:title="@string/run_on_volume_up" />
+    <item android:id="@+id/on_volume_down"
+        android:title="@string/run_on_volume_down" />
+</menu>

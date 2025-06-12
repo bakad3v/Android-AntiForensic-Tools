@@ -25,8 +25,10 @@ import com.sonozaki.activitystate.ActivityStateHolder
 import com.sonozaki.dialogs.DialogLauncher
 import com.sonozaki.dialogs.InputDigitDialog
 import com.sonozaki.entities.MultiuserUIProtection
+import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.Theme
 import com.sonozaki.entities.UsbSettings
+import com.sonozaki.entities.VolumeButtonTriggerOptions
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.SettingsFragmentBinding
 import com.sonozaki.settings.domain.routers.SettingsRouter
@@ -46,8 +48,10 @@ import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_USER_SWITCHER_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_BFU_DELAY_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_CLICK_NUMBER_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_CLICK_NUMBER_VOLUME_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_LATENCY_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_ROOT_LATENCY_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_VOLUME_LATENCY_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_MULTIUSER_UI_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_SAFE_BOOT_RESTRICTION_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_SWITCH_USER_RESTRICTION_DIALOG
@@ -66,7 +70,10 @@ import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ROOT_WA
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.RUN_ON_PASSWORD_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.RUN_ON_USB_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.SELF_DESTRUCTION_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.TRIGGER_ON_BUTTON_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.TRIGGER_ON_BUTTON_LEGACY_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.TRIGGER_ON_BUTTON_SUPERUSER_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.TRIGGER_ON_VOLUME_DOWN_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.TRIGGER_ON_VOLUME_UP_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.TRIM_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.WIPE_DIALOG
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
@@ -110,10 +117,24 @@ class SettingsFragment : Fragment() {
     setupThemesMenu()
     setupUsbMenu()
     setupDisableMultiuserUIMenu()
+    setupPowerButtonMenu()
+    setupVolumeButtonMenu()
     listenDialogResults()
     setupDialogs()
     setupMenu()
     setupButtonsAndSwitches()
+  }
+
+  private fun setupPowerButtonMenu() {
+    binding.powerButtonItem.setOnClickListener {
+      changePowerButtonClicksMenu()
+    }
+  }
+
+  private fun setupVolumeButtonMenu() {
+    binding.volumeButtonItem.setOnClickListener {
+      changeVolumeButtonClicksMenu()
+    }
   }
 
   private fun setupDisableMultiuserUIMenu() {
@@ -281,15 +302,6 @@ class SettingsFragment : Fragment() {
     viewModel.showRunOnDuressPasswordDialog()
   }
 
-  private val switchTriggerOnButtonListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-    if (!checked) {
-      viewModel.setTriggerOnButton(false)
-      return@OnCheckedChangeListener
-    }
-    switch.isChecked = false
-    viewModel.showSetTriggerOnButtonDialog()
-  }
-
   private val switchMoveToBFUAutomaticallyListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
     if (!checked) {
       viewModel.setMoveToBFU(false)
@@ -367,6 +379,12 @@ class SettingsFragment : Fragment() {
       }
       clicksNumber.setOnClickListener {
         viewModel.editClicksNumberDialog()
+      }
+      clicksNumberVolume.setOnClickListener {
+        viewModel.editClicksNumberVolumeDialog()
+      }
+      latencyVolume.setOnClickListener {
+        viewModel.editVolumeButtonLatencyDialog()
       }
       setMultiuserUi.setOnClickListener {
         viewModel.changeMultiuserUISettingsDialog()
@@ -452,6 +470,24 @@ class SettingsFragment : Fragment() {
       }
   }
 
+  private fun getPowerButtonSettingsDescription(triggerOptions: PowerButtonTriggerOptions): String {
+    val id = when(triggerOptions) {
+      PowerButtonTriggerOptions.IGNORE -> R.string.do_nothing
+      PowerButtonTriggerOptions.DEPRECATED_WAY -> R.string.run_on_power_clicks_legacy
+      PowerButtonTriggerOptions.SUPERUSER_WAY -> R.string.run_on_power_clicks_superuser
+    }
+    return requireContext().getString(id)
+  }
+
+  private fun getVolumeButtonSettingsDescription(volumeButtonTriggerOptions: VolumeButtonTriggerOptions): String {
+    val id = when(volumeButtonTriggerOptions) {
+      VolumeButtonTriggerOptions.IGNORE -> R.string.do_nothing
+      VolumeButtonTriggerOptions.ON_VOLUME_UP -> R.string.run_on_volume_up
+      VolumeButtonTriggerOptions.ON_VOLUME_DOWN -> R.string.run_on_volume_down
+    }
+    return requireContext().getString(id)
+  }
+
   private fun listenButtonSettings() {
     viewLifecycleOwner.launchLifecycleAwareCoroutine {
       viewModel.buttonsSettingsState.collect {
@@ -459,10 +495,10 @@ class SettingsFragment : Fragment() {
           rootLatency.setDigit(it.latencyRootMode.toString())
           latency.setDigit(it.latencyUsualMode.toString())
           clicksNumber.setDigit(it.allowedClicks.toString())
-          powerButtonItem.setCheckedProgrammatically(
-            it.triggerOnButton,
-            switchTriggerOnButtonListener
-          )
+          latencyVolume.setDigit(it.latencyVolumeButton.toString())
+          clicksNumberVolume.setDigit(it.volumeButtonAllowedClicks.toString())
+          powerButtonItem.setText(getPowerButtonSettingsDescription(it.triggerOnButton))
+          volumeButtonItem.setText(getVolumeButtonSettingsDescription(it.triggerOnVolumeButton))
         }
       }
     }
@@ -477,7 +513,8 @@ class SettingsFragment : Fragment() {
           disableMultiuserUi.isClickable = rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && it.serviceWorking
           moveToBfu.setSwitchEnabled(rootOrDhizuku && it.serviceWorking)
           runOnPasswordItem.setSwitchEnabled(it.serviceWorking)
-          powerButtonItem.setSwitchEnabled(it.serviceWorking)
+          powerButtonItem.isClickable = it.serviceWorking
+          volumeButtonItem.isClickable = it.serviceWorking
           wipeItem.setCheckedProgrammatically(it.wipe, switchWipeListener)
           runTrimItem.setCheckedProgrammatically(it.trim, switchTrimListener)
           removeItselfItem.setCheckedProgrammatically(
@@ -704,7 +741,14 @@ class SettingsFragment : Fragment() {
         latency ->
       viewModel.setLatency(latency)
     }
-
+    InputDigitDialog.setupListener(
+      parentFragmentManager,
+      viewLifecycleOwner,
+      EDIT_VOLUME_LATENCY_DIALOG
+    ) {
+        latency ->
+      viewModel.setVolumeLatency(latency)
+    }
     InputDigitDialog.setupListener(
       parentFragmentManager,
       viewLifecycleOwner,
@@ -721,9 +765,29 @@ class SettingsFragment : Fragment() {
         clicks ->
       viewModel.setClicksNumber(clicks)
     }
+    InputDigitDialog.setupListener(
+      parentFragmentManager,
+      viewLifecycleOwner,
+      EDIT_CLICK_NUMBER_VOLUME_DIALOG
+    ) {
+      viewModel.setClicksNumberVolume(it)
+    }
     listenQuestionDialog(
-      TRIGGER_ON_BUTTON_DIALOG
-    ) { viewModel.setTriggerOnButton(true) }
+      TRIGGER_ON_BUTTON_SUPERUSER_DIALOG
+    ) { viewModel.setTriggerOnButton(PowerButtonTriggerOptions.SUPERUSER_WAY) }
+
+    listenQuestionDialog(
+      TRIGGER_ON_VOLUME_UP_DIALOG
+    ) { viewModel.setTriggerOnVolumeButton(VolumeButtonTriggerOptions.ON_VOLUME_UP) }
+
+    listenQuestionDialog(
+      TRIGGER_ON_VOLUME_DOWN_DIALOG
+    ) { viewModel.setTriggerOnVolumeButton(VolumeButtonTriggerOptions.ON_VOLUME_DOWN) }
+
+    listenQuestionDialog(TRIGGER_ON_BUTTON_LEGACY_DIALOG) {
+      viewModel.setTriggerOnButton(PowerButtonTriggerOptions.DEPRECATED_WAY)
+    }
+
     listenQuestionDialog(
       REBOOT_ON_USB_DIALOG
     ) {
@@ -767,6 +831,54 @@ class SettingsFragment : Fragment() {
           getString(R.string.settings)
         )
       )
+  }
+
+
+  private fun changeVolumeButtonClicksMenu() {
+    val popup = PopupMenu(context, binding.volumeButtonItem.menu)
+    popup.menuInflater.inflate(R.menu.volume_button_menu, popup.menu)
+    popup.setOnMenuItemClickListener {
+      when (it.itemId) {
+        R.id.do_nothing_volume -> {
+          viewModel.setTriggerOnVolumeButton(VolumeButtonTriggerOptions.IGNORE)
+        }
+        R.id.on_volume_up -> {
+          viewModel.showSetTriggerOnVolumeUpButtonDialog()
+        }
+
+        R.id.on_volume_down -> {
+          viewModel.showSetTriggerOnVolumeDownButtonDialog()
+        }
+        else -> throw RuntimeException("Wrong multiuser UI setting")
+      }
+      return@setOnMenuItemClickListener true
+    }
+    popup.show()
+  }
+
+  /**
+   * Changing power button menu trigger reaction
+   */
+  private fun changePowerButtonClicksMenu() {
+    val popup = PopupMenu(context, binding.powerButtonItem.menu)
+    popup.menuInflater.inflate(R.menu.power_button_menu, popup.menu)
+    popup.setOnMenuItemClickListener {
+      when (it.itemId) {
+        R.id.do_nothing_power -> {
+          viewModel.setTriggerOnButton(PowerButtonTriggerOptions.IGNORE)
+        }
+        R.id.on_power_clicks_legacy -> {
+          viewModel.showSetTriggerOnPowerButtonLegacyDialog()
+        }
+
+        R.id.on_power_clicks_superuser-> {
+          viewModel.showSetTriggerOnButtonSuperuserDialog()
+        }
+        else -> throw RuntimeException("Wrong multiuser UI setting")
+      }
+      return@setOnMenuItemClickListener true
+    }
+    popup.show()
   }
 
   /**
