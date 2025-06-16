@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.Build
 import android.os.UserManager
+import android.provider.Settings
 import com.anggrayudi.storage.extension.toBoolean
 import com.anggrayudi.storage.extension.toInt
 import com.sonozaki.entities.ProfileDomain
@@ -36,7 +37,7 @@ class Root @Inject constructor(
     @Named(IO_DISPATCHER) private val coroutineDispatcher: CoroutineDispatcher
 ) : SuperUser {
 
-    override suspend fun executeRootCommand(command: String): Shell.Result {
+    override suspend fun executeRootCommand(command: String): Shell.Result = withContext(coroutineDispatcher) {
         val result = Shell.cmd(command).exec()
         if (!result.isSuccess) {
             if (!askSuperUserRights()) {
@@ -52,7 +53,7 @@ class Root @Inject constructor(
                 UIText.StringResource(R.string.unknow_root_error, resultText)
             )
         }
-        return result
+        return@withContext result
     }
 
     private fun executeRootCommandParallelly(command: String, callback: (String) -> Unit): () -> Unit {
@@ -133,6 +134,7 @@ class Root @Inject constructor(
                     Build.VERSION_CODES.P.toString()
                 )
             )
+        Settings.Global.DEVELOPMENT_SETTINGS_ENABLED
         executeRootCommand("settings put global user_switcher_enabled ${status.toInt()}")
     }
 
@@ -216,6 +218,30 @@ class Root @Inject constructor(
             }
         }
 
+    override suspend fun getLogsStatus(): Boolean {
+        return !executeRootCommand("getprop persist.log.tag").out.first().startsWith("S")
+    }
+
+    override suspend fun getDeveloperSettingsStatus(): Boolean {
+        return executeRootCommand("settings get global ${Settings.Global.DEVELOPMENT_SETTINGS_ENABLED}").out.first().toInt().toBoolean()
+    }
+
+    override suspend fun changeLogsStatus(enable: Boolean) {
+        if (enable) {
+            executeRootCommand("setprop persist.log.tag \"\"")
+        } else {
+            executeRootCommand("setprop persist.logd.logpersistd \"\"")
+            executeRootCommand("setprop persist.logd.logpersistd.buffer \"\"")
+            executeRootCommand("setprop logd.logpersistd \"\"")
+            executeRootCommand("setprop logd.logpersistd.buffer \"\"")
+            executeRootCommand("setprop persist.log.tag Settings")
+            executeRootCommand("setprop persist.logd.size 65536")
+        }
+    }
+
+    override suspend fun changeDeveloperSettingsStatus(unlock: Boolean) {
+        executeRootCommand("settings put global ${Settings.Global.DEVELOPMENT_SETTINGS_ENABLED} ${unlock.toInt()}")
+    }
 
     override suspend fun getSafeBootStatus(): Boolean {
         val result = executeRootCommand("settings get global safe_boot_disallowed").out[0]

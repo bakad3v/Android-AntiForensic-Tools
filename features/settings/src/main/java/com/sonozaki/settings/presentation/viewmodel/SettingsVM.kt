@@ -55,6 +55,10 @@ import com.sonozaki.settings.domain.usecases.settings.SetScreenshotsStatusUseCas
 import com.sonozaki.settings.domain.usecases.settings.SetThemeUseCase
 import com.sonozaki.settings.domain.usecases.button.SetTriggerOnPowerButtonUseCase
 import com.sonozaki.settings.domain.usecases.button.SetTriggerOnVolumeButtonUseCase
+import com.sonozaki.settings.domain.usecases.settings.GetDeveloperSettingsStatusUseCase
+import com.sonozaki.settings.domain.usecases.settings.GetLogsStatusUseCase
+import com.sonozaki.settings.domain.usecases.settings.SetDeveloperSettingsStatusUseCase
+import com.sonozaki.settings.domain.usecases.settings.SetLogsStatusUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetTrimUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetUserLimitUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetUserSwitchRestrictionUseCase
@@ -119,6 +123,10 @@ class SettingsVM @Inject constructor(
     private val setLatencyVolumeUseCase: SetLatencyVolumeUseCase,
     private val setClicksNumberVolumeUseCase: SetClicksNumberVolumeUseCase,
     private val setTriggerOnVolumeButtonUseCase: SetTriggerOnVolumeButtonUseCase,
+    private val setDeveloperSettingsStatusUseCase: SetDeveloperSettingsStatusUseCase,
+    private val setLogsStatusUseCase: SetLogsStatusUseCase,
+    private val getLogsStatusUseCase: GetLogsStatusUseCase,
+    private val getDeveloperSettingsStatusUseCase: GetDeveloperSettingsStatusUseCase,
     getDeviceProtectionSettingsUseCase: GetDeviceProtectionSettingsUseCase,
     getPermissionsUseCase: GetPermissionsUseCase,
     getUSBSettingsUseCase: GetUsbSettingsUseCase,
@@ -635,6 +643,78 @@ class SettingsVM @Inject constructor(
         }
     }
 
+    fun changeDeveloperSettingsStatusDialog() {
+        viewModelScope.launch {
+            val enabled = try {
+                getDeveloperSettingsStatusUseCase()
+            } catch (e: SuperUserException) {
+                showInfoDialogSuspend(
+                    UIText.StringResource(R.string.error_while_loading_data),
+                    e.messageForLogs
+                )
+                return@launch
+            }
+            val title = if (enabled) {
+                R.string.disable_developer_settings
+            } else {
+                R.string.enable_developer_settings
+
+            }
+            val message = if (enabled) {
+                R.string.disable_developer_settings_long
+            } else {
+                R.string.enable_developer_settings_long
+            }
+
+            val requestKey = if (enabled) {
+                DISABLE_DEV_SETTINGS_DIALOG
+            } else {
+                ENABLE_DEV_SETTINGS_DIALOG
+            }
+            showQuestionDialogSuspend(
+                title = UIText.StringResource(title),
+                message = UIText.StringResource(message),
+                requestKey = requestKey
+            )
+        }
+    }
+
+    fun changeLogsStatusDialog() {
+        viewModelScope.launch {
+            val enabled = try {
+                getLogsStatusUseCase()
+            } catch (e: SuperUserException) {
+                showInfoDialogSuspend(
+                    UIText.StringResource(R.string.error_while_loading_data),
+                    e.messageForLogs
+                )
+                return@launch
+            }
+            val title = if (enabled) {
+                R.string.disable_logs
+            } else {
+                R.string.enable_logs
+
+            }
+            val message = if (enabled) {
+                R.string.disable_logs_long
+            } else {
+                R.string.enable_logs_long
+            }
+
+            val requestKey = if (enabled) {
+                DISABLE_LOGS_DIALOG
+            } else {
+                ENABLE_LOGS_DIALOG
+            }
+            showQuestionDialogSuspend(
+                title = UIText.StringResource(title),
+                message = UIText.StringResource(message),
+                requestKey = requestKey
+            )
+        }
+    }
+
     fun changeUserSwitcherDialog() {
         viewModelScope.launch {
             val enabled = try {
@@ -1075,6 +1155,17 @@ class SettingsVM @Inject constructor(
         )
     }
 
+    fun setLogsStatus(enable: Boolean) {
+        viewModelScope.launch {
+            setLogsStatusUseCase(enable)
+        }
+    }
+
+    fun setDevOptionsStatus(status: Boolean) {
+        viewModelScope.launch {
+            setDeveloperSettingsStatusUseCase(status)
+        }
+    }
 
     companion object {
         const val MOVE_TO_ACCESSIBILITY_SERVICE = "move_to_accessibility_service"
@@ -1119,6 +1210,10 @@ class SettingsVM @Inject constructor(
         const val EDIT_CLICK_NUMBER_VOLUME_DIALOG = "edit_click_number_volume_dialog"
         const val TRIGGER_ON_VOLUME_UP_DIALOG = "trigger_on_volume_up_dialog"
         const val TRIGGER_ON_VOLUME_DOWN_DIALOG = "trigger_on_volume_down_dialog"
+        const val DISABLE_LOGS_DIALOG = "disable_logs_dialog"
+        const val ENABLE_LOGS_DIALOG = "enable_logs_dialog"
+        const val DISABLE_DEV_SETTINGS_DIALOG = "disable_dev_settings_dialog"
+        const val ENABLE_DEV_SETTINGS_DIALOG = "enable_dev_settings_dialog"
     }
 
 }

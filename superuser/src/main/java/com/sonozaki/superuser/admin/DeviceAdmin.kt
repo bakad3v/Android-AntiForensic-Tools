@@ -221,6 +221,34 @@ class DeviceAdmin @Inject constructor(
         )
     }
 
+    override suspend fun changeLogsStatus(enable: Boolean) {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
+    override suspend fun changeDeveloperSettingsStatus(unlock: Boolean) {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
+    override suspend fun getLogsStatus(): Boolean {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
+    override suspend fun getDeveloperSettingsStatus(): Boolean {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
     companion object {
         private const val ADMIN_ERROR_TEXT =
             "Device admin rights are not enough to perform operations."

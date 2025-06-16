@@ -193,4 +193,16 @@ interface SuperUser {
 
     @Throws(SuperUserException::class)
     suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean
+
+    @Throws(SuperUserException::class)
+    suspend fun changeLogsStatus(enable: Boolean)
+
+    @Throws(SuperUserException::class)
+    suspend fun changeDeveloperSettingsStatus(unlock: Boolean)
+
+    @Throws(SuperUserException::class)
+    suspend fun getLogsStatus(): Boolean
+
+    @Throws(SuperUserException::class)
+    suspend fun getDeveloperSettingsStatus(): Boolean
 }

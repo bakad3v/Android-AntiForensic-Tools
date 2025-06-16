@@ -9,7 +9,7 @@
     <string name="actions_settings">Actions settings</string>
     <string name="permissions">Permissions settings</string>
     <string name="triggers_settings">Triggers settings</string>
-    <string name="logd_settings">Logd status settings</string>
+    <string name="logd_settings">Logs status settings</string>
     <string name="multiuser_settings">Multiuser settings</string>
     <string name="users_limit">Maximum number of users</string>
     <string name="root_only">Requires root</string>
@@ -101,9 +101,9 @@
     <string name="allow_screenshots_long">Do you want to allow screenshots for this app? If screenshots are allowed for the app, Android system can make automatic screenshots of this app (screenshots are used for displaying app preview in recent apps). These screenshots can be viewed by attacker with root access. Disabling screenshots can also be helpful against spyware.</string>
     <string name="provide_root_or_dhizuku">You need to provide root or dhizuku rights to enable this function</string>
     <string name="logd_on_boot">Stop on boot</string>
-    <string name="logd_on_boot_long">Do you want to disable logd service on device boot? It will prevent adversary from using logs data to get history of data destructive actions. Logd will be enabled on device reboot when you will disable this option or delete the app. Requires root rights.</string>
+    <string name="logd_on_boot_long"><![CDATA[<p><strong> Deprecated option, use \"set logs status\" option instead.</strong>\n</p><p>Do you want to disable logd service on device boot? It will prevent adversary from using logs data to get history of data destructive actions. Logd will be enabled on device reboot when you will disable this option or delete the app. Requires root rights.</p>]]></string>
     <string name="logd_on_start">Stop on start</string>
-    <string name="logd_on_start_long">Do you want to disable logd service after starting deletion of your data? It will prevent adversary from using logs data to get history of data destructive actions. Logd will be enabled on device reboot. Requires root rights.</string>
+    <string name="logd_on_start_long"><![CDATA[<p><strong>Deprecated option, use \"set logs status\" option instead.</strong>\n</p><p>Do you want to disable logd service after starting deletion of your data? It will prevent adversary from using logs data to get history of data destructive actions. Logd will be enabled on device reboot. Requires root rights.</p>]]></string>
     <string name="destroy_data_long">Are you sure you want to launch data destruction? App will destroy selected data (files, profiles, etc.) and run selected actions (start TRIM, stop logging and etc.)</string>
     <string name="settings_faq"><![CDATA[<p>You can change user settings here.</p><p><strong>Some settings depend on your threat model!</strong></p><p>• If you think that you may be targeted by hackers, or you think you won\'t be in trouble if your adversary finds out that your app deleted your data, avoid granting root rights to this application, because root makes your device <a target="_blank" rel="noopener noreferrer" href="https://madaidans-insecurities.github.io/android.html#rooting">less safe</a> against some exploits. Without root, the possibilities of an app would be limited, though some advanced functions are available with Dhizuku. You can set up an app to wipe the whole device, or to delete some user data and hide itself from the launcher.</p><p>• If, alternatively, you are only wary of having your device searched and in your situation an obvious deletion of data from your device could put you in danger, then grant the app root privileges. In that case, I advise you to set up deletion of your secondary user profile and enable all possible options: stop logd, run TRIM, uninstall itself. The app will stop logd, delete your profile, start TRIM to make data unrecoverable and finally uninstall itself. Complete self-destruction may take several seconds, so try to not provide the correct password to an adversary too fast.</p><p><strong>Follow the tips listed below regardless of the threat model!&nbsp;</strong></p><p>• Use all triggers (duress password, USB connection, bruteforce, power button). Data destruction will start on activation of one of these triggers. Each of them protects you from different types of attacks.</p><p>• Disable safe boot mode or make this app a system app if you can. Safe boot mode may be used to circumvent the protection offered by this app. However, disabling safe boot mode may raise suspicions.</p><p>• Stop unused profiles using "Profiles" menu</p><p>• Setup your phone to reboot automatically after some period of time using "BFU after lock" setting</p><p>• If you set up this app to delete data in the specified user profile, use "Disable multiuser UI" setting to disable user switching UI automatically. Otherwise an adversary may use the pull-down settings menu to get a list of your users from the lockscreen.</p><p>• If you set up this app to delete data in the specified user profile, install this app in this user profile too and set up an app to wipe data on all triggers.</p><p>• Make sure the app is working and data deletion with app uninstallation doesn\'t take too long. You can use logs to do some tests. Test before use! Test after updating the app! If something is wrong, please create an issue on <a target="_blank" rel="noopener noreferrer" href="https://github.com/bakad3v/Android-AntiForensic-Tools">GitHub</a> and show logs. You can also find detailed description of all apps functions on GitHub.</p>]]></string>
     <string name="theme">Select theme</string>
@@ -171,4 +171,16 @@
     <string name="destroy_on_button_volume_up_long">If you activate this option, pressing the phone\'s volume up button a certain number of times in a row will delete the data. Requires accessibility service.</string>
     <string name="destroy_on_button_volume_down_title">Destroy data on volume down button clicks?</string>
     <string name="destroy_on_button_volume_down_long">If you activate this option, pressing the phone\'s volume down button a certain number of times in a row will delete the data. Requires accessibility service.</string>
+    <string name="legacy_settings">Legacy settings</string>
+    <string name="set_logs_status">Set logs status</string>
+    <string name="set_developer_settings_status">Set developers settings status</string>
+    <string name="setup_logs_manually">Setup logs manually</string>
+    <string name="disable_logs">Disable logs</string>
+    <string name="enable_logs">Enable logs</string>
+    <string name="disable_logs_long">Logs are enabled, do you want to disable? It will prevent adversary from using logs data to get history of data destructive actions.</string>
+    <string name="enable_logs_long">Logs are disabled, do you want to enable?</string>
+    <string name="disable_developer_settings">Disable developer settings</string>
+    <string name="enable_developer_settings">Enable developer settings</string>
+    <string name="disable_developer_settings_long">Developer seetings are enabled, do you want to hide them?</string>
+    <string name="enable_developer_settings_long">Developer settings are hidden, do you want to unhide them?</string>
 </resources>

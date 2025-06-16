@@ -324,21 +324,31 @@
 
         </com.google.android.material.textview.MaterialTextView>
 
-        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
-            android:id="@+id/logd_on_start_item"
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_logs_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:mainText="@string/logd_on_start"
+            app:mainText="@string/set_logs_status"
             app:requirementsText="@string/root_only">
-        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
 
-        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
-            android:id="@+id/logd_on_boot_item"
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_developer_settings_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:mainText="@string/logd_on_boot"
+            app:mainText="@string/set_developer_settings_status"
             app:requirementsText="@string/root_only">
-        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/setup_logs_manually"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/setup_logs_manually">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
 
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
@@ -467,6 +477,45 @@
             app:settingsItemText="@string/moving_to_bfu_delay">
         </com.sonozaki.settings.presentation.views.PlainTextSettingView>
 
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/legacy_settings"
+            android:textStyle="bold">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/logd_on_start_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/logd_on_start"
+            app:requirementsText="@string/root_only">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/logd_on_boot_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/logd_on_boot"
+            app:requirementsText="@string/root_only">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
 
         <com.google.android.material.textview.MaterialTextView
             style="?attr/textAppearanceSubtitle1"

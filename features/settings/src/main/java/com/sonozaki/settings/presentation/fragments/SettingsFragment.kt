@@ -40,6 +40,8 @@ import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.CHANGE_
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.CLEAR_DATA_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.CLEAR_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DESTROY_DATA_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_DEV_SETTINGS_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_LOGS_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_MULTIUSER_UI_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_MULTIUSER_UI_ON_BOOT
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.DISABLE_MULTIUSER_UI_ON_LOCK
@@ -52,6 +54,8 @@ import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_CL
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_LATENCY_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_ROOT_LATENCY_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.EDIT_VOLUME_LATENCY_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_DEV_SETTINGS_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_LOGS_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_MULTIUSER_UI_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_SAFE_BOOT_RESTRICTION_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM.Companion.ENABLE_SWITCH_USER_RESTRICTION_DIALOG
@@ -404,7 +408,16 @@ class SettingsFragment : Fragment() {
       destroyData.setOnClickListener {
         viewModel.destroyDataDialog()
       }
+      setDeveloperSettingsStatus.setOnClickListener {
+        viewModel.changeDeveloperSettingsStatusDialog()
       }
+      setLogsStatus.setOnClickListener {
+        viewModel.changeLogsStatusDialog()
+      }
+      setupLogsManually.setOnClickListener {
+
+      }
+    }
   }
 
   private fun listenUsbSettings() {
@@ -440,6 +453,8 @@ class SettingsFragment : Fragment() {
           bruteforceItem.setSwitchEnabled(it.isAdmin)
           logdOnBootItem.setSwitchEnabled(it.isRoot)
           logdOnStartItem.setSwitchEnabled(it.isRoot)
+          setLogsStatus.setActive(it.isRoot)
+          setDeveloperSettingsStatus.setActive(it.isRoot)
           setMultiuserUi.setActive(it.isRoot)
           setUserSwitcherUi.setActive(
             it.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
@@ -775,7 +790,18 @@ class SettingsFragment : Fragment() {
     listenQuestionDialog(
       TRIGGER_ON_BUTTON_SUPERUSER_DIALOG
     ) { viewModel.setTriggerOnButton(PowerButtonTriggerOptions.SUPERUSER_WAY) }
-
+    listenQuestionDialog(
+      DISABLE_LOGS_DIALOG
+    ) { viewModel.setLogsStatus(false) }
+    listenQuestionDialog(
+      ENABLE_LOGS_DIALOG
+    ) { viewModel.setLogsStatus(true) }
+    listenQuestionDialog(
+      ENABLE_DEV_SETTINGS_DIALOG
+    ) { viewModel.setDevOptionsStatus(true) }
+    listenQuestionDialog(
+      DISABLE_DEV_SETTINGS_DIALOG
+    ) { viewModel.setDevOptionsStatus(false) }
     listenQuestionDialog(
       TRIGGER_ON_VOLUME_UP_DIALOG
     ) { viewModel.setTriggerOnVolumeButton(VolumeButtonTriggerOptions.ON_VOLUME_UP) }

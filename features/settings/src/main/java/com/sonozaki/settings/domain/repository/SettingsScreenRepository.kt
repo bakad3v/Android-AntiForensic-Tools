@@ -31,28 +31,18 @@ interface SettingsScreenRepository {
     suspend fun setHide(status: Boolean)
     suspend fun setLogdOnBoot(new: Boolean)
     suspend fun setLogdOnStart(new: Boolean)
-    suspend fun setMultiuserUIStatus(status: Boolean)
     suspend fun setRemoveItself(new: Boolean)
     suspend fun setRunOnDuressPassword(status: Boolean)
     suspend fun setRunRoot(new: Boolean)
-    suspend fun setSafeBootStatus(status: Boolean)
     suspend fun setScreenshotsStatus(status: Boolean)
     suspend fun setTheme(theme: Theme)
     suspend fun setTRIM(new: Boolean)
-    suspend fun setUserLimit(limit: Int)
-    suspend fun setUserSwitcherStatus(status: Boolean)
-    suspend fun setSwitchUserRestriction(status: Boolean)
     suspend fun setWipe(new: Boolean)
     suspend fun setOwnerStatus(active: Boolean)
     suspend fun setRootStatus(status: Boolean)
     suspend fun setUsbSettings(settings: UsbSettings)
     suspend fun setBruteforceLimit(limit: Int)
     suspend fun setBruteforceStatus(status: Boolean)
-    suspend fun getUserLimit(): Int?
-    suspend fun getUserSwitcherStatus(): Boolean
-    suspend fun getSwitchUserRestriction(): Boolean
-    suspend fun getSafeBootStatus(): Boolean
-    suspend fun getMultiuserUIStatus(): Boolean
     suspend fun updateLatency(latency: Int)
     suspend fun updateRootLatency(latency: Int)
     suspend fun updateAllowedClicks(allowedClicks: Int)

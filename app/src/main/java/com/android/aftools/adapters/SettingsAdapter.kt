@@ -119,48 +119,8 @@ class SettingsAdapter @Inject constructor(
         settingsRepository.setClearItself(status)
     }
 
-    override suspend fun setUserLimit(limit: Int) {
-        settingsRepository.setUserLimit(limit)
-    }
-
-    override suspend fun getUserLimit(): Int? {
-        return settingsRepository.getUserLimit()
-    }
-
     override suspend fun setRunOnDuressPassword(status: Boolean) {
        settingsRepository.setRunOnDuressPassword(status)
-    }
-
-    override suspend fun setMultiuserUIStatus(status: Boolean) {
-        settingsRepository.setMultiuserUIStatus(status)
-    }
-
-    override suspend fun setSafeBootStatus(status: Boolean) {
-        settingsRepository.setSafeBootStatus(status)
-    }
-
-    override suspend fun getSafeBootStatus(): Boolean {
-        return settingsRepository.getSafeBootStatus()
-    }
-
-    override suspend fun setSwitchUserRestriction(status: Boolean) {
-        settingsRepository.setSwitchUserRestriction(status)
-    }
-
-    override suspend fun getSwitchUserRestriction(): Boolean {
-        return settingsRepository.getSwitchUserRestriction()
-    }
-
-    override suspend fun getUserSwitcherStatus(): Boolean {
-        return settingsRepository.getUserSwitcherStatus()
-    }
-
-    override suspend fun setUserSwitcherStatus(status: Boolean) {
-        settingsRepository.setUserSwitcherStatus(status)
-    }
-
-    override suspend fun getMultiuserUIStatus(): Boolean {
-        return settingsRepository.getMultiuserUIStatus()
     }
 
     override suspend fun updateLatency(latency: Int) {

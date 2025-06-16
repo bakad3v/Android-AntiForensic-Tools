@@ -7,14 +7,9 @@ import com.sonozaki.encrypteddatastore.BaseSerializer
 import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
-import com.sonozaki.resources.IO_DISPATCHER
-import com.sonozaki.superuser.superuser.SuperUserManager
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
-import javax.inject.Named
 
 /**
  * Repository for changing app settings
@@ -22,9 +17,7 @@ import javax.inject.Named
 class SettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
     settingsSerializer: BaseSerializer<Settings>,
-    settingsMigrationV1: SettingsMigrationV1,
-    @Named(IO_DISPATCHER) private val coroutineDispatcher: CoroutineDispatcher,
-    private val superUserManager: SuperUserManager
+    settingsMigrationV1: SettingsMigrationV1
 ) : SettingsRepository {
 
     private val Context.settingsDatastore by encryptedDataStore(
@@ -149,57 +142,6 @@ class SettingsRepositoryImpl @Inject constructor(
         context.settingsDatastore.updateData {
             it.copy(clearItself = new)
         }
-    }
-
-    override suspend fun setUserLimit(limit: Int) {
-        withContext(coroutineDispatcher) {
-            superUserManager.getSuperUser().setUsersLimit(limit)
-        }
-    }
-
-
-    override suspend fun setMultiuserUIStatus(status: Boolean) {
-        withContext(coroutineDispatcher) {
-            superUserManager.getSuperUser().setMultiuserUI(status)
-        }
-    }
-
-    override suspend fun getMultiuserUIStatus(): Boolean = withContext(coroutineDispatcher) {
-        superUserManager.getSuperUser().getMultiuserUIStatus()
-    }
-
-    override suspend fun setUserSwitcherStatus (status: Boolean) {
-        withContext(coroutineDispatcher) {
-            superUserManager.getSuperUser().setUserSwitcherStatus(status)
-        }
-    }
-
-    override suspend fun getUserSwitcherStatus(): Boolean = withContext(coroutineDispatcher) {
-        superUserManager.getSuperUser().getUserSwitcherStatus()
-    }
-
-    override suspend fun getSwitchUserRestriction(): Boolean = withContext(coroutineDispatcher) {
-        superUserManager.getSuperUser().getSwitchUserRestriction()
-    }
-
-    override suspend fun setSwitchUserRestriction(status: Boolean) {
-        withContext(coroutineDispatcher) {
-            superUserManager.getSuperUser().setSwitchUserRestriction(status)
-        }
-    }
-
-    override suspend fun getUserLimit(): Int? = withContext(coroutineDispatcher) {
-        superUserManager.getSuperUser().getUserLimit()
-    }
-
-    override suspend fun setSafeBootStatus(status: Boolean) {
-        withContext(coroutineDispatcher) {
-            superUserManager.getSuperUser().setSafeBootStatus(status)
-        }
-    }
-
-    override suspend fun getSafeBootStatus(): Boolean = withContext(coroutineDispatcher) {
-        superUserManager.getSuperUser().getSafeBootStatus()
     }
 
     override suspend fun setRunOnDuressPassword(status: Boolean) {
