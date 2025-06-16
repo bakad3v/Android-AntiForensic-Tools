@@ -3,7 +3,6 @@ package com.sonozaki.superuser.owner
 import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.app.admin.DevicePolicyManager
-import android.app.admin.IDevicePolicyManager
 import android.content.BroadcastReceiver
 import android.content.ComponentName
 import android.content.Context
@@ -75,16 +74,17 @@ class Owner @Inject constructor(
             Dhizuku.getOwnerComponent().packageName,
             Context.CONTEXT_IGNORE_SECURITY
         )
+        DevicePolicyManager.DELEGATION_BLOCK_UNINSTALL
         val manager =
             dhizukuContext.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-        val field = manager.javaClass.getDeclaredField("mService")
-        field.isAccessible = true
-        val oldInterface = field[manager] as IDevicePolicyManager
-        if (oldInterface is DhizukuBinderWrapper) return manager
-        val oldBinder = oldInterface.asBinder()
-        val newBinder = binderWrapper(oldBinder)
-        val newInterface = IDevicePolicyManager.Stub.asInterface(newBinder)
-        field[manager] = newInterface
+//        val field = manager.javaClass.getDeclaredField("mService")
+//        field.isAccessible = true
+//        val oldInterface = field[manager] as IDevicePolicyManager
+//        if (oldInterface is DhizukuBinderWrapper) return manager
+//        val oldBinder = oldInterface.asBinder()
+//        val newBinder = binderWrapper(oldBinder)
+//        val newInterface = IDevicePolicyManager.Stub.asInterface(newBinder)
+//        field[manager] = newInterface
         return manager
     }
 

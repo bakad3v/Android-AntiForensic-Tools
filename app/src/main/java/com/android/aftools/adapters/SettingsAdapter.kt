@@ -188,7 +188,7 @@ class SettingsAdapter @Inject constructor(
     }
 
     override suspend fun setVolumeButtonAllowedClicks(clicks: Int) {
-        buttonSettingsRepository.updateAllowedClicks(clicks)
+        buttonSettingsRepository.updateAllowedVolumeButtonClicks(clicks)
     }
 
     override suspend fun changeRebootDelay(delay: Int) {

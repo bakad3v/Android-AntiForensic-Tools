@@ -9,7 +9,6 @@ import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.UserManager
-import android.util.Log
 import android.view.KeyEvent
 import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.KEYCODE_VOLUME_DOWN
@@ -17,6 +16,7 @@ import android.view.KeyEvent.KEYCODE_VOLUME_UP
 import android.view.accessibility.AccessibilityEvent
 import com.sonozaki.entities.ButtonClicked
 import com.sonozaki.entities.MultiuserUIProtection
+import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.superuser.superuser.SuperUser
@@ -26,6 +26,7 @@ import com.sonozaki.triggerreceivers.R
 import com.sonozaki.triggerreceivers.services.domain.router.ActivitiesLauncher
 import com.sonozaki.triggerreceivers.services.domain.usecases.ButtonClickUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.CheckPasswordUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.GetButtonSettingsUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetButtonsRootDataUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetDeviceProtectionSettings
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetLogsEnabledUseCase
@@ -80,6 +81,9 @@ class TriggerReceiverService : AccessibilityService() {
     lateinit var getUsbSettingsUseCase: GetUsbSettingsUseCase
 
     @Inject
+    lateinit var getButtonSettingsUseCase: GetButtonSettingsUseCase
+
+    @Inject
     @Named(IO_DISPATCHER)
     lateinit var dispatcher: CoroutineDispatcher
 
@@ -109,7 +113,6 @@ class TriggerReceiverService : AccessibilityService() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.w("powerButtonClicks", "create")
         coroutineScope.launch(dispatcher) {
             var cancelCallback: (() -> Unit)? = null
             getButtonsRootDataUseCase().collect {
@@ -120,7 +123,6 @@ class TriggerReceiverService : AccessibilityService() {
                 }
             }
         }
-        Log.w("powerButtonClicks", "skip")
         coroutineScope.launch(dispatcher) {
             if (!getPasswordStatusUseCase()) {
                 //app will not set service status to true if it's data has been reset.
@@ -192,8 +194,8 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     private suspend fun handleScreenStateChanged(action: String) {
-        val root = getPermissionsUseCase().isRoot
-        if (!root && buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
+        val deprecatedButton = getButtonSettingsUseCase().triggerOnButton == PowerButtonTriggerOptions.DEPRECATED_WAY
+        if (deprecatedButton && buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
             runActions()
         }
         if (action == Intent.ACTION_SCREEN_OFF) {

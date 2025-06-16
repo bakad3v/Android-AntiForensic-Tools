@@ -4,7 +4,6 @@ import android.content.ComponentName
 import android.content.Context
 import android.os.Build
 import android.os.UserManager
-import android.util.Log
 import com.anggrayudi.storage.extension.toBoolean
 import com.anggrayudi.storage.extension.toInt
 import com.sonozaki.entities.ProfileDomain
@@ -104,7 +103,6 @@ class Root @Inject constructor(
 
     override fun getPowerButtonClicks(callback: (Boolean) -> Unit): () -> Unit {
         return executeRootCommandParallelly("getevent -lq") {
-            Log.w("powerButtonClicks", it)
             callback(it.contains("KEY_POWER") && it.trimEnd().endsWith("DOWN"))
         }
     }

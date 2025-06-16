@@ -1,5 +1,6 @@
 package com.sonozaki.triggerreceivers.services.domain.usecases
 
+import android.util.Log
 import com.sonozaki.entities.ButtonClicked
 import com.sonozaki.entities.ButtonSelected
 import com.sonozaki.entities.ButtonSettings
@@ -45,24 +46,29 @@ class ButtonClickUseCase @Inject constructor(private val buttonSettingsRepositor
         val timestamp = System.currentTimeMillis()
         with(buttonSettingsRepository) {
             val buttonClicksData = getButtonClicksData(buttonSelected)
+            Log.w("buttonClicks",buttonClicksData.toString())
             //if no clicks were performed previously, start counting clicks and return
             if (buttonClicksData.clicksInRow == 0) {
                 setClicksInRow(1, buttonSelected)
+                Log.w("buttonClicks2",buttonClicksData.toString())
                 setLastTimestamp(timestamp, buttonSelected)
                 return false
             }
             val latency = getLatency(buttonSettings, buttonSelected)
             if (timestamp - buttonClicksData.lastTimestamp <= latency) {
                 setClicksInRow(buttonClicksData.clicksInRow + 1, buttonSelected)
+                Log.w("buttonClicks3",buttonClicksData.toString())
                 setLastTimestamp(timestamp, buttonSelected)
             } else { //if delay between last clicks and this click is smaller than latency, update number of clicks and return
                 setClicksInRow(1, buttonSelected)
+                Log.w("buttonClicks4",buttonClicksData.toString())
                 setLastTimestamp(timestamp, buttonSelected)
                 return false
             }  //else allow for deletion and start counting clicks again
             val allowedClicks = getAllowedClicks(buttonSettings, buttonSelected)
             if (buttonClicksData.clicksInRow + 1 == allowedClicks) {
                 setClicksInRow(0, buttonSelected)
+                Log.w("buttonClicks5",buttonClicksData.toString())
                 return true
             }
             return false
@@ -97,9 +103,12 @@ class ButtonClickUseCase @Inject constructor(private val buttonSettingsRepositor
     }
 
     suspend operator fun invoke(buttonClicked: ButtonClicked): Boolean {
+        Log.w("buttonClicks",buttonClicked.toString())
         mutex.withLock {
             val buttonSettings = buttonSettingsRepository.getButtonSettings()
+            Log.w("buttonClicks",buttonSettings.toString())
             val buttonSelected = getButtonSelected(buttonSettings, buttonClicked)
+            Log.w("buttonClicks", buttonSelected.toString())
             //if no correct button was clicked return
             if (buttonSelected == null) {
                 return false

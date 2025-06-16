@@ -13,17 +13,20 @@ import com.sonozaki.logs.domain.usecases.GetLogsUseCase
 import com.sonozaki.logs.domain.usecases.LookLogsForDayUseCase
 import com.sonozaki.logs.presentation.actions.LogsActions
 import com.sonozaki.logs.presentation.state.LogsDataState
+import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.utils.DateValidatorAllowed
 import com.sonozaki.utils.TopLevelFunctions.formatDate
 import com.sonozaki.utils.TopLevelFunctions.getMillis
 import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -33,6 +36,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import javax.inject.Inject
+import javax.inject.Named
 
 @HiltViewModel
 class LogsVM @Inject constructor(
@@ -44,7 +48,8 @@ class LogsVM @Inject constructor(
   private val updateStatesFlow: MutableSharedFlow<LogsDataState>,
   private val logsActionsChannel: Channel<LogsActions>,
   private val changeLogsEnabledUseCase: ChangeLogsEnabledUseCase,
-  private val getAvailableDaysUseCase: GetAvailableDaysUseCase
+  private val getAvailableDaysUseCase: GetAvailableDaysUseCase,
+  @Named(IO_DISPATCHER) private val ioDispatcher: CoroutineDispatcher
 ) : ViewModel() {
   val logsActionFlow = logsActionsChannel.receiveAsFlow()
 
@@ -54,7 +59,7 @@ class LogsVM @Inject constructor(
   )
 
   val logsState: StateFlow<LogsDataState> =
-    getLogsUseCase().map {
+    getLogsUseCase().flowOn(ioDispatcher).map {
       LogsDataState.ViewLogs(
         it.today,
         UIText.ColoredHTMLText(it.logs, com.google.android.material.R.attr.colorPrimary, com.google.android.material.R.attr.colorOnBackground)

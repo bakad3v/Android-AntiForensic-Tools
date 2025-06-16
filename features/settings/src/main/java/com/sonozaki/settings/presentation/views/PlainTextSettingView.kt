@@ -2,11 +2,11 @@ package com.sonozaki.settings.presentation.views
 
 import android.content.Context
 import android.util.AttributeSet
-import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.SettingsDigitItemBinding
 
-class PlainTextSettingView : LinearLayout {
+class PlainTextSettingView : ConstraintLayout {
     constructor(context: Context) : super(context)
     constructor(context: Context, attrs: AttributeSet?) :
             super(context, attrs) {
