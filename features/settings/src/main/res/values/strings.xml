@@ -183,4 +183,11 @@
     <string name="enable_developer_settings">Enable developer settings</string>
     <string name="disable_developer_settings_long">Developer seetings are enabled, do you want to hide them?</string>
     <string name="enable_developer_settings_long">Developer settings are hidden, do you want to unhide them?</string>
+    <string name="bruteforce_prevention_settings">Bruteforce prevention settings</string>
+    <string name="buttons_settings">Buttons settings</string>
+    <string name="data_destruction_settings">Data destruction settings</string>
+    <string name="questionable_settings">Questionable settings</string>
+    <string name="permanent_settings_long">These settings will change the state of your sevice permanently and persist even after app uninstallation. This means that an attacker can detect that these settings have been changed and start suspecting that you used Android AntiForensic Tools to change them. Therefore, for all settings in this section, except legacy and questionable, there are instructions on how to reproduce the same settings manually. It is recommended that you memorise them and tell them to an attacker if they question you.</string>
+    <string name="permissions_setting">Permissions settings</string>
+    <string name="permanent_settings">Permanent settings</string>
 </resources>

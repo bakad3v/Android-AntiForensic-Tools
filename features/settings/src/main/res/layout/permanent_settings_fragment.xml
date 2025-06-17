@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/permanent_settings_long">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/logd_settings"
+            android:textStyle="bold">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_logs_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/set_logs_status"
+            app:requirementsText="@string/root_only">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_developer_settings_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/set_developer_settings_status"
+            app:requirementsText="@string/root_only">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/setup_logs_manually"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/setup_logs_manually">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/safeboot_settings"
+            android:textStyle="bold">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_safe_boot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/safe_boot_status"
+            app:requirementsText="@string/root_and_owner">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/multiuser_settings"
+            android:textStyle="bold">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <LinearLayout
+            android:id="@+id/users_limit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_normal">
+
+            <com.google.android.material.textview.MaterialTextView
+                style="?attr/textAppearanceTitleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/margin_normal"
+                android:paddingTop="@dimen/margin_normal"
+                android:paddingRight="@dimen/margin_normal"
+                android:text="@string/users_limit">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <com.google.android.material.textview.MaterialTextView
+                style="?attr/textAppearanceLabelLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:paddingStart="@dimen/margin_normal"
+                android:text="@string/root_only">
+
+            </com.google.android.material.textview.MaterialTextView>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/questionable_settings"
+            android:textStyle="bold">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/move_to_bfu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/move_to_bfu"
+            app:requirementsText="@string/root_and_owner_accessibility">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/move_to_bfu_delay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/moving_to_bfu_delay">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/legacy_settings"
+            android:textStyle="bold">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/logd_on_start_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/logd_on_start"
+            app:requirementsText="@string/root_only">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/logd_on_boot_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/logd_on_boot"
+            app:requirementsText="@string/root_only">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+    </LinearLayout>
+</ScrollView>

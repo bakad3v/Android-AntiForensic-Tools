@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<navigation android:id="@+id/settingsGraph"
+<navigation xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/settingsGraph"
     app:startDestination="@id/settingsFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
@@ -11,8 +12,44 @@
             app:destination="@id/aboutSettingsFragment"
             app:enterAnim="@anim/from_bottom"
             app:exitAnim="@anim/fade_anim" />
+        <action
+            android:id="@+id/action_settingsFragment_to_dataDestructionSettingsFragment"
+            app:destination="@id/dataDestructionSettingsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_multiuserSettingsFragment"
+            app:destination="@id/multiuserSettingsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_permanentSettingsFragment"
+            app:destination="@id/permanentSettingsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_permissionSettingsFragment"
+            app:destination="@id/permissionSettingsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_triggerSettingsFragment"
+            app:destination="@id/triggerSettingsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_UISettingsFragment"
+            app:destination="@id/UISettingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutSettingsFragment"
         android:name="com.sonozaki.settings.presentation.fragments.AboutSettingsFragment" />
+    <fragment
+        android:id="@+id/dataDestructionSettingsFragment"
+        android:name="com.sonozaki.settings.presentation.fragments.DataDestructionSettingsFragment" />
+    <fragment
+        android:id="@+id/multiuserSettingsFragment"
+        android:name="com.sonozaki.settings.presentation.fragments.MultiuserSettingsFragment" />
+    <fragment
+        android:id="@+id/permanentSettingsFragment"
+        android:name="com.sonozaki.settings.presentation.fragments.PermanentSettingsFragment" />
+    <fragment
+        android:id="@+id/permissionSettingsFragment"
+        android:name="com.sonozaki.settings.presentation.fragments.PermissionSettingsFragment" />
+    <fragment
+        android:id="@+id/triggerSettingsFragment"
+        android:name="com.sonozaki.settings.presentation.fragments.TriggerSettingsFragment" />
+    <fragment
+        android:id="@+id/UISettingsFragment"
+        android:name="com.sonozaki.settings.presentation.fragments.UISettingsFragment" />
 </navigation>

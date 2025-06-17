@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/run_on_password_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/run_on_password"
+            app:requirementsText="@string/accessibility_service_required">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
+            android:id="@+id/usb_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/when_usb_connected"
+            app:requirementsText="@string/accessibility_service_required">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/bruteforce_prevention_settings"
+            android:textStyle="bold">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/bruteforce_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/prevent_bruteforce"
+            app:requirementsText="@string/admin_required">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/allowed_attempts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/allowed_attempts">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/buttons_settings"
+            android:textStyle="bold">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
+            android:id="@+id/power_button_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/destroy_on_button"
+            app:requirementsText="@string/accessibility_service_required">
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/clicks_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/clicks_number">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/latency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/latency_text">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/root_latency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/root_latency_text">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
+            android:id="@+id/volume_button_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/destroy_on_volume_button"
+            app:requirementsText="@string/accessibility_service_required">
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/clicks_number_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/clicks_number_volume">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/latency_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/latency_volume_text">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+    </LinearLayout>
+</ScrollView>

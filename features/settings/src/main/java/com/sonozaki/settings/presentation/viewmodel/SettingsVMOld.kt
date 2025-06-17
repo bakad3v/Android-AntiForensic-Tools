@@ -81,7 +81,7 @@ import okhttp3.ResponseBody
 import javax.inject.Inject
 
 @HiltViewModel
-class SettingsVM @Inject constructor(
+class SettingsVMOld @Inject constructor(
     getSettingsUseCase: GetSettingsUseCase,
     private val setThemeUseCase: SetThemeUseCase,
     private val settingsActionChannel: Channel<SettingsAction>,

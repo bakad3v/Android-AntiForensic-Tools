@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/run_trim_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/run_trim"
+            app:requirementsText="@string/root_only">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/wipe_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/wipe_data"
+            app:requirementsText="@string/all_superusers">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/remove_itself_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/remove_itself"
+            app:requirementsText="@string/root_recommended">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/hide_app_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/hide_app"
+            app:requirementsText="@string/root_or_dhizuku_api">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/clear_itself_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/clear_itself"
+            app:requirementsText="@string/root_and_owner">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/clear_data_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/clear_data">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/dangerous_settings"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/destroy_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/destroy_data"
+            app:settingsTextColor="?attr/colorError">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+    </LinearLayout>
+</ScrollView>

@@ -1,0 +1,540 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/test_only_update_alert"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/margin_normal"
+            android:layout_marginVertical="@dimen/margin_normal"
+            app:cardBackgroundColor="?attr/colorErrorContainer"
+            android:visibility="gone"
+            tools:visibility="visible">
+            <LinearLayout
+                android:paddingStart="@dimen/margin_normal"
+                android:paddingTop="@dimen/margin_normal"
+                android:paddingEnd="@dimen/margin_normal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?attr/textAppearanceTitleLarge"
+                android:text="@string/please_install_testonly_version"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?attr/textAppearanceBodyLarge"
+                android:text="@string/install_testonly_version_long"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/install_testonly_update"
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnErrorContainer"
+                    android:text="@string/install"/>
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.Material3.Button.TextButton"
+                    android:id="@+id/ignore_testonly_update"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorOnErrorContainer"
+                    android:text="@string/ignore_update"/>
+            </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/ui_settings"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
+            android:id="@+id/theme_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/theme">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/allow_screenshots"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/allow_screenshots">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/actions_settings"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/run_trim_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/run_trim"
+            app:requirementsText="@string/root_only">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/wipe_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/wipe_data"
+            app:requirementsText="@string/all_superusers">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/remove_itself_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/remove_itself"
+            app:requirementsText="@string/root_recommended">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/hide_app_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/hide_app"
+            app:requirementsText="@string/root_or_dhizuku_api">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/clear_itself_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/clear_itself"
+            app:requirementsText="@string/root_and_owner">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/clear_data_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/clear_data">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/permissions"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/admin_rights_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/admin_rights">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/root_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/root">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/dhizuku_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/device_owner">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/accessibility_service_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/accessibility_service">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/triggers_settings"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/run_on_password_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/run_on_password"
+            app:requirementsText="@string/accessibility_service_required">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
+            android:id="@+id/usb_menu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/when_usb_connected"
+            app:requirementsText="@string/accessibility_service_required">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/bruteforce_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/prevent_bruteforce"
+            app:requirementsText="@string/admin_required">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/allowed_attempts"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/allowed_attempts">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
+            android:id="@+id/power_button_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/destroy_on_button"
+            app:requirementsText="@string/accessibility_service_required">
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/clicks_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/clicks_number">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/latency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/latency_text">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/root_latency"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/root_latency_text">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
+            android:id="@+id/volume_button_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/destroy_on_volume_button"
+            app:requirementsText="@string/accessibility_service_required">
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/clicks_number_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/clicks_number_volume">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/latency_volume"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/latency_volume_text">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/logd_settings"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_logs_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/set_logs_status"
+            app:requirementsText="@string/root_only">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_developer_settings_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/set_developer_settings_status"
+            app:requirementsText="@string/root_only">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/setup_logs_manually"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/setup_logs_manually">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/multiuser_settings"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_multiuser_ui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/multiuser_ui"
+            app:requirementsText="@string/root_only">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_user_switcher_ui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/switch_user_ui"
+            app:requirementsText="@string/root_only_android10">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/switch_user_permission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/switch_user_permission"
+            app:requirementsText="@string/root_and_owner_android9">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
+            android:id="@+id/disable_multiuser_ui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/disable_multiuser_ui_automatically"
+            app:requirementsText="@string/root_and_owner_android9_acessibility">
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
+
+        <LinearLayout
+            android:id="@+id/users_limit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/margin_normal">
+
+            <com.google.android.material.textview.MaterialTextView
+                style="?attr/textAppearanceTitleLarge"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="@dimen/margin_normal"
+                android:paddingTop="@dimen/margin_normal"
+                android:paddingRight="@dimen/margin_normal"
+                android:text="@string/users_limit">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <com.google.android.material.textview.MaterialTextView
+                style="?attr/textAppearanceLabelLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:paddingStart="@dimen/margin_normal"
+                android:text="@string/root_only">
+
+            </com.google.android.material.textview.MaterialTextView>
+        </LinearLayout>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/device_protection"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_safe_boot"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/safe_boot_status"
+            app:requirementsText="@string/root_and_owner">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/move_to_bfu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/move_to_bfu"
+            app:requirementsText="@string/root_and_owner_accessibility">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/move_to_bfu_delay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/moving_to_bfu_delay">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/legacy_settings"
+            android:textStyle="bold">
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/logd_on_start_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/logd_on_start"
+            app:requirementsText="@string/root_only">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/logd_on_boot_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/logd_on_boot"
+            app:requirementsText="@string/root_only">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+
+
+        <com.google.android.material.divider.MaterialDivider
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+        </com.google.android.material.divider.MaterialDivider>
+
+        <com.google.android.material.textview.MaterialTextView
+            style="?attr/textAppearanceSubtitle1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="@dimen/margin_normal"
+            android:paddingTop="@dimen/margin_normal"
+            android:paddingEnd="@dimen/margin_normal"
+            android:text="@string/dangerous_settings"
+            android:textStyle="bold">
+
+        </com.google.android.material.textview.MaterialTextView>
+
+        <com.sonozaki.settings.presentation.views.PlainTextSettingView
+            android:id="@+id/destroy_data"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:settingsItemText="@string/destroy_data"
+            app:settingsTextColor="?attr/colorError">
+        </com.sonozaki.settings.presentation.views.PlainTextSettingView>
+    </LinearLayout>
+</ScrollView>
