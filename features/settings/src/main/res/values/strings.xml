@@ -53,8 +53,8 @@
     <string name="multiuser_ui_locked">Multiuser UI locked</string>
     <string name="multiuser_ui_status_change_failed">Chaging multiuser UI status failed</string>
     <string name="error_while_loading_data">Data loading failed</string>
-    <string name="enable_safe_boot_long">Safe boot is disabled. Do you really want to enable safe boot? Adversary may use safe boot to circumvent device protection offered by the app. However, disabling safe boot may raise suspicions. Try to make Android AntiForensic Tools a system app instead of manipulating safe boot settings.</string>
-    <string name="disable_safe_boot_long">Safe boot is enabled. Do you really want to disable safe boot? Adversary may use safe boot to circumvent device protection offered by the app. However, disabling safe boot may raise suspicions. Try to make Android AntiForensic Tools a system app instead of manipulating safe boot settings.</string>
+    <string name="enable_safe_boot_long">Safe boot is disabled. Do you really want to enable safe boot? Adversary may use safe boot to circumvent device protection offered by the app.</string>
+    <string name="disable_safe_boot_long">Safe boot is enabled. Do you really want to disable safe boot? Adversary may use safe boot to circumvent device protection offered by the app.</string>
     <string name="enable_safe_boot">Enable safe boot</string>
     <string name="disable_safe_boot">Disable safe boot</string>
     <string name="disable_multiuser_ui">Disable multiuser UI</string>

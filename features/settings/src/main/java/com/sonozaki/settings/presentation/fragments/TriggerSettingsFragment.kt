@@ -55,7 +55,6 @@ class TriggerSettingsFragment: AbstractSettingsFragment() {
         setupPowerButtonMenu()
         setupVolumeButtonMenu()
         listenDialogResults()
-        setupDialogs()
         setupButtonsAndSwitches()
     }
 

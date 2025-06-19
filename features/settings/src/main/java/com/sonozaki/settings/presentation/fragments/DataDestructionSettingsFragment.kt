@@ -46,7 +46,6 @@ class DataDestructionSettingsFragment: AbstractSettingsFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupActivity(R.string.data_destruction_settings)
         listenDialogResults()
-        setupDialogs()
         setupButtonsAndSwitches()
     }
 

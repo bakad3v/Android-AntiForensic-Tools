@@ -1,5 +1,7 @@
 package com.sonozaki.settings.presentation.fragments
 
+import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.Fragment
 import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.activitystate.ActivityStateHolder
@@ -16,6 +18,11 @@ abstract class AbstractSettingsFragment: Fragment() {
             parentFragmentManager,
             context
         )
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setupDialogs()
     }
 
     protected fun setupActivity(stringId: Int) {

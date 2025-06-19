@@ -38,7 +38,6 @@ class UISettingsFragment: AbstractSettingsFragment() {
         setupActivity(R.string.ui_settings)
         setupThemesMenu()
         listenDialogResults()
-        setupDialogs()
         setupButtonsAndSwitches()
     }
 

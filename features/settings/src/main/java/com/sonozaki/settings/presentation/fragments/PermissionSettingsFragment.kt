@@ -39,7 +39,6 @@ class PermissionSettingsFragment: AbstractSettingsFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupActivity(R.string.permissions_setting)
         listenDialogResults()
-        setupDialogs()
         setupButtonsAndSwitches()
     }
 
