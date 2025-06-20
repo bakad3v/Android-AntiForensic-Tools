@@ -32,6 +32,11 @@ class SettingsItemView: ConstraintLayout {
         _binding = SettingsItemBinding.bind(root)
     }
 
+    override fun setOnClickListener(l: OnClickListener?) {
+        super.setOnClickListener(l)
+        binding.icon.setOnClickListener(l)
+    }
+
     private fun readAttrs(attrs: AttributeSet?, defStyleAttr: Int) {
         context.theme.obtainStyledAttributes(
             attrs,
