@@ -87,7 +87,12 @@
             app:requirementsText="@string/root_and_owner">
 
         </com.sonozaki.settings.presentation.views.SettingsItemImageView>
-
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/setup_safe_boot_manually"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/setup_safe_boot_manually">
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -133,7 +138,12 @@
 
             </com.google.android.material.textview.MaterialTextView>
         </LinearLayout>
-
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/setup_user_number_manually"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/setup_users_number_manually">
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
         <com.google.android.material.divider.MaterialDivider
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

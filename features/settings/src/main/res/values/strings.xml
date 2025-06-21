@@ -54,7 +54,7 @@
     <string name="multiuser_ui_status_change_failed">Chaging multiuser UI status failed</string>
     <string name="error_while_loading_data">Data loading failed</string>
     <string name="enable_safe_boot_long">Safe boot is disabled. Do you really want to enable safe boot? Adversary may use safe boot to circumvent device protection offered by the app.</string>
-    <string name="disable_safe_boot_long">Safe boot is enabled. Do you really want to disable safe boot? Adversary may use safe boot to circumvent device protection offered by the app.</string>
+    <string name="disable_safe_boot_long">Safe boot is enabled. Do you really want to disable safe boot? Adversary may use safe boot to circumvent device protection offered by the app. Please use root or ADB for safe boot disabling instead of Dhizuku.</string>
     <string name="enable_safe_boot">Enable safe boot</string>
     <string name="disable_safe_boot">Disable safe boot</string>
     <string name="disable_multiuser_ui">Disable multiuser UI</string>
@@ -187,7 +187,15 @@
     <string name="buttons_settings">Buttons settings</string>
     <string name="data_destruction_settings">Data destruction settings</string>
     <string name="questionable_settings">Questionable settings</string>
-    <string name="permanent_settings_long">These settings will change the state of your sevice permanently and persist even after app uninstallation. This means that an attacker can detect that these settings have been changed and start suspecting that you used Android AntiForensic Tools to change them. Therefore, for all settings in this section, except legacy and questionable, there are instructions on how to reproduce the same settings manually. It is recommended that you memorise them and tell them to an attacker if they question you.</string>
+    <string name="permanent_settings_long">These settings will change the state of your device permanently and persist even after app uninstallation. This means that an attacker can detect that these settings have been changed and start suspecting that you used Android AntiForensic Tools to change them. Therefore, for all settings in this section, except legacy and questionable, there are instructions on how to reproduce the same settings manually. It is recommended that you memorise them and tell them to an attacker if they question you.</string>
     <string name="permissions_setting">Permissions settings</string>
     <string name="permanent_settings">Permanent settings</string>
+    <string name="how_to_disable_logs">How to disable logs</string>
+    <string name="how_to_disable_logs_long"><![CDATA[<div><pre>&bull; Enable developer settings following <a href="https://developer.android.com/studio/debug/dev-options">this instruction</a></pre></div><div><pre>&bull; Open developer settings</pre></div><div><pre>&bull; Find "Logger buffer sizes" option. Set it to "off".</pre></div><div><pre>&bull; Find "Store logger data persistently on device" option. Set it to "off".</pre></div>]]></string>
+    <string name="how_to_disable_safe_boot_long"><![CDATA[<p>Please use root or ADB for safe boot disabling instead of Dhizuku.</p><p>&bull; Download&nbsp;<a href="https://developer.android.com/tools/releases/platform-tools" rel="nofollow">SDK Platform tools</a>&nbsp;on your PC</p><p>&bull; Unzip the archive</p><p>&bull; On your mobile device,&nbsp;<a href="https://developer.android.com/studio/debug/dev-options" rel="nofollow">unlock developer settings</a></p><p>&bull; Open the developer settings and allow debugging via USB</p><p>&bull; Connect devices and allow USB debugging for your PC</p><p>&bull; Open the command prompt and enter the command &lt;path to platform-tools folder&gt;/adb[.exe]&nbsp;shell settings put global safe_boot_disallowed 1.<br /></p>]]></string>
+    <string name="how_to_disable_safe_boot">How to disable safe boot</string>
+    <string name="setup_safe_boot_manually">Setup safe boot manually</string>
+    <string name="setup_users_number_manually">Setup users limit manually</string>
+    <string name="how_to_change_users_limit">How to change users limit</string>
+    <string name="how_to_change_users_limit_long"><![CDATA[<p>&bull; Get root rights</p><p>&bull; Download terminal emulator, for example <a href="https://f-droid.org/packages/com.termux/">Termux</a>.</p><p>&bull; Open emulator and enter command "su"</p><p>&bull; Then enter command "setprop fw.max_users &lt;number of users&gt;".</p><p></p>]]></string>
 </resources>

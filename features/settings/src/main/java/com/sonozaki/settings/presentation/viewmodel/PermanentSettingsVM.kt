@@ -290,6 +290,27 @@ class PermanentSettingsVM @Inject constructor(
         }
     }
 
+    fun showSetupLogsManuallyInfo() {
+        showInfoDialog(
+            UIText.StringResource(R.string.how_to_disable_logs),
+            UIText.StringResource(R.string.how_to_disable_logs_long)
+        )
+    }
+
+    fun showSetupSafeBootManuallyInfo() {
+        showInfoDialog(
+            UIText.StringResource(R.string.how_to_disable_safe_boot),
+            UIText.StringResource(R.string.how_to_disable_safe_boot_long)
+        )
+    }
+
+    fun showSetupUsersNumberManuallyInfo() {
+        showInfoDialog(
+            UIText.StringResource(R.string.how_to_change_users_limit),
+            UIText.StringResource(R.string.how_to_change_users_limit_long)
+        )
+    }
+
     fun setUserLimit(limit: Int) {
         viewModelScope.launch {
             try {

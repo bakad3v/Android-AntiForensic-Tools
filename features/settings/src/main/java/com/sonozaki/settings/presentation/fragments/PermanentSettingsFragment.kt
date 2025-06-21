@@ -205,7 +205,13 @@ class PermanentSettingsFragment: AbstractSettingsFragment() {
                 viewModel.changeLogsStatusDialog()
             }
             setupLogsManually.setOnClickListener {
-
+                viewModel.showSetupLogsManuallyInfo()
+            }
+            setupSafeBootManually.setOnClickListener {
+                viewModel.showSetupSafeBootManuallyInfo()
+            }
+            setupUserNumberManually.setOnClickListener {
+                viewModel.showSetupUsersNumberManuallyInfo()
             }
         }
     }
