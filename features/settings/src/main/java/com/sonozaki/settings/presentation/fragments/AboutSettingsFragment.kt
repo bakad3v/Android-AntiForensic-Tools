@@ -1,36 +1,43 @@
 package com.sonozaki.settings.presentation.fragments
 
 import android.os.Bundle
-import android.text.method.LinkMovementMethod
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.activitystate.ActivityStateHolder
-import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.AboutSettingsFragmentBinding
 
 class AboutSettingsFragment: Fragment() {
+
+    private val aboutBinding: AboutSettingsFragmentBinding get() = _aboutBinding?: throw RuntimeException("AboutSettingsFragwentBinding == null")
+    private var _aboutBinding: AboutSettingsFragmentBinding? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val aboutBinding =
+        _aboutBinding =
             AboutSettingsFragmentBinding.inflate(inflater,container,false)
-        aboutBinding.aboutmessage.movementMethod = LinkMovementMethod.getInstance() //enabling links
-        aboutBinding.aboutmessage.text = HtmlCompat.fromHtml(getString(R.string.settings_faq), HtmlCompat.FROM_HTML_MODE_LEGACY)
-        aboutBinding.close.setOnClickListener {
-            parentFragmentManager.popBackStack()
-        }
         return aboutBinding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setMainActivityState()
+        aboutBinding.close.setOnClickListener {
+            parentFragmentManager.popBackStack()
+        }
+        setupWebview()
+    }
+
+    private fun setupWebview() {
+        aboutBinding.helpWebview.apply {
+            settings.javaScriptEnabled = true
+            loadUrl(WIKI_LINK)
+        }
     }
 
     private fun setMainActivityState() {
@@ -38,5 +45,9 @@ class AboutSettingsFragment: Fragment() {
         if (activity is ActivityStateHolder) {
             activity.setActivityState(ActivityState.NoActionBarActivityState)
         }
+    }
+
+    companion object {
+        private const val WIKI_LINK = "https://github.com/bakad3v/Android-AntiForensic-Tools/wiki/Android-AntiForensic-Tools-wiki"
     }
 }
