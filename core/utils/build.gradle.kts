@@ -39,7 +39,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.kotlinx.datetime.jvm)

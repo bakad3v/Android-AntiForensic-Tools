@@ -1,15 +1,15 @@
 [versions]
-appcompatVersion = "1.7.0"
+appcompatVersion = "1.7.1"
 coilVersion = "2.7.0"
 core = "5.0.0"
-coreKtxVersion = "1.15.0"
+coreKtxVersion = "1.16.0"
 coroutinesVersion = "1.9.0"
 daggerVersion = "2.55"
 desugaringVersion = "2.1.5"
 dhizukuVersion = "2.5.3"
 espressoCoreVersion = "3.6.1"
-fragmentKtx = "1.8.6"
-hiddenapibypass = "4.3"
+fragmentKtx = "1.8.8"
+hiddenapibypass = "6.1"
 javaxInject = "1"
 jodaTime = "2.13.1"
 junit = "1.2.1"
@@ -17,10 +17,10 @@ junitVersion = "4.13.2"
 kotlinxCollectionsImmutableVersion = "0.3.8"
 kotlinxDatetimeJvmVersion = "0.4.0"
 leakCanaryVersion = "2.14"
-lifecycleVersion = "2.8.7"
+lifecycleVersion = "2.9.1"
 materialVersion = "1.12.0"
-navigationVersion = "2.8.9"
-securityVersion = "1.1.0-alpha06"
+navigationVersion = "2.9.0"
+securityVersion = "1.1.0-beta01"
 serializeVersion = "1.7.3"
 serialization = "2.1.10"
 storage = "1.5.5"
@@ -31,8 +31,10 @@ jetbrainsKotlinJvm = "2.1.0"
 kapt = "2.1.0"
 dependencyAnalysis = "2.12.0"
 betterDatastore = "1.0.0-alpha"
-workmanager = "2.10.0"
+workmanager = "2.10.1"
 androidxHiltCompiler = "1.2.0"
+retrofitVersion = "3.0.0"
+okioVersion = "3.11.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
@@ -69,6 +71,9 @@ storage = { module = "com.anggrayudi:storage", version.ref = "storage" }
 zxcvbn = { module = "com.nulab-inc:zxcvbn", version.ref = "zxcvbn" }
 workmanager = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workmanager" }
 hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androidxHiltCompiler" }
+retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofitVersion" }
+converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofitVersion"}
+okio = { group = "com.squareup.okio", name = "okio", version.ref = "okioVersion"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

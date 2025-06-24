@@ -27,6 +27,11 @@ class SettingsItemImageView : LinearLayout {
         readAttrs(attrs,defStyleAttr)
     }
 
+    override fun setOnClickListener(l: OnClickListener?) {
+        super.setOnClickListener(l)
+        binding.icon.setOnClickListener(l)
+    }
+
     private var _binding: SettingsImageItemBinding? = null
     private val binding get() = _binding ?: throw RuntimeException("No settings item binding")
 

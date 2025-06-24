@@ -1,6 +1,7 @@
 package com.android.aftools.adapters
 
-import com.sonozaki.entities.ButtonSettings
+import com.bakasoft.appupdater.repository.AppUpdateRepository
+import com.bakasoft.network.RequestResult
 import com.sonozaki.data.settings.repositories.BruteforceRepository
 import com.sonozaki.data.settings.repositories.ButtonSettingsRepository
 import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepository
@@ -8,14 +9,18 @@ import com.sonozaki.data.settings.repositories.PermissionsRepository
 import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.data.settings.repositories.UsbSettingsRepository
 import com.sonozaki.entities.BruteforceSettings
+import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.Permissions
+import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
 import com.sonozaki.entities.UsbSettings
+import com.sonozaki.entities.VolumeButtonTriggerOptions
 import com.sonozaki.settings.domain.repository.SettingsScreenRepository
 import kotlinx.coroutines.flow.Flow
+import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class SettingsAdapter @Inject constructor(
@@ -24,7 +29,8 @@ class SettingsAdapter @Inject constructor(
     private val buttonSettingsRepository: ButtonSettingsRepository,
     private val bruteforceRepository: BruteforceRepository,
     private val permissionsRepository: PermissionsRepository,
-    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository
+    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository,
+    private val appUpdateRepository: AppUpdateRepository
 ): SettingsScreenRepository {
     override val settings: Flow<Settings>
         get() = settingsRepository.settings
@@ -38,6 +44,8 @@ class SettingsAdapter @Inject constructor(
         get() = buttonSettingsRepository.buttonSettings
     override val deviceProtectionSettings: Flow<DeviceProtectionSettings>
         get() = deviceProtectionSettingsRepository.deviceProtectionSettings
+    override val showUpdatePopup: Flow<Boolean>
+        get() = appUpdateRepository.showUpdatePopupStatus
 
     override suspend fun setTheme(theme: Theme) {
         settingsRepository.setTheme(theme)
@@ -111,60 +119,36 @@ class SettingsAdapter @Inject constructor(
         settingsRepository.setClearItself(status)
     }
 
-    override suspend fun setUserLimit(limit: Int) {
-        settingsRepository.setUserLimit(limit)
-    }
-
-    override suspend fun getUserLimit(): Int? {
-        return settingsRepository.getUserLimit()
-    }
-
     override suspend fun setRunOnDuressPassword(status: Boolean) {
        settingsRepository.setRunOnDuressPassword(status)
-    }
-
-    override suspend fun setMultiuserUIStatus(status: Boolean) {
-        settingsRepository.setMultiuserUIStatus(status)
-    }
-
-    override suspend fun setSafeBootStatus(status: Boolean) {
-        settingsRepository.setSafeBootStatus(status)
-    }
-
-    override suspend fun getSafeBootStatus(): Boolean {
-        return settingsRepository.getSafeBootStatus()
-    }
-
-    override suspend fun setSwitchUserRestriction(status: Boolean) {
-        settingsRepository.setSwitchUserRestriction(status)
-    }
-
-    override suspend fun getSwitchUserRestriction(): Boolean {
-        return settingsRepository.getSwitchUserRestriction()
-    }
-
-    override suspend fun getUserSwitcherStatus(): Boolean {
-        return settingsRepository.getUserSwitcherStatus()
-    }
-
-    override suspend fun setUserSwitcherStatus(status: Boolean) {
-        settingsRepository.setUserSwitcherStatus(status)
-    }
-
-    override suspend fun getMultiuserUIStatus(): Boolean {
-        return settingsRepository.getMultiuserUIStatus()
     }
 
     override suspend fun updateLatency(latency: Int) {
         buttonSettingsRepository.updateLatency(latency)
     }
 
+    override suspend fun updateRootLatency(latency: Int) {
+        buttonSettingsRepository.updateRootLatency(latency)
+    }
+
     override suspend fun updateAllowedClicks(allowedClicks: Int) {
         buttonSettingsRepository.updateAllowedClicks(allowedClicks)
     }
 
-    override suspend fun setTriggerOnButtonStatus(status: Boolean) {
+    override suspend fun setTriggerOnButtonStatus(status: PowerButtonTriggerOptions) {
         buttonSettingsRepository.setTriggerOnButtonStatus(status)
+    }
+
+    override suspend fun setTriggerOnVolumeButtonStatus(status: VolumeButtonTriggerOptions) {
+        buttonSettingsRepository.setTriggerOnVolumeButtonStatus(status)
+    }
+
+    override suspend fun setTriggerOnVolumeButtonLatency(latency: Int) {
+        buttonSettingsRepository.updateVolumeLatency(latency)
+    }
+
+    override suspend fun setVolumeButtonAllowedClicks(clicks: Int) {
+        buttonSettingsRepository.updateAllowedVolumeButtonClicks(clicks)
     }
 
     override suspend fun changeRebootDelay(delay: Int) {
@@ -181,5 +165,13 @@ class SettingsAdapter @Inject constructor(
 
     override suspend fun setScreenshotsStatus(status: Boolean) {
         settingsRepository.setScreenshotsStatus(status)
+    }
+
+    override suspend fun disableUpdatePopup() {
+        appUpdateRepository.disableUpdatePopup()
+    }
+
+    override suspend fun downloadUpdate(): RequestResult<ResponseBody> {
+        return appUpdateRepository.downloadUpdate()
     }
 }

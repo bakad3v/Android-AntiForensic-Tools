@@ -1,40 +1,111 @@
 package com.sonozaki.triggerreceivers.services.domain.usecases
 
-import android.util.Log
+import com.sonozaki.entities.ButtonClicked
+import com.sonozaki.entities.ButtonSelected
+import com.sonozaki.entities.ButtonSettings
+import com.sonozaki.entities.PowerButtonTriggerOptions
+import com.sonozaki.entities.VolumeButtonTriggerOptions
 import com.sonozaki.triggerreceivers.services.domain.repository.ReceiversRepository
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 /**
  * Handle power button click
  */
 class ButtonClickUseCase @Inject constructor(private val buttonSettingsRepository: ReceiversRepository) {
-    suspend operator fun invoke(): Boolean {
+
+    private val mutex = Mutex()
+
+    /**
+     * Get latency specified for selected button
+     */
+    private fun getLatency(buttonSettings: ButtonSettings, buttonSelected: ButtonSelected): Int {
+        return when(buttonSelected) {
+            ButtonSelected.VOLUME_BUTTON -> buttonSettings.latencyVolumeButton
+            ButtonSelected.POWER_BUTTON -> when(buttonSettings.triggerOnButton) {
+                PowerButtonTriggerOptions.IGNORE -> -1 //must never occur
+                PowerButtonTriggerOptions.DEPRECATED_WAY -> buttonSettings.latencyUsualMode
+                PowerButtonTriggerOptions.SUPERUSER_WAY -> buttonSettings.latencyRootMode
+            }
+        }
+    }
+
+    /**
+     * Get allowed clicks for selected button
+     */
+    private fun getAllowedClicks(buttonSettings: ButtonSettings, buttonSelected: ButtonSelected): Int {
+        return when(buttonSelected) {
+            ButtonSelected.POWER_BUTTON -> buttonSettings.allowedClicks
+            ButtonSelected.VOLUME_BUTTON -> buttonSettings.volumeButtonAllowedClicks
+        }
+    }
+
+    private suspend fun buttonClick(buttonSettings: ButtonSettings, buttonSelected: ButtonSelected): Boolean {
         val timestamp = System.currentTimeMillis()
         with(buttonSettingsRepository) {
-            val buttonSettings = getButtonSettings()
-            if (!buttonSettings.triggerOnButton) {
-                return false
-            } //continue if data destruction can be activated by power button clicks
-            val buttonClicksData = getButtonClicksData()
+            val buttonClicksData = getButtonClicksData(buttonSelected)
+            //if no clicks were performed previously, start counting clicks and return
             if (buttonClicksData.clicksInRow == 0) {
-                setClicksInRow(1)
-                setLastTimestamp(timestamp)
+                setClicksInRow(1, buttonSelected)
+                setLastTimestamp(timestamp, buttonSelected)
                 return false
             }
-            if (timestamp - buttonClicksData.lastTimestamp <= buttonSettings.latency) {
-                Log.w("screen_state", "clicks ${buttonClicksData.clicksInRow}")
-                setClicksInRow(buttonClicksData.clicksInRow+1)
-                setLastTimestamp(timestamp)
-            } else { //if delay between last clicks and this click is smaller than latency, update number of clicks
-                setClicksInRow(1)
-                setLastTimestamp(timestamp)
+            val latency = getLatency(buttonSettings, buttonSelected)
+            if (timestamp - buttonClicksData.lastTimestamp <= latency) {
+                setClicksInRow(buttonClicksData.clicksInRow + 1, buttonSelected)
+                setLastTimestamp(timestamp, buttonSelected)
+            } else { //if delay between last clicks and this click is smaller than latency, update number of clicks and return
+                setClicksInRow(1, buttonSelected)
+                setLastTimestamp(timestamp, buttonSelected)
                 return false
-            }  //else start counting clicks again
-            if (buttonClicksData.clicksInRow+1 == buttonSettings.allowedClicks) {
-                setClicksInRow(0)
+            }  //else allow for deletion and start counting clicks again
+            val allowedClicks = getAllowedClicks(buttonSettings, buttonSelected)
+            if (buttonClicksData.clicksInRow + 1 == allowedClicks) {
+                setClicksInRow(0, buttonSelected)
                 return true
             }
             return false
+        }
+    }
+
+    private fun isPowerButtonSelected(buttonSettings: ButtonSettings, buttonClicked: ButtonClicked): Boolean {
+        return when (buttonSettings.triggerOnButton) {
+            PowerButtonTriggerOptions.IGNORE -> false
+            PowerButtonTriggerOptions.SUPERUSER_WAY, PowerButtonTriggerOptions.DEPRECATED_WAY -> {
+                buttonClicked == ButtonClicked.POWER_BUTTON
+            }
+        }
+    }
+
+    private fun isVolumeButtonSelected(buttonSettings: ButtonSettings, buttonClicked: ButtonClicked): Boolean {
+        return when (buttonSettings.triggerOnVolumeButton) {
+            VolumeButtonTriggerOptions.IGNORE -> false
+            VolumeButtonTriggerOptions.ON_VOLUME_DOWN -> buttonClicked == ButtonClicked.VOLUME_DOWN
+            VolumeButtonTriggerOptions.ON_VOLUME_UP -> buttonClicked == ButtonClicked.VOLUME_UP
+        }
+    }
+
+    private fun getButtonSelected(buttonSettings: ButtonSettings, buttonClicked: ButtonClicked): ButtonSelected? {
+        if (isVolumeButtonSelected(buttonSettings, buttonClicked)) {
+            return ButtonSelected.VOLUME_BUTTON
+        }
+        if (isPowerButtonSelected(buttonSettings, buttonClicked)) {
+            return ButtonSelected.POWER_BUTTON
+        }
+        return null
+    }
+
+    suspend operator fun invoke(buttonClicked: ButtonClicked): Boolean {
+        mutex.withLock {
+            val buttonSettings = buttonSettingsRepository.getButtonSettings()
+            val buttonSelected = getButtonSelected(buttonSettings, buttonClicked)
+            //if no correct button was clicked return
+            if (buttonSelected == null) {
+                return false
+            }
+            val result = buttonClick(buttonSettings,buttonSelected)
+            return result
         }
     }
 }

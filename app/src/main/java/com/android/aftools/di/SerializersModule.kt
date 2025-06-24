@@ -4,6 +4,7 @@ import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.data.files.entities.FilesList
 import com.sonozaki.data.logs.entities.LogList
 import com.sonozaki.data.profiles.entities.IntList
+import com.sonozaki.data.settings.entities.ButtonSettingsV1
 import com.sonozaki.data.settings.entities.SettingsV1
 import com.sonozaki.data.settings.entities.UsbSettingsV1
 import com.sonozaki.encrypteddatastore.BaseSerializer
@@ -108,4 +109,10 @@ class SerializersModule {
     fun bindUSBV1BaseSerializer(@Named(IO_DISPATCHER) ioDispatcher: CoroutineDispatcher) =
         BaseSerializer<UsbSettingsV1>(ioDispatcher, UsbSettingsV1.serializer(),
             UsbSettingsV1())
+
+    @Provides
+    @Singleton
+    fun bindButtonSettingsV1BaseSerializer(@Named(IO_DISPATCHER) ioDispatcher: CoroutineDispatcher) =
+        BaseSerializer<ButtonSettingsV1>(ioDispatcher, ButtonSettingsV1.serializer(),
+            ButtonSettingsV1())
 }

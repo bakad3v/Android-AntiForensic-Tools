@@ -18,6 +18,7 @@ import com.rosan.dhizuku.api.Dhizuku.binderWrapper
 import com.rosan.dhizuku.api.DhizukuBinderWrapper
 import com.rosan.dhizuku.api.DhizukuRequestPermissionListener
 import com.sonozaki.entities.ProfileDomain
+import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.superuser.R
 import com.sonozaki.superuser.domain.usecases.SetOwnerInactiveUseCase
 import com.sonozaki.superuser.mapper.ProfilesMapper
@@ -26,9 +27,13 @@ import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
 import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import okio.BufferedSource
 import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.util.concurrent.Executors
 import javax.inject.Inject
+import javax.inject.Named
 
 class Owner @Inject constructor(
     @ApplicationContext private val context: Context,
@@ -36,7 +41,8 @@ class Owner @Inject constructor(
     private val setOwnerInactiveUseCase: SetOwnerInactiveUseCase,
     private val appDPM: DevicePolicyManager,
     private val userManager: UserManager,
-    private val deviceAdmin: ComponentName
+    private val deviceAdmin: ComponentName,
+    @Named(IO_DISPATCHER) private val coroutineDispatcher: CoroutineDispatcher
 ) :
     SuperUser {
 
@@ -63,6 +69,7 @@ class Owner @Inject constructor(
             Dhizuku.getOwnerComponent().packageName,
             Context.CONTEXT_IGNORE_SECURITY
         )
+        DevicePolicyManager.DELEGATION_BLOCK_UNINSTALL
         val manager =
             dhizukuContext.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
         val field = manager.javaClass.getDeclaredField("mService")
@@ -98,6 +105,16 @@ class Owner @Inject constructor(
         val newInterface = IPackageInstaller.Stub.asInterface(newBinder)
         field[installer] = newInterface
         return installer
+    }
+
+    private fun getDhizukuContext(): Context {
+        if (!initialized) {
+            initDhizuku()
+        }
+        return context.createPackageContext(
+            Dhizuku.getOwnerComponent().packageName,
+            Context.CONTEXT_IGNORE_SECURITY
+        )
     }
 
     private fun checkAdminApp(packageName: String) {
@@ -165,7 +182,7 @@ class Owner @Inject constructor(
         }
     }
 
-    override suspend fun getProfiles(): List<ProfileDomain> {
+    override suspend fun getProfiles(): List<ProfileDomain> = withContext(coroutineDispatcher) {
         try {
             val userHandles =
                 if (VERSION.SDK_INT >= Build.VERSION_CODES.P) {
@@ -179,21 +196,23 @@ class Owner @Inject constructor(
                         )
                     )
                 }
-            return userHandles.map { profilesMapper.mapUserHandleToProfile(it) }
+            return@withContext userHandles.map { profilesMapper.mapUserHandleToProfile(it) }
         } catch (e: Exception) {
             handleException(e)
         }
     }
 
     override suspend fun removeProfile(id: Int) {
-        try {
-            dpm.removeUser(deviceOwner, profilesMapper.mapIdToUserHandle(id))
-        } catch (e: Exception) {
-            handleException(e)
+        withContext(coroutineDispatcher) {
+            try {
+                dpm.removeUser(deviceOwner, profilesMapper.mapIdToUserHandle(id))
+            } catch (e: Exception) {
+                handleException(e)
+            }
         }
     }
 
-    override suspend fun uninstallApp(packageName: String) {
+    override suspend fun uninstallApp(packageName: String) = withContext(coroutineDispatcher) {
         try {
             checkAdminApp(packageName)
             packageInstaller.uninstall(
@@ -206,11 +225,13 @@ class Owner @Inject constructor(
     }
 
     override suspend fun hideApp(packageName: String) {
-        try {
-            checkAdminApp(packageName)
-            dpm.setApplicationHidden(deviceOwner, packageName, true)
-        } catch (e: Exception) {
-            handleException(e)
+        withContext(coroutineDispatcher) {
+            try {
+                checkAdminApp(packageName)
+                dpm.setApplicationHidden(deviceOwner, packageName, true)
+            } catch (e: Exception) {
+                handleException(e)
+            }
         }
     }
 
@@ -237,7 +258,7 @@ class Owner @Inject constructor(
         }
     }
 
-    override suspend fun setSafeBootStatus(status: Boolean) {
+    override suspend fun setSafeBootStatus(status: Boolean) = withContext(coroutineDispatcher) {
         if (status) {
             dpm.addUserRestriction(deviceOwner, UserManager.DISALLOW_SAFE_BOOT)
         } else {
@@ -245,10 +266,11 @@ class Owner @Inject constructor(
         }
     }
 
-    override suspend fun getSafeBootStatus(): Boolean =
+    override suspend fun getSafeBootStatus(): Boolean = withContext(coroutineDispatcher) {
         dpm.getUserRestrictions(deviceOwner).getBoolean(UserManager.DISALLOW_SAFE_BOOT)
+    }
 
-    override suspend fun setSwitchUserRestriction(status: Boolean) {
+    override suspend fun setSwitchUserRestriction(status: Boolean) = withContext(coroutineDispatcher) {
         if (VERSION.SDK_INT < Build.VERSION_CODES.P)
             throw SuperUserException(
                 ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
@@ -263,7 +285,7 @@ class Owner @Inject constructor(
             dpm.clearUserRestriction(deviceOwner, UserManager.DISALLOW_USER_SWITCH)
     }
 
-    override suspend fun getSwitchUserRestriction(): Boolean {
+    override suspend fun getSwitchUserRestriction(): Boolean = withContext(coroutineDispatcher) {
         if (VERSION.SDK_INT < Build.VERSION_CODES.P)
             throw SuperUserException(
                 ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.P),
@@ -272,7 +294,7 @@ class Owner @Inject constructor(
                     Build.VERSION_CODES.P.toString()
                 )
             )
-        return dpm.getUserRestrictions(deviceOwner).getBoolean(UserManager.DISALLOW_USER_SWITCH)
+        return@withContext dpm.getUserRestrictions(deviceOwner).getBoolean(UserManager.DISALLOW_USER_SWITCH)
     }
 
     override suspend fun reboot() {
@@ -300,6 +322,41 @@ class Owner @Inject constructor(
         return dpm.stopUser(deviceOwner, profilesMapper.mapIdToUserHandle(userId)) == UserManager.USER_OPERATION_SUCCESS
     }
 
+    override suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean = withContext(coroutineDispatcher) {
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
+    }
+
+    override suspend fun changeLogsStatus(enable: Boolean) {
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
+    }
+
+    override suspend fun changeDeveloperSettingsStatus(unlock: Boolean) {
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
+    }
+
+    override suspend fun getLogsStatus(): Boolean {
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
+    }
+
+    override suspend fun getDeveloperSettingsStatus(): Boolean {
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
+    }
+
     override suspend fun runTrim() {
         throw SuperUserException(
             NO_ROOT_RIGHTS,
@@ -315,6 +372,13 @@ class Owner @Inject constructor(
     }
 
     override suspend fun stopLogd() {
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
+    }
+
+    override fun getPowerButtonClicks(callback: (Boolean) -> Unit): () -> Unit {
         throw SuperUserException(
             NO_ROOT_RIGHTS,
             UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
@@ -366,6 +430,7 @@ class Owner @Inject constructor(
 
 
     companion object {
+        private const val INSTALL_COMPLETE = "DHIZUKU_INSTALL_COMPLETE"
         private const val NO_OWNER_RIGHTS = "App doesn't have owner rights."
         private const val ANDROID_VERSION_INCORRECT =
             "Wrong android version, SDK version %s or higher required"

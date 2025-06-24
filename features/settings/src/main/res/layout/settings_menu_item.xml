@@ -19,9 +19,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingStart="@dimen/margin_normal"
-            android:maxLines="1"
+            android:maxLines="2"
             android:ellipsize="end"
-            android:text="@string/when_usb_connected">
+            tools:text="testererferererferrferffrfreferferferferferfe">
 
         </com.google.android.material.textview.MaterialTextView>
 

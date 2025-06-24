@@ -16,14 +16,15 @@ android {
         applicationId = "com.android.aftools"
         minSdk = 26
         targetSdk = 35
-        versionCode = 6
-        versionName = "1.4.1"
+        versionCode = 7
+        versionName = "1.5.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -67,6 +68,7 @@ android {
     }
 
   buildFeatures {
+    buildConfig = true
     viewBinding = true
   }
 
@@ -100,8 +102,6 @@ dependencies {
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
 
-    implementation(libs.security.crypto.ktx)
-
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
     //Better Encrypted DataStore
@@ -128,11 +128,16 @@ dependencies {
     implementation(libs.core)
     implementation(libs.storage)
 
+    //Network
+    implementation(libs.retrofit)
+    implementation(libs.converter.scalars)
+
     //Project modules dependencies
     implementation(project(":core:validators"))
     implementation(project(":core:passwordStrength"))
     implementation(project(":core:resources"))
     implementation(project(":core:utils"))
+    implementation(project(":core:network"))
     implementation(project(":features:passwordSetup"))
     implementation(project(":features:profiles"))
     implementation(project(":features:files"))
@@ -155,4 +160,5 @@ dependencies {
     implementation(project(":data:files"))
     implementation(project(":data:logs"))
     implementation(project(":data:profiles"))
+    implementation(project(":data:appUpdater"))
 }

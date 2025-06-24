@@ -1,32 +1,43 @@
 package com.sonozaki.superuser.root
-import android.app.admin.DevicePolicyManager
+
 import android.content.ComponentName
 import android.content.Context
 import android.os.Build
 import android.os.UserManager
+import android.provider.Settings
 import com.anggrayudi.storage.extension.toBoolean
 import com.anggrayudi.storage.extension.toInt
 import com.sonozaki.entities.ProfileDomain
+import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.superuser.R
 import com.sonozaki.superuser.domain.usecases.SetRootInactiveUseCase
 import com.sonozaki.superuser.mapper.ProfilesMapper
 import com.sonozaki.superuser.superuser.SuperUser
 import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
+import com.topjohnwu.superuser.CallbackList
 import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.withContext
+import okio.BufferedSource
+import okio.buffer
+import okio.sink
+import java.io.File
 import javax.inject.Inject
+import javax.inject.Named
+
 
 class Root @Inject constructor(
     @ApplicationContext private val context: Context,
     private val profilesMapper: ProfilesMapper,
     private val setRootInactiveUseCase: SetRootInactiveUseCase,
-    private val dpm: DevicePolicyManager,
     private val userManager: UserManager,
-    private val deviceAdmin: ComponentName
+    private val deviceAdmin: ComponentName,
+    @Named(IO_DISPATCHER) private val coroutineDispatcher: CoroutineDispatcher
 ) : SuperUser {
 
-    override suspend fun executeRootCommand(command: String): Shell.Result {
+    override suspend fun executeRootCommand(command: String): Shell.Result = withContext(coroutineDispatcher) {
         val result = Shell.cmd(command).exec()
         if (!result.isSuccess) {
             if (!askSuperUserRights()) {
@@ -42,7 +53,19 @@ class Root @Inject constructor(
                 UIText.StringResource(R.string.unknow_root_error, resultText)
             )
         }
-        return result
+        return@withContext result
+    }
+
+    private fun executeRootCommandParallelly(command: String, callback: (String) -> Unit): () -> Unit {
+        val shell = Shell.Builder.create().build()
+        val callbackList: List<String?> = object : CallbackList<String?>() {
+            override fun onAddElement(s: String?) {
+                callback(s?:"")
+            }
+        }
+        val job = shell.newJob()
+        job.add(command).to(callbackList).submit()
+        return { shell.close() }
     }
 
     private suspend fun checkAdminApp(packageName: String) {
@@ -79,6 +102,12 @@ class Root @Inject constructor(
         executeRootCommand("stop logd")
     }
 
+    override fun getPowerButtonClicks(callback: (Boolean) -> Unit): () -> Unit {
+        return executeRootCommandParallelly("getevent -lq") {
+            callback(it.contains("KEY_POWER") && it.trimEnd().endsWith("DOWN"))
+        }
+    }
+
     override suspend fun setMultiuserUI(status: Boolean) {
         executeRootCommand("setprop fw.show_multiuserui ${status.toInt()}")
     }
@@ -105,6 +134,7 @@ class Root @Inject constructor(
                     Build.VERSION_CODES.P.toString()
                 )
             )
+        Settings.Global.DEVELOPMENT_SETTINGS_ENABLED
         executeRootCommand("settings put global user_switcher_enabled ${status.toInt()}")
     }
 
@@ -123,7 +153,9 @@ class Root @Inject constructor(
         } catch (e: NumberFormatException) {
             throw SuperUserException(
                 NUMBER_NOT_RECOGNISED, UIText.StringResource(
-                    com.sonozaki.resources.R.string.number_not_found))
+                    com.sonozaki.resources.R.string.number_not_found
+                )
+            )
         }
     }
 
@@ -163,8 +195,10 @@ class Root @Inject constructor(
 
     override suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean {
         if (userId == 0) {
-            throw SuperUserException(PRIMARY_USER_LOGOUT,
-                UIText.StringResource(R.string.cant_logout_from_primary_user))
+            throw SuperUserException(
+                PRIMARY_USER_LOGOUT,
+                UIText.StringResource(R.string.cant_logout_from_primary_user)
+            )
         }
         if (isCurrent) {
             executeRootCommand("am switch-user 0")
@@ -173,6 +207,41 @@ class Root @Inject constructor(
         return executeRootCommand("am stop-user -w $userId").isSuccess
     }
 
+    override suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean =
+        withContext(coroutineDispatcher) {
+            val apkFile = File(context.filesDir, "base.apk")
+            data.use { src -> apkFile.sink().buffer().use { it.writeAll(src); it.flush() } }
+            try {
+                return@withContext executeRootCommand("pm install -t -r ${apkFile.absolutePath}").isSuccess
+            } catch (e: SuperUserException) {
+                return@withContext executeRootCommand("cat \"${apkFile.absolutePath}\" | pm install -t -r -S $length").isSuccess
+            }
+        }
+
+    override suspend fun getLogsStatus(): Boolean {
+        return !executeRootCommand("getprop persist.log.tag").out.first().startsWith("S")
+    }
+
+    override suspend fun getDeveloperSettingsStatus(): Boolean {
+        return executeRootCommand("settings get global ${Settings.Global.DEVELOPMENT_SETTINGS_ENABLED}").out.first().toInt().toBoolean()
+    }
+
+    override suspend fun changeLogsStatus(enable: Boolean) {
+        if (enable) {
+            executeRootCommand("setprop persist.log.tag \"\"")
+        } else {
+            executeRootCommand("setprop persist.logd.logpersistd \"\"")
+            executeRootCommand("setprop persist.logd.logpersistd.buffer \"\"")
+            executeRootCommand("setprop logd.logpersistd \"\"")
+            executeRootCommand("setprop logd.logpersistd.buffer \"\"")
+            executeRootCommand("setprop persist.log.tag Settings")
+            executeRootCommand("setprop persist.logd.size 65536")
+        }
+    }
+
+    override suspend fun changeDeveloperSettingsStatus(unlock: Boolean) {
+        executeRootCommand("settings put global ${Settings.Global.DEVELOPMENT_SETTINGS_ENABLED} ${unlock.toInt()}")
+    }
 
     override suspend fun getSafeBootStatus(): Boolean {
         val result = executeRootCommand("settings get global safe_boot_disallowed").out[0]
@@ -196,7 +265,9 @@ class Root @Inject constructor(
         } catch (e: NumberFormatException) {
             throw SuperUserException(
                 NUMBER_NOT_RECOGNISED, UIText.StringResource(
-                    com.sonozaki.resources.R.string.number_not_found))
+                    com.sonozaki.resources.R.string.number_not_found
+                )
+            )
         }
 
     fun askSuperUserRights(): Boolean {

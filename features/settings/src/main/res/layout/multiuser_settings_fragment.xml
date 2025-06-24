@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
+            android:id="@+id/disable_multiuser_ui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/disable_multiuser_ui_automatically"
+            app:requirementsText="@string/root_and_owner_android9_acessibility">
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_multiuser_ui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/multiuser_ui"
+            app:requirementsText="@string/root_only">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/set_user_switcher_ui"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/switch_user_ui"
+            app:requirementsText="@string/root_only_android10">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+
+        <com.sonozaki.settings.presentation.views.SettingsItemImageView
+            android:id="@+id/switch_user_permission"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/switch_user_permission"
+            app:requirementsText="@string/root_and_owner_android9">
+
+        </com.sonozaki.settings.presentation.views.SettingsItemImageView>
+    </LinearLayout>
+</ScrollView>

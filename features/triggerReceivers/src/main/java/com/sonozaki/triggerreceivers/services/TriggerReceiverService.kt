@@ -1,7 +1,6 @@
 package com.sonozaki.triggerreceivers.services
 
 import android.accessibilityservice.AccessibilityService
-import android.accessibilityservice.AccessibilityServiceInfo
 import android.app.KeyguardManager
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -10,17 +9,25 @@ import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.UserManager
-import android.util.Log
+import android.view.KeyEvent
+import android.view.KeyEvent.ACTION_DOWN
+import android.view.KeyEvent.KEYCODE_VOLUME_DOWN
+import android.view.KeyEvent.KEYCODE_VOLUME_UP
 import android.view.accessibility.AccessibilityEvent
+import com.sonozaki.entities.ButtonClicked
 import com.sonozaki.entities.MultiuserUIProtection
+import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.resources.IO_DISPATCHER
+import com.sonozaki.superuser.superuser.SuperUser
 import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.superuser.superuser.SuperUserManager
 import com.sonozaki.triggerreceivers.R
 import com.sonozaki.triggerreceivers.services.domain.router.ActivitiesLauncher
 import com.sonozaki.triggerreceivers.services.domain.usecases.ButtonClickUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.CheckPasswordUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.GetButtonSettingsUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.GetButtonsRootDataUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetDeviceProtectionSettings
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetLogsEnabledUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetPasswordStatusUseCase
@@ -74,6 +81,9 @@ class TriggerReceiverService : AccessibilityService() {
     lateinit var getUsbSettingsUseCase: GetUsbSettingsUseCase
 
     @Inject
+    lateinit var getButtonSettingsUseCase: GetButtonSettingsUseCase
+
+    @Inject
     @Named(IO_DISPATCHER)
     lateinit var dispatcher: CoroutineDispatcher
 
@@ -99,11 +109,20 @@ class TriggerReceiverService : AccessibilityService() {
     lateinit var getPermissionsUseCase: GetPermissionsUseCase
 
     @Inject
-    @Named(IO_DISPATCHER)
-    lateinit var ioDispatcher: CoroutineDispatcher
+    lateinit var getButtonsRootDataUseCase: GetButtonsRootDataUseCase
 
     override fun onCreate() {
         super.onCreate()
+        coroutineScope.launch(dispatcher) {
+            var cancelCallback: (() -> Unit)? = null
+            getButtonsRootDataUseCase().collect {
+                if (it) {
+                    cancelCallback = listenForButtonClicksRoot(superUserManager.getSuperUser())
+                } else {
+                    cancelCallback?.invoke()
+                }
+            }
+        }
         coroutineScope.launch(dispatcher) {
             if (!getPasswordStatusUseCase()) {
                 //app will not set service status to true if it's data has been reset.
@@ -119,6 +138,17 @@ class TriggerReceiverService : AccessibilityService() {
         listenUserUnlocked()
         listenUsbConnection()
         keyguardManager = getSystemService(KeyguardManager::class.java)
+    }
+
+    private fun listenForButtonClicksRoot(superUser: SuperUser): () -> Unit {
+        return superUser.getPowerButtonClicks {
+            if (!it) return@getPowerButtonClicks
+            coroutineScope.launch(dispatcher) {
+                if (buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
+                    runActions()
+                }
+            }
+        }
     }
 
     private suspend fun writeLogs(text: String) {
@@ -164,8 +194,8 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     private suspend fun handleScreenStateChanged(action: String) {
-        Log.w("screen_state", "changed")
-        if (buttonClicksUseCase()) {
+        val deprecatedButton = getButtonSettingsUseCase().triggerOnButton == PowerButtonTriggerOptions.DEPRECATED_WAY
+        if (deprecatedButton && buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
             runActions()
         }
         if (action == Intent.ACTION_SCREEN_OFF) {
@@ -247,7 +277,7 @@ class TriggerReceiverService : AccessibilityService() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 coroutineScope.launch(dispatcher) {
                     if (getSettingsUseCase().runOnBoot) {
-                        withContext(ioDispatcher) {
+                        withContext(dispatcher) {
                             delay(2000) //for some reason, file deletion doesn't work without delay after unlocking
                             activitiesLauncher.startAFU()
                         }
@@ -292,7 +322,7 @@ class TriggerReceiverService : AccessibilityService() {
      * Run in background thread actions that can be started before the device is unlocked. If the device remains locked, it postpones other actions until unlocked, otherwise it performs them immediately.
      */
     private suspend fun runActions() {
-        withContext(ioDispatcher) {
+        withContext(dispatcher) {
             activitiesLauncher.startBFU()
             if (userManager.isUserUnlocked) {
                 activitiesLauncher.startAFU()
@@ -324,24 +354,33 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
-        if (keyguardManager?.isDeviceLocked != true ||
-            event?.isEnabled != true
+        if (event == null || event.packageName !in PACKAGE_NAMES_INTERCEPTED || keyguardManager?.isDeviceLocked != true ||
+            event.isEnabled != true || event.isPassword !=true
         ) return
         updatePassword(event.text.joinToString(""))
+    }
+
+    override fun onKeyEvent(event: KeyEvent?): Boolean {
+        if (event?.action == ACTION_DOWN) {
+            val buttonClicked = if (event.keyCode == KEYCODE_VOLUME_UP) {
+                ButtonClicked.VOLUME_UP
+            } else if (event.keyCode == KEYCODE_VOLUME_DOWN) {
+                ButtonClicked.VOLUME_DOWN
+            } else {
+                return super.onKeyEvent(event)
+            }
+            coroutineScope.launch(dispatcher) {
+                if (buttonClicksUseCase(buttonClicked)) {
+                    runActions()
+                }
+            }
+        }
+        return super.onKeyEvent(event)
     }
 
     override fun onInterrupt() {
     }
 
-
-    override fun onServiceConnected() {
-        super.onServiceConnected()
-        serviceInfo = serviceInfo.apply {
-            eventTypes = AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED or
-                    AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
-            flags = AccessibilityServiceInfo.FLAG_RETRIEVE_INTERACTIVE_WINDOWS
-        }
-    }
 
     override fun onUnbind(intent: Intent?): Boolean {
         runBlocking {
@@ -357,5 +396,6 @@ class TriggerReceiverService : AccessibilityService() {
 
     companion object {
         private const val IGNORE_CHAR = '•'
+        private val PACKAGE_NAMES_INTERCEPTED = setOf("com.android.systemui","com.android.keyguard")
     }
 }

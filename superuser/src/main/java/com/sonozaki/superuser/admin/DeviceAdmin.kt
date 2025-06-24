@@ -2,7 +2,6 @@ package com.sonozaki.superuser.admin
 
 import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Build.VERSION
@@ -13,12 +12,11 @@ import com.sonozaki.superuser.superuser.SuperUser
 import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
 import com.topjohnwu.superuser.Shell
-import dagger.hilt.android.qualifiers.ApplicationContext
+import okio.BufferedSource
 import javax.inject.Inject
 
 
 class DeviceAdmin @Inject constructor(
-    @ApplicationContext private val context: Context,
     private val dpm: DevicePolicyManager,
     private val setAdminInactiveUseCase: SetAdminInactiveUseCase,
     private val deviceAdminReceiver: ComponentName
@@ -125,6 +123,13 @@ class DeviceAdmin @Inject constructor(
         )
     }
 
+    override fun getPowerButtonClicks(callback: (Boolean) -> Unit): () -> Unit {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
     override suspend fun setMultiuserUI(status: Boolean) {
         throw SuperUserException(
             ADMIN_ERROR_TEXT,
@@ -203,6 +208,41 @@ class DeviceAdmin @Inject constructor(
     }
 
     override suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
+    override suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
+    override suspend fun changeLogsStatus(enable: Boolean) {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
+    override suspend fun changeDeveloperSettingsStatus(unlock: Boolean) {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
+    override suspend fun getLogsStatus(): Boolean {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
+    override suspend fun getDeveloperSettingsStatus(): Boolean {
         throw SuperUserException(
             ADMIN_ERROR_TEXT,
             UIText.StringResource(R.string.device_admin_error)

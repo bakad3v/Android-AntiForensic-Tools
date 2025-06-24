@@ -49,6 +49,8 @@ dependencies {
     implementation(project(":superuser"))
     implementation(project(":core:utils"))
     implementation(project(":core:activityState"))
+    implementation(project(":core:network"))
+    implementation(libs.retrofit)
     testImplementation(libs.junit)
     implementation(project(":core:resources"))
     androidTestImplementation(libs.ext.junit)

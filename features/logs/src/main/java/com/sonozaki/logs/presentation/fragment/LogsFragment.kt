@@ -31,8 +31,6 @@ import com.sonozaki.utils.DateValidatorAllowed
 import com.sonozaki.utils.TopLevelFunctions.formatDate
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
 
 /**
  * Fragment for displaying logs
@@ -184,11 +182,8 @@ class LogsFragment : Fragment() {
         icon = com.sonozaki.resources.R.drawable.ic_baseline_play_arrow_24
         text = R.string.enable_logs
       }
-      withContext(Dispatchers.Main) {
-        val startIcon = findItem(R.id.logs_enabled)
-          ?: throw RuntimeException("Enable logs button not found")
-        startIcon.setIcon(icon).setTitle(text)
-      }
+      val startIcon = findItem(R.id.logs_enabled)
+      startIcon?.setIcon(icon)?.setTitle(text)
     }
   }
 

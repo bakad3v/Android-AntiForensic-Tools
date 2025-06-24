@@ -1,10 +1,10 @@
 package com.sonozaki.settings.domain.usecases.settings
 
-import com.sonozaki.settings.domain.repository.SettingsScreenRepository
+import com.sonozaki.superuser.superuser.SuperUserManager
 import javax.inject.Inject
 
-class GetUserSwitcherStatusUseCase @Inject constructor(private val settingsScreenRepository: SettingsScreenRepository) {
+class GetUserSwitcherStatusUseCase @Inject constructor(private val superUserManager: SuperUserManager) {
     suspend operator fun invoke(): Boolean {
-        return settingsScreenRepository.getUserSwitcherStatus()
+        return superUserManager.getSuperUser().getUserSwitcherStatus()
     }
 }
