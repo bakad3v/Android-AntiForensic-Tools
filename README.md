@@ -31,13 +31,13 @@ This app is disguised as other apps - [Island](https://github.com/oasisfeng/isla
 Ideally, I recommend changing the package name yourself before installing. When renaming, select the package name used by an existing app that isn't on your device. The process of renaming a package will be described below.
 
 ### Apps versions
-* AFTools_island_NON_ROOT_ONLY - a version of the app masquerading as the Island app. Can be installed without ADB or root rights, but **installation is not recommended.**
-* AFTools_shelter_NON_ROOT_ONLY - a version of the app masquerading as the Shelter app. Can be installed without ADB or root rights, but **installation is not recommended.**
+* AFTools_island_NON_ROOT_ONLY - a version of the app masquerading as the Island app. Can be installed without ADB or root rights, but **it's better to use TESTONLY version if you have root rights**.
+* AFTools_shelter_NON_ROOT_ONLY - a version of the app masquerading as the Shelter app. Can be installed without ADB or root rights, but **it's better to use TESTONLY version if you have root rights**.
 * AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB or root for installation!**
 * AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB or root for installation!**"
 ### Installation of testOnly apps
 #### Easiest way (root only)
-1. Install NOT_RECOMMENDED app version
+1. Install NON_ROOT_ONLY app version
 2. Give it root rights and **don't** give it admin rights
 3. You will see a notification at the top of the settings screen. Click "install" button and app will update itself to the testOnly version.
 
@@ -55,13 +55,15 @@ Ideally, I recommend changing the package name yourself before installing. When 
 3. Download the version of the application that requires installation via ADB to your computer
 4. On your mobile device, [unlock developer settings](https://developer.android.com/studio/debug/dev-options)
 5. Open the developer settings and allow debugging via USB
+
 ![steps](img/Screenshot_20250603-233335_Settings.png)
-6. Connect devices and allow USB debugging for your PC
-7. Open the command prompt and enter the command \<path to platform-tools folder\>/adb[.exe] install -t \<path to apk file\>.
+
+7. Connect devices and allow USB debugging for your PC
+8. Open the command prompt and enter the command \<path to platform-tools folder\>/adb[.exe] install -t \<path to apk file\>.
 
     ![steps](img/Screenshot_2025-06-03_23_36_26.png)
-8. If you install the new version of an app, enter the command \<path to platform-tools folder\>/adb[.exe] install -t -r \<path to apk file\>.
-9. After the update, restart the application accessibility service if it has stopped working
+9. If you install the new version of an app, enter the command \<path to platform-tools folder\>/adb[.exe] install -t -r \<path to apk file\>.
+10. After the update, restart the application accessibility service if it has stopped working
 ### Changing app's package name
 #### Via Apktool
 1. Install GUI client for apktool like [Apk editor studio](https://qwertycube.com/apk-editor-studio/download/). Install java if it's not installed.
