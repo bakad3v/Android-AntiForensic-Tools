@@ -2,6 +2,7 @@ package com.sonozaki.entities
 
 import kotlinx.serialization.Serializable
 
+
 @Serializable
 data class App(
     val packageName: String,

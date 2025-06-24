@@ -3,5 +3,6 @@
   <string name="cancel">Cancel</string>
   <string name="ok">OK</string>
   <string name="logo_background">Background of logotype</string>
+  <string name="wake_up">Caro m\'è \'l sonno, e più l\'esser di sasso, mentre che \'l danno e la vergogna dura; non veder, non sentir m\'è gran ventura; però non mi destar, deh, parla basso.</string>
   <string name="prominent_disclosure_message">The app uses accessibility service to listen for a duress password on the lockscreen and listen for usb connections.</string>
 </resources>

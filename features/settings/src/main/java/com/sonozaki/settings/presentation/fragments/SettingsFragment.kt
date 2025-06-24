@@ -8,20 +8,24 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.MenuProvider
-import androidx.fragment.app.Fragment
+import androidx.core.view.isVisible
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.activitystate.ActivityStateHolder
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.SettingsFragmentBinding
+import com.sonozaki.settings.presentation.viewmodel.SettingsVM
+import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class SettingsFragment: Fragment() {
+class SettingsFragment: AbstractSettingsFragment() {
     private var _binding: SettingsFragmentBinding? = null
     private val binding
         get() = _binding ?: throw RuntimeException("SettingsFragmentBinding == null")
+    override val viewModel by viewModels<SettingsVM>()
     private val navController by lazy { findNavController() }
 
     override fun onCreateView(
@@ -38,7 +42,18 @@ class SettingsFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupActivity()
         setupMenu()
+        listenPopup()
         listenClickable()
+    }
+
+    private fun listenPopup() {
+        viewLifecycleOwner.launchLifecycleAwareCoroutine {
+            viewModel.updatePopupStatusFlow.collect {
+                with(binding) {
+                    testOnlyUpdateAlert.isVisible = it
+                }
+            }
+        }
     }
 
     /**
@@ -78,6 +93,12 @@ class SettingsFragment: Fragment() {
             }
             uiSettings.setOnClickListener {
                 navController.navigate(R.id.action_settingsFragment_to_UISettingsFragment)
+            }
+            installTestonlyUpdate.setOnClickListener {
+                viewModel.updateApp()
+            }
+            ignoreTestonlyUpdate.setOnClickListener {
+                viewModel.disableUpdatePopup()
             }
         }
     }

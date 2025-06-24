@@ -21,3 +21,15 @@
 #-renamesourcefileattribute SourceFile
 -dontwarn org.joda.convert.FromString
 -dontwarn org.joda.convert.ToString
+-keep class androidx.datastore.*.** { *; }
+-keepclassmembers class * extends com.google.protobuf.GeneratedMessageLite* {
+    <fields>;
+}
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+-keepattributes Signature,Exceptions,*Annotation*
+-dontnote retrofit2.Platform
+-dontwarn retrofit2.Platform$Java8

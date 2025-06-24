@@ -1,11 +1,10 @@
 package com.sonozaki.superuser.owner
 
 import android.annotation.SuppressLint
-import android.app.PendingIntent
 import android.app.admin.DevicePolicyManager
+import android.app.admin.IDevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.IPackageInstaller
 import android.content.pm.PackageInstaller
@@ -73,14 +72,14 @@ class Owner @Inject constructor(
         DevicePolicyManager.DELEGATION_BLOCK_UNINSTALL
         val manager =
             dhizukuContext.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
-//        val field = manager.javaClass.getDeclaredField("mService")
-//        field.isAccessible = true
-//        val oldInterface = field[manager] as IDevicePolicyManager
-//        if (oldInterface is DhizukuBinderWrapper) return manager
-//        val oldBinder = oldInterface.asBinder()
-//        val newBinder = binderWrapper(oldBinder)
-//        val newInterface = IDevicePolicyManager.Stub.asInterface(newBinder)
-//        field[manager] = newInterface
+        val field = manager.javaClass.getDeclaredField("mService")
+        field.isAccessible = true
+        val oldInterface = field[manager] as IDevicePolicyManager
+        if (oldInterface is DhizukuBinderWrapper) return manager
+        val oldBinder = oldInterface.asBinder()
+        val newBinder = binderWrapper(oldBinder)
+        val newInterface = IDevicePolicyManager.Stub.asInterface(newBinder)
+        field[manager] = newInterface
         return manager
     }
 
@@ -356,16 +355,6 @@ class Owner @Inject constructor(
             NO_ROOT_RIGHTS,
             UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
         )
-    }
-
-    private fun createIntentSender(context: Context?, sessionId: Int, piFlags: Int): IntentSender {
-        val pendingIntent = PendingIntent.getBroadcast(
-            getDhizukuContext(),
-            sessionId,
-            Intent(INSTALL_COMPLETE),
-            piFlags
-        )
-        return pendingIntent.intentSender
     }
 
     override suspend fun runTrim() {
