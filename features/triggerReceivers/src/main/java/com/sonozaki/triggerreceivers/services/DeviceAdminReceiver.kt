@@ -3,7 +3,9 @@ import android.app.admin.DeviceAdminReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.UserHandle
+import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.triggerreceivers.services.domain.router.ActivitiesLauncher
+import com.sonozaki.triggerreceivers.services.domain.usecases.GetBruteforceSettingsUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.OnRightPasswordUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.OnWrongPasswordUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.SetAdminActiveUseCase
@@ -30,19 +32,28 @@ class DeviceAdminReceiver: DeviceAdminReceiver() {
     @Inject
     lateinit var activitiesLauncher: ActivitiesLauncher
 
+    @Inject
+    lateinit var getBruteforceSettingsUseCase: GetBruteforceSettingsUseCase
+
     override fun onPasswordFailed(context: Context, intent: Intent, user: UserHandle) {
         coroutineScope.launch {
-            if (onWrongPasswordUseCase()) {
+            if (checkBruteforceDetectionMethod() && onWrongPasswordUseCase()) {
                 activitiesLauncher.launchService(context)
             }
         }
         super.onPasswordFailed(context, intent, user)
     }
 
+    private suspend fun checkBruteforceDetectionMethod(): Boolean {
+        return getBruteforceSettingsUseCase().detectingMethod == BruteforceDetectingMethod.ADMIN
+    }
+
     override fun onPasswordSucceeded(context: Context, intent: Intent, user: UserHandle) {
         super.onPasswordSucceeded(context, intent, user)
         coroutineScope.launch {
-            onRightPasswordUseCase()
+            if (checkBruteforceDetectionMethod()) {
+                onRightPasswordUseCase()
+            }
         }
     }
 

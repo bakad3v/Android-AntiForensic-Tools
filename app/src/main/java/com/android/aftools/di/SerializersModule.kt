@@ -4,6 +4,7 @@ import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.data.files.entities.FilesList
 import com.sonozaki.data.logs.entities.LogList
 import com.sonozaki.data.profiles.entities.IntList
+import com.sonozaki.data.settings.entities.BruteforceSettingsV1
 import com.sonozaki.data.settings.entities.ButtonSettingsV1
 import com.sonozaki.data.settings.entities.SettingsV1
 import com.sonozaki.data.settings.entities.UsbSettingsV1
@@ -115,4 +116,10 @@ class SerializersModule {
     fun bindButtonSettingsV1BaseSerializer(@Named(IO_DISPATCHER) ioDispatcher: CoroutineDispatcher) =
         BaseSerializer<ButtonSettingsV1>(ioDispatcher, ButtonSettingsV1.serializer(),
             ButtonSettingsV1())
+
+    @Provides
+    @Singleton
+    fun bindBruteforceSettingsV1BaseSerializer(@Named(IO_DISPATCHER) ioDispatcher: CoroutineDispatcher) =
+        BaseSerializer<BruteforceSettingsV1>(ioDispatcher, BruteforceSettingsV1.serializer(),
+            BruteforceSettingsV1())
 }

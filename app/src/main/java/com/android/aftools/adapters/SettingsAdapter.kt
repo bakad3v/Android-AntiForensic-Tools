@@ -8,6 +8,7 @@ import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepositor
 import com.sonozaki.data.settings.repositories.PermissionsRepository
 import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.data.settings.repositories.UsbSettingsRepository
+import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
@@ -83,7 +84,7 @@ class SettingsAdapter @Inject constructor(
         bruteforceRepository.setBruteforceLimit(limit)
     }
 
-    override suspend fun setBruteforceStatus(status: Boolean) {
+    override suspend fun setBruteforceStatus(status: BruteforceDetectingMethod) {
         bruteforceRepository.setBruteforceStatus(status)
     }
 

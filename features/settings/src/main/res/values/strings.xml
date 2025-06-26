@@ -197,4 +197,13 @@
     <string name="setup_users_number_manually">Setup users limit manually</string>
     <string name="how_to_change_users_limit">How to change users limit</string>
     <string name="how_to_change_users_limit_long"><![CDATA[<p>&bull; Get root rights</p><p>&bull; Download terminal emulator, for example <a href="https://f-droid.org/packages/com.termux/">Termux</a>.</p><p>&bull; Open emulator and enter command "su"</p><p>&bull; Then enter command "setprop fw.max_users &lt;number of users&gt;".</p><p></p>]]></string>
+    <string name="no">No</string>
+    <string name="with_admin_rights">With admin rights</string>
+    <string name="with_accessibility_service">With accessibility service</string>
+    <string name="bruteforce_defense_admin">Bruteforce defence (admin rights)</string>
+    <string name="bruteforce_defense_accessibility">Bruteforce defense (accessibility service)</string>
+    <string name="bruteforce_defence_accessibility_long">After reaching maximum number of wrong password attempts (default: 5), app will start to destroy your data. Requires accessibility service.\nImportant: this method may not work for custom ROMs and exotic device languages. Use method, requiring admin rights, if this doesn\'t work for you.</string>
+    <string name="provide_admin">You need to grant admin rights to select this option</string>
+    <string name="no_accessibility_service">Accessibility service is not working</string>
+    <string name="grant_accessibility">You need to start accessibility service to select this option</string>
 </resources>

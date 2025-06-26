@@ -10,6 +10,7 @@ import com.sonozaki.entities.Theme
 import com.sonozaki.entities.UsbSettings
 import kotlinx.coroutines.flow.Flow
 import com.bakasoft.network.RequestResult
+import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.VolumeButtonTriggerOptions
 import okhttp3.ResponseBody
@@ -42,7 +43,7 @@ interface SettingsScreenRepository {
     suspend fun setRootStatus(status: Boolean)
     suspend fun setUsbSettings(settings: UsbSettings)
     suspend fun setBruteforceLimit(limit: Int)
-    suspend fun setBruteforceStatus(status: Boolean)
+    suspend fun setBruteforceStatus(status: BruteforceDetectingMethod)
     suspend fun updateLatency(latency: Int)
     suspend fun updateRootLatency(latency: Int)
     suspend fun updateAllowedClicks(allowedClicks: Int)

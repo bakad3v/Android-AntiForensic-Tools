@@ -9,6 +9,7 @@ import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepositor
 import com.sonozaki.data.settings.repositories.PermissionsRepository
 import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.data.settings.repositories.UsbSettingsRepository
+import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.ButtonSelected
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.Settings
@@ -52,6 +53,10 @@ class ReceiversAdapter @Inject constructor(
 
     override suspend fun getButtonSettings(): ButtonSettings {
         return buttonSettingsRepository.buttonSettings.first()
+    }
+
+    override suspend fun getBruteforceSettings(): BruteforceSettings {
+        return bruteforceRepository.bruteforceSettings.first()
     }
 
     override suspend fun getButtonClicksData(buttonSelected: ButtonSelected): ButtonClicksData {
