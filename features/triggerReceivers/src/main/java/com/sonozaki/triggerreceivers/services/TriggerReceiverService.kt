@@ -386,11 +386,15 @@ class TriggerReceiverService : AccessibilityService() {
         return getBruteforceSettingsUseCase().detectingMethod == BruteforceDetectingMethod.ACCESSIBILITY_SERVICE
     }
 
+    private fun compareStringWithResource(text: String, rId: Int): Boolean {
+        return text.compareTo(baseContext.getString(rId), true) == 0
+    }
+
     private fun watchWrongPassword(text: String) {
         coroutineScope.launch(dispatcher) {
             if (checkBruteforceDetectionMethod()
-                && (text == baseContext.getString(R.string.kg_wrong_password)
-                || text == baseContext.getString(R.string.wrong_password))
+                && (compareStringWithResource(text, R.string.kg_wrong_password)
+                || compareStringWithResource(text, R.string.wrong_password))
             ) {
                 if (onWrongPasswordUseCase()) {
                     runActions()
