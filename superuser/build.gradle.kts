@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.kapt)
     alias(libs.plugins.hiltAndroid)
     alias(libs.plugins.dependency.analysis)
+    alias(libs.plugins.kotlin.parcelize)
 }
 
 android {
@@ -33,6 +34,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    buildFeatures {
+        aidl = true
+    }
 }
 
 dependencies {
@@ -50,4 +54,6 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.okio)
     implementation(libs.storage)
+    implementation(libs.shizuku)
+    implementation(libs.shizuku.provider)
 }

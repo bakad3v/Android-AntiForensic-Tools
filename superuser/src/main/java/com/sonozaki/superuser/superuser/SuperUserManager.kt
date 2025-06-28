@@ -5,6 +5,7 @@ import com.sonozaki.superuser.admin.DeviceAdmin
 import com.sonozaki.superuser.domain.usecases.GetPermissionsUseCase
 import com.sonozaki.superuser.owner.Owner
 import com.sonozaki.superuser.root.Root
+import com.sonozaki.superuser.shizuku.ShizukuManager
 import com.sonozaki.utils.UIText
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -13,12 +14,18 @@ import javax.inject.Singleton
  * Class for retrieving superusers and managing permissions.
  */
 @Singleton
-class SuperUserManager @Inject constructor(private val owner: Owner, private val root: Root, private val admin: DeviceAdmin, private val getPermissionsUseCase: GetPermissionsUseCase) {
+class SuperUserManager @Inject constructor(private val owner: Owner, private val root: Root, private val admin: DeviceAdmin, private val getPermissionsUseCase: GetPermissionsUseCase, private val shizukuManager: ShizukuManager) {
 
     /**
      * Show dialog with root rights request.
      */
     fun askRootRights(): Boolean = root.askSuperUserRights()
+
+    fun askShizukuRights() = shizukuManager.requestShizukuPermission()
+
+    fun checkShizukuInstalled() = shizukuManager.checkShizukuInstalled()
+
+    val shizukuStateFlow = shizukuManager.shizukuStateFlow
 
     /**
      * Show dialog with Dhizuku permission request.

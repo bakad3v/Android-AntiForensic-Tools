@@ -26,8 +26,9 @@ import okio.sink
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
-
+@Singleton
 class Root @Inject constructor(
     @ApplicationContext private val context: Context,
     private val profilesMapper: ProfilesMapper,

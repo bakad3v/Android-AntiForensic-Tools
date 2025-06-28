@@ -29,6 +29,41 @@
         </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
 
         <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+            android:id="@+id/shizuku_item"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:mainText="@string/shizuku">
+        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_gravity="start"
+            android:orientation="horizontal">
+
+            <com.google.android.material.textview.MaterialTextView
+                style="?attr/textAppearanceTitleLarge"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
+                android:layout_weight="1"
+                android:maxLines="2"
+                android:ellipsize="end"
+                android:text="@string/shizuku_state">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/shizuku_state"
+                android:layout_width="wrap_content"
+                android:gravity="center|end"
+                android:layout_height="wrap_content"
+                android:padding="@dimen/margin_normal">
+
+            </com.google.android.material.textview.MaterialTextView>
+
+        </LinearLayout>
+        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
             android:id="@+id/accessibility_service_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

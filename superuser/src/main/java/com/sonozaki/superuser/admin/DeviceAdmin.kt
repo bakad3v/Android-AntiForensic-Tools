@@ -14,8 +14,9 @@ import com.sonozaki.utils.UIText
 import com.topjohnwu.superuser.Shell
 import okio.BufferedSource
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class DeviceAdmin @Inject constructor(
     private val dpm: DevicePolicyManager,
     private val setAdminInactiveUseCase: SetAdminInactiveUseCase,

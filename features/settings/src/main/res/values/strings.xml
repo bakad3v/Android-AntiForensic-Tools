@@ -206,4 +206,13 @@
     <string name="provide_admin">You need to grant admin rights to select this option</string>
     <string name="no_accessibility_service">Accessibility service is not working</string>
     <string name="grant_accessibility">You need to start accessibility service to select this option</string>
+    <string name="shizuku">Shizuku</string>
+    <string name="install_shizuku">Do you want to install shizuku?</string>
+    <string name="install_shizuku_long">You need to install shizuku app and activate it. I recommend downloading pixincreate\\\'s fork, because self-activation works better in his version of the app.</string>
+    <string name="disable_shizuku_manually">Revoke shizuku permission manually</string>
+    <string name="disable_shizuku_manually_long">Open shizuku app and revoke shizuku permissions manually</string>
+    <string name="shizuku_state">Shizuku state</string>
+    <string name="initialized">INITIALIZED</string>
+    <string name="dead">DEAD</string>
+    <string name="loading">LOADING</string>
 </resources>

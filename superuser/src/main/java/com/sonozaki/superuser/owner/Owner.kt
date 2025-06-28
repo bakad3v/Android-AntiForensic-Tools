@@ -34,7 +34,9 @@ import org.lsposed.hiddenapibypass.HiddenApiBypass
 import java.util.concurrent.Executors
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 
+@Singleton
 class Owner @Inject constructor(
     @ApplicationContext private val context: Context,
     private val profilesMapper: ProfilesMapper,
@@ -62,13 +64,7 @@ class Owner @Inject constructor(
      */
     @SuppressLint("PrivateApi", "SoonBlockedPrivateApi")
     private fun getDhizukuDPM(): DevicePolicyManager {
-        if (!initialized) {
-            initDhizuku()
-        }
-        val dhizukuContext = context.createPackageContext(
-            Dhizuku.getOwnerComponent().packageName,
-            Context.CONTEXT_IGNORE_SECURITY
-        )
+        val dhizukuContext = getDhizukuContext()
         DevicePolicyManager.DELEGATION_BLOCK_UNINSTALL
         val manager =
             dhizukuContext.getSystemService(Context.DEVICE_POLICY_SERVICE) as DevicePolicyManager
@@ -88,13 +84,7 @@ class Owner @Inject constructor(
      */
     @SuppressLint("SoonBlockedPrivateApi")
     private fun getDhizukuPackageInstaller(): PackageInstaller {
-        if (!initialized) {
-            initDhizuku()
-        }
-        val context = context.createPackageContext(
-            Dhizuku.getOwnerComponent().packageName,
-            Context.CONTEXT_IGNORE_SECURITY
-        )
+        val context = getDhizukuContext()
         val installer = context.packageManager.packageInstaller
         val field = installer.javaClass.getDeclaredField("mInstaller")
         field.isAccessible = true

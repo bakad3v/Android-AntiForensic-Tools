@@ -35,6 +35,7 @@ workmanager = "2.10.1"
 androidxHiltCompiler = "1.2.0"
 retrofitVersion = "3.0.0"
 okioVersion = "3.11.0"
+shizuku = "13.1.5"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
@@ -66,7 +67,6 @@ material = { module = "com.google.android.material:material", version.ref = "mat
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigationVersion" }
 navigation-safe-args-gradle-plugin = { module = "androidx.navigation:navigation-safe-args-gradle-plugin", version.ref = "navigationVersion" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigationVersion" }
-security-crypto-ktx = { module = "androidx.security:security-crypto-ktx", version.ref = "securityVersion" }
 storage = { module = "com.anggrayudi:storage", version.ref = "storage" }
 zxcvbn = { module = "com.nulab-inc:zxcvbn", version.ref = "zxcvbn" }
 workmanager = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "workmanager" }
@@ -74,10 +74,13 @@ hilt-work = { group = "androidx.hilt", name = "hilt-work", version.ref = "androi
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofitVersion" }
 converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalars", version.ref = "retrofitVersion"}
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okioVersion"}
+shizuku = {group = "dev.rikka.shizuku", name = "api", version.ref = "shizuku"}
+shizuku-provider = {group = "dev.rikka.shizuku", name = "provider", version.ref = "shizuku"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 java-library = { id = "java-library" }
+kotlin-parcelize = { id = "kotlin-parcelize" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
