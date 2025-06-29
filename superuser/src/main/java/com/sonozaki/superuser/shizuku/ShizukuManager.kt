@@ -5,15 +5,21 @@ import android.content.Context
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
+import android.os.UserManager
 import android.util.Log
-import com.sonozaki.entities.ProfileDomain
 import com.sonozaki.entities.ShizukuState
 import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.superuser.IRemoteShell
+import com.sonozaki.superuser.R
 import com.sonozaki.superuser.ShellResult
+import com.sonozaki.superuser.commandsRunner.CommandResult
+import com.sonozaki.superuser.commandsRunner.CommandsRunner
 import com.sonozaki.superuser.domain.usecases.GetPermissionsFlowUseCase
 import com.sonozaki.superuser.domain.usecases.SetShizukuPermissionUseCase
-import com.sonozaki.superuser.superuser.SuperUser
+import com.sonozaki.superuser.mapper.CommandResultMapper
+import com.sonozaki.superuser.mapper.ProfilesMapper
+import com.sonozaki.superuser.superuser.SuperUserException
+import com.sonozaki.utils.UIText
 import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -37,8 +43,12 @@ class ShizukuManager @Inject constructor(
     private val coroutineScope: CoroutineScope,
     private val _shizukuStateFlow: MutableStateFlow<ShizukuState>,
     private val getPermissionsFlowUseCase: GetPermissionsFlowUseCase,
-    private val setShizukuPermissionUseCase: SetShizukuPermissionUseCase
-): SuperUser {
+    private val setShizukuPermissionUseCase: SetShizukuPermissionUseCase,
+    private val deviceAdmin: ComponentName,
+    private val userManager: UserManager,
+    private val profilesMapper: ProfilesMapper,
+    private val commandResultMapper: CommandResultMapper
+): CommandsRunner(context, coroutineDispatcher, profilesMapper, userManager, deviceAdmin) {
 
     val shizukuStateFlow = _shizukuStateFlow.asStateFlow()
 
@@ -70,6 +80,11 @@ class ShizukuManager @Inject constructor(
             .tag(context.packageName)
     }
 
+
+    override suspend fun runCommand(command: String): CommandResult {
+        return commandResultMapper.mapShizukuResultToCommandResult(runAdbCommand(command))
+    }
+
     /**
      * Wait until shizuku service stops loading, run command if possible
      */
@@ -78,7 +93,9 @@ class ShizukuManager @Inject constructor(
             it != ShizukuState.LOADING
         }
         if (nextState == ShizukuState.INITIALIZED) {
-            userService?.executeNow(command) ?: ShellResult(3)
+            val result = userService?.executeNow(command)
+            Log.w("adbResult", result.toString())
+            result ?: ShellResult(3)
         } else { //if service is dead return error
             ShellResult(3)
         }
@@ -168,121 +185,40 @@ class ShizukuManager @Inject constructor(
         }
     }
 
-    override suspend fun wipe() {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getProfiles(): List<ProfileDomain> {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun removeProfile(id: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun uninstallApp(packageName: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun hideApp(packageName: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun clearAppData(packageName: String) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun runTrim() {
-        TODO("Not yet implemented")
-    }
-
     override suspend fun executeRootCommand(command: String): Shell.Result {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun stopLogd() {
-        TODO("Not yet implemented")
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
     }
 
     override fun getPowerButtonClicks(callback: (Boolean) -> Unit): () -> Unit {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun setMultiuserUI(status: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getMultiuserUIStatus(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun setUsersLimit(limit: Int) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getUserLimit(): Int? {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun setSafeBootStatus(status: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getSafeBootStatus(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun setUserSwitcherStatus(status: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getUserSwitcherStatus(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun setSwitchUserRestriction(status: Boolean) {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun getSwitchUserRestriction(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun reboot() {
-        TODO("Not yet implemented")
-    }
-
-    override suspend fun stopProfile(
-        userId: Int,
-        isCurrent: Boolean
-    ): Boolean {
-        TODO("Not yet implemented")
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
     }
 
     override suspend fun installTestOnlyApp(
         length: Long,
         data: BufferedSource
     ): Boolean {
-        TODO("Not yet implemented")
+        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
     }
 
-    override suspend fun changeLogsStatus(enable: Boolean) {
-        TODO("Not yet implemented")
+    override suspend fun stopLogd() {
+        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
     }
 
-    override suspend fun changeDeveloperSettingsStatus(unlock: Boolean) {
-        TODO("Not yet implemented")
+    override suspend fun setMultiuserUI(status: Boolean) {
+        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
     }
 
-    override suspend fun getLogsStatus(): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun getMultiuserUIStatus(): Boolean {
+        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
     }
 
-    override suspend fun getDeveloperSettingsStatus(): Boolean {
-        TODO("Not yet implemented")
+    override suspend fun setUsersLimit(limit: Int) {
+        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
     }
 
     companion object {
         private const val SHIZUKU_PERMISSION_REQUEST_ID = 18
+        private const val NOT_ENOUGH_RIGHTS = "App doesn't have necessary rights"
+        private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
     }
 }

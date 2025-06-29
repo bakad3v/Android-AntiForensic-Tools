@@ -5,13 +5,11 @@ import android.app.admin.DevicePolicyManager
 import android.app.admin.IDevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
-import android.content.IntentSender
 import android.content.pm.IPackageInstaller
 import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION
-import android.os.Parcel
 import android.os.UserManager
 import com.rosan.dhizuku.api.Dhizuku
 import com.rosan.dhizuku.api.Dhizuku.binderWrapper
@@ -37,7 +35,7 @@ import javax.inject.Named
 import javax.inject.Singleton
 
 @Singleton
-class Owner @Inject constructor(
+class DhizukuManager @Inject constructor(
     @ApplicationContext private val context: Context,
     private val profilesMapper: ProfilesMapper,
     private val setOwnerInactiveUseCase: SetOwnerInactiveUseCase,
@@ -203,15 +201,7 @@ class Owner @Inject constructor(
     }
 
     override suspend fun uninstallApp(packageName: String) = withContext(coroutineDispatcher) {
-        try {
-            checkAdminApp(packageName)
-            packageInstaller.uninstall(
-                packageName,
-                IntentSender.readIntentSenderOrNullFromParcel(Parcel.obtain())
-            )
-        } catch (e: Exception) {
-            handleException(e)
-        }
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
     }
 
     override suspend fun hideApp(packageName: String) {
@@ -426,6 +416,7 @@ class Owner @Inject constructor(
             "Wrong android version, SDK version %s or higher required"
         private const val PRIMARY_USER_LOGOUT = "You can't logout from primary user"
         private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
+        private const val NOT_ENOUGH_RIGHTS = "App doesn't have enough rights"
     }
 
 }
