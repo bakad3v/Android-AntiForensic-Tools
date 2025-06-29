@@ -13,7 +13,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mainText="@string/run_trim"
-            app:requirementsText="@string/root_only">
+            app:requirementsText="@string/root_or_shizuku_root_recommended">
         </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
 
         <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mainText="@string/wipe_data"
-            app:requirementsText="@string/all_superusers">
+            app:requirementsText="@string/dhizuku_root_admin">
 
         </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
 
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mainText="@string/remove_itself"
-            app:requirementsText="@string/root_recommended">
+            app:requirementsText="@string/root_or_shizuku_root_recommended">
 
         </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
 

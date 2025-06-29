@@ -72,10 +72,10 @@
     <string name="accessibility_service_title">Open accessibility service settings</string>
     <string name="accessibility_service_long"><![CDATA[This app requires accessibility service for various actions. Click \"ok\" and go to \"Installed Services>Android AntiForensic Tools\" if you want to enable/disable accessibility service.]]></string>
     <string name="run_trim">Run TRIM</string>
-    <string name="trim_long"><![CDATA[After completion of all operations app will run <a href="https://en.wikipedia.org/wiki/Trim_(computing)">TRIM command</a> and tell the drive about all areas of data are no longer being used and therefore can be erased. Enabling this option may reduce the likelihood of deleted data recovery. Requires root rights.]]></string>
+    <string name="trim_long"><![CDATA[After completion of all operations app will run <a href="https://en.wikipedia.org/wiki/Trim_(computing)">TRIM command</a> and tell the drive about all areas of data are no longer being used and therefore can be erased. Enabling this option may reduce the likelihood of deleted data recovery. Requires root rights or shizuku rights.<\p>\n<p><strong>Important: its recommended to use this option with root privileges. If you use this option with Shizuku permission and you will activate some trigger in BFU (before first unlock) state of your device, trim will not run.</strong></p>]]></string>
     <string name="wipe_data">Wipe data</string>
     <string name="wipe_long">App will wipe all user\'s data or all data on device if called from main user. For wiping all device data (calling wipe from main user) with device admin rights Android 13 or below required.</string>
-    <string name="self_destruct_long"><![CDATA[<p>App will destroy itself after ending of all operations. Requires root rights or Dhizuku permission.&nbsp;</p>\n<p><strong>Warning: self-destruction may take several seconds to complete, avoid providing correct password to adversary too fast after trigger activation.<\strong><\p>\n<p><strong>Important: its recommended to use this option with root privileges. If you use this option with Dhizuku permission, Android system may display notification about app deletion that will make data deletion obvious for adversary. Consider using “clear &amp; hide” option with Dhizuku.</strong></p>]]></string>
+    <string name="self_destruct_long"><![CDATA[<p>App will destroy itself after ending of all operations. Requires root rights or Shizuku permission.&nbsp;</p>\n<p><strong>Warning: self-destruction may take several seconds to complete, avoid providing correct password to adversary too fast after trigger activation.<\strong><\p>\n<p><strong>Important: its recommended to use this option with root privileges. If you use this option with Shizuku permission and you will activate some trigger in BFU (before first unlock) state of your device, self-destruction will be postponed until first device unlock and Shizuku service activation. In this case “hide app” option can help you by hiding app from launcher until it will be deleted by Shizuku.</strong></p>]]></string>
     <string name="run_on_connection">Destroy data on connection</string>
     <string name="run_on_usb_connection_long">App will start to destroy data when usb device or usb accessory connected. Connecting device to computer in charging only mode will be counted too. This option will protect you from attacks. Don\'t forget to disable this option if you want to connect any USB device without losing data! Requires running accessibility service.</string>
     <string name="bruteforce_defense">Bruteforce defense</string>
@@ -215,4 +215,6 @@
     <string name="initialized">INITIALIZED</string>
     <string name="dead">DEAD</string>
     <string name="loading">LOADING</string>
+    <string name="root_or_shizuku_root_recommended">Root or shizuku, root recommended</string>
+    <string name="dhizuku_root_admin">Requires dhizuku/root/admin rights</string>
 </resources>

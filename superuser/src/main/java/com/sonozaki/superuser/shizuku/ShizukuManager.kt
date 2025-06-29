@@ -94,9 +94,20 @@ class ShizukuManager @Inject constructor(
         }
         if (nextState == ShizukuState.INITIALIZED) {
             val result = userService?.executeNow(command)
-            Log.w("adbResult", result.toString())
             result ?: ShellResult(3)
         } else { //if service is dead return error
+            ShellResult(3)
+        }
+    }
+
+    /**
+     * Run adb command if possible without waiting
+     */
+    private suspend fun runAdbCommandImmediately(command: String) = withContext(coroutineDispatcher) {
+        if (shizukuStateFlow.value == ShizukuState.INITIALIZED) {
+            val result = userService?.executeNow(command)
+            result ?: ShellResult(3)
+        } else { //if service is dead or shizuku inactive return error
             ShellResult(3)
         }
     }
@@ -214,6 +225,26 @@ class ShizukuManager @Inject constructor(
 
     override suspend fun setUsersLimit(limit: Int) {
         throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+    }
+
+    override suspend fun hideApp(packageName: String) {
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
+    }
+
+    override suspend fun clearAppData(packageName: String) {
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
+    }
+
+    override suspend fun runTrim() {
+        runAdbCommandImmediately("sm fstrim &")
+    }
+
+    override suspend fun wipe() {
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
+    }
+
+    override suspend fun removeProfile(id: Int) {
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
     }
 
     companion object {

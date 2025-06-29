@@ -18,9 +18,7 @@ class Dshizuku @Inject constructor(
     private val dhizukuManager: DhizukuManager,
     private val getPermissionsUseCase: GetPermissionsUseCase
 ): SuperUser {
-    override suspend fun wipe() {
-        dhizukuManager.wipe()
-    }
+
 
     /**
      * Function for choosing shizuku or dhizuku to run a command.
@@ -36,6 +34,15 @@ class Dshizuku @Inject constructor(
         }
     }
 
+    //available only for dhizuku
+    override suspend fun wipe() {
+        if (getPermissionsUseCase().isOwner) {
+            dhizukuManager.wipe()
+        } else {
+            shizukuManager.wipe()
+        }
+    }
+
     override suspend fun getProfiles(): List<ProfileDomain> {
         return if (shizukuDhizukuNormalFlow()) {
             shizukuManager.getProfiles()
@@ -44,11 +51,12 @@ class Dshizuku @Inject constructor(
         }
     }
 
+    //Function available only for dhizuku
     override suspend fun removeProfile(id: Int) {
-        return if (shizukuDhizukuNormalFlow()) {
-            shizukuManager.removeProfile(id)
-        } else {
+        return if (getPermissionsUseCase().isOwner) {
             dhizukuManager.removeProfile(id)
+        } else {
+            shizukuManager.removeProfile(id)
         }
     }
 
@@ -61,19 +69,21 @@ class Dshizuku @Inject constructor(
         }
     }
 
+    //Function available only for dhizuku
     override suspend fun hideApp(packageName: String) {
-        return if (shizukuDhizukuNormalFlow()) {
-            shizukuManager.hideApp(packageName)
+         if (getPermissionsUseCase().isOwner) {
+             dhizukuManager.hideApp(packageName)
         } else {
-            dhizukuManager.hideApp(packageName)
+             shizukuManager.hideApp(packageName)
         }
     }
 
+    //Function available only for dhizuku
     override suspend fun clearAppData(packageName: String) {
-        return if (shizukuDhizukuNormalFlow()) {
-            shizukuManager.clearAppData(packageName)
-        } else {
+        if (getPermissionsUseCase().isOwner) {
             dhizukuManager.clearAppData(packageName)
+        } else {
+           shizukuManager.clearAppData(packageName)
         }
     }
 
@@ -109,13 +119,8 @@ class Dshizuku @Inject constructor(
         throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
     }
 
-    //Function available only for shizuku
     override suspend fun getUserLimit(): Int? {
-        return if (getPermissionsUseCase().isShizuku) {
-            shizukuManager.getUserLimit()
-        } else {
-            dhizukuManager.getUserLimit()
-        }
+        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
     }
 
     override suspend fun setSafeBootStatus(status: Boolean) {

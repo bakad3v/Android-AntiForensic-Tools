@@ -5,11 +5,13 @@ import android.app.admin.DevicePolicyManager
 import android.app.admin.IDevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
+import android.content.IntentSender
 import android.content.pm.IPackageInstaller
 import android.content.pm.PackageInstaller
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Build.VERSION
+import android.os.Parcel
 import android.os.UserManager
 import com.rosan.dhizuku.api.Dhizuku
 import com.rosan.dhizuku.api.Dhizuku.binderWrapper
@@ -201,7 +203,15 @@ class DhizukuManager @Inject constructor(
     }
 
     override suspend fun uninstallApp(packageName: String) = withContext(coroutineDispatcher) {
-        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
+        try {
+            checkAdminApp(packageName)
+            packageInstaller.uninstall(
+                packageName,
+                IntentSender.readIntentSenderOrNullFromParcel(Parcel.obtain())
+            )
+        } catch (e: Exception) {
+            handleException(e)
+        }
     }
 
     override suspend fun hideApp(packageName: String) {
