@@ -9,24 +9,24 @@ import androidx.fragment.app.viewModels
 import com.sonozaki.dialogs.InputDigitDialog
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.PermanentSettingsFragmentBinding
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.CHANGE_USER_LIMIT_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.DISABLE_DEV_SETTINGS_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.DISABLE_LOGS_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.DISABLE_SAFE_BOOT_RESTRICTION_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.EDIT_BFU_DELAY_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.ENABLE_DEV_SETTINGS_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.ENABLE_LOGS_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.ENABLE_SAFE_BOOT_RESTRICTION_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.LOGD_ON_BOOT_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.LOGD_ON_START_DIALOG
-import com.sonozaki.settings.presentation.viewmodel.PermanentSettingsVM.Companion.MOVE_TO_BFU_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.CHANGE_USER_LIMIT_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.DISABLE_DEV_SETTINGS_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.DISABLE_LOGS_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.DISABLE_SAFE_BOOT_RESTRICTION_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.EDIT_BFU_DELAY_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.ENABLE_DEV_SETTINGS_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.ENABLE_LOGS_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.ENABLE_SAFE_BOOT_RESTRICTION_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.LOGD_ON_BOOT_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.LOGD_ON_START_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.NoticeableSettingsVM.Companion.MOVE_TO_BFU_DIALOG
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
-class PermanentSettingsFragment: AbstractSettingsFragment() {
-    override val viewModel: PermanentSettingsVM by viewModels()
+class NoticeableSettingsFragment: AbstractSettingsFragment() {
+    override val viewModel: NoticeableSettingsVM by viewModels()
     private var _binding: PermanentSettingsFragmentBinding? = null
     private val binding
         get() = _binding ?: throw RuntimeException("PermanentSettingsFragmentBinding == null")
@@ -134,14 +134,15 @@ class PermanentSettingsFragment: AbstractSettingsFragment() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.permissionsState.collect {
                 val serviceWorking = viewModel.settingsState.value.serviceWorking
-                val rootOrDhizuku = it.isRoot || it.isOwner
+                val rootOrShizuku = it.isRoot || it.isShizuku
+                val rootShizukuOrDhizuku = it.isRoot || it.isShizuku || it.isOwner
                 with(binding) {
-                    moveToBfu.setSwitchEnabled(rootOrDhizuku && serviceWorking)
+                    moveToBfu.setSwitchEnabled(rootShizukuOrDhizuku && serviceWorking)
                     logdOnBootItem.setSwitchEnabled(it.isRoot)
                     logdOnStartItem.setSwitchEnabled(it.isRoot)
-                    setLogsStatus.setActive(it.isRoot)
-                    setDeveloperSettingsStatus.setActive(it.isRoot)
-                    setSafeBoot.setActive(rootOrDhizuku)
+                    setLogsStatus.setActive(rootOrShizuku)
+                    setDeveloperSettingsStatus.setActive(rootOrShizuku)
+                    setSafeBoot.setActive(rootShizukuOrDhizuku)
                 }
             }
         }

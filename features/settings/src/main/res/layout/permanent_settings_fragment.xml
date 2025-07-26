@@ -41,7 +41,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mainText="@string/set_logs_status"
-            app:requirementsText="@string/root_only">
+            app:requirementsText="@string/root_or_shizuku">
 
         </com.sonozaki.settings.presentation.views.SettingsItemImageView>
 
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mainText="@string/set_developer_settings_status"
-            app:requirementsText="@string/root_only">
+            app:requirementsText="@string/root_or_shizuku">
 
         </com.sonozaki.settings.presentation.views.SettingsItemImageView>
 
@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mainText="@string/safe_boot_status"
-            app:requirementsText="@string/root_and_owner">
+            app:requirementsText="@string/root_shizuku_and_owner">
 
         </com.sonozaki.settings.presentation.views.SettingsItemImageView>
         <com.sonozaki.settings.presentation.views.SettingsItemImageView
@@ -165,7 +165,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mainText="@string/move_to_bfu"
-            app:requirementsText="@string/root_and_owner_accessibility">
+            app:requirementsText="@string/root_and_shizuku_and_dhizuku_accessibility">
         </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
 
         <com.sonozaki.settings.presentation.views.PlainTextSettingView

@@ -120,7 +120,7 @@
     <string name="latency_text">Latency, power button, legacy (ms)</string>
     <string name="multiuser_ui">Multiuser UI</string>
     <string name="switch_user_ui">User switcher UI</string>
-    <string name="root_only_android10">Requires root, Android 10+</string>
+    <string name="root_or_shizuku_android10">Requires root or shizuku, Android 10+</string>
     <string name="switch_user_permission">Switch user permission</string>
     <string name="root_and_owner_android9">Requires root or dhizuku, Android 9+</string>
     <string name="safe_boot_status">Safe boot status</string>
@@ -140,7 +140,7 @@
     <string name="disable_multiuser_ui_automatically_on_boot_long">UI for switching users would be disabled automatically on your device on boot. It will prevent discovery of your profiles via pull-down settings menu.</string>
     <string name="disable_multiuser_ui_automatically_on_lock_long">UI for switching users would be disabled automatically on your device on screen lock. It will prevent discovery of your profiles via pull-down settings menu.</string>
     <string name="root_and_owner_android9_acessibility">Requires root or dhizuku, accessibility service, Android 9+</string>
-    <string name="root_and_owner_accessibility">Requires root or dhizuku + accessibility service</string>
+    <string name="root_and_shizuku_and_dhizuku_accessibility">Requires root/shizuku/dhizuku + accessibility service</string>
     <string name="please_install_testonly_version">Test-only app version available!</string>
     <string name="install_testonly_version_long">You are using not test-only version of the app. It have the drawback that the self-destruct option is not compatible with administrator priveleges. It\'s recommended to install test-only version.</string>
     <string name="install">Install</string>
@@ -217,4 +217,6 @@
     <string name="loading">LOADING</string>
     <string name="root_or_shizuku_root_recommended">Root or shizuku, root recommended</string>
     <string name="dhizuku_root_admin">Requires dhizuku/root/admin rights</string>
+    <string name="root_or_shizuku">Requires root or shizuku</string>
+    <string name="root_shizuku_and_owner">Requires root, shizuku or dhizuku</string>
 </resources>

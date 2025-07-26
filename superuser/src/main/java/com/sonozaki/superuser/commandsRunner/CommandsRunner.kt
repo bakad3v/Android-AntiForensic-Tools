@@ -75,7 +75,6 @@ abstract class CommandsRunner(private val context: Context,
     }
 
     override suspend fun setSafeBootStatus(status: Boolean) {
-        runCommand("pm set-user-restriction ${UserManager.DISALLOW_SAFE_BOOT} ${status.toInt()}")
         runCommand("settings put global safe_boot_disallowed ${status.toInt()}")
     }
 

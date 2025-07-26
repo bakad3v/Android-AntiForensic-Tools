@@ -24,7 +24,7 @@ class DeviceRebootWorker @AssistedInject constructor(
     private val superUserManager: SuperUserManager,
     private val getLogsDataUseCase: GetLogsDataUseCase,
     private val writeToLogsUseCase: WriteToLogsUseCase,
-    private val getRootEnabledUseCase: GetRebootEnabledUseCase
+    private val getRebootEnabledUseCase: GetRebootEnabledUseCase
 ):
     CoroutineWorker(context, workerParams) {
 
@@ -35,7 +35,7 @@ class DeviceRebootWorker @AssistedInject constructor(
     }
 
     override suspend fun doWork(): Result {
-        if (getRootEnabledUseCase()) {
+        if (getRebootEnabledUseCase()) {
             try {
                 writeToLogs(applicationContext.getString((R.string.reboot_started)))
                 superUserManager.getSuperUser().reboot()

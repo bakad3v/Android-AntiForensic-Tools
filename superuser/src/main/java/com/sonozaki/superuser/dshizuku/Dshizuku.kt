@@ -157,19 +157,21 @@ class Dshizuku @Inject constructor(
         }
     }
 
+    //Function available only for dhizuku
     override suspend fun setSwitchUserRestriction(status: Boolean) {
-        if (shizukuDhizukuNormalFlow()) {
-            shizukuManager.setSwitchUserRestriction(status)
-        } else {
+        if (getPermissionsUseCase().isOwner) {
             dhizukuManager.setSwitchUserRestriction(status)
+        } else {
+            shizukuManager.setSwitchUserRestriction(status)
         }
     }
 
+    //Function available only for dhizuku
     override suspend fun getSwitchUserRestriction(): Boolean {
-        return if (shizukuDhizukuNormalFlow()) {
-            shizukuManager.getSwitchUserRestriction()
-        } else {
+        return if (getPermissionsUseCase().isOwner) {
             dhizukuManager.getSwitchUserRestriction()
+        } else {
+            shizukuManager.getSwitchUserRestriction()
         }
     }
 

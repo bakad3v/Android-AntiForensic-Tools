@@ -247,6 +247,14 @@ class ShizukuManager @Inject constructor(
         throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
     }
 
+    override suspend fun getSwitchUserRestriction(): Boolean {
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
+    }
+
+    override suspend fun setSwitchUserRestriction(status: Boolean) {
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
+    }
+
     companion object {
         private const val SHIZUKU_PERMISSION_REQUEST_ID = 18
         private const val NOT_ENOUGH_RIGHTS = "App doesn't have necessary rights"

@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:mainText="@string/switch_user_ui"
-            app:requirementsText="@string/root_only_android10">
+            app:requirementsText="@string/root_or_shizuku_android10">
 
         </com.sonozaki.settings.presentation.views.SettingsItemImageView>
 

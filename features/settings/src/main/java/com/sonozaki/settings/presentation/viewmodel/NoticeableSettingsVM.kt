@@ -29,7 +29,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class PermanentSettingsVM @Inject constructor(
+class NoticeableSettingsVM @Inject constructor(
     private val getLogsStatusUseCase: GetLogsStatusUseCase,
     private val getDeveloperSettingsStatusUseCase: GetDeveloperSettingsStatusUseCase,
     private val getSafeBootRestrictionUseCase: GetSafeBootRestrictionUseCase,
