@@ -57,7 +57,8 @@ class ProfilesFragment : Fragment() {
             { id, status ->
                 viewModel.setProfileDeletionStatus(id, status)
             },
-            { id, isCurrent -> viewModel.stopProfile(id, isCurrent) }
+            { id, isCurrent -> viewModel.stopProfile(id, isCurrent) },
+            viewModel::showNoDeletionRights
         )
     }
 
@@ -222,7 +223,7 @@ class ProfilesFragment : Fragment() {
     }
 
     override fun onDestroyView() {
-        binding.items.setAdapter(null)
+        binding.items.adapter = null
         _binding = null
         super.onDestroyView()
     }

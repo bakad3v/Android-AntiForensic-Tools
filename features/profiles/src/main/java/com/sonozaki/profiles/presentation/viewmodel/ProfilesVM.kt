@@ -4,8 +4,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.sonozaki.dialogs.DialogActions
 import com.sonozaki.profiles.R
-import com.sonozaki.profiles.domain.usecases.GetProfilesUseCase
+import com.sonozaki.profiles.domain.mappers.ProfilesUIMapper
 import com.sonozaki.profiles.domain.usecases.GetDeleteProfilesUseCase
+import com.sonozaki.profiles.domain.usecases.GetPermissionsFlowUseCase
+import com.sonozaki.profiles.domain.usecases.GetProfilesUseCase
 import com.sonozaki.profiles.domain.usecases.RefreshProfilesUseCase
 import com.sonozaki.profiles.domain.usecases.SetDeleteProfilesUseCase
 import com.sonozaki.profiles.domain.usecases.SetProfileDeletionStatusUseCase
@@ -16,7 +18,7 @@ import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.onSubscription
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.stateIn
@@ -31,17 +33,24 @@ class ProfilesVM @Inject constructor(
     private val refreshProfilesUseCase: RefreshProfilesUseCase,
     private val dialogActionsChannel: Channel<DialogActions>,
     private val stopProfileUseCase: StopProfileUseCase,
+    private val profilesUIMapper: ProfilesUIMapper,
+    getPermissionsFlowUseCase: GetPermissionsFlowUseCase,
     getDeleteProfilesUseCase: GetDeleteProfilesUseCase
 ) : ViewModel() {
 
     val profileActions = dialogActionsChannel.receiveAsFlow()
 
-    val profiles = getProfilesUseCase().map {
-        if (it == null) {
-            showNoSuperuserRightsDialog()
-            ProfilesDataState.SuperUserAbsent
-        } else
-        ProfilesDataState.ViewData(it)
+    val profiles = combine(getProfilesUseCase(), getPermissionsFlowUseCase()){
+        profiles, permissions ->
+        if (profiles == null) {
+        showNoSuperuserRightsDialog()
+        ProfilesDataState.SuperUserAbsent
+    } else
+        ProfilesDataState.ViewData(
+            profiles.map {
+                profilesUIMapper.map(it, permissions)
+            }
+        )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(0, 0),
@@ -96,6 +105,17 @@ class ProfilesVM @Inject constructor(
                 DialogActions.ShowInfoDialog(
                     title = UIText.StringResource(R.string.profiles),
                     message = UIText.StringResource(R.string.profiles_faq)
+                )
+            )
+        }
+    }
+
+    fun showNoDeletionRights() {
+        viewModelScope.launch {
+            dialogActionsChannel.send(
+                DialogActions.ShowInfoDialog(
+                    title = UIText.StringResource(R.string.cant_delete_profile),
+                    message = UIText.StringResource(R.string.cant_delete_profile_long)
                 )
             )
         }
