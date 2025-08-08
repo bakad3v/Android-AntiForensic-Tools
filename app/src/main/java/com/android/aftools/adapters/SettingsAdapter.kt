@@ -1,7 +1,5 @@
 package com.android.aftools.adapters
 
-import com.bakasoft.appupdater.repository.AppUpdateRepository
-import com.bakasoft.network.RequestResult
 import com.sonozaki.data.settings.repositories.BruteforceRepository
 import com.sonozaki.data.settings.repositories.ButtonSettingsRepository
 import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepository
@@ -21,7 +19,6 @@ import com.sonozaki.entities.UsbSettings
 import com.sonozaki.entities.VolumeButtonTriggerOptions
 import com.sonozaki.settings.domain.repository.SettingsScreenRepository
 import kotlinx.coroutines.flow.Flow
-import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class SettingsAdapter @Inject constructor(
@@ -30,8 +27,7 @@ class SettingsAdapter @Inject constructor(
     private val buttonSettingsRepository: ButtonSettingsRepository,
     private val bruteforceRepository: BruteforceRepository,
     private val permissionsRepository: PermissionsRepository,
-    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository,
-    private val appUpdateRepository: AppUpdateRepository
+    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository
 ): SettingsScreenRepository {
     override val settings: Flow<Settings>
         get() = settingsRepository.settings
@@ -45,8 +41,6 @@ class SettingsAdapter @Inject constructor(
         get() = buttonSettingsRepository.buttonSettings
     override val deviceProtectionSettings: Flow<DeviceProtectionSettings>
         get() = deviceProtectionSettingsRepository.deviceProtectionSettings
-    override val showUpdatePopup: Flow<Boolean>
-        get() = appUpdateRepository.showUpdatePopupStatus
 
     override suspend fun setTheme(theme: Theme) {
         settingsRepository.setTheme(theme)
@@ -166,13 +160,5 @@ class SettingsAdapter @Inject constructor(
 
     override suspend fun setScreenshotsStatus(status: Boolean) {
         settingsRepository.setScreenshotsStatus(status)
-    }
-
-    override suspend fun disableUpdatePopup() {
-        appUpdateRepository.disableUpdatePopup()
-    }
-
-    override suspend fun downloadUpdate(): RequestResult<ResponseBody> {
-        return appUpdateRepository.downloadUpdate()
     }
 }

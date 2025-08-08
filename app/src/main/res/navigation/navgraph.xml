@@ -60,4 +60,7 @@
   <include app:graph="@navigation/settings_graph">
 
   </include>
+  <fragment
+      android:id="@+id/appUpdaterFragment"
+      android:name="com.bakasoft.appupdatecenter.presentation.fragments.AppUpdaterFragment" />
 </navigation>

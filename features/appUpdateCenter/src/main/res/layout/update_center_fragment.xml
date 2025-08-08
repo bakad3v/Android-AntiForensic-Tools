@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools">
+    <ScrollView
+    android:id="@+id/scrollUpdateCenter"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:padding="16dp">
+
+        <LinearLayout
+            android:id="@+id/containerUpdateCenter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvLatestVersionHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="?attr/textAppearanceTitleLarge"
+                tools:text="Latest version: 1.5.0"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/tvUpdateStatusSubtitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="You are up to date"
+                style="?attr/textAppearanceTitleSmall"
+                android:layout_marginBottom="16dp"/>
+
+            <!-- Выбор версии для установки -->
+            <TextView
+                android:id="@+id/tvChooseVariantLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/select_app_version"
+                style="?attr/textAppearanceTitleSmall"
+                android:layout_marginBottom="8dp"/>
+
+            <RadioGroup
+                android:id="@+id/rgVersionType"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/rbRegularVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/install_usual_version"
+                    android:checked="false"/>
+
+                <com.google.android.material.radiobutton.MaterialRadioButton
+                    android:id="@+id/rbRootVersion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/install_testonly_version"
+                    android:checked="false"/>
+
+            </RadioGroup>
+
+            <LinearLayout
+                android:id="@+id/containerNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="24dp">
+
+                <com.google.android.material.checkbox.MaterialCheckBox
+                    android:id="@+id/chkEnableNotifications"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/enable_update_notifications"
+                    android:checked="true"/>
+
+            </LinearLayout>
+
+            <!-- Кнопка установки обновления -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnInstallUpdate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/install_update" />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ProgressBar
+        android:id="@+id/loading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:progressTint="?attr/colorPrimary"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+    <LinearLayout
+        android:id="@+id/error_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="23dp"
+        android:layout_marginEnd="23dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible">
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:src="@drawable/baseline_warning_24">
+
+        </ImageView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp">
+
+        </Space>
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="3"
+            style="?attr/textAppearanceBodyLarge"
+            android:textSize="18sp"
+            tools:text="Error 404 ">
+
+        </TextView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/reload_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/reload"
+            android:textSize="14sp" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.bakasoft.appupdater.network
+package com.bakasoft.appinstaller.data.network
 
 import okhttp3.ResponseBody
 import retrofit2.Response
@@ -6,7 +6,7 @@ import retrofit2.http.GET
 import retrofit2.http.Streaming
 import retrofit2.http.Url
 
-interface DownloadAppTestVersionService {
+interface DownloadAppFileService {
 
     @GET
     @Streaming

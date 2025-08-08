@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="enable_update_notifications">Notify about updates?</string>
+    <string name="install_update">Install update</string>
+    <string name="install_usual_version">Install usual version</string>
+    <string name="install_testonly_version">Install testonly version</string>
+    <string name="select_app_version">Select app version</string>
+    <string name="reload">Reload</string>
+    <string name="latest_version">Latest version: %1$s</string>
+    <string name="update_app">You can install new version of the app</string>
+    <string name="install_testonly">You have the latest version, but you doesn\'t have testOnly version of the app installed. Testonly app version have several advantages. You can read more on github.</string>
+    <string name="up_to_date">You\'re up to date</string>
+    <string name="app_update_center">App update center</string>
+</resources>

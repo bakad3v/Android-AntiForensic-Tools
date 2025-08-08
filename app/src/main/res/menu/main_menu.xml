@@ -19,6 +19,9 @@
   <item android:title="@string/log"
     android:id="@+id/logsFragment"
     android:icon="@drawable/ic_baseline_text_snippet_24" />
+  <item android:title="@string/app_update_center"
+    android:id="@+id/appUpdaterFragment"
+    android:icon="@drawable/outline_system_update_24"/>
   <item android:title="@string/about"
     android:id="@+id/aboutFragment"
     android:icon="@drawable/ic_baseline_help_outline_24" />

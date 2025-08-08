@@ -8,7 +8,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.MenuProvider
-import androidx.core.view.isVisible
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -17,7 +16,6 @@ import com.sonozaki.activitystate.ActivityStateHolder
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.SettingsFragmentBinding
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM
-import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -42,19 +40,9 @@ class SettingsFragment: AbstractSettingsFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupActivity()
         setupMenu()
-        listenPopup()
         listenClickable()
     }
 
-    private fun listenPopup() {
-        viewLifecycleOwner.launchLifecycleAwareCoroutine {
-            viewModel.updatePopupStatusFlow.collect {
-                with(binding) {
-                    testOnlyUpdateAlert.isVisible = it
-                }
-            }
-        }
-    }
 
     /**
      * Setting up faq icon in action bar
@@ -93,12 +81,6 @@ class SettingsFragment: AbstractSettingsFragment() {
             }
             uiSettings.setOnClickListener {
                 navController.navigate(R.id.action_settingsFragment_to_UISettingsFragment)
-            }
-            installTestonlyUpdate.setOnClickListener {
-                viewModel.updateApp()
-            }
-            ignoreTestonlyUpdate.setOnClickListener {
-                viewModel.disableUpdatePopup()
             }
         }
     }

@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
@@ -17,11 +18,15 @@ import androidx.navigation.ui.setupWithNavController
 import com.android.aftools.R
 import com.android.aftools.databinding.MainActivityBinding
 import com.android.aftools.presentation.viewmodels.MainVM
+import com.android.aftools.presentation.viewmodels.MainVM.Companion.UPDATE_POPUP_REQUEST
 import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.activitystate.ActivityStateHolder
+import com.sonozaki.dialogs.DialogLauncher
+import com.sonozaki.dialogs.QuestionDialog
 import com.sonozaki.entities.Theme
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 
 @AndroidEntryPoint
@@ -32,6 +37,9 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
         get() = _mainBinding ?: throw RuntimeException("MainActivityBinding == null")
     private val viewModel: MainVM by viewModels()
     private var drawerReady = false
+    private val dialogLauncher by lazy {
+        DialogLauncher(supportFragmentManager, this)
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +54,26 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
         controller = navHostFragment.navController
         setContentView(mainBinding.root)
         observeActivityState()
+        observeDialogActions()
+        setupDialogsListeners()
+    }
+
+    private fun setupDialogsListeners() {
+        QuestionDialog.setupListener(
+            supportFragmentManager,
+            UPDATE_POPUP_REQUEST,
+            this
+            ) {
+            controller.navigate(R.id.appUpdaterFragment)
+        }
+    }
+
+    private fun observeDialogActions() {
+        lifecycleScope.launch {
+            viewModel.dialogActions.collect {
+                dialogLauncher.launchDialogFromAction(it)
+            }
+        }
     }
 
     /**
@@ -159,6 +187,7 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
                     R.id.rootFragment,
                     R.id.setupFilesFragment,
                     R.id.logsFragment,
+                    R.id.appUpdaterFragment,
                     R.id.aboutFragment
                 ), mainBinding.drawer
             )

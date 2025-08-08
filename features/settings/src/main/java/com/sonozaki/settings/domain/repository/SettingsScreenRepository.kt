@@ -1,19 +1,17 @@
 package com.sonozaki.settings.domain.repository
 
-import com.sonozaki.entities.ButtonSettings
+import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.BruteforceSettings
+import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.Permissions
+import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
 import com.sonozaki.entities.UsbSettings
-import kotlinx.coroutines.flow.Flow
-import com.bakasoft.network.RequestResult
-import com.sonozaki.entities.BruteforceDetectingMethod
-import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.VolumeButtonTriggerOptions
-import okhttp3.ResponseBody
+import kotlinx.coroutines.flow.Flow
 
 interface SettingsScreenRepository {
     val settings: Flow<Settings>
@@ -22,7 +20,6 @@ interface SettingsScreenRepository {
     val bruteForceSettings: Flow<BruteforceSettings>
     val buttonSettings: Flow<ButtonSettings>
     val deviceProtectionSettings: Flow<DeviceProtectionSettings>
-    val showUpdatePopup: Flow<Boolean>
 
     suspend fun sendBroadcast(status: Boolean)
     suspend fun setClearItself(status: Boolean)
@@ -54,6 +51,4 @@ interface SettingsScreenRepository {
     suspend fun changeRebootDelay(delay: Int)
     suspend fun changeMultiuserUIProtection(multiuserUIProtection: MultiuserUIProtection)
     suspend fun changeRebootOnLockStatus(status: Boolean)
-    suspend fun disableUpdatePopup()
-    suspend fun downloadUpdate(): RequestResult<ResponseBody>
 }

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_installation_description">App installation notifications</string>
+    <string name="app_installation">App installation</string>
+    <string name="app_update_in_progress">App update in progress</string>
+    <string name="update_success">Successfully updated</string>
+    <string name="update_failed">Update failed</string>
+</resources>

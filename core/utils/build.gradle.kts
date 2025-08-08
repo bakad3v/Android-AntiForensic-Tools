@@ -42,4 +42,5 @@ dependencies {
     implementation(libs.lifecycle.viewmodel.ktx)
     coreLibraryDesugaring(libs.desugar.jdk.libs)
     implementation(libs.kotlinx.datetime.jvm)
+    implementation(project(":core:network"))
 }
