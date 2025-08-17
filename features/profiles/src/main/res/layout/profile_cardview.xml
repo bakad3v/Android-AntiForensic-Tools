@@ -82,18 +82,32 @@
 
             </com.google.android.material.divider.MaterialDivider>
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/delete"
-                style="?attr/materialButtonOutlinedStyle"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_normal"
-                android:textColor="?attr/colorTertiary"
-                app:icon="@drawable/ic_baseline_delete_24"
-                app:iconTint="?attr/colorError"
                 app:layout_constraintStart_toStartOf="@+id/materialDivider"
                 app:layout_constraintTop_toBottomOf="@+id/materialDivider"
-                app:strokeColor="?attr/colorError" />
+                >
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/delete"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?attr/colorError"
+                    app:icon="@drawable/ic_baseline_delete_24"
+                    app:iconTint="?attr/colorError" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/open"
+                    style="?attr/materialButtonOutlinedStyle"
+                    android:layout_width="wrap_content"
+                    android:text="@string/login"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_normal"
+                    android:textColor="?attr/colorPrimary"
+                    app:icon="@drawable/baseline_login_24"
+                    app:iconTint="?attr/colorPrimary" />
+            </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/stop"

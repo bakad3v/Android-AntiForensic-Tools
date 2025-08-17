@@ -145,6 +145,10 @@ abstract class CommandsRunner(private val context: Context,
         runCommand("reboot")
     }
 
+    override suspend fun openProfile(userId: Int) {
+        runCommand("am switch-user $userId")
+    }
+
     override suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean {
         if (userId == 0) {
             throw SuperUserException(

@@ -22,5 +22,6 @@
     <string name="failed_to_stop_profile">Failed to stop profile</string>
     <string name="cant_delete_profile">Can\'t delete profile</string>
     <string name="cant_delete_profile_long">You have not enough rights to set up profiles deletion</string>
+    <string name="login">Login</string>
 
 </resources>

@@ -8,6 +8,7 @@ import com.sonozaki.profiles.domain.mappers.ProfilesUIMapper
 import com.sonozaki.profiles.domain.usecases.GetDeleteProfilesUseCase
 import com.sonozaki.profiles.domain.usecases.GetPermissionsFlowUseCase
 import com.sonozaki.profiles.domain.usecases.GetProfilesUseCase
+import com.sonozaki.profiles.domain.usecases.OpenProfileUseCase
 import com.sonozaki.profiles.domain.usecases.RefreshProfilesUseCase
 import com.sonozaki.profiles.domain.usecases.SetDeleteProfilesUseCase
 import com.sonozaki.profiles.domain.usecases.SetProfileDeletionStatusUseCase
@@ -34,6 +35,7 @@ class ProfilesVM @Inject constructor(
     private val dialogActionsChannel: Channel<DialogActions>,
     private val stopProfileUseCase: StopProfileUseCase,
     private val profilesUIMapper: ProfilesUIMapper,
+    private val openProfileUseCase: OpenProfileUseCase,
     getPermissionsFlowUseCase: GetPermissionsFlowUseCase,
     getDeleteProfilesUseCase: GetDeleteProfilesUseCase
 ) : ViewModel() {
@@ -84,6 +86,12 @@ class ProfilesVM @Inject constructor(
     fun setProfileDeletionStatus(id: Int, status: Boolean) {
         viewModelScope.launch {
             setProfilesDeletionStatusUseCase(id, status)
+        }
+    }
+
+    fun openProfile(id: Int) {
+        viewModelScope.launch {
+            openProfileUseCase(id)
         }
     }
 

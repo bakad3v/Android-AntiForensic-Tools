@@ -260,6 +260,10 @@ class DhizukuManager @Inject constructor(
         dpm.getUserRestrictions(deviceOwner).getBoolean(UserManager.DISALLOW_SAFE_BOOT)
     }
 
+    override suspend fun openProfile(userId: Int) {
+        dpm.switchUser(deviceOwner, profilesMapper.mapIdToUserHandle(userId))
+    }
+
     override suspend fun setSwitchUserRestriction(status: Boolean) = withContext(coroutineDispatcher) {
         if (VERSION.SDK_INT < Build.VERSION_CODES.P)
             throw SuperUserException(

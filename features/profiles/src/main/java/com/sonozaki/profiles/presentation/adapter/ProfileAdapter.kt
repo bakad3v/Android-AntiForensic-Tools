@@ -22,6 +22,7 @@ class ProfileAdapter @AssistedInject constructor(
     diffCallback: MyProfileAdapterDiffCallback,
     @Assisted(ON_DELETE_ITEM_LISTENER) private val onDeleteItemClickListener: ((Int, Boolean) -> Unit),
     @Assisted(ON_STOP_ITEM_LISTENER) private val onStopItemClickListener: ((Int, Boolean) -> Unit),
+    @Assisted private val onOpenProfile: (Int) -> Unit,
     @Assisted private val onItemDeletionForbidden: () -> Unit
 ) : ListAdapter<ProfileUI, MyProfileViewHolder>(diffCallback) {
 
@@ -103,6 +104,9 @@ class ProfileAdapter @AssistedInject constructor(
       stop.setOnClickListener {
           onStopItemClickListener(profile.profileDomain.id, profile.profileDomain.current)
       }
+        open.setOnClickListener {
+            onOpenProfile(profile.profileDomain.id)
+        }
     }
   }
 
@@ -111,6 +115,7 @@ class ProfileAdapter @AssistedInject constructor(
       fun create(
           @Assisted(ON_DELETE_ITEM_LISTENER) onDeleteItemClickListener: ((Int, Boolean) -> Unit),
           @Assisted(ON_STOP_ITEM_LISTENER) onStopItemClickListener: ((Int, Boolean) -> Unit),
+          @Assisted onOpenProfile: (Int) -> Unit,
           @Assisted onItemDeletionForbidden: () -> Unit
       ): ProfileAdapter
   }

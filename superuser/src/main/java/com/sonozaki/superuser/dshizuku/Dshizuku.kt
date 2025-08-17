@@ -237,6 +237,14 @@ class Dshizuku @Inject constructor(
         }
     }
 
+    override suspend fun openProfile(userId: Int) {
+        if (shizukuDhizukuNormalFlow()) {
+            shizukuManager.openProfile(userId)
+        } else {
+            dhizukuManager.openProfile(userId)
+        }
+    }
+
     companion object {
         private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
     }

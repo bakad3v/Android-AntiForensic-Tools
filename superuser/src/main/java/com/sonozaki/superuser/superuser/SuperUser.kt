@@ -205,4 +205,7 @@ interface SuperUser {
 
     @Throws(SuperUserException::class)
     suspend fun getDeveloperSettingsStatus(): Boolean
+
+    @Throws(SuperUserException::class)
+    suspend fun openProfile(userId: Int)
 }

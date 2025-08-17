@@ -33,6 +33,11 @@ class ProfilesAdapter @Inject constructor(
 
     override fun getProfiles(): Flow<List<ProfileDomain>?>
         = profilesRepository.getProfiles()
+
+    override suspend fun openProfile(id: Int) {
+        profilesRepository.openProfile(id)
+    }
+
     override val deleteProfiles: Flow<Boolean>
         get() = settingsRepository.settings.map { it.deleteProfiles }
     override val permissions: Flow<Permissions>

@@ -54,10 +54,9 @@ class ProfilesFragment : Fragment() {
 
     private val myProfileAdapter by lazy {
         profileAdapterFactory.create(
-            { id, status ->
-                viewModel.setProfileDeletionStatus(id, status)
-            },
-            { id, isCurrent -> viewModel.stopProfile(id, isCurrent) },
+            viewModel::setProfileDeletionStatus,
+            viewModel::stopProfile,
+            viewModel::openProfile,
             viewModel::showNoDeletionRights
         )
     }
