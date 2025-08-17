@@ -181,6 +181,7 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
         if (mainBinding.bigLayout == null) {
             val conf = AppBarConfiguration(
                 setOf(
+                    R.id.wizardGraph,
                     R.id.settingsGraph,
                     R.id.profilesFragment,
                     R.id.setupPassFragment,

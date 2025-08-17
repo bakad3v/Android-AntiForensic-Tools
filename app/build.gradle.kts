@@ -153,6 +153,7 @@ dependencies {
     implementation(project(":features:splash"))
     implementation(project(":features:lockscreen"))
     implementation(project(":features:services"))
+    implementation(project(":features:setupWizard"))
     implementation(project(":core:encryptedDatastore"))
     implementation(project(":data:password"))
     implementation(project(":data:root"))

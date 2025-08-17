@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   <item
+      android:title="@string/setup_wizard"
+      android:id="@+id/wizardGraph"
+      android:icon="@drawable/baseline_auto_fix_normal_24"
+    />
+  <item
       android:title="@string/settings"
       android:id="@+id/settingsGraph"
       android:icon="@drawable/ic_baseline_settings_24" />

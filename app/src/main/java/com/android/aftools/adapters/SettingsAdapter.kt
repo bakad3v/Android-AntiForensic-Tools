@@ -27,8 +27,7 @@ class SettingsAdapter @Inject constructor(
     private val buttonSettingsRepository: ButtonSettingsRepository,
     private val bruteforceRepository: BruteforceRepository,
     private val permissionsRepository: PermissionsRepository,
-    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository
-): SettingsScreenRepository {
+    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository): SettingsScreenRepository {
     override val settings: Flow<Settings>
         get() = settingsRepository.settings
     override val permissions: Flow<Permissions>

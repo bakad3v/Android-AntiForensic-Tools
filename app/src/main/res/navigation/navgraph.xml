@@ -6,8 +6,8 @@
     android:id="@+id/passFragmentNav"
     android:name="com.sonozaki.lockscreen.presentation.fragment.EnterPassFragment">
     <action
-        android:id="@+id/action_passFragmentNav_to_settingsFragment"
-        app:destination="@id/settingsGraph"
+        android:id="@+id/action_passFragmentNav_to_wizardFragment"
+        app:destination="@id/wizardGraph"
         app:popUpTo="@id/passFragmentNav"
         app:popUpToInclusive="true" />
   </fragment>
@@ -49,7 +49,7 @@
       android:name="com.sonozaki.passwordsetup.presentation.fragment.SetupPassFragment">
     <action
         android:id="@+id/action_setupPassFragment_to_settingsFragment"
-        app:destination="@id/settingsGraph"
+        app:destination="@id/wizardGraph"
         app:popUpTo="@id/setupPassFragment"
         app:popUpToInclusive="true" />
     <argument
@@ -58,6 +58,9 @@
         app:argType="boolean" />
   </fragment>
   <include app:graph="@navigation/settings_graph">
+
+  </include>
+  <include app:graph="@navigation/setup_wizard_graph">
 
   </include>
   <fragment

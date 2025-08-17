@@ -5,8 +5,10 @@ import com.android.aftools.routers.InstallationRouterImpl
 import com.android.aftools.routers.LockScreenRouterImpl
 import com.android.aftools.routers.PasswordSetupRouterImpl
 import com.android.aftools.routers.SettingsRouterImpl
+import com.android.aftools.routers.SetupWizardRouterImpl
 import com.android.aftools.routers.SplashRouterImpl
 import com.bakasoft.appupdatecenter.domain.AppUpdateRouter
+import com.bakasoft.setupwizard.domain.routers.SetupWizardRouter
 import com.sonozaki.lockscreen.domain.router.LockScreenRouter
 import com.sonozaki.passwordsetup.domain.router.PasswordSetupRouter
 import com.sonozaki.settings.domain.routers.SettingsRouter
@@ -45,4 +47,8 @@ abstract class RoutersModule {
     @Binds
     @Singleton
     abstract fun binAppUpdateRouter(routerImpl: InstallationRouterImpl): AppUpdateRouter
+
+    @Binds
+    @Singleton
+    abstract fun bindSetupWizardRouter(routerImpl: SetupWizardRouterImpl): SetupWizardRouter
 }
