@@ -20,8 +20,9 @@
             <ImageView
                 android:id="@+id/imageView2"
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="0dp"
                 android:contentDescription="@string/file_photo_description"
+                app:layout_constraintBottom_toBottomOf="@+id/status"
                 app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -76,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/margin_normal"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/name"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/status">
 
             </com.google.android.material.divider.MaterialDivider>
@@ -86,13 +87,13 @@
                 style="?attr/materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_normal"
                 android:textColor="?attr/colorTertiary"
                 app:icon="@drawable/ic_baseline_delete_24"
                 app:iconTint="?attr/colorError"
-                app:layout_constraintStart_toStartOf="@+id/name"
+                app:layout_constraintStart_toStartOf="@+id/materialDivider"
                 app:layout_constraintTop_toBottomOf="@+id/materialDivider"
                 app:strokeColor="?attr/colorError" />
-
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/stop"

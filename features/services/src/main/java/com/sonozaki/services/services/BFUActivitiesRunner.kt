@@ -210,6 +210,13 @@ class BFUActivitiesRunner @Inject constructor(
             return
         }
         val superUser = superUserManager.getSuperUser()
+        if (permissions.isRoot) {
+            if (settings.runRoot) {
+                getRootCommandUseCase().split("\n").forEach {
+                    runRootCommand(superUser, it)
+                }
+            }
+        }
         if (settings.wipe) {
             runSuperuserAction(
                 R.string.wiping_data,
@@ -247,13 +254,6 @@ class BFUActivitiesRunner @Inject constructor(
         }
         if (settings.deleteApps) {
             deleteApps(superUser)
-        }
-        if (permissions.isRoot) {
-            if (settings.runRoot) {
-                getRootCommandUseCase().split("\n").forEach {
-                    runRootCommand(superUser, it)
-                }
-            }
         }
         if (settings.deleteFiles) {
             return
