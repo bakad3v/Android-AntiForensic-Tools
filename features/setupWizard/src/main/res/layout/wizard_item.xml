@@ -27,7 +27,7 @@
             android:layout_weight="1"
             android:layout_marginStart="12dp"
             android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
-            android:maxLines="3"
+            android:maxLines="5"
             android:ellipsize="end"
             tools:text="Setting" />
 
