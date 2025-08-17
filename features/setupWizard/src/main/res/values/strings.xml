@@ -33,8 +33,8 @@
     <string name="files_deletion_selected">Files deletion selected. Consider deleting user profiles</string>
     <string name="wipe_data_selected">Wiping device data selected. Consider deleting user profiles</string>
     <string name="root_selected">Root commands specified. Wizard can\'t analize root commands</string>
-    <string name="some_warnings">You\'re almost alright</string>
-    <string name="some_warnings_long">But some recommendations are violated</string>
+    <string name="some_warnings">We\'re unsure you\'re alright</string>
+    <string name="some_warnings_long">Some recommendations are violated, but maybe you understand what you are doing...</string>
     <string name="unsafe">You\'re unsafe!</string>
     <string name="unsafe_long">You\'re not protected against some types of attacks</string>
     <string name="apply_settings">Apply settings?</string>
@@ -48,6 +48,9 @@
     <string name="disable_safe_boot_question"><![CDATA[<p>&bull; Disable safe boot mode</p>]]></string>
     <string name="hide_multiuser_ui_question"><![CDATA[<p>&bull; Hide multiuser UI every time you turn off phone screen</p>]]></string>
     <string name="run_trim_question"><![CDATA[<p>&bull; Run <a href="https://en.wikipedia.org/wiki/Trim_(computing)">TRIM command</a> after data destruction to hide traces of deleted data</p>]]></string>
+    <string name="some_permissions_granted">You granted some permissions, but this is not enough to setup protection automatically</string>
+    <string name="not_enough_rights_to_check_safe_boot">App doesn\'t have enough rights to check safe boot status</string>
+    <string name="not_enough_rights_to_check_logs">App doesn\'t have enough rights to check logs status</string>
 
 
 </resources>

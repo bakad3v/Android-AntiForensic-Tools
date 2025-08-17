@@ -148,8 +148,7 @@
                         <com.bakasoft.setupwizard.presentation.views.WizardItem
                             android:id="@+id/grant_superuser_permissions"
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            app:settingsText="@string/grant_superuser_permissions" />
+                            android:layout_height="wrap_content" />
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/permissions_help"
@@ -335,15 +334,13 @@
                             android:id="@+id/disable_logs"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/margin_normal"
-                            app:settingsText="@string/disable_logs" />
+                            android:layout_marginBottom="@dimen/margin_normal" />
 
                         <com.bakasoft.setupwizard.presentation.views.WizardItem
                             android:id="@+id/disable_safe_boot"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="@dimen/margin_normal"
-                            app:settingsText="@string/disable_safe_boot" />
+                            android:layout_marginBottom="@dimen/margin_normal" />
 
                         <com.bakasoft.setupwizard.presentation.views.WizardItem
                             android:id="@+id/setup_multiuser_ui_hiding"

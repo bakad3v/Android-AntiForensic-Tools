@@ -141,6 +141,40 @@ class SetupWizardFragment: Fragment() {
                 SettingsElementState.RECOMMENDED ->
                     triggerOnButton.setText(requireContext().getString(R.string.legacy_way_of_click_detection))
             }
+
+            val permissionsSettings = map.getOrDefault(WizardElement.SUPERUSER_PERMISSIONS,
+                SettingsElementState.UNKNOW)
+
+            when(permissionsSettings) {
+                SettingsElementState.NOT_NEEDED, SettingsElementState.UNKNOW -> {}
+                SettingsElementState.REQUIRED, SettingsElementState.OK ->
+                    grantSuperuserPermissions.setText(requireContext().getString(R.string.grant_superuser_permissions))
+                SettingsElementState.RECOMMENDED ->
+                    grantSuperuserPermissions.setText(requireContext().getString(R.string.some_permissions_granted))
+            }
+
+            val safeBootSettings = map.getOrDefault(WizardElement.DISABLE_SAFE_BOOT,
+                SettingsElementState.UNKNOW)
+
+            when(safeBootSettings) {
+                SettingsElementState.NOT_NEEDED, SettingsElementState.UNKNOW,
+                SettingsElementState.REQUIRED, SettingsElementState.OK ->
+                    disableSafeBoot.setText(requireContext().getString(R.string.disable_safe_boot))
+                SettingsElementState.RECOMMENDED ->
+                    disableSafeBoot.setText(requireContext().getString(R.string.not_enough_rights_to_check_safe_boot))
+            }
+
+            val logsSettings = map.getOrDefault(WizardElement.DISABLE_LOGS,
+                SettingsElementState.UNKNOW)
+
+            when(logsSettings) {
+                SettingsElementState.NOT_NEEDED, SettingsElementState.UNKNOW,
+                SettingsElementState.REQUIRED, SettingsElementState.OK ->
+                    disableLogs.setText(requireContext().getString(R.string.disable_logs))
+                SettingsElementState.RECOMMENDED ->
+                    disableLogs.setText(requireContext().getString(R.string.not_enough_rights_to_check_logs))
+            }
+
             when(dataSelected) {
                 DataSelected.PROFILES -> {
                     selectData.setText(requireContext().getString(R.string.profile_deletion_selected))

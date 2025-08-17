@@ -48,9 +48,6 @@ class GetWizardStateUseCase @Inject constructor(
 
             val accessibilityServiceState = getAccessibilityServiceState(settings)
 
-            val superUserPermissionsState =
-                getSuperUserPermissionsState(permissions)
-
             val usbTriggerState = getUsbTriggerState(usbSettings)
 
             val passwordState = getPasswordState(settings)
@@ -64,8 +61,7 @@ class GetWizardStateUseCase @Inject constructor(
 
             val selectedDataState = when (selectedData) {
                 DataSelected.PROFILES -> SettingsElementState.OK
-                DataSelected.WIPE, DataSelected.FILES -> SettingsElementState.RECOMMENDED
-                DataSelected.ROOT -> SettingsElementState.UNKNOW
+                DataSelected.WIPE, DataSelected.FILES, DataSelected.ROOT -> SettingsElementState.RECOMMENDED
                 DataSelected.NONE -> SettingsElementState.REQUIRED
             }
 
@@ -94,6 +90,10 @@ class GetWizardStateUseCase @Inject constructor(
             val disableMultiuserUIState = getDisableMultiuserUIState(selectedData, profilesSelected)
 
             val activateTrimState = getActivateTrimState(selectedData, settings)
+
+            val protectionFixAvailable = getProtectionAvailable(permissions, selectedData)
+            val superUserPermissionsState =
+                getSuperUserPermissionsState(permissions, protectionFixAvailable)
 
             val dataMap = EnumMap<WizardElement, SettingsElementState>(WizardElement::class.java).apply {
                 put(WizardElement.CORRECT_APP_VERSION, appVersionState)
@@ -125,7 +125,7 @@ class GetWizardStateUseCase @Inject constructor(
                 dataMap = dataMap,
                 state = appState,
                 dataSelected = selectedData,
-                protectionFixActive = getProtectionAvailable(permissions),
+                protectionFixActive = protectionFixAvailable,
                 triggersFixActive = settings.serviceWorking)
         }
     }
@@ -170,12 +170,16 @@ class GetWizardStateUseCase @Inject constructor(
                     SettingsElementState.OK
                 }
             } catch (e: SuperUserException) {
-                SettingsElementState.UNKNOW
+                SettingsElementState.RECOMMENDED
             }
         }
 
-    private fun getProtectionAvailable(permissions: Permissions): Boolean {
-        return permissions.isOwner || permissions.isShizuku || permissions.isRoot
+    private fun getProtectionAvailable(permissions: Permissions, selected: DataSelected): Boolean {
+        return when(selected) {
+            DataSelected.PROFILES, DataSelected.FILES -> permissions.isRoot || (permissions.isShizuku && permissions.isOwner)
+            DataSelected.WIPE, DataSelected.ROOT -> permissions.isRoot || permissions.isShizuku || permissions.isOwner
+            DataSelected.NONE -> false
+        }
     }
 
     private suspend fun getDisableSafeBootState(): SettingsElementState =
@@ -186,7 +190,7 @@ class GetWizardStateUseCase @Inject constructor(
                 SettingsElementState.REQUIRED
             }
         } catch (e: Exception) {
-            SettingsElementState.UNKNOW
+            SettingsElementState.RECOMMENDED
         }
 
     private fun getAppHidingState(
@@ -270,9 +274,13 @@ class GetWizardStateUseCase @Inject constructor(
         UsbSettings.DO_NOTHING -> SettingsElementState.REQUIRED
     }
 
-    private fun getSuperUserPermissionsState(permissions: Permissions): SettingsElementState =
+    private fun getSuperUserPermissionsState(permissions: Permissions, protectionFixAvailable: Boolean): SettingsElementState =
         if (permissions.isRoot || permissions.isAdmin || permissions.isShizuku || permissions.isOwner) {
-            SettingsElementState.OK
+            if (protectionFixAvailable) {
+                SettingsElementState.OK
+            } else {
+                SettingsElementState.RECOMMENDED
+            }
         } else {
             SettingsElementState.REQUIRED
         }
