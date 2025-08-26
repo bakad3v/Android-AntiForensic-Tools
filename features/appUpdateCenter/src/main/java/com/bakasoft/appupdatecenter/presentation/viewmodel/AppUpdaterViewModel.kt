@@ -46,7 +46,7 @@ class AppUpdaterViewModel @Inject constructor(
     val appUpdateCenterState = combine(getAppUpdateDataFlowUseCase(),
         getPopupStatusUseCase(), getPermissionsUseCase(), selectedOptionFlow) { appUpdate, popupStatus, permissions, selectedOption ->
         when(appUpdate) {
-            is RequestResult.Error -> AppUpdaterState.Error(networkErrorToText(appUpdate.error))
+            is RequestResult.Error -> AppUpdaterState.Error(networkErrorToText(appUpdate.error), popupStatus)
             is RequestResult.Data -> AppUpdaterState.Data(
                 appUpdate.data, appUpdate.data.newVersion,
                 (permissions.isRoot || permissions.isShizuku) && (appUpdate.data.newVersion || !appUpdate.data.isTestOnly),

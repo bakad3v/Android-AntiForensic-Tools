@@ -100,7 +100,7 @@ class AppUpdaterFragment: Fragment() {
     }
 
 
-    private fun showError(error: UIText.StringResource) {
+    private fun showError(error: UIText.StringResource, showUpdatePopup: Boolean) {
         with(binding) {
             loading.isVisible = false
             scrollUpdateCenter.isVisible = false
@@ -109,6 +109,7 @@ class AppUpdaterFragment: Fragment() {
             reloadButton.setOnClickListener {
                 viewModel.checkUpdates()
             }
+            chkEnableNotificationsError.isChecked = showUpdatePopup
         }
     }
 
@@ -128,6 +129,9 @@ class AppUpdaterFragment: Fragment() {
                 viewModel.checkUpdates()
             }
             chkEnableNotifications.setOnCheckedChangeListener { _, checked ->
+                viewModel.setUpdatePopupStatus(checked)
+            }
+            chkEnableNotificationsError.setOnCheckedChangeListener { _, checked ->
                 viewModel.setUpdatePopupStatus(checked)
             }
         }
@@ -195,7 +199,7 @@ class AppUpdaterFragment: Fragment() {
                         showLoading()
                     }
                     is AppUpdaterState.Error -> {
-                        showError(it.error)
+                        showError(it.error, it.showUpdatePopup)
                     }
                     is AppUpdaterState.Data -> {
                         showData(it)

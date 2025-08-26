@@ -147,5 +147,12 @@
             android:layout_height="wrap_content"
             android:text="@string/reload"
             android:textSize="14sp" />
+
+        <com.google.android.material.checkbox.MaterialCheckBox
+            android:id="@+id/chkEnableNotificationsError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/enable_update_notifications"
+            android:checked="true"/>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -11,7 +11,7 @@ sealed class AppUpdaterState {
                     val showUpdatePopup: Boolean,
                     val selectedOption: SelectedOption = SelectedOption.NONE
     ): AppUpdaterState()
-    data class Error(val error: UIText.StringResource): AppUpdaterState()
+    data class Error(val error: UIText.StringResource, val showUpdatePopup: Boolean): AppUpdaterState()
 }
 
 enum class SelectedOption {
