@@ -2,6 +2,7 @@ package com.bakasoft.setupwizard.domain.usecases
 
 import com.bakasoft.setupwizard.domain.entities.AppState
 import com.bakasoft.setupwizard.domain.entities.DataSelected
+import com.bakasoft.setupwizard.domain.entities.PermissionsState
 import com.bakasoft.setupwizard.domain.entities.SettingsElementState
 import com.bakasoft.setupwizard.domain.entities.SetupWizardState
 import com.bakasoft.setupwizard.domain.entities.WizardElement
@@ -92,9 +93,13 @@ class GetWizardStateUseCase @Inject constructor(
             val activateTrimState = getActivateTrimState(selectedData, settings)
 
             val protectionFixAvailable = getProtectionAvailable(permissions, selectedData)
-            val superUserPermissionsState =
-                getSuperUserPermissionsState(permissions, protectionFixAvailable)
-
+            val superUserPermissions =
+                getPermissionState(permissions, protectionFixAvailable, rootCommandNotEmpty, profilesSelected)
+            val superUserPermissionsState = when(superUserPermissions) {
+                PermissionsState.ROOT -> SettingsElementState.OK
+                PermissionsState.PROBABLY_NOT_ENOUGH, PermissionsState.PROBABLY_ENOUGH -> SettingsElementState.RECOMMENDED
+                PermissionsState.NOT_ENOUGH -> SettingsElementState.REQUIRED
+            }
             val dataMap = EnumMap<WizardElement, SettingsElementState>(WizardElement::class.java).apply {
                 put(WizardElement.CORRECT_APP_VERSION, appVersionState)
                 put(WizardElement.ACCESSIBILITY_SERVICE, accessibilityServiceState)
@@ -126,7 +131,8 @@ class GetWizardStateUseCase @Inject constructor(
                 state = appState,
                 dataSelected = selectedData,
                 protectionFixActive = protectionFixAvailable,
-                triggersFixActive = settings.serviceWorking)
+                triggersFixActive = settings.serviceWorking,
+                permissionsState = superUserPermissions)
         }
     }
 
@@ -134,8 +140,16 @@ class GetWizardStateUseCase @Inject constructor(
         selectedData: DataSelected,
         settings: Settings
     ): SettingsElementState = when (selectedData) {
-        DataSelected.WIPE, DataSelected.NONE -> SettingsElementState.NOT_NEEDED
-        DataSelected.ROOT -> SettingsElementState.UNKNOW
+        DataSelected.WIPE, DataSelected.NONE -> if (settings.trim) {
+            SettingsElementState.OK
+        } else {
+            SettingsElementState.NOT_NEEDED
+        }
+        DataSelected.ROOT -> if (settings.trim) {
+            SettingsElementState.OK
+        } else {
+            SettingsElementState.UNKNOW
+        }
         DataSelected.FILES, DataSelected.PROFILES ->
             if (settings.trim) {
                 SettingsElementState.OK
@@ -154,13 +168,43 @@ class GetWizardStateUseCase @Inject constructor(
             SettingsElementState.REQUIRED
         }
 
-        else -> SettingsElementState.NOT_NEEDED
+        DataSelected.ROOT ->  if (profilesSelected) {
+            SettingsElementState.OK
+        } else {
+            SettingsElementState.UNKNOW
+        }
+
+        else -> if (profilesSelected) {
+            SettingsElementState.OK
+        } else {
+            SettingsElementState.NOT_NEEDED
+        }
     }
 
     private suspend fun getDisableLogsState(selectedData: DataSelected): SettingsElementState =
         when (selectedData) {
-            DataSelected.WIPE, DataSelected.NONE -> SettingsElementState.NOT_NEEDED
-            DataSelected.ROOT -> SettingsElementState.UNKNOW
+            DataSelected.WIPE, DataSelected.NONE ->try {
+                if (superUserManager.getSuperUser()
+                        .getLogsStatus()
+                ) {
+                    SettingsElementState.NOT_NEEDED
+                } else {
+                    SettingsElementState.OK
+                }
+            } catch (e: SuperUserException) {
+                SettingsElementState.NOT_NEEDED
+            }
+            DataSelected.ROOT -> try {
+                if (superUserManager.getSuperUser()
+                        .getLogsStatus()
+                ) {
+                    SettingsElementState.UNKNOW
+                } else {
+                    SettingsElementState.OK
+                }
+            } catch (e: SuperUserException) {
+                SettingsElementState.UNKNOW
+            }
             DataSelected.FILES, DataSelected.PROFILES -> try {
                 if (superUserManager.getSuperUser()
                         .getLogsStatus()
@@ -176,8 +220,9 @@ class GetWizardStateUseCase @Inject constructor(
 
     private fun getProtectionAvailable(permissions: Permissions, selected: DataSelected): Boolean {
         return when(selected) {
+            DataSelected.ROOT -> permissions.isRoot
             DataSelected.PROFILES, DataSelected.FILES -> permissions.isRoot || (permissions.isShizuku && permissions.isOwner)
-            DataSelected.WIPE, DataSelected.ROOT -> permissions.isRoot || permissions.isShizuku || permissions.isOwner
+            DataSelected.WIPE -> permissions.isRoot || permissions.isShizuku || permissions.isOwner
             DataSelected.NONE -> false
         }
     }
@@ -198,8 +243,16 @@ class GetWizardStateUseCase @Inject constructor(
         permissions: Permissions,
         settings: Settings
     ): SettingsElementState = when (selectedData) {
-        DataSelected.WIPE, DataSelected.NONE -> SettingsElementState.NOT_NEEDED
-        DataSelected.ROOT -> SettingsElementState.UNKNOW
+        DataSelected.WIPE, DataSelected.NONE -> if (settings.hideItself) {
+            SettingsElementState.OK
+        } else {
+            SettingsElementState.NOT_NEEDED
+        }
+        DataSelected.ROOT -> if (settings.hideItself) {
+            SettingsElementState.OK
+        } else {
+            SettingsElementState.UNKNOW
+        }
         DataSelected.FILES, DataSelected.PROFILES -> if (!permissions.isRoot) {
             if (settings.hideItself) {
                 SettingsElementState.OK
@@ -215,8 +268,16 @@ class GetWizardStateUseCase @Inject constructor(
         selectedData: DataSelected,
         settings: Settings
     ): SettingsElementState = when (selectedData) {
-        DataSelected.WIPE, DataSelected.NONE -> SettingsElementState.NOT_NEEDED
-        DataSelected.ROOT -> SettingsElementState.UNKNOW
+        DataSelected.WIPE, DataSelected.NONE -> if (settings.removeItself) {
+            SettingsElementState.OK
+        } else {
+            SettingsElementState.NOT_NEEDED
+        }
+        DataSelected.ROOT -> if (settings.removeItself) {
+            SettingsElementState.OK
+        } else {
+            SettingsElementState.UNKNOW
+        }
         DataSelected.FILES, DataSelected.PROFILES -> if (settings.removeItself) {
             SettingsElementState.OK
         } else {
@@ -274,16 +335,23 @@ class GetWizardStateUseCase @Inject constructor(
         UsbSettings.DO_NOTHING -> SettingsElementState.REQUIRED
     }
 
-    private fun getSuperUserPermissionsState(permissions: Permissions, protectionFixAvailable: Boolean): SettingsElementState =
-        if (permissions.isRoot || permissions.isAdmin || permissions.isShizuku || permissions.isOwner) {
-            if (protectionFixAvailable) {
-                SettingsElementState.OK
+    private fun getPermissionState(permissions: Permissions, protectionFixAvailable: Boolean, rootCommandNotEmpty: Boolean, profilesSelected: Boolean): PermissionsState {
+        if (permissions.isRoot) {
+            return PermissionsState.ROOT
+        }
+        if (rootCommandNotEmpty || profilesSelected && !permissions.isOwner) {
+            return PermissionsState.NOT_ENOUGH
+        }
+        return if (permissions.isAdmin || permissions.isShizuku || permissions.isOwner) {
+            if (protectionFixAvailable || (permissions.isShizuku && permissions.isOwner)) {
+                PermissionsState.PROBABLY_ENOUGH
             } else {
-                SettingsElementState.RECOMMENDED
+                PermissionsState.PROBABLY_NOT_ENOUGH
             }
         } else {
-            SettingsElementState.REQUIRED
+            PermissionsState.NOT_ENOUGH
         }
+    }
 
     private fun getAccessibilityServiceState(settings: Settings): SettingsElementState = if (settings.serviceWorking) {
         SettingsElementState.OK

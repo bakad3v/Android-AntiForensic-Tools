@@ -48,9 +48,10 @@
     <string name="disable_safe_boot_question"><![CDATA[<p>&bull; Disable safe boot mode</p>]]></string>
     <string name="hide_multiuser_ui_question"><![CDATA[<p>&bull; Hide multiuser UI every time you turn off phone screen</p>]]></string>
     <string name="run_trim_question"><![CDATA[<p>&bull; Run <a href="https://en.wikipedia.org/wiki/Trim_(computing)">TRIM command</a> after data destruction to hide traces of deleted data</p>]]></string>
-    <string name="some_permissions_granted">You granted some permissions, but this is not enough to setup protection automatically</string>
+    <string name="some_permissions_granted">You granted some permissions, but this is probably not enough</string>
     <string name="not_enough_rights_to_check_safe_boot">App doesn\'t have enough rights to check safe boot status</string>
     <string name="not_enough_rights_to_check_logs">App doesn\'t have enough rights to check logs status</string>
+    <string name="probably_enough_permissions">You probably provided enough permissions, but app would still work better with root rights</string>
 
 
 </resources>

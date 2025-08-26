@@ -16,6 +16,7 @@ import com.bakasoft.setupwizard.R
 import com.bakasoft.setupwizard.databinding.WizardScreenBinding
 import com.bakasoft.setupwizard.domain.entities.AppState
 import com.bakasoft.setupwizard.domain.entities.DataSelected
+import com.bakasoft.setupwizard.domain.entities.PermissionsState
 import com.bakasoft.setupwizard.domain.entities.SettingsElementState
 import com.bakasoft.setupwizard.domain.entities.SetupWizardState
 import com.bakasoft.setupwizard.domain.entities.WizardElement
@@ -68,7 +69,7 @@ class SetupWizardFragment: Fragment() {
                         setupColors(state.dataMap)
                         setupClickListeners(state.dataSelected)
                         setupWizards(state.triggersFixActive, state.protectionFixActive)
-                        setupButtonTexts(state.dataMap, state.dataSelected)
+                        setupButtonTexts(state.dataMap, state.dataSelected, state.permissionsState)
                         setupAppState(state.state)
                     }
                 }
@@ -100,7 +101,8 @@ class SetupWizardFragment: Fragment() {
         }
     }
 
-    private fun setupButtonTexts(map: EnumMap<WizardElement, SettingsElementState>, dataSelected: DataSelected) {
+    private fun setupButtonTexts(map: EnumMap<WizardElement, SettingsElementState>,
+                                 dataSelected: DataSelected, permissionsState: PermissionsState) {
         with(binding) {
             val appVersionSettings = map.getOrDefault(WizardElement.CORRECT_APP_VERSION,
                 SettingsElementState.UNKNOW)
@@ -142,15 +144,13 @@ class SetupWizardFragment: Fragment() {
                     triggerOnButton.setText(requireContext().getString(R.string.legacy_way_of_click_detection))
             }
 
-            val permissionsSettings = map.getOrDefault(WizardElement.SUPERUSER_PERMISSIONS,
-                SettingsElementState.UNKNOW)
-
-            when(permissionsSettings) {
-                SettingsElementState.NOT_NEEDED, SettingsElementState.UNKNOW -> {}
-                SettingsElementState.REQUIRED, SettingsElementState.OK ->
+            when(permissionsState) {
+                PermissionsState.ROOT, PermissionsState.NOT_ENOUGH ->
                     grantSuperuserPermissions.setText(requireContext().getString(R.string.grant_superuser_permissions))
-                SettingsElementState.RECOMMENDED ->
+                PermissionsState.PROBABLY_NOT_ENOUGH ->
                     grantSuperuserPermissions.setText(requireContext().getString(R.string.some_permissions_granted))
+                PermissionsState.PROBABLY_ENOUGH ->
+                    grantSuperuserPermissions.setText(requireContext().getString(R.string.probably_enough_permissions))
             }
 
             val safeBootSettings = map.getOrDefault(WizardElement.DISABLE_SAFE_BOOT,

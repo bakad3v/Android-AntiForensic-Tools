@@ -5,7 +5,8 @@ import java.util.EnumMap
 sealed class SetupWizardState {
     data object Loading: SetupWizardState()
     data class Data(val dataMap: EnumMap<WizardElement, SettingsElementState>, val state: AppState,
-                    val dataSelected: DataSelected, val protectionFixActive: Boolean, val triggersFixActive: Boolean): SetupWizardState()
+                    val dataSelected: DataSelected, val protectionFixActive: Boolean, val triggersFixActive: Boolean,
+        val permissionsState: PermissionsState): SetupWizardState()
 }
 
 enum class DataSelected {
