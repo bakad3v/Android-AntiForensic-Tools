@@ -175,11 +175,25 @@ abstract class CommandsRunner(private val context: Context,
         }
 
     override suspend fun getLogsStatus(): Boolean {
-        return !runCommand("getprop persist.log.tag").output.first().startsWith("S")
+        val resultData = runCommand("getprop persist.log.tag").output.first()
+        if (resultData.isBlank()) {
+            throw SuperUserException(
+                DATA_NOT_FOUND,
+                UIText.StringResource(R.string.data_not_found)
+            )
+        }
+        return !resultData.startsWith("S")
     }
 
     override suspend fun getDeveloperSettingsStatus(): Boolean {
-        return runCommand("settings get global ${Settings.Global.DEVELOPMENT_SETTINGS_ENABLED}").output.first().toInt().toBoolean()
+        return try {
+            runCommand("settings get global ${Settings.Global.DEVELOPMENT_SETTINGS_ENABLED}").output.first().toInt().toBoolean()
+        } catch (e: NumberFormatException) {
+            throw SuperUserException(
+                NUMBER_NOT_RECOGNISED,
+                UIText.StringResource(com.sonozaki.resources.R.string.number_not_found)
+            )
+        }
     }
 
     override suspend fun changeLogsStatus(enable: Boolean) {
@@ -248,5 +262,6 @@ abstract class CommandsRunner(private val context: Context,
             "Wrong android version, SDK version %s or higher required"
         private const val PRIMARY_USER_LOGOUT = "You can't logout from primary user"
         private const val NUMBER_NOT_RECOGNISED = "Number not recognised"
+        private const val DATA_NOT_FOUND = "Data not found"
     }
 }
