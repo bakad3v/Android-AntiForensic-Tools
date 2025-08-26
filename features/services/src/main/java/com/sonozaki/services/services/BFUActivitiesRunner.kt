@@ -201,7 +201,7 @@ class BFUActivitiesRunner @Inject constructor(
             return
         }
         writeToLogs(R.string.got_data)
-        if (!permissions.isRoot && !permissions.isOwner && !permissions.isAdmin) {
+        if (!permissions.isRoot && !permissions.isOwner && !permissions.isAdmin && !permissions.isShizuku) {
             if (!settings.deleteFiles && settings.clearData) {
                 context.clearData(false) {
                     writeToLogs(it)
@@ -227,7 +227,7 @@ class BFUActivitiesRunner @Inject constructor(
             }
             return
         }
-        if (!permissions.isRoot && !permissions.isOwner) {
+        if (!permissions.isRoot && !permissions.isOwner && !permissions.isShizuku) {
             if (!settings.deleteFiles && settings.clearData)  {
                 try {
                     superUserManager.removeAdminRights()
@@ -258,7 +258,7 @@ class BFUActivitiesRunner @Inject constructor(
         if (settings.deleteFiles) {
             return
         } //if there are some files marked for deletion, the following actions must be postponed until the removal of files is completed
-        if (permissions.isRoot) {
+        if (permissions.isRoot || permissions.isShizuku) {
             if (settings.trim) {
                 runSuperuserAction(
                     R.string.running_trim,
