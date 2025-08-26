@@ -24,6 +24,7 @@ import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
@@ -51,10 +52,11 @@ class ShizukuManager @Inject constructor(
 ): CommandsRunner(context, coroutineDispatcher, profilesMapper, userManager, deviceAdmin) {
 
     val shizukuStateFlow = _shizukuStateFlow.asStateFlow()
+    var reload: Boolean = true
 
     init {
         //listen for shizuku permission infinitely
-        coroutineScope.launch {
+        coroutineScope.launch(coroutineDispatcher) {
             getPermissionsFlowUseCase().collect {
                 if (it.isShizuku) {
                     start()
@@ -151,7 +153,8 @@ class ShizukuManager @Inject constructor(
     /**
      * Bind shizuku user service, listen for shizuku connection state and change shizuku state accordingly
      */
-    private fun start() {
+    private suspend fun start() {
+        reload = true
         object : ServiceConnection {
             override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
                 Log.w("binderReceivedListener","connected")
@@ -170,15 +173,19 @@ class ShizukuManager @Inject constructor(
             }
         }.also {
             _shizukuStateFlow.value = ShizukuState.LOADING
-            try {
-                Shizuku.bindUserService(userServiceArgs, it)
-            } catch (e: IllegalStateException) {
-                _shizukuStateFlow.value = ShizukuState.DEAD
-            } catch (e: SecurityException) {
-                _shizukuStateFlow.value = ShizukuState.DEAD
-                coroutineScope.launch {
-                    setShizukuPermissionUseCase(false)
+            while(reload) {
+                try {
+                    Shizuku.bindUserService(userServiceArgs, it)
+                    reload = false
+                } catch (e: IllegalStateException) {
+                    _shizukuStateFlow.value = ShizukuState.DEAD
+                } catch (e: SecurityException) {
+                    _shizukuStateFlow.value = ShizukuState.DEAD
+                    coroutineScope.launch {
+                        setShizukuPermissionUseCase(false)
+                    }
                 }
+                delay(2000)
             }
         }
     }
@@ -188,6 +195,7 @@ class ShizukuManager @Inject constructor(
      */
     fun stop() {
         runCatching {
+            reload = false
             // With true flag it does not remove connection from cache
             Shizuku.unbindUserService(userServiceArgs, null, false)
             Shizuku.unbindUserService(userServiceArgs, null, true)
