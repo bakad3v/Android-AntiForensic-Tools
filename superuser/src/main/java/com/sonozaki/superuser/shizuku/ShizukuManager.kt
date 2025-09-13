@@ -106,11 +106,13 @@ class ShizukuManager @Inject constructor(
      * Run adb command if possible without waiting
      */
     private suspend fun runAdbCommandImmediately(command: String) = withContext(coroutineDispatcher) {
+        Log.w("shizukuValue", shizukuStateFlow.value.toString())
         if (shizukuStateFlow.value == ShizukuState.INITIALIZED) {
             val result = userService?.executeNow(command)
-            result ?: ShellResult(3)
+            Log.w("adbResultImmediately",result?.output.toString())
+            result ?: throw SuperUserException(SHIZUKU_NOT_INITIALIZED, UIText.StringResource(R.string.shizuku_not_initialized))
         } else { //if service is dead or shizuku inactive return error
-            ShellResult(3)
+            throw SuperUserException(SHIZUKU_NOT_INITIALIZED, UIText.StringResource(R.string.shizuku_not_initialized))
         }
     }
 
@@ -147,7 +149,11 @@ class ShizukuManager @Inject constructor(
             }
         }
         Shizuku.addRequestPermissionResultListener(listener)
-        Shizuku.requestPermission(SHIZUKU_PERMISSION_REQUEST_ID)
+        try {
+            Shizuku.requestPermission(SHIZUKU_PERMISSION_REQUEST_ID)
+        } catch (e: IllegalStateException) {
+            _shizukuStateFlow.value = ShizukuState.DEAD
+        }
     }
 
     /**
@@ -169,6 +175,7 @@ class ShizukuManager @Inject constructor(
 
             override fun onServiceDisconnected(componentName: ComponentName?) {
                 userService = null
+                Log.w("userService","null")
                 _shizukuStateFlow.value = ShizukuState.DEAD
             }
         }.also {
@@ -199,6 +206,7 @@ class ShizukuManager @Inject constructor(
             // With true flag it does not remove connection from cache
             Shizuku.unbindUserService(userServiceArgs, null, false)
             Shizuku.unbindUserService(userServiceArgs, null, true)
+            Log.w("userService","null")
             userService = null
             _shizukuStateFlow.value = ShizukuState.DEAD
         }
@@ -247,6 +255,11 @@ class ShizukuManager @Inject constructor(
         runAdbCommandImmediately("sm fstrim &")
     }
 
+    override suspend fun uninstallApp(packageName: String) {
+        checkAdminApp(packageName)
+        runAdbCommandImmediately("pm uninstall $packageName")
+    }
+
     override suspend fun wipe() {
         throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
     }
@@ -267,5 +280,6 @@ class ShizukuManager @Inject constructor(
         private const val SHIZUKU_PERMISSION_REQUEST_ID = 18
         private const val NOT_ENOUGH_RIGHTS = "App doesn't have necessary rights"
         private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
+        private const val SHIZUKU_NOT_INITIALIZED = "Shizuku is not initialized"
     }
 }

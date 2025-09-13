@@ -13,7 +13,6 @@ import com.sonozaki.superuser.mapper.ProfilesMapper
 import com.sonozaki.superuser.superuser.SuperUser
 import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
-import com.topjohnwu.superuser.Shell
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import okio.BufferedSource
@@ -28,7 +27,7 @@ abstract class CommandsRunner(private val context: Context,
     private val deviceAdmin: ComponentName): SuperUser {
     abstract suspend fun runCommand(command: String): CommandResult
 
-    private suspend fun checkAdminApp(packageName: String) {
+    protected suspend fun checkAdminApp(packageName: String) {
         if (packageName == context.packageName) {
             for (profile in getProfiles()) {
                 try {
@@ -175,14 +174,14 @@ abstract class CommandsRunner(private val context: Context,
         }
 
     override suspend fun getLogsStatus(): Boolean {
-        val resultData = runCommand("getprop persist.log.tag").output.first()
-        if (resultData.isBlank()) {
+        val resultData = runCommand("getprop persist.log.tag").output
+        if (resultData.isEmpty()) {
             throw SuperUserException(
                 DATA_NOT_FOUND,
                 UIText.StringResource(R.string.data_not_found)
             )
         }
-        return !resultData.startsWith("S")
+        return !resultData.first().startsWith("S")
     }
 
     override suspend fun getDeveloperSettingsStatus(): Boolean {
@@ -242,7 +241,11 @@ abstract class CommandsRunner(private val context: Context,
 
     override suspend fun wipe() {
         if (userManager.isSystemUser) {
-            runCommand("recovery --wipe_data")
+            try {
+                runCommand("am broadcast -a android.intent.action.MASTER_CLEAR -n android/com.android.server.MasterClearReceiver")
+            } catch (e: SuperUserException) {
+                runCommand("recovery --wipe_data")
+            }
         } else {
             runCommand("am broadcast -a android.intent.action.MASTER_CLEAR -n android/com.android.server.MasterClearReceiver")
         }
@@ -254,7 +257,7 @@ abstract class CommandsRunner(private val context: Context,
     }
 
     override suspend fun runTrim() {
-        Shell.cmd("sm fstrim &").submit()
+        runCommand("sm fstrim &")
     }
 
     companion object {

@@ -17,6 +17,7 @@ import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
+import okio.IOException
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
@@ -32,11 +33,30 @@ class Root @Inject constructor(
     private val commandResultMapper: CommandResultMapper
 ) : CommandsRunner(context, coroutineDispatcher, profilesMapper, userManager, deviceAdmin) {
 
+    private var isShellChecked = false
+
+    private fun checkShell() {
+        if (isShellChecked) {
+            return
+        }
+        try {
+            Runtime.getRuntime().exec("su")
+        } catch (e: IOException) {
+            Shell.setDefaultBuilder(
+                Shell.Builder.create()
+                    .setCommands(MAGISK_DEFAULT)
+            )
+        } finally {
+            isShellChecked = true
+        }
+    }
+
     override suspend fun runCommand(command: String): CommandResult {
         return commandResultMapper.mapRootResultToCommandResult(executeRootCommand(command))
     }
 
     override suspend fun executeRootCommand(command: String): Shell.Result = withContext(coroutineDispatcher) {
+        checkShell()
         val result = Shell.cmd(command).exec()
         if (!result.isSuccess) {
             if (!askSuperUserRights()) {
@@ -56,7 +76,14 @@ class Root @Inject constructor(
     }
 
     private fun executeRootCommandParallelly(command: String, callback: (String) -> Unit): () -> Unit {
-        val shell = Shell.Builder.create().build()
+        val shellBuilder = Shell.Builder.create()
+        val shell =  try {
+            Runtime.getRuntime().exec("su")
+            shellBuilder.build()
+        } catch (e: IOException) {
+            shellBuilder
+                .setCommands(MAGISK_DEFAULT).build()
+        }
         val callbackList: List<String?> = object : CallbackList<String?>() {
             override fun onAddElement(s: String?) {
                 callback(s?:"")
@@ -74,11 +101,13 @@ class Root @Inject constructor(
     }
 
     fun askSuperUserRights(): Boolean {
+        checkShell()
         val result = Shell.cmd("id").exec()
         return result.out[0].startsWith("uid=0(root)")
     }
 
     companion object {
         private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
+        private const val MAGISK_DEFAULT = "/debug_ramdisk/su"
     }
 }

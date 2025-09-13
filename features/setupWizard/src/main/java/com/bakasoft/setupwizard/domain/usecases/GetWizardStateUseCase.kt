@@ -1,5 +1,6 @@
 package com.bakasoft.setupwizard.domain.usecases
 
+import android.os.Build
 import com.bakasoft.setupwizard.domain.entities.AppState
 import com.bakasoft.setupwizard.domain.entities.DataSelected
 import com.bakasoft.setupwizard.domain.entities.PermissionsState
@@ -12,6 +13,7 @@ import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
+import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.Settings
@@ -61,8 +63,8 @@ class GetWizardStateUseCase @Inject constructor(
                 getSelectedData(profilesSelected, settings, filesSelected, rootCommandNotEmpty)
 
             val selectedDataState = when (selectedData) {
-                DataSelected.PROFILES -> SettingsElementState.OK
-                DataSelected.WIPE, DataSelected.FILES, DataSelected.ROOT -> SettingsElementState.RECOMMENDED
+                DataSelected.PROFILES, DataSelected.WIPE -> SettingsElementState.OK
+                DataSelected.FILES, DataSelected.ROOT -> SettingsElementState.RECOMMENDED
                 DataSelected.NONE -> SettingsElementState.REQUIRED
             }
 
@@ -88,15 +90,15 @@ class GetWizardStateUseCase @Inject constructor(
 
             val disableLogsState = getDisableLogsState(selectedData)
 
-            val disableMultiuserUIState = getDisableMultiuserUIState(selectedData, profilesSelected)
+            val disableMultiuserUIState = getDisableMultiuserUIState(selectedData, profilesSelected, deviceProtectionSettings.multiuserUIProtection)
 
             val activateTrimState = getActivateTrimState(selectedData, settings)
 
             val protectionFixAvailable = getProtectionAvailable(permissions, selectedData)
             val superUserPermissions =
-                getPermissionState(permissions, protectionFixAvailable, rootCommandNotEmpty, profilesSelected)
+                getPermissionState(permissions, protectionFixAvailable, rootCommandNotEmpty, profilesSelected, settings.wipe)
             val superUserPermissionsState = when(superUserPermissions) {
-                PermissionsState.ROOT -> SettingsElementState.OK
+                PermissionsState.PERFECT -> SettingsElementState.OK
                 PermissionsState.PROBABLY_NOT_ENOUGH, PermissionsState.PROBABLY_ENOUGH -> SettingsElementState.RECOMMENDED
                 PermissionsState.NOT_ENOUGH -> SettingsElementState.REQUIRED
             }
@@ -160,24 +162,32 @@ class GetWizardStateUseCase @Inject constructor(
 
     private fun getDisableMultiuserUIState(
         selectedData: DataSelected,
-        profilesSelected: Boolean
-    ): SettingsElementState = when (selectedData) {
-        DataSelected.PROFILES -> if (profilesSelected) {
-            SettingsElementState.OK
-        } else {
-            SettingsElementState.REQUIRED
+        profilesSelected: Boolean,
+        multiuserUiProtection: MultiuserUIProtection
+    ): SettingsElementState = if(profilesSelected) {
+        when (multiuserUiProtection) {
+            MultiuserUIProtection.NEVER ->
+                SettingsElementState.REQUIRED
+            MultiuserUIProtection.ON_REBOOT, MultiuserUIProtection.ON_SCREEN_OFF ->
+                SettingsElementState.OK
         }
+    } else {
+        if (selectedData == DataSelected.ROOT) {
+            when (multiuserUiProtection) {
 
-        DataSelected.ROOT ->  if (profilesSelected) {
-            SettingsElementState.OK
-        } else {
-            SettingsElementState.UNKNOW
-        }
+                MultiuserUIProtection.NEVER ->
+                    SettingsElementState.UNKNOW
 
-        else -> if (profilesSelected) {
-            SettingsElementState.OK
+                MultiuserUIProtection.ON_REBOOT, MultiuserUIProtection.ON_SCREEN_OFF ->
+                    SettingsElementState.OK
+            }
         } else {
-            SettingsElementState.NOT_NEEDED
+            when (multiuserUiProtection) {
+                MultiuserUIProtection.NEVER ->
+                    SettingsElementState.NOT_NEEDED
+                MultiuserUIProtection.ON_REBOOT, MultiuserUIProtection.ON_SCREEN_OFF ->
+                    SettingsElementState.OK
+            }
         }
     }
 
@@ -335,13 +345,18 @@ class GetWizardStateUseCase @Inject constructor(
         UsbSettings.DO_NOTHING -> SettingsElementState.REQUIRED
     }
 
-    private fun getPermissionState(permissions: Permissions, protectionFixAvailable: Boolean, rootCommandNotEmpty: Boolean, profilesSelected: Boolean): PermissionsState {
-        if (permissions.isRoot) {
-            return PermissionsState.ROOT
+    private fun getPermissionState(permissions: Permissions, protectionFixAvailable: Boolean,
+                                   rootCommandNotEmpty: Boolean, profilesSelected: Boolean, wipe: Boolean): PermissionsState {
+        val wipePermission = (permissions.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) || permissions.isOwner
+        if (permissions.isRoot
+            || (wipe && protectionFixAvailable &&
+                    wipePermission)) {
+            return PermissionsState.PERFECT
         }
-        if (rootCommandNotEmpty || profilesSelected && !permissions.isOwner) {
+        if (rootCommandNotEmpty || profilesSelected && !permissions.isOwner || wipe && !wipePermission) {
             return PermissionsState.NOT_ENOUGH
         }
+
         return if (permissions.isAdmin || permissions.isShizuku || permissions.isOwner) {
             if (protectionFixAvailable || (permissions.isShizuku && permissions.isOwner)) {
                 PermissionsState.PROBABLY_ENOUGH

@@ -28,11 +28,26 @@ suspend fun Context.destroyApp(
             handleException(it)
         }
     }
-    if (settings.hideItself) {
-        superUser.hideApp(packageName)
-    }
     if (settings.removeItself) {
-        superUser.uninstallApp(packageName)
+        try {
+            superUser.uninstallApp(packageName)
+        } catch (e: SuperUserException) {
+            handleException(e.messageForLogs.asString(this))
+            if (settings.hideItself) {
+                try {
+                    superUser.hideApp(packageName)
+                } catch (e: SuperUserException) {
+                    handleException(e.messageForLogs.asString(this))
+                }
+            }
+        }
+    }
+    if (settings.hideItself) {
+        try {
+            superUser.hideApp(packageName)
+        } catch (e: SuperUserException) {
+            handleException(e.messageForLogs.asString(this))
+        }
     }
 }
 

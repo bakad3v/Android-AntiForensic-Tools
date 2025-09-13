@@ -145,7 +145,7 @@ class SetupWizardFragment: Fragment() {
             }
 
             when(permissionsState) {
-                PermissionsState.ROOT, PermissionsState.NOT_ENOUGH ->
+                PermissionsState.PERFECT, PermissionsState.NOT_ENOUGH ->
                     grantSuperuserPermissions.setText(requireContext().getString(R.string.grant_superuser_permissions))
                 PermissionsState.PROBABLY_NOT_ENOUGH ->
                     grantSuperuserPermissions.setText(requireContext().getString(R.string.some_permissions_granted))

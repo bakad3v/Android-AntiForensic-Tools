@@ -31,7 +31,7 @@
     <string name="legacy_way_of_click_detection">You selected legacy way of clicks detection</string>
     <string name="profile_deletion_selected">Profile deletion selected</string>
     <string name="files_deletion_selected">Files deletion selected. Consider deleting user profiles</string>
-    <string name="wipe_data_selected">Wiping device data selected. Consider deleting user profiles</string>
+    <string name="wipe_data_selected">Wiping device data selected</string>
     <string name="root_selected">Root commands specified. Wizard can\'t analize root commands</string>
     <string name="some_warnings">We\'re unsure you\'re alright</string>
     <string name="some_warnings_long">Some recommendations are violated, but maybe you understand what you are doing...</string>
