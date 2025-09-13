@@ -7,8 +7,8 @@
     <string name="select_app_version">Select app version</string>
     <string name="reload">Reload</string>
     <string name="latest_version">Latest version: %1$s</string>
-    <string name="update_app">You can install new version of the app</string>
-    <string name="install_testonly">You have the latest version, but you doesn\'t have testOnly version of the app installed. Testonly app version have several advantages. You can read more on github.</string>
+    <string name="update_app">You can install a new version of the app</string>
+    <string name="install_testonly">You have the latest version, but you don\'t have the testOnly version of the app installed. The testOnly app version has several advantages. You can read more on GitHub.</string>
     <string name="up_to_date">You\'re up to date</string>
     <string name="app_update_center">App update center</string>
 </resources>

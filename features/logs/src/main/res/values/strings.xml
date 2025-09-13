@@ -2,15 +2,15 @@
 <resources>
     <string name="log">Logs</string>
     <string name="enable_logs">Enable logging</string>
-    <string name="select_day">Open logs for day</string>
+    <string name="select_day">Open logs for a day</string>
     <string name="change_timeout">Change timeout</string>
     <string name="clear_logs">Clear logs</string>
-    <string name="enable_logs_long"><![CDATA[Do you really want to enable logging? If adversary would get access to application password he can get data about deleted files. <strong>It is highly recommended to enable logs only for application testing.</strong>]]></string>
-    <string name="enter_timeout_logs">Enter timeout for logs autodeletion (in days)</string>
-    <string name="timeout_logs_long">Logs older than n days would be cleared to free space.</string>
+    <string name="enable_logs_long"><![CDATA[Do you really want to enable logging? If an adversary gains access to the application password, they could view data about deleted data. <strong>It is highly recommended to enable logs only for application testing.</strong>]]></string>
+    <string name="enter_timeout_logs">Enter timeout for log auto-deletion (in days)</string>
+    <string name="timeout_logs_long">Logs older than N days will be cleared to free space.</string>
     <string name="clear_logs_question">Do you want to clear logs?</string>
-    <string name="logs_clear_warning">Logs for day %1$s would be cleared.</string>
-    <string name="logs_help">You can read logs here if they are enabled. You can find out when application was unlocked and what files were deleted. Logs are deleting automatically after 7 days, but you can change this behaviour.</string>
-    <string name="select_date">Select day</string>
+    <string name="logs_clear_warning">Logs for day %1$s will be cleared.</string>
+    <string name="logs_help">You can read logs here if they are enabled. Logs show when the application was unlocked and what data was deleted. Logs are deleted automatically after 7 days, but you can change this behavior.</string>
+    <string name="select_date">Select date</string>
     <string name="disable_logs">Disable logging</string>
 </resources>
