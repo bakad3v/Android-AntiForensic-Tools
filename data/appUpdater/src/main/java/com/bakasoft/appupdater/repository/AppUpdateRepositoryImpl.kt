@@ -51,7 +51,7 @@ class AppUpdateRepositoryImpl @Inject constructor(
     private fun createAppDownloadLinks(version: String): AppLatestVersion {
         Log.w("isTestOnly",context.isTestOnlyApp().toString())
         return AppLatestVersion(
-            "https://github.com/bakad3v/Android-AntiForensic-Tools/releases/download/v$version/AFTools_${appFlavor}_NON_ROOT_ONLY.apk",
+            "https://github.com/bakad3v/Android-AntiForensic-Tools/releases/download/v$version/AFTools_${appFlavor}_USUAL.apk",
             "https://github.com/bakad3v/Android-AntiForensic-Tools/releases/download/v$version/AFTools_${appFlavor}_TESTONLY.apk",
             version != appVersion,
             context.isTestOnlyApp(),

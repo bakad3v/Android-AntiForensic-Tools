@@ -217,7 +217,7 @@
     <string name="with_accessibility_service">With accessibility service</string>
     <string name="bruteforce_defense_admin">Brute-force defense (admin rights)</string>
     <string name="bruteforce_defense_accessibility">Brute-force defense (accessibility service)</string>
-    <string name="bruteforce_defence_accessibility_long">After reaching the maximum number of wrong password attempts (default: 10), the app will start destroying your data. Requires the accessibility service.\nImportant: this method may not work on custom ROMs or exotic device languages. Use the method that requires admin rights if this doesn\'t work for you.</string>
+    <string name="bruteforce_defence_accessibility_long"><![CDATA[<p>After reaching the maximum number of wrong password attempts (default: 10), the app will start destroying your data. Requires the accessibility service.</p><p>Warning:</strong> this brute-force detection method is experimental and <strong>cannot detect every 5th wrong password attempt</strong>. In practice that means if you set the limit to 5 failed attempts, the app might not detect the 5th failure - it may only trigger after the 6th attempt.</p><p>This method can also fail on custom ROMs or devices using uncommon languages. If this approach doesn\'t work for you, use the alternative method that requires admin rights.</p>]]></string>
     <string name="provide_admin">You need to grant admin rights to select this option</string>
     <string name="no_accessibility_service">Accessibility service is not working</string>
     <string name="grant_accessibility">You need to start the accessibility service to select this option</string>
