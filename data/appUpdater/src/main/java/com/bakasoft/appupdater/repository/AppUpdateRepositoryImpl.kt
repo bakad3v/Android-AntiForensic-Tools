@@ -2,7 +2,6 @@ package com.bakasoft.appupdater.repository
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
-import android.util.Log
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.preferencesDataStore
@@ -49,7 +48,6 @@ class AppUpdateRepositoryImpl @Inject constructor(
     }
 
     private fun createAppDownloadLinks(version: String): AppLatestVersion {
-        Log.w("isTestOnly",context.isTestOnlyApp().toString())
         return AppLatestVersion(
             "https://github.com/bakad3v/Android-AntiForensic-Tools/releases/download/v$version/AFTools_${appFlavor}_USUAL.apk",
             "https://github.com/bakad3v/Android-AntiForensic-Tools/releases/download/v$version/AFTools_${appFlavor}_TESTONLY.apk",

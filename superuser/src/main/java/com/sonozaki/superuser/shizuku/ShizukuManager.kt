@@ -6,7 +6,6 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
 import android.os.UserManager
-import android.util.Log
 import com.sonozaki.entities.ShizukuState
 import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.superuser.IRemoteShell
@@ -106,10 +105,8 @@ class ShizukuManager @Inject constructor(
      * Run adb command if possible without waiting
      */
     private suspend fun runAdbCommandImmediately(command: String) = withContext(coroutineDispatcher) {
-        Log.w("shizukuValue", shizukuStateFlow.value.toString())
         if (shizukuStateFlow.value == ShizukuState.INITIALIZED) {
             val result = userService?.executeNow(command)
-            Log.w("adbResultImmediately",result?.output.toString())
             result ?: throw SuperUserException(SHIZUKU_NOT_INITIALIZED, UIText.StringResource(R.string.shizuku_not_initialized))
         } else { //if service is dead or shizuku inactive return error
             throw SuperUserException(SHIZUKU_NOT_INITIALIZED, UIText.StringResource(R.string.shizuku_not_initialized))
@@ -163,19 +160,16 @@ class ShizukuManager @Inject constructor(
         reload = true
         object : ServiceConnection {
             override fun onServiceConnected(componentName: ComponentName?, binder: IBinder?) {
-                Log.w("binderReceivedListener","connected")
                 if (binder == null || !binder.pingBinder()) {
                     _shizukuStateFlow.value = ShizukuState.DEAD
                     return
                 }
-                Log.w("binderReceivedListener","connectedSuccess")
                 userService = IRemoteShell.Stub.asInterface(binder)
                 _shizukuStateFlow.value = ShizukuState.INITIALIZED
             }
 
             override fun onServiceDisconnected(componentName: ComponentName?) {
                 userService = null
-                Log.w("userService","null")
                 _shizukuStateFlow.value = ShizukuState.DEAD
             }
         }.also {
@@ -206,7 +200,6 @@ class ShizukuManager @Inject constructor(
             // With true flag it does not remove connection from cache
             Shizuku.unbindUserService(userServiceArgs, null, false)
             Shizuku.unbindUserService(userServiceArgs, null, true)
-            Log.w("userService","null")
             userService = null
             _shizukuStateFlow.value = ShizukuState.DEAD
         }
