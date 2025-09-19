@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="everything_ok">You\'re OK!</string>
+    <string name="all_requirements_satisafied"><![CDATA[All requirements satisfied! Consider using <a href="https://grapheneos.org">GrapheneOS</a> for advanced security.]]></string>
+    <string name="install_required_version">0. Install the correct app version</string>
+    <string name="grant_necessary_permissions">1. Grant necessary permissions</string>
+    <string name="provide_accessibility_service">Activate the accessibility service</string>
+    <string name="grant_superuser_permissions">Grant superuser permissions</string>
+    <string name="setup_triggers">2. Set up triggers</string>
+    <string name="trigger_on_duress_password">Trigger on duress password</string>
+    <string name="trigger_on_button">Trigger on button clicks</string>
+    <string name="trigger_on_bruteforce">Trigger on brute force</string>
+    <string name="trigger_on_usb_connection">Trigger on USB connection</string>
+    <string name="select_data_destruction">3. Select data to destroy</string>
+    <string name="select_data">Select data to delete (profiles recommended)</string>
+    <string name="activate_data_destruction">Activate data destruction</string>
+    <string name="setup_antiforensic_protection">4. Set up antiforensic protection</string>
+    <string name="enable_self_destruction">Enable app self-destruction</string>
+    <string name="enable_app_hidding">Enable app hiding</string>
+    <string name="disable_logs">Disable logs</string>
+    <string name="disable_safe_boot">Disable safe boot</string>
+    <string name="setup_multiuser_ui_hiding">Set up multiuser UI hiding</string>
+    <string name="setup_trim">Activate TRIM</string>
+    <string name="fix_automatically">Fix automatically</string>
+    <string name="setup_wizard">Setup wizard</string>
+    <string name="latest_app_version_installed">Latest app version installed</string>
+    <string name="install_testonly_version">Install test-only app version</string>
+    <string name="update_app">Please update the app</string>
+    <string name="cant_check_updates">Failed to check for updates</string>
+    <string name="reboot_on_usb_selected">It\'s better to destroy data on USB connection instead of rebooting</string>
+    <string name="legacy_way_of_click_detection">You selected the legacy way of click detection</string>
+    <string name="profile_deletion_selected">Profile deletion selected</string>
+    <string name="files_deletion_selected">File deletion selected. Consider deleting user profiles</string>
+    <string name="wipe_data_selected">Device data wiping selected</string>
+    <string name="root_selected">Root commands specified. Wizard can\'t analyze root commands</string>
+    <string name="some_warnings">We\'re unsure you\'re alright</string>
+    <string name="some_warnings_long">Some recommendations are not followed, but maybe you know what you are doing...</string>
+    <string name="unsafe">You\'re unsafe!</string>
+    <string name="unsafe_long">You\'re not protected against some types of attacks</string>
+    <string name="apply_settings">Apply settings?</string>
+    <string name="cant_setup_triggers">App can\'t set up triggers automatically</string>
+    <string name="setup_volume_button"><![CDATA[<p>Do you want this app to destroy your secret data when:</p>\n<p>&bull; Duress password (the same password you use to enter this app) is entered</p>\n<p>&bull; A USB device or accessory is connected. Connecting the device to a computer in charging-only mode will also be counted.</p>\n<p>&bull; Volume button is clicked %1$d times in a row</p>\n<p>&bull; Incorrect password is entered %2$d times in a row</p>]]></string>
+    <string name="setup_power_button"><![CDATA[<p>Do you want this app to destroy your secret data when:</p>\n<p>&bull; Duress password (the same password you use to enter this app) is entered</p>\n<p>&bull; A USB device or accessory is connected. Connecting the device to a computer in charging-only mode will also be counted.</p>\n<p>&bull; Power button is clicked %1$d times in a row</p>\n<p>&bull; Incorrect password is entered %2$d times in a row</p>]]></string>
+    <string name="do_ypu_want_this_app_to"><![CDATA[<p>Do you want this app to:</p>]]></string>
+    <string name="destroy_itself_question"><![CDATA[<p>&bull; Destroy itself after deleting your data</p>]]></string>
+    <string name="hide_itself_question"><![CDATA[<p>&bull; Hide itself after deleting your data and before self-destruction</p>]]></string>
+    <string name="disable_logs_question"><![CDATA[<p>&bull; Disable device logs</p>]]></string>
+    <string name="disable_safe_boot_question"><![CDATA[<p>&bull; Disable safe boot mode</p>]]></string>
+    <string name="hide_multiuser_ui_question"><![CDATA[<p>&bull; Hide the multiuser UI every time you turn off the phone screen</p>]]></string>
+    <string name="run_trim_question"><![CDATA[<p>&bull; Run the <a href="https://blog.elcomsoft.com/2025/06/what-trim-drat-and-dzat-really-mean-for-ssd-forensics/">TRIM command</a> after data destruction to remove traces of deleted data</p>]]></string>
+    <string name="some_permissions_granted">You granted some permissions, but this is probably not enough</string>
+    <string name="not_enough_rights_to_check_safe_boot">App doesn\'t have enough rights to check the safe boot status</string>
+    <string name="not_enough_rights_to_check_logs">App doesn\'t have enough rights to check the log status</string>
+    <string name="probably_enough_permissions">You probably granted enough permissions, but the app would still work better with root rights</string>
+</resources>

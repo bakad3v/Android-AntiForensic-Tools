@@ -66,6 +66,14 @@ class ProfilesRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun openProfile(id: Int) {
+        try {
+            superUserManager.getSuperUser().openProfile(id)
+        } catch (e: SuperUserException) {
+
+        }
+    }
+
     override fun getProfilesToDelete(): Flow<List<Int>> =
         context.profilesDatastore.data.map { it.list }
 

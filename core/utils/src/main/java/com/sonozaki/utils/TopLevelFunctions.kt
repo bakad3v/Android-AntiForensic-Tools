@@ -6,6 +6,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import com.bakasoft.network.NetworkError
 import kotlinx.coroutines.launch
 import kotlinx.datetime.toJavaLocalDateTime
 import java.time.LocalDateTime
@@ -32,6 +33,15 @@ object TopLevelFunctions {
           coroutine()
         }
       }
+    }
+  }
+
+  fun networkErrorToText(error: NetworkError): UIText.StringResource {
+    return when(error) {
+      is NetworkError.EmptyResponse -> UIText.StringResource(R.string.empty_response)
+      is NetworkError.ConnectionError -> UIText.StringResource(R.string.connection_error)
+      is NetworkError.ServerError -> UIText.StringResource(R.string.server_error, error.code, error.description)
+      is NetworkError.UnknownError -> UIText.StringResource(R.string.unknown_error, error.error)
     }
   }
 

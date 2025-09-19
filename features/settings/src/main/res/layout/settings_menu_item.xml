@@ -18,7 +18,7 @@
             style="?attr/textAppearanceTitleLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingStart="@dimen/margin_normal"
+            android:layout_marginStart="@dimen/margin_normal"
             android:maxLines="2"
             android:ellipsize="end"
             tools:text="testererferererferrferffrfreferferferferferfe">
@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:paddingStart="@dimen/margin_normal"
+            android:layout_marginStart="@dimen/margin_normal"
             android:text="@string/accessibility_service_required">
 
         </com.google.android.material.textview.MaterialTextView>

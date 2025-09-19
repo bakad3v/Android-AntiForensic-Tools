@@ -8,13 +8,15 @@ import android.widget.CompoundButton
 import android.widget.PopupMenu
 import androidx.fragment.app.viewModels
 import com.sonozaki.dialogs.InputDigitDialog
+import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.entities.VolumeButtonTriggerOptions
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.TriggerSettingsFragmentBinding
 import com.sonozaki.settings.presentation.viewmodel.TriggerSettingsVM
-import com.sonozaki.settings.presentation.viewmodel.TriggerSettingsVM.Companion.BRUTEFORCE_DIALOG
+import com.sonozaki.settings.presentation.viewmodel.TriggerSettingsVM.Companion.BRUTEFORCE_DIALOG_ACCESSIBILITY
+import com.sonozaki.settings.presentation.viewmodel.TriggerSettingsVM.Companion.BRUTEFORCE_DIALOG_ADMIN
 import com.sonozaki.settings.presentation.viewmodel.TriggerSettingsVM.Companion.EDIT_CLICK_NUMBER_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.TriggerSettingsVM.Companion.EDIT_CLICK_NUMBER_VOLUME_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.TriggerSettingsVM.Companion.EDIT_LATENCY_DIALOG
@@ -52,6 +54,7 @@ class TriggerSettingsFragment: AbstractSettingsFragment() {
         super.onViewCreated(view, savedInstanceState)
         setupActivity(R.string.triggers_settings)
         setupUsbMenu()
+        setupBruteforceProtectionMenu()
         setupPowerButtonMenu()
         setupVolumeButtonMenu()
         listenDialogResults()
@@ -67,20 +70,10 @@ class TriggerSettingsFragment: AbstractSettingsFragment() {
         viewModel.showRunOnDuressPasswordDialog()
     }
 
-    private val switchBruteforceListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
-        if (!checked) {
-            viewModel.setBruteforceProtection(false)
-            return@OnCheckedChangeListener
-        }
-        switch.isChecked = false
-        viewModel.showBruteforceDialog()
-    }
-
     private fun setupButtonsAndSwitches() {
         listenSettings()
         listenButtonSettings()
         listenBruteforceProtectionSettings()
-        checkPermissions()
         listenUsbSettings()
         setupClickableElements()
     }
@@ -121,27 +114,21 @@ class TriggerSettingsFragment: AbstractSettingsFragment() {
         }
     }
 
-    private fun checkPermissions() {
-        viewLifecycleOwner.launchLifecycleAwareCoroutine {
-            viewModel.permissionsState.collect {
-                with(binding) {
-                    bruteforceItem.setSwitchEnabled(it.isAdmin)
-                }
-            }
+    private fun bruteforceMenuSettingsToString(status: BruteforceDetectingMethod): String {
+        val id = when(status) {
+            BruteforceDetectingMethod.NONE -> R.string.no
+            BruteforceDetectingMethod.ADMIN -> R.string.with_admin_rights
+            BruteforceDetectingMethod.ACCESSIBILITY_SERVICE -> R.string.with_accessibility_service
         }
+        return requireContext().getString(id)
     }
-
-
 
     private fun listenBruteforceProtectionSettings() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.bruteforceProtectionState.collect {
                 with(binding) {
                     allowedAttempts.setDigit(it.allowedAttempts.toString())
-                    bruteforceItem.setCheckedProgrammatically(
-                        it.bruteforceRestricted,
-                        switchBruteforceListener
-                    )
+                    bruteforceItem.setText(bruteforceMenuSettingsToString(it.detectingMethod))
                 }
             }
         }
@@ -290,6 +277,36 @@ class TriggerSettingsFragment: AbstractSettingsFragment() {
         popup.show()
     }
 
+    fun setupBruteforceProtectionMenu() {
+        binding.bruteforceItem.setOnClickListener {
+            changeBruteforceProtectionMenu()
+        }
+    }
+
+    private fun changeBruteforceProtectionMenu() {
+        val popup = PopupMenu(context, binding.bruteforceItem.menu)
+        popup.menuInflater.inflate(R.menu.bruteforce_menu, popup.menu)
+        popup.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.no -> {
+                    viewModel.setBruteforceProtection(BruteforceDetectingMethod.NONE)
+                }
+
+                R.id.with_admin_rights -> {
+                    viewModel.showBruteforceDialogAdmin()
+                }
+
+                R.id.with_accessibility_service -> {
+                   viewModel.showBruteforceDialogAccessibility()
+                }
+
+                else -> throw RuntimeException("Wrong menu item")
+            }
+            return@setOnMenuItemClickListener true
+        }
+        popup.show()
+    }
+
     /**
      * Listening for dialog result
      */
@@ -316,9 +333,12 @@ class TriggerSettingsFragment: AbstractSettingsFragment() {
             viewModel.setRunOnUsbConnection()
         }
         listenQuestionDialog(
-            BRUTEFORCE_DIALOG,
+            BRUTEFORCE_DIALOG_ADMIN,
         ) {
-            viewModel.setBruteforceProtection(true)
+            viewModel.setBruteforceProtection(BruteforceDetectingMethod.ADMIN)
+        }
+        listenQuestionDialog(BRUTEFORCE_DIALOG_ACCESSIBILITY) {
+            viewModel.setBruteforceProtection(BruteforceDetectingMethod.ACCESSIBILITY_SERVICE)
         }
         InputDigitDialog.setupListener(
             parentFragmentManager,

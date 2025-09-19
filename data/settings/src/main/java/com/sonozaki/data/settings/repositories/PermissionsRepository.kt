@@ -10,5 +10,6 @@ interface PermissionsRepository {
     suspend fun setAdminStatus(status: Boolean)
     suspend fun setOwnerStatus(status: Boolean)
     suspend fun setRootStatus(status: Boolean)
+    suspend fun setShizukuPermission(permission: Boolean)
     val permissions: Flow<Permissions>
 }

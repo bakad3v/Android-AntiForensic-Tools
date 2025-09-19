@@ -32,7 +32,7 @@ class DialogLauncher (
       )
   }
 
-  private fun showQuestionDialog(title: String, message: String, requestKey: String, hideCancel: Boolean = false, cancellable: Boolean = true) {
+  fun showQuestionDialog(title: String, message: String, requestKey: String, hideCancel: Boolean = false, cancellable: Boolean = true) {
       QuestionDialog.show(fragmentManager, title, message, requestKey, hideCancel, cancellable)
   }
 

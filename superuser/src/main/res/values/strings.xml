@@ -7,4 +7,7 @@
     <string name="unknow_root_error">Root action failed for some reason: %1$s</string>
     <string name="wrong_android_version">Wrong android version, SDK version %1$s or higher required</string>
     <string name="cant_logout_from_primary_user">You can\'t logout from primary user</string>
+    <string name="not_enough_rights">App have not enough rights</string>
+    <string name="data_not_found">Data not found</string>
+    <string name="shizuku_not_initialized">Shizuku not initialized</string>
 </resources>

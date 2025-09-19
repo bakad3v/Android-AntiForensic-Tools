@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/wizardGraph"
+    app:startDestination="@id/setupWizardFragment">
+
+    <fragment
+        android:id="@+id/setupProtectionConfirmationFragment"
+        android:name="com.bakasoft.setupwizard.presentation.fragment.SetupProtectionConfirmationFragment">
+        <action
+            android:id="@+id/action_setupProtectionConfirmationFragment_to_setupWizardFragment"
+            app:destination="@id/setupWizardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/setupTriggersConfirmationFragment"
+        android:name="com.bakasoft.setupwizard.presentation.fragment.SetupTriggersConfirmationFragment">
+        <action
+            android:id="@+id/action_setupTriggersConfirmationFragment_to_setupWizardFragment"
+            app:destination="@id/setupWizardFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/setupWizardFragment"
+        android:name="com.bakasoft.setupwizard.presentation.fragment.SetupWizardFragment">
+        <action
+            android:id="@+id/action_setupWizardFragment_to_setupProtectionConfirmationFragment"
+            app:destination="@id/setupProtectionConfirmationFragment" />
+        <action
+            android:id="@+id/action_setupWizardFragment_to_setupTriggersConfirmationFragment"
+            app:destination="@id/setupTriggersConfirmationFragment" />
+    </fragment>
+</navigation>

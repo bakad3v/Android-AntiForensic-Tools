@@ -1,0 +1,6 @@
+<resources>
+    <color name="state_ok_base">#4CAF50</color>
+    <color name="state_required_base">#E53935</color>
+    <color name="state_recommended_base">#FBC02D</color>
+    <color name="state_gray_base">#9E9E9E</color>
+</resources>

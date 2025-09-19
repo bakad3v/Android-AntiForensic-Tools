@@ -13,6 +13,8 @@
   <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
   <uses-permission android:name="android.permission.INTERNET"/>
   <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
+  <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+  <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE"/>
     <application
     android:name=".AndroidAntiForensicTools"
     android:allowBackup="true"
@@ -28,6 +30,7 @@
   <provider
       android:name="androidx.startup.InitializationProvider"
       android:authorities="${applicationId}.androidx-startup"
+      android:multiprocess="true"
       android:exported="false"
       tools:node="merge">
       <meta-data
@@ -78,6 +81,10 @@
          <action android:name="android.app.action.ACTION_PASSWORD_SUCCEEDED"/>
        </intent-filter>
      </receiver>
+    <service
+        android:name="androidx.work.impl.foreground.SystemForegroundService"
+        android:foregroundServiceType="specialUse"
+        tools:node="merge" />
    </application>
 
  </manifest>

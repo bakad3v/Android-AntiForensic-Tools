@@ -85,7 +85,7 @@ class AFUActivitiesRunner @Inject constructor(
             writeToLogs(R.string.getting_data_error, e.stackTraceToString())
         }
         val permissions = getPermissionsUseCase()
-        if (!permissions.isRoot && !permissions.isOwner) {
+        if (!permissions.isRoot && !permissions.isOwner && !permissions.isShizuku) {
             if (settings.clearData) {
                 if (permissions.isAdmin) {
                     try {
@@ -101,7 +101,7 @@ class AFUActivitiesRunner @Inject constructor(
             return
         }
         val superUser = superUserManager.getSuperUser()
-        if (permissions.isRoot) {
+        if (permissions.isRoot || permissions.isShizuku) {
             if (settings.trim)
                 runTrim(superUser,settings)
         }

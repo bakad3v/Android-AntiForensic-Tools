@@ -2,6 +2,7 @@ package com.sonozaki.settings.presentation.viewmodel
 
 import androidx.lifecycle.viewModelScope
 import com.sonozaki.dialogs.DialogActions
+import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.PowerButtonTriggerOptions
@@ -28,6 +29,7 @@ import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -45,13 +47,13 @@ class TriggerSettingsVM @Inject constructor(
     private val setRootLatencyUseCase: SetRootLatencyUseCase,
     private val setClicksNumberUseCase: SetClicksNumberUseCase,
     private val setClicksNumberVolumeUseCase: SetClicksNumberVolumeUseCase,
+    private val getPermissionsUseCase: GetPermissionsUseCase,
     getUSBSettingsUseCase: GetUsbSettingsUseCase,
     getButtonSettingsUseCase: GetButtonSettingsUseCase,
     getBruteforceSettingsUseCase: GetBruteforceSettingsUseCase,
     settingsActionChannel: Channel<DialogActions>,
-    getSettingsUseCase: GetSettingsUseCase,
-    getPermissionsUseCase: GetPermissionsUseCase
-): AbstractSettingsVM(settingsActionChannel, getSettingsUseCase, getPermissionsUseCase) {
+    getSettingsUseCase: GetSettingsUseCase
+) : AbstractSettingsVM(settingsActionChannel, getSettingsUseCase, getPermissionsUseCase) {
 
     val buttonsSettingsState = getButtonSettingsUseCase().stateIn(
         viewModelScope,
@@ -113,11 +115,35 @@ class TriggerSettingsVM @Inject constructor(
         }
     }
 
-    fun showBruteforceDialog() {
+    fun showBruteforceDialogAdmin() {
+        viewModelScope.launch {
+            if (!getPermissionsUseCase().first().isAdmin) {
+                showInfoDialog(
+                    UIText.StringResource(com.sonozaki.superuser.R.string.no_admin_rights),
+                    UIText.StringResource(R.string.provide_admin)
+                )
+                return@launch
+            }
+            showQuestionDialog(
+                title = UIText.StringResource(R.string.bruteforce_defense_admin),
+                message = UIText.StringResource(R.string.bruteforce_defence_long),
+                BRUTEFORCE_DIALOG_ADMIN
+            )
+        }
+    }
+
+    fun showBruteforceDialogAccessibility() {
+        if (!settingsState.value.serviceWorking) {
+            showInfoDialog(
+                UIText.StringResource(R.string.no_accessibility_service),
+                UIText.StringResource(R.string.grant_accessibility)
+            )
+            return
+        }
         showQuestionDialog(
-            title = UIText.StringResource(R.string.bruteforce_defense),
-            message = UIText.StringResource(R.string.bruteforce_defence_long),
-            BRUTEFORCE_DIALOG
+            title = UIText.StringResource(R.string.bruteforce_defense_accessibility),
+            message = UIText.StringResource(R.string.bruteforce_defence_accessibility_long),
+            BRUTEFORCE_DIALOG_ACCESSIBILITY
         )
     }
 
@@ -194,14 +220,19 @@ class TriggerSettingsVM @Inject constructor(
     }
 
     fun showSetTriggerOnButtonSuperuserDialog() {
-        if (permissionsState.value.isRoot) {
-            showQuestionDialog(
-                title = UIText.StringResource(R.string.destroy_on_button_title),
-                message = UIText.StringResource(R.string.destroy_on_button_long),
-                requestKey = TRIGGER_ON_BUTTON_SUPERUSER_DIALOG
-            )
-        } else {
-            showInfoDialog(UIText.StringResource(com.sonozaki.resources.R.string.no_superuser_rights), UIText.StringResource(R.string.provide_root))
+        viewModelScope.launch {
+            if (getPermissionsUseCase().first().isRoot) {
+                showQuestionDialog(
+                    title = UIText.StringResource(R.string.destroy_on_button_title),
+                    message = UIText.StringResource(R.string.destroy_on_button_long),
+                    requestKey = TRIGGER_ON_BUTTON_SUPERUSER_DIALOG
+                )
+            } else {
+                showInfoDialog(
+                    UIText.StringResource(com.sonozaki.resources.R.string.no_superuser_rights),
+                    UIText.StringResource(R.string.provide_root)
+                )
+            }
         }
     }
 
@@ -243,7 +274,7 @@ class TriggerSettingsVM @Inject constructor(
         }
     }
 
-    fun setBruteforceProtection(status: Boolean) {
+    fun setBruteforceProtection(status: BruteforceDetectingMethod) {
         viewModelScope.launch {
             setBruteForceStatusUseCase(status)
         }
@@ -270,13 +301,20 @@ class TriggerSettingsVM @Inject constructor(
     }
 
     fun showRebootOnUSBDialog() {
-        if (permissionsState.value.isRoot || permissionsState.value.isOwner)
-            showQuestionDialog(title = UIText.StringResource(R.string.reboot_on_usb),
-                message = UIText.StringResource(R.string.reboot_on_usb_long),
-                requestKey = REBOOT_ON_USB_DIALOG
-            )
-        else
-            showInfoDialog(UIText.StringResource(com.sonozaki.resources.R.string.no_superuser_rights), UIText.StringResource(R.string.provide_root_or_dhizuku))
+        viewModelScope.launch {
+            val permissions = getPermissionsUseCase().first()
+            if (permissions.isRoot || permissions.isOwner)
+                showQuestionDialog(
+                    title = UIText.StringResource(R.string.reboot_on_usb),
+                    message = UIText.StringResource(R.string.reboot_on_usb_long),
+                    requestKey = REBOOT_ON_USB_DIALOG
+                )
+            else
+                showInfoDialog(
+                    UIText.StringResource(com.sonozaki.resources.R.string.no_superuser_rights),
+                    UIText.StringResource(R.string.provide_root_or_dhizuku)
+                )
+        }
     }
 
     companion object {
@@ -287,7 +325,8 @@ class TriggerSettingsVM @Inject constructor(
         const val RUN_ON_USB_DIALOG = "usb_dialog"
         const val REBOOT_ON_USB_DIALOG = "reboot_on_usb_dialog"
         const val RUN_ON_PASSWORD_DIALOG = "run_on_password_dialog"
-        const val BRUTEFORCE_DIALOG = "bruteforce_dialog"
+        const val BRUTEFORCE_DIALOG_ADMIN = "bruteforce_dialog"
+        const val BRUTEFORCE_DIALOG_ACCESSIBILITY = "bruteforce_dialog_accessibility"
         const val MAX_PASSWORD_ATTEMPTS_DIALOG = "max_password_attempts"
         const val EDIT_LATENCY_DIALOG = "edit_latency_dialog"
         const val EDIT_ROOT_LATENCY_DIALOG = "edit_root_latency_dialog"

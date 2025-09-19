@@ -1,5 +1,6 @@
 package com.sonozaki.triggerreceivers.services.domain.repository
 
+import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.ButtonClicksData
 import com.sonozaki.entities.ButtonSelected
 import com.sonozaki.entities.ButtonSettings
@@ -16,6 +17,7 @@ interface ReceiversRepository {
     suspend fun getSettings(): Settings
     suspend fun getPermissions(): Permissions
     suspend fun getButtonSettings(): ButtonSettings
+    suspend fun getBruteforceSettings(): BruteforceSettings
     suspend fun getButtonClicksData(buttonSelected: ButtonSelected): ButtonClicksData
     fun getButtonSettingsFlow(): Flow<ButtonSettings>
     fun getPermissionsFlow(): Flow<Permissions>

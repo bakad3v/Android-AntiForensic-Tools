@@ -95,11 +95,12 @@ class MultiuserSettingsFragment: AbstractSettingsFragment() {
             viewModel.permissionsState.collect {
                 val serviceWorking = viewModel.settingsState.value.serviceWorking
                 val rootOrDhizuku = it.isRoot || it.isOwner
+                val rootOrShizuku = it.isRoot || it.isShizuku
                 with(binding) {
                     disableMultiuserUi.isClickable = rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && serviceWorking
                     setMultiuserUi.setActive(it.isRoot)
                     setUserSwitcherUi.setActive(
-                        it.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
+                        rootOrShizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q
                     )
                     switchUserPermission.setActive(
                         rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P

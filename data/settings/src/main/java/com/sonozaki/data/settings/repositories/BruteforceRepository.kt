@@ -1,5 +1,6 @@
 package com.sonozaki.data.settings.repositories
 
+import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.BruteforceSettings
 import kotlinx.coroutines.flow.Flow
 
@@ -12,7 +13,7 @@ interface BruteforceRepository {
     /**
      * Enforce or disable bruteforce prevention system
      */
-    suspend fun setBruteforceStatus(status: Boolean)
+    suspend fun setBruteforceStatus(status: BruteforceDetectingMethod)
 
     /**
      * Set number of wrong password attempts. On n-th wrong attempt app will react.

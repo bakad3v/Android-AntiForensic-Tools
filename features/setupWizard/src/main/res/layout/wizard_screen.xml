@@ -1,0 +1,404 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ScrollView
+        android:id="@+id/data_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/app_state_card"
+                    style="?attr/materialCardViewFilledStyle"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:layout_marginTop="@dimen/margin_big"
+                    android:elevation="2dp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/app_state_image"
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent">
+
+                    </ImageView>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/app_state"
+                    style="?attr/textAppearanceDisplaySmall"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_big"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_big"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/app_state_card" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/app_state_subtitle"
+                    style="?attr/textAppearanceTitleLarge"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_big"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_big"
+                    android:gravity="center"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/app_state" />
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView"
+                    style="?attr/materialCardViewFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_big"
+                    android:layout_marginTop="@dimen/margin_big"
+                    android:layout_marginEnd="@dimen/margin_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/app_state_subtitle">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="@dimen/margin_normal">
+
+                        <TextView
+                            style="?attr/textAppearanceTitleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="@dimen/margin_normal"
+                            android:text="@string/install_required_version" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/install_required_app_version"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                        </com.bakasoft.setupwizard.presentation.views.WizardItem>
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/install_app_help"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/baseline_help_24"
+                            android:text="@string/help" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView2"
+                    style="?attr/materialCardViewFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_big"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="@dimen/margin_normal">
+
+                        <TextView
+                            style="?attr/textAppearanceTitleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="@dimen/margin_normal"
+                            android:text="@string/grant_necessary_permissions" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/provide_accessibility_service"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_normal"
+                            app:settingsText="@string/provide_accessibility_service">
+
+                        </com.bakasoft.setupwizard.presentation.views.WizardItem>
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/grant_superuser_permissions"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/permissions_help"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/baseline_help_24"
+                            android:text="@string/help" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView3"
+                    style="?attr/materialCardViewFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_big"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView2">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="@dimen/margin_normal">
+
+                        <TextView
+                            style="?attr/textAppearanceTitleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="@dimen/margin_normal"
+                            android:text="@string/setup_triggers" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/trigger_on_usb_connection"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_normal"
+                            app:settingsText="@string/trigger_on_usb_connection" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/trigger_on_duress_password"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_normal"
+                            app:settingsText="@string/trigger_on_duress_password">
+
+                        </com.bakasoft.setupwizard.presentation.views.WizardItem>
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/trigger_on_button"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_normal" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/trigger_on_bruteforce"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:settingsText="@string/trigger_on_bruteforce" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/triggers_help"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:icon="@drawable/baseline_help_24"
+                                android:text="@string/help" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/setup_triggers_automatically"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:icon="@drawable/baseline_auto_fix_normal_24"
+                                android:text="@string/fix_automatically" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView4"
+                    style="?attr/materialCardViewFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_big"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView3">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="@dimen/margin_normal">
+
+                        <TextView
+                            style="?attr/textAppearanceTitleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="@dimen/margin_normal"
+                            android:text="@string/select_data_destruction" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/selectData"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_normal">
+
+                        </com.bakasoft.setupwizard.presentation.views.WizardItem>
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/activate_data_destruction"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:settingsText="@string/activate_data_destruction" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/destroy_data_help"
+                            style="@style/Widget.Material3.Button.TextButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:icon="@drawable/baseline_help_24"
+                            android:text="@string/help" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/materialCardView5"
+                    style="?attr/materialCardViewFilledStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_big"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView4">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="@dimen/margin_normal">
+
+                        <TextView
+                            style="?attr/textAppearanceTitleMedium"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingVertical="@dimen/margin_normal"
+                            android:text="@string/setup_antiforensic_protection" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/remove_itself"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_normal"
+                            app:settingsText="@string/enable_self_destruction">
+
+                        </com.bakasoft.setupwizard.presentation.views.WizardItem>
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/hide_app"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_normal"
+                            app:settingsText="@string/enable_app_hidding" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/disable_logs"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_normal" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/disable_safe_boot"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_normal" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/setup_multiuser_ui_hiding"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/margin_normal"
+                            app:settingsText="@string/setup_multiuser_ui_hiding" />
+
+                        <com.bakasoft.setupwizard.presentation.views.WizardItem
+                            android:id="@+id/run_trim"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:settingsText="@string/setup_trim">
+
+                        </com.bakasoft.setupwizard.presentation.views.WizardItem>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/protection_help"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:icon="@drawable/baseline_help_24"
+                                android:drawableTint="?attr/colorPrimary"
+                                android:text="@string/help" />
+
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/setup_protection_automatically"
+                                style="@style/Widget.Material3.Button.TextButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:icon="@drawable/baseline_auto_fix_normal_24"
+                                android:text="@string/fix_automatically" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
+    </ScrollView>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loading_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:progressTint="?attr/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="@+id/loading_layout"
+            app:layout_constraintEnd_toEndOf="@+id/loading_layout"
+            app:layout_constraintStart_toStartOf="@+id/loading_layout"
+            app:layout_constraintTop_toTopOf="@+id/loading_layout" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

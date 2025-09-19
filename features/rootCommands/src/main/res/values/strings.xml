@@ -2,7 +2,7 @@
 <resources>
     <string name="enter_root_commands">Enter root commands here</string>
     <string name="enable_root_command">Enable custom root commands</string>
-    <string name="enable_root_command_long">If you activate trigger, these commands will run after data deletion.</string>
+    <string name="enable_root_command_long">If you activate a trigger, these commands will run after data deletion.</string>
     <string name="no_root_rights_commands">You need root rights to run root commands</string>
     <string name="edit_command">Edit root command</string>
     <string name="save_command">Save root command</string>

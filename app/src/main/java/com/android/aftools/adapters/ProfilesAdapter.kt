@@ -1,7 +1,9 @@
 package com.android.aftools.adapters
 
 import com.sonozaki.data.profiles.repository.ProfilesRepository
+import com.sonozaki.data.settings.repositories.PermissionsRepository
 import com.sonozaki.data.settings.repositories.SettingsRepository
+import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.ProfileDomain
 import com.sonozaki.profiles.domain.repository.ProfilesScreenRepository
 import kotlinx.coroutines.flow.Flow
@@ -10,7 +12,8 @@ import javax.inject.Inject
 
 class ProfilesAdapter @Inject constructor(
     private val profilesRepository: ProfilesRepository,
-    private val settingsRepository: SettingsRepository
+    private val settingsRepository: SettingsRepository,
+    private val permissionsRepository: PermissionsRepository
 ): ProfilesScreenRepository {
     override suspend fun refreshDeviceProfiles() {
         profilesRepository.refreshDeviceProfiles()
@@ -30,6 +33,13 @@ class ProfilesAdapter @Inject constructor(
 
     override fun getProfiles(): Flow<List<ProfileDomain>?>
         = profilesRepository.getProfiles()
+
+    override suspend fun openProfile(id: Int) {
+        profilesRepository.openProfile(id)
+    }
+
     override val deleteProfiles: Flow<Boolean>
         get() = settingsRepository.settings.map { it.deleteProfiles }
+    override val permissions: Flow<Permissions>
+        get() = permissionsRepository.permissions
 }

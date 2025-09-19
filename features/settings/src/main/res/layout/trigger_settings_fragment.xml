@@ -41,13 +41,12 @@
             android:textStyle="bold">
         </com.google.android.material.textview.MaterialTextView>
 
-        <com.sonozaki.settings.presentation.views.SettingsItemSwitchView
+        <com.sonozaki.settings.presentation.views.SettingsItemMenuView
             android:id="@+id/bruteforce_item"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:mainText="@string/prevent_bruteforce"
-            app:requirementsText="@string/admin_required">
-        </com.sonozaki.settings.presentation.views.SettingsItemSwitchView>
+            app:mainText="@string/prevent_bruteforce">
+        </com.sonozaki.settings.presentation.views.SettingsItemMenuView>
 
         <com.sonozaki.settings.presentation.views.PlainTextSettingView
             android:id="@+id/allowed_attempts"

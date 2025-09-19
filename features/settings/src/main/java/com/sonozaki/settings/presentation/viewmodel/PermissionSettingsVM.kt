@@ -26,6 +26,8 @@ class PermissionSettingsVM @Inject constructor(
     getPermissionsUseCase: GetPermissionsUseCase
 ): AbstractSettingsVM(settingsActionChannel, getSettingsUseCase, getPermissionsUseCase) {
 
+    val shizukuState = superUserManager.shizukuStateFlow
+
     fun showAccessibilityServiceDialog() {
         showQuestionDialog(
             title = UIText.StringResource(R.string.accessibility_service_title),
@@ -86,6 +88,20 @@ class PermissionSettingsVM @Inject constructor(
         )
     }
 
+    fun askShizuku() {
+        if (superUserManager.checkShizukuInstalled()) {
+            superUserManager.askShizukuRights()
+        } else {
+            viewModelScope.launch {
+                showQuestionDialog(
+                    title = UIText.StringResource(R.string.install_shizuku),
+                    message = UIText.StringResource(R.string.install_shizuku_long),
+                    requestKey = INSTALL_SHIZUKU_DIALOG
+                )
+            }
+        }
+    }
+
     fun showRootDisableDialog() {
         viewModelScope.launch {
             showInfoDialogSuspend(
@@ -103,9 +119,19 @@ class PermissionSettingsVM @Inject constructor(
         }
     }
 
+    fun showDisableShizukuDialog() {
+        showQuestionDialog(
+            UIText.StringResource(R.string.disable_shizuku_manually),
+            UIText.StringResource(R.string.disable_shizuku_manually_long),
+            DISABLE_SHIZUKU_MANUALLY
+        )
+    }
+
     companion object {
         const val MOVE_TO_ACCESSIBILITY_SERVICE = "move_to_accessibility_service"
         const val ROOT_WARNING_DIALOG = "root_warning_dialog"
         const val INSTALL_DIZUKU_DIALOG = "install_dizuku"
+        const val INSTALL_SHIZUKU_DIALOG = "install_shizuku"
+        const val DISABLE_SHIZUKU_MANUALLY = "disable_shizuku_manually"
     }
 }

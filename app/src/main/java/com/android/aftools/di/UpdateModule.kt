@@ -1,12 +1,18 @@
 package com.android.aftools.di
 
 import com.android.aftools.BuildConfig
-import com.bakasoft.appupdater.network.DownloadAppTestVersionService
-import com.sonozaki.resources.APP_UPDATE_URL
+import com.bakasoft.appinstaller.data.network.DownloadAppFileService
+import com.bakasoft.appupdater.network.DownloadAppsLastVersionService
+import com.bakasoft.network.RequestResult
+import com.sonozaki.entities.AppInstallerData
+import com.sonozaki.entities.AppLatestVersion
+import com.sonozaki.resources.APP_FLAVOR
+import com.sonozaki.resources.APP_VERSION
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
+import kotlinx.coroutines.flow.MutableSharedFlow
 import retrofit2.Retrofit
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import javax.inject.Named
@@ -18,15 +24,13 @@ class UpdateModule {
 
     @Provides
     @Singleton
-    @Named(APP_UPDATE_URL)
-    fun getUrl(): String {
-        val version = when (BuildConfig.FLAVOR_name) {
-            "island" -> "AFTools_island_TESTONLY.apk"
-            "shelter" -> "AFTools_shelter_TESTONLY.apk"
-            else -> return ""
-        }
-        return  "bakad3v/Android-AntiForensic-Tools/releases/download/v${BuildConfig.VERSION_NAME}/$version"
-    }
+    @Named(APP_VERSION)
+    fun getAppVersion(): String = BuildConfig.VERSION_NAME
+
+    @Provides
+    @Singleton
+    @Named(APP_FLAVOR)
+    fun getAppFlavor(): String = BuildConfig.FLAVOR_name
 
 
     @Provides
@@ -38,9 +42,25 @@ class UpdateModule {
 
     @Provides
     @Singleton
-    fun provideUpdateService(retrofit: Retrofit): DownloadAppTestVersionService {
-       return retrofit.create(DownloadAppTestVersionService::class.java)
+    fun provideUpdateService(retrofit: Retrofit): DownloadAppFileService {
+       return retrofit.create(DownloadAppFileService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideDownloadLastVersionService(retrofit: Retrofit): DownloadAppsLastVersionService {
+        return retrofit.create(DownloadAppsLastVersionService::class.java)
+    }
+
+    @Provides
+    @Singleton
+    fun provideLatestVersionSharedFlow(): MutableSharedFlow<RequestResult<AppLatestVersion>> =
+        MutableSharedFlow(replay = 1)
+
+    @Provides
+    @Singleton
+    fun provideAppinstallatorDataSharedFlow(): MutableSharedFlow<AppInstallerData> =
+        MutableSharedFlow(replay = 1)
 
     companion object {
         const val GITHUB = "https://github.com/"

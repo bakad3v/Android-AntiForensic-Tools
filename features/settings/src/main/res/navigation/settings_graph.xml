@@ -42,7 +42,7 @@
         android:name="com.sonozaki.settings.presentation.fragments.MultiuserSettingsFragment" />
     <fragment
         android:id="@+id/permanentSettingsFragment"
-        android:name="com.sonozaki.settings.presentation.fragments.PermanentSettingsFragment" />
+        android:name="com.sonozaki.settings.presentation.fragments.NoticeableSettingsFragment" />
     <fragment
         android:id="@+id/permissionSettingsFragment"
         android:name="com.sonozaki.settings.presentation.fragments.PermissionSettingsFragment" />

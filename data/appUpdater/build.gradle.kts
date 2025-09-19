@@ -49,4 +49,5 @@ dependencies {
     androidTestImplementation(libs.espresso.core)
     implementation(project(":core:resources"))
     implementation(project(":core:network"))
+    implementation(project(":core:entities"))
 }

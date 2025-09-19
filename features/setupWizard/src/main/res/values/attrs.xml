@@ -1,0 +1,5 @@
+<resources>
+    <declare-styleable name="SettingsElementView">
+        <attr name="settingsText" format="string|reference" />
+    </declare-styleable>
+</resources>

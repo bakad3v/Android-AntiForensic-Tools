@@ -13,9 +13,6 @@ suspend fun Context.destroyApp(
     superUserManager: SuperUserManager,
     handleException: suspend (e: String) -> Unit
 ) {
-    if (settings.removeItself) {
-        superUser.uninstallApp(packageName)
-    }
     if (settings.clearItself) {
         superUser.clearAppData(packageName)
     }
@@ -31,8 +28,26 @@ suspend fun Context.destroyApp(
             handleException(it)
         }
     }
+    if (settings.removeItself) {
+        try {
+            superUser.uninstallApp(packageName)
+        } catch (e: SuperUserException) {
+            handleException(e.messageForLogs.asString(this))
+            if (settings.hideItself) {
+                try {
+                    superUser.hideApp(packageName)
+                } catch (e: SuperUserException) {
+                    handleException(e.messageForLogs.asString(this))
+                }
+            }
+        }
+    }
     if (settings.hideItself) {
-        superUser.hideApp(packageName)
+        try {
+            superUser.hideApp(packageName)
+        } catch (e: SuperUserException) {
+            handleException(e.messageForLogs.asString(this))
+        }
     }
 }
 

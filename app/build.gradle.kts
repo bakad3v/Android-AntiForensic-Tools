@@ -16,8 +16,8 @@ android {
         applicationId = "com.android.aftools"
         minSdk = 26
         targetSdk = 35
-        versionCode = 7
-        versionName = "1.5.0"
+        versionCode = 8
+        versionName = "2.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -146,16 +146,19 @@ dependencies {
     implementation(project(":core:activityState"))
     implementation(project(":core:dialogs"))
     implementation(project(":features:rootCommands"))
+    implementation(project(":features:appUpdateCenter"))
     implementation(project(":features:settings"))
     implementation(project(":core:entities"))
     implementation(project(":features:triggerReceivers"))
     implementation(project(":features:splash"))
     implementation(project(":features:lockscreen"))
     implementation(project(":features:services"))
+    implementation(project(":features:setupWizard"))
     implementation(project(":core:encryptedDatastore"))
     implementation(project(":data:password"))
     implementation(project(":data:root"))
     implementation(project(":superuser"))
+    implementation(project(":appInstaller"))
     implementation(project(":data:settings"))
     implementation(project(":data:files"))
     implementation(project(":data:logs"))

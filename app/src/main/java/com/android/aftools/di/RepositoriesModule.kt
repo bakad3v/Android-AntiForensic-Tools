@@ -1,7 +1,13 @@
 package com.android.aftools.di
 
+import com.android.aftools.adapters.AppUpdaterAdapter
+import com.android.aftools.adapters.SetupWizardRepositoryAdapter
+import com.bakasoft.appinstaller.data.repository.AppInstallerRepositoryImpl
+import com.bakasoft.appinstaller.domain.repository.AppInstallerServiceRepository
+import com.bakasoft.appupdatecenter.domain.repository.AppUpdateCenterRepository
 import com.bakasoft.appupdater.repository.AppUpdateRepository
 import com.bakasoft.appupdater.repository.AppUpdateRepositoryImpl
+import com.bakasoft.setupwizard.domain.repository.SetupWizardRepository
 import com.sonozaki.data.files.repository.FilesRepository
 import com.sonozaki.data.files.repository.FilesRepositoryImpl
 import com.sonozaki.data.logs.repository.LogsRepositoryImpl
@@ -74,4 +80,16 @@ abstract class RepositoriesModule {
     @Binds
     @Singleton
     abstract fun provideButtonRepository(buttonSettingsRepositoryImpl: ButtonSettingsRepositoryImpl): ButtonSettingsRepository
+
+    @Binds
+    @Singleton
+    abstract fun provideAppUpdaterRepository(appUpdaterAdapter: AppUpdaterAdapter): AppUpdateCenterRepository
+
+    @Binds
+    @Singleton
+    abstract fun provideAppInstallerRepository(appInstallerRepositoryImpl: AppInstallerRepositoryImpl): AppInstallerServiceRepository
+
+    @Binds
+    @Singleton
+    abstract fun provideSetupWizardRepository(impl: SetupWizardRepositoryAdapter): SetupWizardRepository
 }

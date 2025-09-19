@@ -31,4 +31,6 @@ interface ProfilesRepository {
      * Function for retrieving information about user profiles from device. Requires root or dhizuku rights.
      */
     suspend fun refreshDeviceProfiles()
+
+    suspend fun openProfile(id: Int)
 }

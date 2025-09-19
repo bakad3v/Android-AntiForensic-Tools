@@ -121,12 +121,13 @@ class DataDestructionSettingsFragment: AbstractSettingsFragment() {
         viewLifecycleOwner.launchLifecycleAwareCoroutine {
             viewModel.permissionsState.collect {
                 val rootOrDhizuku = it.isRoot || it.isOwner
+                val rootOrShizuku = it.isRoot || it.isShizuku
                 with(binding) {
-                    runTrimItem.setSwitchEnabled(it.isRoot)
+                    runTrimItem.setSwitchEnabled(rootOrShizuku)
                     wipeItem.setSwitchEnabled(
                         rootOrDhizuku || it.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE
                     )
-                    removeItselfItem.setSwitchEnabled(rootOrDhizuku)
+                    removeItselfItem.setSwitchEnabled(rootOrShizuku)
                     hideAppItem.setSwitchEnabled(
                         rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
                     )

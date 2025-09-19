@@ -14,6 +14,7 @@ import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.KEYCODE_VOLUME_DOWN
 import android.view.KeyEvent.KEYCODE_VOLUME_UP
 import android.view.accessibility.AccessibilityEvent
+import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.ButtonClicked
 import com.sonozaki.entities.MultiuserUIProtection
 import com.sonozaki.entities.PowerButtonTriggerOptions
@@ -26,6 +27,7 @@ import com.sonozaki.triggerreceivers.R
 import com.sonozaki.triggerreceivers.services.domain.router.ActivitiesLauncher
 import com.sonozaki.triggerreceivers.services.domain.usecases.ButtonClickUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.CheckPasswordUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.GetBruteforceSettingsUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetButtonSettingsUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetButtonsRootDataUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetDeviceProtectionSettings
@@ -34,6 +36,8 @@ import com.sonozaki.triggerreceivers.services.domain.usecases.GetPasswordStatusU
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetPermissionsUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetSettingsUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetUsbSettingsUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.OnRightPasswordUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.OnWrongPasswordUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.SetRunOnBootUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.SetServiceStatusUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.WriteLogsUseCase
@@ -111,6 +115,15 @@ class TriggerReceiverService : AccessibilityService() {
     @Inject
     lateinit var getButtonsRootDataUseCase: GetButtonsRootDataUseCase
 
+    @Inject
+    lateinit var getBruteforceSettingsUseCase: GetBruteforceSettingsUseCase
+
+    @Inject
+    lateinit var onWrongPasswordUseCase: OnWrongPasswordUseCase
+
+    @Inject
+    lateinit var onRightPasswordUseCase: OnRightPasswordUseCase
+
     override fun onCreate() {
         super.onCreate()
         coroutineScope.launch(dispatcher) {
@@ -162,6 +175,11 @@ class TriggerReceiverService : AccessibilityService() {
         val screenUnlockedFilter = IntentFilter(Intent.ACTION_USER_PRESENT)
         val screenUnlockedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
+                coroutineScope.launch(dispatcher) {
+                    if (checkBruteforceDetectionMethod()) {
+                        onRightPasswordUseCase()
+                    }
+                }
                 activitiesLauncher.stopReboot()
             }
         }
@@ -355,9 +373,34 @@ class TriggerReceiverService : AccessibilityService() {
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
         if (event == null || event.packageName !in PACKAGE_NAMES_INTERCEPTED || keyguardManager?.isDeviceLocked != true ||
-            event.isEnabled != true || event.isPassword !=true
+            event.isEnabled != true
         ) return
-        updatePassword(event.text.joinToString(""))
+        if (event.isPassword == true) {
+            updatePassword(event.text.joinToString(""))
+        } else {
+            watchWrongPassword(event.text.joinToString(""))
+        }
+    }
+
+    private suspend fun checkBruteforceDetectionMethod(): Boolean {
+        return getBruteforceSettingsUseCase().detectingMethod == BruteforceDetectingMethod.ACCESSIBILITY_SERVICE
+    }
+
+    private fun compareStringWithResource(text: String, rId: Int): Boolean {
+        return text.compareTo(baseContext.getString(rId), true) == 0
+    }
+
+    private fun watchWrongPassword(text: String) {
+        coroutineScope.launch(dispatcher) {
+            if (checkBruteforceDetectionMethod()
+                && (compareStringWithResource(text, R.string.kg_wrong_password)
+                || compareStringWithResource(text, R.string.wrong_password))
+            ) {
+                if (onWrongPasswordUseCase()) {
+                    runActions()
+                }
+            }
+        }
     }
 
     override fun onKeyEvent(event: KeyEvent?): Boolean {

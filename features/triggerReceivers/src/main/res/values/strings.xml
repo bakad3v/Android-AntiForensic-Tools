@@ -6,4 +6,6 @@
     <string name="rebooting_failed">Rebooting device failed: %1$s</string>
     <string name="stopping_logs">Stopping logs</string>
     <string name="stopping_logs_failed">Stopping logs failed: %1$s</string>
+    <string name="kg_wrong_password">Wrong password</string>
+    <string name="wrong_password">Incorrect password</string>
 </resources>
