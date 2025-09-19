@@ -95,5 +95,9 @@ class AppInstallerWorker @AssistedInject constructor(
             WorkManager.getInstance(context)
                 .enqueueUniqueWork(WORK_NAME, ExistingWorkPolicy.REPLACE, workRequest)
         }
+
+        fun stop(context: Context) {
+            WorkManager.getInstance(context).cancelUniqueWork(WORK_NAME)
+        }
     }
 }
