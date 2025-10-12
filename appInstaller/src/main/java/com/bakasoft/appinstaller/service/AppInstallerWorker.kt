@@ -40,7 +40,7 @@ class AppInstallerWorker @AssistedInject constructor(
         return withContext(dispatcher) {
             val result = installAppUseCase()
             showFinishedNotification(result)
-            if (result != null) {
+            if (result == null) {
                 Result.success()
             } else {
                 Result.failure()
