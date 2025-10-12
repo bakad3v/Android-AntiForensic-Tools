@@ -208,4 +208,7 @@ interface SuperUser {
 
     @Throws(SuperUserException::class)
     suspend fun openProfile(userId: Int)
+
+    @Throws(SuperUserException::class)
+    suspend fun removeNotification(packageName: String, id: Int)
 }

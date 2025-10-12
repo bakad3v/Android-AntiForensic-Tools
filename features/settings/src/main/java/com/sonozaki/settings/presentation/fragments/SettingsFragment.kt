@@ -82,6 +82,9 @@ class SettingsFragment: AbstractSettingsFragment() {
             uiSettings.setOnClickListener {
                 navController.navigate(R.id.action_settingsFragment_to_UISettingsFragment)
             }
+            notificationHiding.setOnClickListener {
+                navController.navigate(R.id.action_settingsFragment_to_notificationSettingsFragment)
+            }
         }
     }
 

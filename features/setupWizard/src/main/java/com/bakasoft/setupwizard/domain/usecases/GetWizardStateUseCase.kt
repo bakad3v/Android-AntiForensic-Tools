@@ -42,10 +42,12 @@ class GetWizardStateUseCase @Inject constructor(
             repository.filesSelected,
             repository.profilesSelected,
             repository.rootCommandNotEmpty,
+            repository.listeningNotifications
         ) { settings: Settings, permissions: Permissions, usbSettings: UsbSettings,
             buttonSettings: ButtonSettings, bruteforceSettings: BruteforceSettings,
             deviceProtectionSettings: DeviceProtectionSettings, appLatestData: AppLatestVersion?,
-            filesSelected: Boolean, profilesSelected: Boolean, rootCommandNotEmpty: Boolean ->
+            filesSelected: Boolean, profilesSelected: Boolean, rootCommandNotEmpty: Boolean,
+            listeningNotifications: Boolean ->
             val testOnlyNeeded = permissions.isAdmin && permissions.isRoot && settings.removeItself
             val appVersionState = getAppVersionState(appLatestData, testOnlyNeeded)
 
@@ -95,6 +97,9 @@ class GetWizardStateUseCase @Inject constructor(
             val activateTrimState = getActivateTrimState(selectedData, settings)
 
             val protectionFixAvailable = getProtectionAvailable(permissions, selectedData)
+
+            val notificationSettingsState = getNotificationsHidingStatus(listeningNotifications)
+
             val superUserPermissions =
                 getPermissionState(permissions, protectionFixAvailable, rootCommandNotEmpty, profilesSelected, settings.wipe)
             val superUserPermissionsState = when(superUserPermissions) {
@@ -118,6 +123,7 @@ class GetWizardStateUseCase @Inject constructor(
                 put(WizardElement.DISABLE_LOGS, disableLogsState)
                 put(WizardElement.SETUP_MULTIUSER, disableMultiuserUIState)
                 put(WizardElement.ACTIVATE_TRIM, activateTrimState)
+                put(WizardElement.HIDE_NOTIFICATIONS, notificationSettingsState)
             }
 
             val appState = if (dataMap.containsValue(SettingsElementState.REQUIRED)) {
@@ -135,6 +141,14 @@ class GetWizardStateUseCase @Inject constructor(
                 protectionFixActive = protectionFixAvailable,
                 triggersFixActive = settings.serviceWorking,
                 permissionsState = superUserPermissions)
+        }
+    }
+
+    private fun getNotificationsHidingStatus(listeningNotifications: Boolean): SettingsElementState {
+        return if (listeningNotifications) {
+            SettingsElementState.OK
+        } else {
+            SettingsElementState.RECOMMENDED
         }
     }
 
@@ -387,7 +401,7 @@ class GetWizardStateUseCase @Inject constructor(
         SettingsElementState.OK
     }
 
-    inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, R> combine(
+    inline fun <T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, R> combine(
         flow: Flow<T1>,
         flow2: Flow<T2>,
         flow3: Flow<T3>,
@@ -398,7 +412,8 @@ class GetWizardStateUseCase @Inject constructor(
         flow8: Flow<T8>,
         flow9: Flow<T9>,
         flow10: Flow<T10>,
-        crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10) -> R
+        flow11: Flow<T11>,
+        crossinline transform: suspend (T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11) -> R
     ): Flow<R> {
         return combine(
             flow,
@@ -410,7 +425,8 @@ class GetWizardStateUseCase @Inject constructor(
             flow7,
             flow8,
             flow9,
-            flow10) { args: Array<*> ->
+            flow10,
+            flow11) { args: Array<*> ->
             @Suppress("UNCHECKED_CAST")
             transform(
                 args[0] as T1,
@@ -422,7 +438,8 @@ class GetWizardStateUseCase @Inject constructor(
                 args[6] as T7,
                 args[7] as T8,
                 args[8] as T9,
-                args[9] as T10
+                args[9] as T10,
+                args[10] as T11
             )
         }
     }

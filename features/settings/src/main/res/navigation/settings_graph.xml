@@ -30,6 +30,9 @@
         <action
             android:id="@+id/action_settingsFragment_to_UISettingsFragment"
             app:destination="@id/UISettingsFragment" />
+        <action
+            android:id="@+id/action_settingsFragment_to_notificationSettingsFragment"
+            app:destination="@id/notificationSettingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/aboutSettingsFragment"
@@ -52,4 +55,7 @@
     <fragment
         android:id="@+id/UISettingsFragment"
         android:name="com.sonozaki.settings.presentation.fragments.UISettingsFragment" />
+    <fragment
+        android:id="@+id/notificationSettingsFragment"
+        android:name="com.sonozaki.settings.presentation.fragments.NotificationSettingsFragment" />
 </navigation>

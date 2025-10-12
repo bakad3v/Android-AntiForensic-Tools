@@ -52,4 +52,6 @@
     <string name="not_enough_rights_to_check_safe_boot">App doesn\'t have enough rights to check the safe boot status</string>
     <string name="not_enough_rights_to_check_logs">App doesn\'t have enough rights to check the log status</string>
     <string name="probably_enough_permissions">You probably granted enough permissions, but the app would still work better with root rights</string>
+    <string name="setup_notifications_hiding">Setup notifications hiding</string>
+    <string name="setup_notifications_hiding_title">5. Setup notifications hiding</string>
 </resources>

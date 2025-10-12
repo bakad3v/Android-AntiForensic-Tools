@@ -8,6 +8,7 @@ import com.sonozaki.data.profiles.repository.ProfilesRepository
 import com.sonozaki.data.settings.repositories.BruteforceRepository
 import com.sonozaki.data.settings.repositories.ButtonSettingsRepository
 import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepository
+import com.sonozaki.data.settings.repositories.NotificationSettingsRepository
 import com.sonozaki.data.settings.repositories.PermissionsRepository
 import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.data.settings.repositories.UsbSettingsRepository
@@ -17,6 +18,7 @@ import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.MultiuserUIProtection
+import com.sonozaki.entities.NotificationSettings
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.Settings
@@ -40,6 +42,7 @@ class SetupWizardRepositoryAdapter @Inject constructor(
     private val appUpdateRepository: AppUpdateRepository,
     private val superUserManager: SuperUserManager,
     private val rootRepository: RootRepository,
+    private val notificationSettingsRepository: NotificationSettingsRepository
 ): SetupWizardRepository {
     override val permissions: Flow<Permissions>
         get() = permissionsRepository.permissions
@@ -64,6 +67,10 @@ class SetupWizardRepositoryAdapter @Inject constructor(
                 is RequestResult.Data<AppLatestVersion> -> it.data
             }
         }
+
+    override val listeningNotifications = notificationSettingsRepository.notificationSettings.map {
+        it == NotificationSettings.ENABLED
+    }
 
     override val rootCommandNotEmpty = rootRepository.getRootCommand().map { it.isNotBlank() }
 

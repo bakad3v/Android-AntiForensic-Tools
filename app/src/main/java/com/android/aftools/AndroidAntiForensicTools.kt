@@ -3,15 +3,11 @@ package com.android.aftools
 import android.app.Application
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.work.Configuration
-import com.bakasoft.appupdatecenter.domain.AppUpdateRouter
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
 
 @HiltAndroidApp
 class AndroidAntiForensicTools: Application(), Configuration.Provider {
-
-    @Inject
-    lateinit var appUpdateRouter: AppUpdateRouter
 
     @Inject
     lateinit var hiltWorkerFactory: HiltWorkerFactory
@@ -21,9 +17,4 @@ class AndroidAntiForensicTools: Application(), Configuration.Provider {
         get() = Configuration.Builder()
             .setWorkerFactory(hiltWorkerFactory)
             .build()
-
-    override fun onCreate() {
-        super.onCreate()
-        appUpdateRouter.killNotifications()
-    }
 }

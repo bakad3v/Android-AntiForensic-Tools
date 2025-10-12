@@ -234,4 +234,7 @@
     <string name="dhizuku_root_admin">Requires Dhizuku/root/admin rights</string>
     <string name="root_or_shizuku">Requires root or Shizuku</string>
     <string name="root_shizuku_and_owner">Requires root, Shizuku, or Dhizuku</string>
+    <string name="notification_hiding">Notifications hiding</string>
+    <string name="enable_notification_hiding">Enable notifications hiding?</string>
+    <string name="enable_notification_hiding_long">Do you want to hide android system notification about accessibility service usage? This notification can reveal to the enemy the presence of Android Antiforensic Tools on your device</string>
 </resources>

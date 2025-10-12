@@ -26,6 +26,8 @@ import com.sonozaki.data.settings.repositories.UsbSettingsRepository
 import com.sonozaki.data.logs.repository.LogsRepository
 import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepository
 import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepositoryImpl
+import com.sonozaki.data.settings.repositories.NotificationSettingsRepository
+import com.sonozaki.data.settings.repositories.NotificationSettingsRepositoryImpl
 import com.sonozaki.root.repository.RootRepository
 import com.sonozaki.root.repository.RootRepositoryImpl
 import dagger.Binds
@@ -92,4 +94,8 @@ abstract class RepositoriesModule {
     @Binds
     @Singleton
     abstract fun provideSetupWizardRepository(impl: SetupWizardRepositoryAdapter): SetupWizardRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindNotificationSettingsRepository(impl: NotificationSettingsRepositoryImpl): NotificationSettingsRepository
 }

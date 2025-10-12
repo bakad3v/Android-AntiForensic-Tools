@@ -21,6 +21,8 @@ interface SetupWizardRepository {
     val appLatestData: Flow<AppLatestVersion?>
     val rootCommandNotEmpty: Flow<Boolean>
 
+    val listeningNotifications: Flow<Boolean>
+
     suspend fun checkUpdates()
     suspend fun refreshProfiles()
 
