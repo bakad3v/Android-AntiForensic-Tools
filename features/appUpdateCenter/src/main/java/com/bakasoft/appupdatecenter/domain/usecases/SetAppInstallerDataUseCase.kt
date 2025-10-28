@@ -7,7 +7,7 @@ import javax.inject.Inject
 class SetAppInstallerDataUseCase @Inject constructor(
     private val repository: AppInstallerServiceRepository
 ) {
-    suspend operator fun invoke(path: String, isTestOnly: Boolean) {
-        repository.setInstallerData(AppInstallerData(path, isTestOnly))
+    suspend operator fun invoke(path: String, isTestOnly: Boolean, disableAdmin: Boolean) {
+        repository.setInstallerData(AppInstallerData(path, isTestOnly, disableAdmin))
     }
 }

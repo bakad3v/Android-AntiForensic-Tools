@@ -84,7 +84,7 @@ class MultiuserSettingsFragment: AbstractSettingsFragment() {
                 val permissions = viewModel.permissionsState.value
                 val rootOrDhizuku = permissions.isRoot || permissions.isOwner
                 with(binding) {
-                    disableMultiuserUi.isClickable = rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && it.serviceWorking
+                    disableMultiuserUi.isClickable = (rootOrDhizuku || permissions.isShizuku) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && it.serviceWorking
                 }
             }
         }
@@ -97,7 +97,7 @@ class MultiuserSettingsFragment: AbstractSettingsFragment() {
                 val rootOrDhizuku = it.isRoot || it.isOwner
                 val rootOrShizuku = it.isRoot || it.isShizuku
                 with(binding) {
-                    disableMultiuserUi.isClickable = rootOrDhizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && serviceWorking
+                    disableMultiuserUi.isClickable = (rootOrDhizuku || it.isShizuku) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.P && serviceWorking
                     setMultiuserUi.setActive(it.isRoot)
                     setUserSwitcherUi.setActive(
                         rootOrShizuku && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q

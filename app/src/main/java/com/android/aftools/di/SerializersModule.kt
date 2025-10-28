@@ -6,6 +6,7 @@ import com.sonozaki.data.logs.entities.LogList
 import com.sonozaki.data.profiles.entities.IntList
 import com.sonozaki.data.settings.entities.BruteforceSettingsV1
 import com.sonozaki.data.settings.entities.ButtonSettingsV1
+import com.sonozaki.entities.NotificationSettings
 import com.sonozaki.data.settings.entities.PermissionsV1
 import com.sonozaki.data.settings.entities.SettingsV1
 import com.sonozaki.data.settings.entities.UsbSettingsV1
@@ -129,4 +130,11 @@ class SerializersModule {
     fun bindPermissionsV1BaseSerializer(@Named(IO_DISPATCHER) ioDispatcher: CoroutineDispatcher) =
         BaseSerializer<PermissionsV1>(ioDispatcher, PermissionsV1.serializer(),
             PermissionsV1())
+
+    @Provides
+    @Singleton
+    fun provideNotificationSettingsSerializer(@Named(IO_DISPATCHER) ioDispatcher: CoroutineDispatcher): BaseSerializer<NotificationSettings> {
+        return BaseSerializer(ioDispatcher, NotificationSettings.serializer(),
+            NotificationSettings.DISABLED)
+    }
 }

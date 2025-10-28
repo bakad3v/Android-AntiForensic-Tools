@@ -4,8 +4,10 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.os.Build
 import android.os.IBinder
 import android.os.UserManager
+import com.anggrayudi.storage.extension.toInt
 import com.sonozaki.entities.ShizukuState
 import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.superuser.IRemoteShell
@@ -104,10 +106,16 @@ class ShizukuManager @Inject constructor(
     /**
      * Run adb command if possible without waiting
      */
-    private suspend fun runAdbCommandImmediately(command: String) = withContext(coroutineDispatcher) {
+    private suspend fun runAdbCommandImmediately(command: String): ShellResult = withContext(coroutineDispatcher) {
         if (shizukuStateFlow.value == ShizukuState.INITIALIZED) {
             val result = userService?.executeNow(command)
-            result ?: throw SuperUserException(SHIZUKU_NOT_INITIALIZED, UIText.StringResource(R.string.shizuku_not_initialized))
+            if (result == null) {
+                throw SuperUserException(SHIZUKU_NOT_INITIALIZED, UIText.StringResource(R.string.shizuku_not_initialized))
+            } else if (!result.isSuccessful) {
+                throw SuperUserException(SHIZUKU_COMMAND_FAILED, UIText.StringResource(R.string.shizuku_failure, result.errorOutput))
+            } else {
+                result
+            }
         } else { //if service is dead or shizuku inactive return error
             throw SuperUserException(SHIZUKU_NOT_INITIALIZED, UIText.StringResource(R.string.shizuku_not_initialized))
         }
@@ -248,11 +256,6 @@ class ShizukuManager @Inject constructor(
         runAdbCommandImmediately("sm fstrim &")
     }
 
-    override suspend fun uninstallApp(packageName: String) {
-        checkAdminApp(packageName)
-        runAdbCommandImmediately("pm uninstall $packageName")
-    }
-
     override suspend fun wipe() {
         throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
     }
@@ -269,10 +272,33 @@ class ShizukuManager @Inject constructor(
         throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
     }
 
+    override suspend fun removeNotification(packageName: String, id: Int) {
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
+    }
+
+    override suspend fun setUserSwitcherStatus(status: Boolean) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q)
+            throw SuperUserException(
+                ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.Q),
+                UIText.StringResource(
+                    R.string.wrong_android_version,
+                    Build.VERSION_CODES.P.toString()
+                )
+            )
+        runAdbCommandImmediately("settings put global user_switcher_enabled ${status.toInt()}")
+    }
+
+    override suspend fun uninstallApp(packageName: String) {
+        checkAdminApp(packageName)
+        runAdbCommandImmediately("pm uninstall $packageName")
+    }
+
     companion object {
         private const val SHIZUKU_PERMISSION_REQUEST_ID = 18
         private const val NOT_ENOUGH_RIGHTS = "App doesn't have necessary rights"
         private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
         private const val SHIZUKU_NOT_INITIALIZED = "Shizuku is not initialized"
+        private const val SHIZUKU_COMMAND_FAILED = "Shizuku command failure"
+
     }
 }

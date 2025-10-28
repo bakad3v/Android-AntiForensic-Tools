@@ -3,6 +3,8 @@ package com.bakasoft.appinstaller.service
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
+import android.content.pm.ServiceInfo
+import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
@@ -40,7 +42,7 @@ class AppInstallerWorker @AssistedInject constructor(
         return withContext(dispatcher) {
             val result = installAppUseCase()
             showFinishedNotification(result)
-            if (result != null) {
+            if (result == null) {
                 Result.success()
             } else {
                 Result.failure()
@@ -56,7 +58,11 @@ class AppInstallerWorker @AssistedInject constructor(
             .setProgress(0, 0, true)
             .build()
 
-        return ForegroundInfo(NOTIFICATION_ID, notification)
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            ForegroundInfo(NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE)
+        } else {
+            ForegroundInfo(NOTIFICATION_ID, notification)
+        }
     }
 
     private fun showFinishedNotification(networkError: NetworkError? = null) {

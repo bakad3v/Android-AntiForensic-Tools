@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.android.aftools.R
 import com.android.aftools.domain.entities.UpdateCheckResult
 import com.android.aftools.domain.usecases.CheckUpdatesUseCase
+import com.bakasoft.appupdatecenter.domain.AppUpdateRouter
 import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.dialogs.DialogActions
 import com.sonozaki.settings.domain.usecases.settings.GetSettingsUseCase
@@ -25,14 +26,26 @@ class MainVM @Inject constructor(
     private val _activityState: MutableStateFlow<ActivityState>,
     private val checkUpdatesUseCase: CheckUpdatesUseCase,
     getSettingsUseCase: GetSettingsUseCase,
-    private val _dialogActions: Channel<DialogActions>
+    private val _dialogActions: Channel<DialogActions>,
+    private val appUpdateRouter: AppUpdateRouter
 ) : ViewModel() {
 
     val dialogActions = _dialogActions.receiveAsFlow()
 
     init {
+        killNotifications()
         checkUpdate()
     }
+
+    private fun killNotifications() {
+        try {
+            appUpdateRouter.killNotifications()
+        } catch (e: Exception) {
+
+        }
+    }
+
+
 
     private fun checkUpdate() {
         viewModelScope.launch {

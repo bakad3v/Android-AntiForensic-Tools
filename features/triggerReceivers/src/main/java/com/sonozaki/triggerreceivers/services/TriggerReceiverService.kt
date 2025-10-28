@@ -9,6 +9,7 @@ import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.UserManager
+import android.util.Log
 import android.view.KeyEvent
 import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.KEYCODE_VOLUME_DOWN
@@ -190,8 +191,13 @@ class TriggerReceiverService : AccessibilityService() {
         val permissions = getPermissionsUseCase()
         try {
             writeLogs(baseContext.getString(R.string.disabling_multiuser_ui))
-            if (permissions.isRoot && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                superUserManager.getSuperUser().setUserSwitcherStatus(false)
+            if ((permissions.isRoot || permissions.isShizuku) && Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                try {
+                    superUserManager.getSuperUser().setUserSwitcherStatus(false)
+                    superUserManager.getSuperUser().setSwitchUserRestriction(false)
+                } catch (e: SuperUserException) {
+                    superUserManager.getSuperUser().setSwitchUserRestriction(true)
+                }
             } else {
                 superUserManager.getSuperUser().setSwitchUserRestriction(true)
             }

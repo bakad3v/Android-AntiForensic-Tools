@@ -8,4 +8,9 @@
     <string name="stopping_logs_failed">Stopping logs failed: %1$s</string>
     <string name="kg_wrong_password">Wrong password</string>
     <string name="wrong_password">Incorrect password</string>
+    <string name="notifications_interception_started">Notifications interception started</string>
+    <string name="notifications_interception_stopped">Notifications interception stopped</string>
+    <string name="notification_intercepted">Notification intercepted: %1$d %2$s\n</string>
+    <string name="notification_removed">Notification removed: %1$d</string>
+    <string name="notification_removal_failed">Failed to remove notification %1$d: %2$s</string>
 </resources>

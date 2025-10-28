@@ -245,6 +245,10 @@ class Dshizuku @Inject constructor(
         }
     }
 
+    override suspend fun removeNotification(packageName: String, id: Int) {
+        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+    }
+
     companion object {
         private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
     }

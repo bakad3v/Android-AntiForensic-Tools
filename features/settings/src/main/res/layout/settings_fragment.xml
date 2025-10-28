@@ -32,6 +32,12 @@
         android:layout_height="wrap_content"
         app:itemText="@string/permanent_settings">
     </com.sonozaki.settings.presentation.views.SettingsItemView>
+        <com.sonozaki.settings.presentation.views.SettingsItemView
+            android:id="@+id/notification_hiding"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:itemText="@string/notification_hiding">
+        </com.sonozaki.settings.presentation.views.SettingsItemView>
     <com.sonozaki.settings.presentation.views.SettingsItemView
         android:id="@+id/multiuser_settings"
         android:layout_width="match_parent"

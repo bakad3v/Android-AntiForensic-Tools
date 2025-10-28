@@ -114,7 +114,7 @@ class SetupWizardFragment: Fragment() {
                     installRequiredAppVersion.setText(requireContext().getString(R.string.install_testonly_version))
                 }
                 SettingsElementState.RECOMMENDED -> {
-                    installRequiredAppVersion.setText(requireContext().getString(R.string.update_app))
+                    installRequiredAppVersion.setText(requireContext().getString(R.string.please_update_app))
                 }
                 SettingsElementState.NOT_NEEDED -> {}
                 SettingsElementState.UNKNOW -> {
@@ -256,6 +256,10 @@ class SetupWizardFragment: Fragment() {
                 SettingsElementState.UNKNOW))
             removeItself.setState(dataMap.getOrDefault(WizardElement.ENABLE_SELF_DESTRUCTION,
                 SettingsElementState.UNKNOW))
+            hideNotifications.setState(
+                dataMap.getOrDefault(WizardElement.HIDE_NOTIFICATIONS,
+                    SettingsElementState.UNKNOW)
+            )
             hideApp.setState(dataMap.getOrDefault(WizardElement.ENABLE_HIDING,
                 SettingsElementState.UNKNOW))
             disableLogs.setState(dataMap.getOrDefault(WizardElement.DISABLE_LOGS,
@@ -306,6 +310,9 @@ class SetupWizardFragment: Fragment() {
             removeItself.setOnClickListener {
                 setupWizardRouter.openSettings(findNavController())
             }
+            hideNotifications.setOnClickListener {
+                setupWizardRouter.openSettings(findNavController())
+            }
             hideApp.setOnClickListener {
                 setupWizardRouter.openSettings(findNavController())
             }
@@ -338,6 +345,9 @@ class SetupWizardFragment: Fragment() {
             protectionHelp.setOnClickListener {
                 openLink(ANTIFORENSIC_PROTECTION_HELP)
             }
+            notificationsHelp.setOnClickListener {
+                openLink(NOTIFICATION_SETTINGS_HELP)
+            }
         }
     }
 
@@ -362,6 +372,7 @@ class SetupWizardFragment: Fragment() {
         private const val ROOT_COMMANDS_HELP = "https://github.com/bakad3v/Android-AntiForensic-Tools/wiki/Root-commands-settings"
         private const val TRIGGERS_HELP = "https://github.com/bakad3v/Android-AntiForensic-Tools/wiki/Triggers-settings"
         private const val ANTIFORENSIC_PROTECTION_HELP = "https://github.com/bakad3v/Android-AntiForensic-Tools/wiki/Data-destruction-settings"
+        private const val NOTIFICATION_SETTINGS_HELP = "https://github.com/bakad3v/Android-AntiForensic-Tools/wiki/Notifications-hiding"
     }
 
     override fun onDestroyView() {

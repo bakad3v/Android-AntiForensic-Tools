@@ -6,12 +6,14 @@ import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.data.settings.repositories.BruteforceRepository
 import com.sonozaki.data.settings.repositories.ButtonSettingsRepository
 import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepository
+import com.sonozaki.data.settings.repositories.NotificationSettingsRepository
 import com.sonozaki.data.settings.repositories.PermissionsRepository
 import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.data.settings.repositories.UsbSettingsRepository
 import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.ButtonSelected
 import com.sonozaki.entities.DeviceProtectionSettings
+import com.sonozaki.entities.NotificationSettings
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.password.repository.PasswordManager
@@ -29,7 +31,8 @@ class ReceiversAdapter @Inject constructor(
     private val bruteforceRepository: BruteforceRepository,
     private val permissionsRepository: PermissionsRepository,
     private val logsRepository: LogsRepository,
-    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository
+    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository,
+    private val notificationSettingsRepository: NotificationSettingsRepository
 ) : ReceiversRepository {
     override suspend fun getDeviceProtectionSettings(): DeviceProtectionSettings {
         return deviceProtectionSettingsRepository.deviceProtectionSettings.first()
@@ -109,5 +112,9 @@ class ReceiversAdapter @Inject constructor(
 
     override suspend fun areLogsEnabled(): Boolean {
         return logsRepository.getLogsData().first().logsEnabled
+    }
+
+    override suspend fun setNotificationSettings(notificationSettings: NotificationSettings) {
+        notificationSettingsRepository.setNotificationSettings(notificationSettings)
     }
 }

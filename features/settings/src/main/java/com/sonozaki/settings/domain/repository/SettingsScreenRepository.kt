@@ -5,6 +5,7 @@ import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.MultiuserUIProtection
+import com.sonozaki.entities.NotificationSettings
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.Settings
@@ -20,6 +21,8 @@ interface SettingsScreenRepository {
     val bruteForceSettings: Flow<BruteforceSettings>
     val buttonSettings: Flow<ButtonSettings>
     val deviceProtectionSettings: Flow<DeviceProtectionSettings>
+
+    val notificationSettings: Flow<NotificationSettings>
 
     suspend fun sendBroadcast(status: Boolean)
     suspend fun setClearItself(status: Boolean)

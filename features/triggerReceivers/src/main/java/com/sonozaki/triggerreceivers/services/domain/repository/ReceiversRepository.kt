@@ -5,6 +5,7 @@ import com.sonozaki.entities.ButtonClicksData
 import com.sonozaki.entities.ButtonSelected
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
+import com.sonozaki.entities.NotificationSettings
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.entities.Permissions
@@ -31,4 +32,6 @@ interface ReceiversRepository {
     suspend fun setLastTimestamp(timestamp: Long, buttonSelected: ButtonSelected)
     suspend fun writeToLogs(text: String)
     suspend fun areLogsEnabled(): Boolean
+
+    suspend fun setNotificationSettings(notificationSettings: NotificationSettings)
 }

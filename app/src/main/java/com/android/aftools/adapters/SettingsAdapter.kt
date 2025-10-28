@@ -3,6 +3,7 @@ package com.android.aftools.adapters
 import com.sonozaki.data.settings.repositories.BruteforceRepository
 import com.sonozaki.data.settings.repositories.ButtonSettingsRepository
 import com.sonozaki.data.settings.repositories.DeviceProtectionSettingsRepository
+import com.sonozaki.data.settings.repositories.NotificationSettingsRepository
 import com.sonozaki.data.settings.repositories.PermissionsRepository
 import com.sonozaki.data.settings.repositories.SettingsRepository
 import com.sonozaki.data.settings.repositories.UsbSettingsRepository
@@ -11,6 +12,7 @@ import com.sonozaki.entities.BruteforceSettings
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.MultiuserUIProtection
+import com.sonozaki.entities.NotificationSettings
 import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.PowerButtonTriggerOptions
 import com.sonozaki.entities.Settings
@@ -27,7 +29,8 @@ class SettingsAdapter @Inject constructor(
     private val buttonSettingsRepository: ButtonSettingsRepository,
     private val bruteforceRepository: BruteforceRepository,
     private val permissionsRepository: PermissionsRepository,
-    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository): SettingsScreenRepository {
+    private val deviceProtectionSettingsRepository: DeviceProtectionSettingsRepository,
+    private val notificationSettingsRepository: NotificationSettingsRepository): SettingsScreenRepository {
     override val settings: Flow<Settings>
         get() = settingsRepository.settings
     override val permissions: Flow<Permissions>
@@ -40,6 +43,9 @@ class SettingsAdapter @Inject constructor(
         get() = buttonSettingsRepository.buttonSettings
     override val deviceProtectionSettings: Flow<DeviceProtectionSettings>
         get() = deviceProtectionSettingsRepository.deviceProtectionSettings
+
+    override val notificationSettings: Flow<NotificationSettings>
+        get() = notificationSettingsRepository.notificationSettings
 
     override suspend fun setTheme(theme: Theme) {
         settingsRepository.setTheme(theme)

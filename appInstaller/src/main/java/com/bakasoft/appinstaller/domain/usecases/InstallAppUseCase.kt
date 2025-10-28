@@ -16,6 +16,11 @@ class InstallAppUseCase @Inject constructor(
         val result = appInstallerRepository.downloadUpdate(data.path)
         return when (result) {
             is RequestResult.Data<ResponseBody> -> {
+                if (data.disableAdmin) {
+                    try {
+                        superUserManager.removeAdminRights()
+                    } catch (e: Exception) {}
+                }
                 if (data.isTestOnly) {
                     try {
                         superUserManager.getSuperUser().installTestOnlyApp(

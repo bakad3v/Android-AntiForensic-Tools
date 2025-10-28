@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts.RequestPermission
+import androidx.core.text.HtmlCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -144,11 +145,15 @@ class AppUpdaterFragment: Fragment() {
             errorLayout.isVisible = false
             tvLatestVersionHeader.text = requireContext().getString(R.string.latest_version, data.appLatestVersion.version)
             tvUpdateStatusSubtitle.text = if (data.appLatestVersion.newVersion) {
-                requireContext().getString(R.string.update_app)
+                HtmlCompat.fromHtml(requireContext().getString(R.string.update_app), HtmlCompat.FROM_HTML_MODE_LEGACY)
             } else if (!data.appLatestVersion.isTestOnly) {
-                requireContext().getString(R.string.install_testonly)
+                HtmlCompat.fromHtml(requireContext().getString(R.string.install_testonly), HtmlCompat.FROM_HTML_MODE_LEGACY)
             } else {
                 requireContext().getString(R.string.up_to_date)
+            }
+            tvAdminRightsStatusSubtitle.isVisible = !data.isAppTestOnly
+            if (!data.isAppTestOnly) {
+                tvAdminRightsStatusSubtitle.text = HtmlCompat.fromHtml(requireContext().getString(R.string.testonly_update_warning), HtmlCompat.FROM_HTML_MODE_LEGACY)
             }
             rbRegularVersion.isEnabled = data.activeUsualVersion
             rbRootVersion.isEnabled = data.activeTestOnlyVersion
@@ -186,7 +191,11 @@ class AppUpdaterFragment: Fragment() {
                     data.appLatestVersion.adbVersionLink
             }
             btnInstallUpdate.setOnClickListener {
-                viewModel.setInstallerData(path, data.selectedOption == SelectedOption.INSTALL_TESTONLY)
+                viewModel.setInstallerData(
+                    path,
+                    data.selectedOption == SelectedOption.INSTALL_TESTONLY,
+                    !data.isAppTestOnly && data.selectedOption == SelectedOption.INSTALL_TESTONLY
+                )
             }
         }
     }
