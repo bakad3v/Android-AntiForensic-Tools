@@ -50,7 +50,7 @@ class AppUpdaterViewModel @Inject constructor(
             is RequestResult.Data -> AppUpdaterState.Data(
                 appUpdate.data, appUpdate.data.newVersion,
                 permissions.isRoot && (appUpdate.data.newVersion || !appUpdate.data.isTestOnly),
-                popupStatus, selectedOption)
+                popupStatus, appUpdate.data.isTestOnly, selectedOption)
         }
     }.stateIn(
         viewModelScope,
@@ -64,9 +64,9 @@ class AppUpdaterViewModel @Inject constructor(
         }
     }
 
-    fun setInstallerData(path: String, isTestOnly: Boolean) {
+    fun setInstallerData(path: String, isTestOnly: Boolean, disableAdmin: Boolean) {
         viewModelScope.launch {
-            setAppInstallerDataUseCase(path, isTestOnly)
+            setAppInstallerDataUseCase(path, isTestOnly, disableAdmin)
             actionsChannel.send(AppUpdaterActions.START_UPDATE)
         }
     }

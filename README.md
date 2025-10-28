@@ -20,6 +20,8 @@ There are limits to the stealthiness of data deletion. After data is removed, tr
 
 Another disadvantage of the app is that its most advanced features, including self-destruction, require root permissions to function properly. Granting root permissions [increases](https://madaidans-insecurities.github.io/android.html) the attack surface and can make you more vulnerable to certain types of attacks. As an alternative to rooting your device, you can use the app with [Dhizuku](https://github.com/iamr0s/Dhizuku) and [Shizuku](https://github.com/pixincreate/Shizuku/). However, features like self-destruction and TRIM may be less reliable due to limitations inherent in these apps.
 
+**Warning: Dhizuku and Shizuku are not working well as of October 2025. This [version](https://github.com/iamr0s/Dhizuku/releases/tag/v2.10.1) of Dhizuku cannot trigger device data wipe until API 35 (Android 15); this [version](https://github.com/iamr0s/Dhizuku/releases/tag/v2.11) of Dhizuku can erase device data but does not work in BFU mode. This [version](https://github.com/pixincreate/Shizuku/releases/tag/shizuku-v13.5.4.r1082.d2ed7207-release) of Shizuku does not work with API 36 (Android 16); this [version](https://github.com/RikkaApps/Shizuku/releases/tag/v13.6.0) of Shizuku works with API 36, but its autostart feature does not work. Currently, Dhizuku and Shizuku are only fully functional on API 35 (Android 15).**
+
 Despite using many available Android privileges, the app is limited by the OS itself. Custom OSes such as [GrapheneOS](https://grapheneos.org/) are better suited to withstand advanced adversaries and can patch security holes that this application cannot.
 
 ## Installation
@@ -31,12 +33,12 @@ Ideally you should change the package name yourself before installing. When rena
 ### Apps versions
 * AFTools_island_USUAL- a version of the app masquerading as the Island app. Can be installed without superuser rights.
 * AFTools_shelter_USUAL - a version of the app masquerading as the Shelter app. Can be installed without superuser rights.
-* AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB, Shizuku or root for installation!**
-* AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB, Shizuku or root for installation!**"
+* AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB or root for installation!**
+* AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB or root for installation!**"
 ### Installation of testOnly apps
-#### Easiest way (root or Shizuku)
+#### Easiest way (root only)
 1. Install the USUAL app version
-2. Grant it root or Shizuku rights and **don't** give it admin rights
+2. Grant it root rights and **don't** give it admin rights
 3. Select "App update center" in the menu
 4. Select "install testonly version" option and click "install update"
 

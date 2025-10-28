@@ -265,7 +265,7 @@ abstract class CommandsRunner(private val context: Context,
     }
 
     companion object {
-        private const val ANDROID_VERSION_INCORRECT =
+        const val ANDROID_VERSION_INCORRECT =
             "Wrong android version, SDK version %s or higher required"
         private const val PRIMARY_USER_LOGOUT = "You can't logout from primary user"
         private const val NUMBER_NOT_RECOGNISED = "Number not recognised"

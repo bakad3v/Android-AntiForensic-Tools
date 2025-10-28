@@ -25,7 +25,7 @@
     <string name="setup_wizard">Setup wizard</string>
     <string name="latest_app_version_installed">Latest app version installed</string>
     <string name="install_testonly_version">Install test-only app version</string>
-    <string name="update_app">Please update the app</string>
+    <string name="please_update_app">Please update the app</string>
     <string name="cant_check_updates">Failed to check for updates</string>
     <string name="reboot_on_usb_selected">It\'s better to destroy data on USB connection instead of rebooting</string>
     <string name="legacy_way_of_click_detection">You selected the legacy way of click detection</string>

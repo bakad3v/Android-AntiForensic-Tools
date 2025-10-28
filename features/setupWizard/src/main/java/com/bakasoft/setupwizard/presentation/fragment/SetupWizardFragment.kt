@@ -114,7 +114,7 @@ class SetupWizardFragment: Fragment() {
                     installRequiredAppVersion.setText(requireContext().getString(R.string.install_testonly_version))
                 }
                 SettingsElementState.RECOMMENDED -> {
-                    installRequiredAppVersion.setText(requireContext().getString(R.string.update_app))
+                    installRequiredAppVersion.setText(requireContext().getString(R.string.please_update_app))
                 }
                 SettingsElementState.NOT_NEEDED -> {}
                 SettingsElementState.UNKNOW -> {

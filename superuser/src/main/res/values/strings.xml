@@ -10,4 +10,5 @@
     <string name="not_enough_rights">App have not enough rights</string>
     <string name="data_not_found">Data not found</string>
     <string name="shizuku_not_initialized">Shizuku not initialized</string>
+    <string name="shizuku_failure">Shizuku command failed: %1$s</string>
 </resources>

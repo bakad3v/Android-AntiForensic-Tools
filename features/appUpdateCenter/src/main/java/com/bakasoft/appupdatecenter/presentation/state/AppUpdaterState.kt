@@ -9,6 +9,7 @@ sealed class AppUpdaterState {
                     val activeUsualVersion: Boolean,
                     val activeTestOnlyVersion: Boolean,
                     val showUpdatePopup: Boolean,
+                    val isAppTestOnly: Boolean,
                     val selectedOption: SelectedOption = SelectedOption.NONE
     ): AppUpdaterState()
     data class Error(val error: UIText.StringResource, val showUpdatePopup: Boolean): AppUpdaterState()
