@@ -154,6 +154,10 @@ class TriggerReceiverService : AccessibilityService() {
         keyguardManager = getSystemService(KeyguardManager::class.java)
     }
 
+    /**
+     * Listen for power button clicks
+     * @return callback for stopping listening to power button clicks
+     */
     private fun listenForButtonClicksRoot(superUser: SuperUser): () -> Unit {
         return superUser.getPowerButtonClicks {
             if (!it) return@getPowerButtonClicks
@@ -171,7 +175,9 @@ class TriggerReceiverService : AccessibilityService() {
         }
     }
 
-
+    /**
+     *  resets the counter of incorrect password attempts and prevents rebooting if user unlocked
+     */
     private fun listenScreenUnlocked() {
         val screenUnlockedFilter = IntentFilter(Intent.ACTION_USER_PRESENT)
         val screenUnlockedReceiver = object : BroadcastReceiver() {
@@ -211,12 +217,19 @@ class TriggerReceiverService : AccessibilityService() {
         }
     }
 
+    /**
+     * Disable multiuser UI on device boot if needed
+     */
     private suspend fun protectMultiuserUI() {
         if (getDeviceProtectionSettings().multiuserUIProtection == MultiuserUIProtection.ON_REBOOT) {
             disableMultiuserUI()
         }
     }
 
+    /**
+     * When screen turns on|off, app can enqueue rebooting (to move device to BFU), hide multiuser UI
+     * or use screen state changes as proxy for power button clicks (deprecated)
+     */
     private suspend fun handleScreenStateChanged(action: String) {
         val deprecatedButton = getButtonSettingsUseCase().triggerOnButton == PowerButtonTriggerOptions.DEPRECATED_WAY
         if (deprecatedButton && buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
@@ -355,6 +368,9 @@ class TriggerReceiverService : AccessibilityService() {
         }
     }
 
+    /**
+     * Trigger when password entered by user changes
+     */
     private fun updatePassword(text: String) {
         val ignoreChars = text.count { it == IGNORE_CHAR }
         if (ignoreChars == 0 && text.length != 1) {
@@ -396,6 +412,9 @@ class TriggerReceiverService : AccessibilityService() {
         return text.compareTo(baseContext.getString(rId), true) == 0
     }
 
+    /**
+     * Check if user entered wrong password without admin privileges. May not work on some devices
+     */
     private fun watchWrongPassword(text: String) {
         coroutineScope.launch(dispatcher) {
             if (checkBruteforceDetectionMethod()
@@ -409,6 +428,9 @@ class TriggerReceiverService : AccessibilityService() {
         }
     }
 
+    /**
+     * Trigger on volume buttons clicks
+     */
     override fun onKeyEvent(event: KeyEvent?): Boolean {
         if (event?.action == ACTION_DOWN) {
             val buttonClicked = if (event.keyCode == KEYCODE_VOLUME_UP) {

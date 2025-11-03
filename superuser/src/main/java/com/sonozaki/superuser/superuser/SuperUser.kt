@@ -4,7 +4,7 @@ import com.topjohnwu.superuser.Shell
 import okio.BufferedSource
 
 /**
- * Superuser interface. There are three types of superusers: device admin, device owner (provided by Dhizuku) and root. Root user is the most privileged one, and device admin is the least privileged.
+ * Superuser interface. There are three types of superusers: device admin, Dshizuku (chooses between Shizuku and Dhizuku) and root. Root user is the most privileged one, and device admin is the least privileged.
  */
 interface SuperUser {
     /**
@@ -18,7 +18,7 @@ interface SuperUser {
     /**
      * Get list of all user profiles.
      *
-     * Requirements: device owner or root. Device owner requires Android 9 and above to get profiles and can't retrieve profiles names.
+     * Requirements: shizuku, dhizuku or root. Dhizuku requires Android 9 and above to get profiles and can't retrieve profiles names.
      * @return list of profiles
      */
     @Throws(SuperUserException::class)
@@ -27,7 +27,7 @@ interface SuperUser {
     /**
      * Remove specified user profile.
      *
-     * Requirements: device owner or root.
+     * Requirements: dhizuku or root.
      * @param id id of profile to remove
      */
     @Throws(SuperUserException::class)
@@ -36,7 +36,7 @@ interface SuperUser {
     /**
      * Uninstall app with specified packageName. App leave numerous traces in android system even after uninstallation, it's recommended to clear app's data instead of deletion.
      *
-     * Requirements: device owner or root. **Android can show notification if app was deleted using Dhizuku, making work of application obvious to adversary.**
+     * Requirements: root or shizuku.
      * @param packageName name of package to uninstall
      */
     @Throws(SuperUserException::class)
@@ -45,7 +45,7 @@ interface SuperUser {
     /**
      * Hide app with specified packageName.
      *
-     * Requirements: device owner or root. The function can work with bugs if hiding apps is done using Dhizuku.
+     * Requirements: dhizuku or root. The function can work with bugs if hiding apps is done using Dhizuku.
      * @param packageName name of package to hide.
      */
     @Throws(SuperUserException::class)
@@ -54,7 +54,7 @@ interface SuperUser {
     /**
      * Clear data of app with specified packageName.
      *
-     * Requirements: device owner or root. Device owner requires Android 9 or higher.
+     * Requirements: dhizuku or root. Dhizuku requires Android 9 or higher.
      * @param packageName name of package to clear.
      */
     @Throws(SuperUserException::class)
@@ -63,7 +63,7 @@ interface SuperUser {
     /**
      * Run [TRIM](https://en.wikipedia.org/wiki/Trim_(computing)) command to mark unused blocks for clearing. Use it to reduce the likelihood of deleted data recovery.
      *
-     * Requirements: root.
+     * Requirements: root or shizuku.
      */
     @Throws(SuperUserException::class)
     suspend fun runTrim()
@@ -85,6 +85,11 @@ interface SuperUser {
     @Throws(SuperUserException::class)
     suspend fun stopLogd()
 
+    /**
+     * Call callback when power button clicked
+     * @return callback to stop listening to power button
+     * Requires: root
+     */
     fun getPowerButtonClicks(callback: (Boolean) -> Unit): () -> Unit
 
     /**
@@ -124,11 +129,11 @@ interface SuperUser {
     suspend fun getUserLimit(): Int?
 
     /**
-     * Enable or disable safe boot. For unknown reason there may be problems with enabling safe boot if it was disabled.
+     * Enable or disable safe boot.
      *
-     * Adversary may use safe boot to circumvent device protection offered by the app. However, disabling safe boot may raise suspicions. Try to make Android Antiforensics Tools a system app instead.
+     * Adversary may use safe boot to circumvent device protection offered by the app.
      *
-     * Requirements: device owner or root.
+     * Requirements: dhizuku or shizuku or root.
      * @param status enable or disable safe boot.
      */
     @Throws(SuperUserException::class)
@@ -137,7 +142,7 @@ interface SuperUser {
     /**
      * Get status of safe boot.
      *
-     * Requirements: device owner or root.
+     * Requirements: dhizuku or shizuku or root.
      * @return is safe boot enabled or disabled.
      */
     @Throws(SuperUserException::class)
@@ -146,7 +151,7 @@ interface SuperUser {
     /**
      * Enable or disable UI for switching between users. May be helpful if this UI is disabled or, in contrast, can't be disabled in android settings. It's recommended to disable UI for switching between users every time you don't need it, because adversary may use it to get list of your profiles from lockscreen.
      *
-     * Requirements: root, Android 10+.
+     * Requirements: root or shizuku, Android 10+.
      *  @param status enable or disable user switcher UI.
      */
     @Throws(SuperUserException::class)
@@ -155,7 +160,7 @@ interface SuperUser {
     /**
      * Get status of UI for switching between users
      *
-     * Requirements: root, Android 10+.
+     * Requirements: root or shizuku, Android 10+.
      * @return is UI for switching between users enabled or disabled.
      */
     @Throws(SuperUserException::class)
@@ -164,7 +169,7 @@ interface SuperUser {
     /**
      * Enable or disable switching between users and corresponding UI. May be helpful if this UI is disabled or, in contrast, can't be disabled in android settings. It's recommended to disable UI for switching between users every time you don't need it, because adversary may use it to get list of your profiles from lockscreen.
      *
-     * Requirements: root, Android 9+.
+     * Requirements: root or dhizuku, Android 9+.
      * @param status allow or prohibit switching between users.
      */
     @Throws(SuperUserException::class)
@@ -173,7 +178,7 @@ interface SuperUser {
     /**
      * Get status of switching between users
      *
-     * Requirements: root, Android 9+.
+     * Requirements: root or dhizuku, Android 9+.
      * @return is switching between users enabled or disabled.
      */
     @Throws(SuperUserException::class)
@@ -181,34 +186,64 @@ interface SuperUser {
 
     /**
      * Reboot device
+     * Requirements: root or shizuku or dhizuku
      */
     @Throws(SuperUserException::class)
     suspend fun reboot()
 
     /**
      * Logout specified user. Moves user to SHUTDOWN state, evicts encryption keys. Can't be called for primary user.
+     * Requirements: root or shizuku or dhizuku with Android 9 or higher
      */
     @Throws(SuperUserException::class)
     suspend fun stopProfile(userId: Int, isCurrent: Boolean): Boolean
 
+    /**
+     * Install application with testOnly flag.
+     * Requirements: root
+     */
     @Throws(SuperUserException::class)
     suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean
 
+    /**
+     * Disables or enables logs
+     * Requirements: root or shizuku
+     */
     @Throws(SuperUserException::class)
     suspend fun changeLogsStatus(enable: Boolean)
 
+    /**
+     * Disables or enables developer options
+     * Requirements: root or shizuku
+     */
     @Throws(SuperUserException::class)
     suspend fun changeDeveloperSettingsStatus(unlock: Boolean)
 
+    /**
+     * Check if logs are enabled
+     * Requirements: root or shizuku
+     */
     @Throws(SuperUserException::class)
     suspend fun getLogsStatus(): Boolean
 
+    /**
+     * Check if developer options are enabled
+     * Requirements: root or shizuku
+     */
     @Throws(SuperUserException::class)
     suspend fun getDeveloperSettingsStatus(): Boolean
 
+    /**
+     * Log in specified user profile
+     * Requirements: root or shizuku or dhizuku
+     */
     @Throws(SuperUserException::class)
     suspend fun openProfile(userId: Int)
 
+    /**
+     * Remove notification for specified package name with specified id
+     * Requirements: root
+     */
     @Throws(SuperUserException::class)
     suspend fun removeNotification(packageName: String, id: Int)
 }

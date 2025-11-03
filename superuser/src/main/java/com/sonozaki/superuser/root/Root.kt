@@ -39,6 +39,7 @@ class Root @Inject constructor(
         if (isShellChecked) {
             return
         }
+        //su may become inaccessible if persist.sys.safemode == 1 even when booting to safe mode is prohibited
         try {
             Runtime.getRuntime().exec("su")
         } catch (e: IOException) {
