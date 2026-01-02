@@ -2,11 +2,10 @@ package com.sonozaki.data.settings.dataMigration
 
 import android.content.Context
 import androidx.datastore.core.DataMigration
-import com.sonozaki.bedatastore.datastore.dataStoreFile
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.core.deviceProtectedDataStoreFile
+import androidx.datastore.deviceProtectedDataStore
 import com.sonozaki.data.settings.entities.ButtonSettingsV1
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.ButtonSettings
 import com.sonozaki.entities.PowerButtonTriggerOptions
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -14,18 +13,16 @@ import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class ButtonSettingsMigrationV1 @Inject constructor(@ApplicationContext private val context: Context,
-                                                    buttonSettingsSerializerV1: BaseSerializer<ButtonSettingsV1>)
+                                                    buttonSettingsSerializerV1: EncryptedSerializer<ButtonSettingsV1>)
     : DataMigration<ButtonSettings> {
 
-    private val Context.oldDatastore by encryptedDataStore(
+    private val Context.oldDatastore by deviceProtectedDataStore(
         OLD_BUTTON_SETTINGS,
-        buttonSettingsSerializerV1,
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        buttonSettingsSerializerV1
     )
 
     override suspend fun cleanUp() {
-        context.dataStoreFile(OLD_BUTTON_SETTINGS, true).delete()
+        context.deviceProtectedDataStoreFile(OLD_BUTTON_SETTINGS).delete()
     }
 
     override suspend fun migrate(currentData: ButtonSettings): ButtonSettings {
@@ -39,7 +36,7 @@ class ButtonSettingsMigrationV1 @Inject constructor(@ApplicationContext private 
     }
 
     override suspend fun shouldMigrate(currentData: ButtonSettings): Boolean {
-        return context.dataStoreFile(OLD_BUTTON_SETTINGS, true).exists()
+        return context.deviceProtectedDataStoreFile(OLD_BUTTON_SETTINGS).exists()
     }
 
     companion object {

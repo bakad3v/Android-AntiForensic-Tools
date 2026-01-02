@@ -1,4 +1,4 @@
-package com.sonozaki.encrypteddatastore
+package com.sonozaki.encrypteddatastore.encryption
 
 import androidx.datastore.core.Serializer
 import kotlinx.coroutines.CoroutineDispatcher
@@ -10,13 +10,20 @@ import java.io.InputStream
 import java.io.OutputStream
 import javax.inject.Inject
 
-class BaseSerializer<T> @Inject constructor(private val dispatcherIO: CoroutineDispatcher, private val serializer: KSerializer<T>, override val defaultValue: T): Serializer<T> {
+class EncryptedSerializer<T> @Inject constructor(
+    private val encryptionManager: EncryptionManager,
+    private val dispatcherIO: CoroutineDispatcher,
+    private val serializer: KSerializer<T>,
+    override val defaultValue: T,
+    private val alias: EncryptionAlias = EncryptionAlias.DATASTORE,
+):
+    Serializer<T> {
     override suspend fun readFrom(input: InputStream): T = withContext(dispatcherIO) {
         return@withContext try {
-            val inputBytes = input.readBytes().decodeToString()
+            val decryptedBytes = encryptionManager.decrypt(alias.name, input)
             Json.decodeFromString(
                 deserializer = serializer,
-                string = inputBytes
+                string = decryptedBytes.decodeToString()
             )
         } catch (e: SerializationException) {
             defaultValue
@@ -25,11 +32,14 @@ class BaseSerializer<T> @Inject constructor(private val dispatcherIO: CoroutineD
 
     override suspend fun writeTo(t: T, output: OutputStream) {
         withContext(dispatcherIO) {
-            val resultString = Json.encodeToString(
-                serializer = serializer,
-                value = t
+            encryptionManager.encrypt(
+                alias.name,
+                Json.encodeToString(
+                    serializer = serializer,
+                    value = t
+                ).encodeToByteArray(),
+                output
             )
-            output.write(resultString.encodeToByteArray())
         }
     }
 }

@@ -2,14 +2,13 @@ package com.sonozaki.data.files.repository
 
 import android.content.Context
 import android.net.Uri
+import androidx.datastore.dataStore
 import androidx.documentfile.provider.DocumentFile
 import com.anggrayudi.storage.file.getAbsolutePath
 import com.anggrayudi.storage.file.mimeType
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
 import com.sonozaki.data.files.entities.FileDatastore
 import com.sonozaki.data.files.entities.FilesList
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.FileType
 import com.sonozaki.entities.FilesSortOrder
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -27,16 +26,13 @@ import javax.inject.Inject
 class FilesRepositoryImpl @Inject constructor(
   @ApplicationContext private val context: Context,
   private val sortOrderFlow: MutableStateFlow<FilesSortOrder>,
-  filesSerializer: BaseSerializer<FilesList>
+  filesSerializer: EncryptedSerializer<FilesList>
 ) : FilesRepository {
 
 
   override fun getSortOrder() = sortOrderFlow.asStateFlow()
 
-  private val Context.filesDataStore by encryptedDataStore(DATASTORE_NAME,
-    filesSerializer,
-    alias = EncryptionAlias.DATASTORE.name
-  )
+  private val Context.filesDataStore by dataStore(DATASTORE_NAME, filesSerializer)
 
 
   @OptIn(ExperimentalCoroutinesApi::class)

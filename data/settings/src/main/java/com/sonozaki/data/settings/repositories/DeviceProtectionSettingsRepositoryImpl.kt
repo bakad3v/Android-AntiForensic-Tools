@@ -1,9 +1,8 @@
 package com.sonozaki.data.settings.repositories
 
 import android.content.Context
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import androidx.datastore.deviceProtectedDataStore
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.DeviceProtectionSettings
 import com.sonozaki.entities.MultiuserUIProtection
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -12,14 +11,12 @@ import javax.inject.Inject
 
 class DeviceProtectionSettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    permissionsSerializer: BaseSerializer<DeviceProtectionSettings>
+    permissionsSerializer: EncryptedSerializer<DeviceProtectionSettings>
 ) : DeviceProtectionSettingsRepository {
 
-    private val Context.deviceProtectionSettingsDatastore by encryptedDataStore(
+    private val Context.deviceProtectionSettingsDatastore by deviceProtectedDataStore(
         DATASTORE_NAME,
-        permissionsSerializer,
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        permissionsSerializer
     )
 
     override val deviceProtectionSettings: Flow<DeviceProtectionSettings>

@@ -2,12 +2,11 @@ package com.sonozaki.data.logs.repository
 
 
 import android.content.Context
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.deviceProtectedDataStore
 import com.sonozaki.data.logs.entities.LogDatastore
 import com.sonozaki.data.logs.entities.LogList
 import com.sonozaki.data.logs.mapper.LogMapper
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.LogEntity
 import com.sonozaki.entities.LogsData
 import com.sonozaki.utils.TopLevelFunctions.getEpochDays
@@ -25,25 +24,21 @@ import javax.inject.Inject
 
 
 class LogsRepositoryImpl @Inject constructor(
-  @ApplicationContext private val context: Context,
-  private val dayFlow: MutableStateFlow<Long>,
-  private val mapper: LogMapper,
-  logsDataSerializer: BaseSerializer<LogsData>,
-  logsSerializer: BaseSerializer<LogList>
+    @ApplicationContext private val context: Context,
+    private val dayFlow: MutableStateFlow<Long>,
+    private val mapper: LogMapper,
+    logsDataSerializer: EncryptedSerializer<LogsData>,
+    logsSerializer: EncryptedSerializer<LogList>
 ) : LogsRepository {
 
-  private val Context.logsDataStore by encryptedDataStore(
+  private val Context.logsDataStore by deviceProtectedDataStore(
       ENTRIES_DATASTORE_NAME,
-      logsSerializer,
-      alias = EncryptionAlias.DATASTORE.name,
-      isDBA = true
+      logsSerializer
   )
 
-  private val Context.logsDataDataStore by encryptedDataStore(
+  private val Context.logsDataDataStore by deviceProtectedDataStore(
       DATASTORE_NAME,
-      logsDataSerializer,
-      alias = EncryptionAlias.DATASTORE.name,
-      isDBA = true
+      logsDataSerializer
   )
 
 

@@ -1,10 +1,9 @@
 package com.sonozaki.data.settings.repositories
 
 import android.content.Context
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.deviceProtectedDataStore
 import com.sonozaki.data.settings.dataMigration.USBMigrationV1
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.UsbSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -15,17 +14,15 @@ import javax.inject.Inject
  */
 class USBSettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    usbSettingsSerializer: BaseSerializer<UsbSettings>,
+    usbSettingsSerializer: EncryptedSerializer<UsbSettings>,
     private val usbMigrationV1: USBMigrationV1):
     UsbSettingsRepository {
-    private val Context.usbDataStore by encryptedDataStore(
+    private val Context.usbDataStore by deviceProtectedDataStore(
         DATASTORE_NAME,
-        produceMigrations = { context ->
-            listOf<USBMigrationV1>(usbMigrationV1)
+        produceMigrations = {
+            listOf(usbMigrationV1)
         },
-        serializer = usbSettingsSerializer,
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        serializer = usbSettingsSerializer
     )
 
     companion object {

@@ -1,10 +1,9 @@
 package com.sonozaki.data.settings.repositories
 
 import android.content.Context
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.deviceProtectedDataStore
 import com.sonozaki.data.settings.dataMigration.BruteforceSettingsMigrationV1
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.BruteforceSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -14,18 +13,16 @@ import javax.inject.Inject
 
 class BruteforceSettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    bruteforceSettingsSerializer: BaseSerializer<BruteforceSettings>,
+    bruteforceSettingsSerializer: EncryptedSerializer<BruteforceSettings>,
     bruteforceSettingsMigrationV1: BruteforceSettingsMigrationV1):
     BruteforceRepository {
 
-    private val Context.bruteforceDataStore by encryptedDataStore(
+    private val Context.bruteforceDataStore by deviceProtectedDataStore(
         DATASTORE_NAME,
         bruteforceSettingsSerializer,
-        produceMigrations = { context ->
-            listOf<BruteforceSettingsMigrationV1>(bruteforceSettingsMigrationV1)
-        },
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        produceMigrations = {
+            listOf(bruteforceSettingsMigrationV1)
+        }
     )
 
     companion object {

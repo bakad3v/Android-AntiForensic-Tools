@@ -1,24 +1,21 @@
 package com.sonozaki.data.settings.repositories
 
 import android.content.Context
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.deviceProtectedDataStore
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.NotificationSettings
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class NotificationSettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    notificationSettingsSerializer: BaseSerializer<NotificationSettings>
+    notificationSettingsSerializer: EncryptedSerializer<NotificationSettings>
 ): NotificationSettingsRepository {
 
-    private val Context.deviceProtectionSettingsDatastore by encryptedDataStore(
+    private val Context.deviceProtectionSettingsDatastore by deviceProtectedDataStore(
         DATASTORE_NAME,
-        notificationSettingsSerializer,
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        notificationSettingsSerializer
     )
 
     override val notificationSettings: Flow<NotificationSettings> = context.deviceProtectionSettingsDatastore.data

@@ -2,29 +2,26 @@ package com.sonozaki.data.settings.dataMigration
 
 import android.content.Context
 import androidx.datastore.core.DataMigration
-import com.sonozaki.bedatastore.datastore.dataStoreFile
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.core.deviceProtectedDataStoreFile
+import androidx.datastore.deviceProtectedDataStore
 import com.sonozaki.data.settings.entities.PermissionsV1
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.Permissions
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class PermissionsMigrationV1 @Inject constructor(@ApplicationContext private val context: Context,
-                                                 permissionsSerializer: BaseSerializer<PermissionsV1>)
+                                                 permissionsSerializer: EncryptedSerializer<PermissionsV1>)
     : DataMigration<Permissions> {
 
-    private val Context.oldDatastore by encryptedDataStore(
+    private val Context.oldDatastore by deviceProtectedDataStore(
         OLD_PERMISSIONS,
-        permissionsSerializer,
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        permissionsSerializer
     )
 
     override suspend fun cleanUp() {
-        context.dataStoreFile(OLD_PERMISSIONS, true).delete()
+        context.deviceProtectedDataStoreFile(OLD_PERMISSIONS).delete()
     }
 
     override suspend fun migrate(currentData: Permissions): Permissions {
@@ -33,7 +30,7 @@ class PermissionsMigrationV1 @Inject constructor(@ApplicationContext private val
     }
 
     override suspend fun shouldMigrate(currentData: Permissions): Boolean {
-        return context.dataStoreFile(OLD_PERMISSIONS, true).exists()
+        return context.deviceProtectedDataStoreFile(OLD_PERMISSIONS).exists()
     }
 
     companion object {

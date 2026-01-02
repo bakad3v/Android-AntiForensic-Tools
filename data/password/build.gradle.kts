@@ -43,7 +43,6 @@ dependencies {
     kapt(libs.hilt.compiler)
     implementation(libs.core.ktx)
     testImplementation(libs.junit)
-    implementation(libs.better.datastore)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
     // Serialization

@@ -40,7 +40,6 @@ dependencies {
     implementation(project(":core:encryptedDatastore"))
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
-    implementation(libs.better.datastore)
     implementation(libs.core.ktx)
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

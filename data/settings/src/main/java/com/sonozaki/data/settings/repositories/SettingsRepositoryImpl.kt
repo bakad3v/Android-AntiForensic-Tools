@@ -1,10 +1,9 @@
 package com.sonozaki.data.settings.repositories
 
 import android.content.Context
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.deviceProtectedDataStore
 import com.sonozaki.data.settings.dataMigration.SettingsMigrationV1
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -16,18 +15,16 @@ import javax.inject.Inject
  */
 class SettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    settingsSerializer: BaseSerializer<Settings>,
+    settingsSerializer: EncryptedSerializer<Settings>,
     settingsMigrationV1: SettingsMigrationV1
 ) : SettingsRepository {
 
-    private val Context.settingsDatastore by encryptedDataStore(
+    private val Context.settingsDatastore by deviceProtectedDataStore(
         DATASTORE_NAME,
-        produceMigrations = { context ->
-            listOf<SettingsMigrationV1>(settingsMigrationV1)
+        produceMigrations = {
+            listOf(settingsMigrationV1)
         },
-        serializer = settingsSerializer,
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        serializer = settingsSerializer
     )
 
     companion object {

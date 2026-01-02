@@ -1,10 +1,9 @@
 package com.sonozaki.data.settings.repositories
 
 import android.content.Context
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.deviceProtectedDataStore
 import com.sonozaki.data.settings.dataMigration.ButtonSettingsMigrationV1
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.ButtonClicksData
 import com.sonozaki.entities.ButtonSelected
 import com.sonozaki.entities.ButtonSettings
@@ -15,20 +14,18 @@ import javax.inject.Inject
 
 class ButtonSettingsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    buttonSettingsSerializer: BaseSerializer<ButtonSettings>,
+    buttonSettingsSerializer: EncryptedSerializer<ButtonSettings>,
     buttonSettingsMigrationV1: ButtonSettingsMigrationV1) :
     ButtonSettingsRepository {
     private var powerButtonClicksData = ButtonClicksData()
     private var volumeButtonClicksData = ButtonClicksData()
 
-    private val Context.buttonDataStore by encryptedDataStore(
+    private val Context.buttonDataStore by deviceProtectedDataStore(
         DATASTORE_NAME,
         buttonSettingsSerializer,
-        produceMigrations = { context ->
-            listOf<ButtonSettingsMigrationV1>(buttonSettingsMigrationV1)
-        },
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        produceMigrations = {
+            listOf(buttonSettingsMigrationV1)
+        }
     )
 
     override val buttonSettings = context.buttonDataStore.data

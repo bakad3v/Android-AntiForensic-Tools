@@ -2,12 +2,11 @@ package com.sonozaki.data.settings.dataMigration
 
 import android.content.Context
 import androidx.datastore.core.DataMigration
-import com.sonozaki.bedatastore.datastore.dataStoreFile
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.core.deviceProtectedDataStoreFile
+import androidx.datastore.deviceProtectedDataStore
 import com.sonozaki.data.settings.entities.SettingsV1
 import com.sonozaki.data.settings.mappers.SettingsVersionMapper
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.Settings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
@@ -18,19 +17,17 @@ import javax.inject.Inject
  */
 class SettingsMigrationV1 @Inject constructor(
     @ApplicationContext private val context: Context,
-    settingsSerializerV1: BaseSerializer<SettingsV1>,
+    settingsSerializerV1: EncryptedSerializer<SettingsV1>,
     private val settingsVersionMapper: SettingsVersionMapper
 ) : DataMigration<Settings> {
 
-    private val Context.oldDatastore by encryptedDataStore(
+    private val Context.oldDatastore by deviceProtectedDataStore(
         OLD_SETTINGS,
-        settingsSerializerV1,
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        settingsSerializerV1
     )
     
     override suspend fun cleanUp() {
-        context.dataStoreFile(OLD_SETTINGS, true).delete()
+        context.deviceProtectedDataStoreFile(OLD_SETTINGS).delete()
     }
 
     override suspend fun migrate(currentData: Settings): Settings {
@@ -39,7 +36,7 @@ class SettingsMigrationV1 @Inject constructor(
     }
 
     override suspend fun shouldMigrate(currentData: Settings): Boolean {
-        return context.dataStoreFile(OLD_SETTINGS, true).exists()
+        return context.deviceProtectedDataStoreFile(OLD_SETTINGS).exists()
     }
 
     companion object {

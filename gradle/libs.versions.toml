@@ -30,19 +30,20 @@ kotlin = "2.1.10"
 jetbrainsKotlinJvm = "2.1.0"
 kapt = "2.1.0"
 dependencyAnalysis = "2.12.0"
-betterDatastore = "1.0.0-alpha"
 workmanager = "2.10.1"
 androidxHiltCompiler = "1.2.0"
 retrofitVersion = "3.0.0"
 okioVersion = "3.11.0"
 shizuku = "13.1.5"
+datastoreVersion = "1.2.0"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
 coil = { module = "io.coil-kt:coil", version.ref = "coilVersion" }
 core = { module = "com.github.topjohnwu.libsu:core", version.ref = "core" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
-better-datastore = { module = "com.github.bakad3v:BetterEncryptedDatastore", version.ref = "betterDatastore"  }
+datastore-core-android = { module = "androidx.datastore:datastore-core-android", version.ref = "datastoreVersion" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastoreVersion" }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaringVersion" }
 dhizuku-api = { module = "io.github.iamr0s:Dhizuku-API", version.ref = "dhizukuVersion" }
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCoreVersion" }

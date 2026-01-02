@@ -1,9 +1,8 @@
 package com.sonozaki.password.repository
 
 import android.content.Context
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import androidx.datastore.deviceProtectedDataStore
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.password.entities.PasswordStatus
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.first
@@ -13,13 +12,11 @@ import javax.inject.Inject
 
 class PasswordManagerImpl @Inject constructor(
   @ApplicationContext private val context: Context,
-  passwordStatusSerializer: BaseSerializer<PasswordStatus>
+  passwordStatusSerializer: EncryptedSerializer<PasswordStatus>
 ) : PasswordManager {
-  private val Context.passwordPrefs by encryptedDataStore(
+  private val Context.passwordPrefs by deviceProtectedDataStore(
       PREFERENCES_NAME,
-      passwordStatusSerializer,
-    alias = EncryptionAlias.PASSWORD.name,
-    isDBA = true
+      passwordStatusSerializer
   )
 
 

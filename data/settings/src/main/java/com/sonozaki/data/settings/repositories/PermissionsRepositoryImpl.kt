@@ -1,10 +1,9 @@
 package com.sonozaki.data.settings.repositories
 
 import android.content.Context
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.deviceProtectedDataStore
 import com.sonozaki.data.settings.dataMigration.PermissionsMigrationV1
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.Permissions
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
@@ -12,17 +11,15 @@ import javax.inject.Inject
 
 class PermissionsRepositoryImpl @Inject constructor(
     @ApplicationContext private val context: Context,
-    permissionsSerializer: BaseSerializer<Permissions>,
+    permissionsSerializer: EncryptedSerializer<Permissions>,
     permissionsMigrationV1: PermissionsMigrationV1):
     PermissionsRepository {
-    private val Context.permissionsDatastore by encryptedDataStore(
+    private val Context.permissionsDatastore by deviceProtectedDataStore(
         DATASTORE_NAME,
-        produceMigrations = { context ->
-            listOf<PermissionsMigrationV1>(permissionsMigrationV1)
+        produceMigrations = {
+            listOf(permissionsMigrationV1)
         },
-        serializer = permissionsSerializer,
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        serializer = permissionsSerializer
     )
 
     companion object {

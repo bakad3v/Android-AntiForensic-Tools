@@ -104,9 +104,6 @@ dependencies {
 
     coreLibraryDesugaring(libs.desugar.jdk.libs)
 
-    //Better Encrypted DataStore
-    implementation(libs.better.datastore)
-
     // LeakCanary (debug only)
     debugImplementation(libs.leakcanary.android)
 

@@ -1,11 +1,10 @@
 package com.sonozaki.data.profiles.repository
 
 import android.content.Context
-import com.sonozaki.bedatastore.datastore.encryptedDataStore
+import androidx.datastore.deviceProtectedDataStore
 import com.sonozaki.data.profiles.entities.IntList
 import com.sonozaki.data.profiles.mapper.ProfilesMapper
-import com.sonozaki.encrypteddatastore.BaseSerializer
-import com.sonozaki.encrypteddatastore.encryption.EncryptionAlias
+import com.sonozaki.encrypteddatastore.encryption.EncryptedSerializer
 import com.sonozaki.entities.ProfileDomain
 import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.superuser.superuser.SuperUserException
@@ -26,14 +25,12 @@ class ProfilesRepositoryImpl @Inject constructor(
     private val superUserManager: SuperUserManager,
     private val profilesOnDevice: MutableSharedFlow<List<ProfileDomain>?>,
     @Named(IO_DISPATCHER) private val coroutineDispatcher: CoroutineDispatcher,
-    profilesSerializer: BaseSerializer<IntList>
+    profilesSerializer: EncryptedSerializer<IntList>
 ) : ProfilesRepository {
 
-    private val Context.profilesDatastore by encryptedDataStore(
+    private val Context.profilesDatastore by deviceProtectedDataStore(
         DATASTORE_NAME,
-        profilesSerializer,
-        alias = EncryptionAlias.DATASTORE.name,
-        isDBA = true
+        profilesSerializer
     )
 
     companion object {
