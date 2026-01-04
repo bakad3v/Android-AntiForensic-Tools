@@ -9,7 +9,6 @@ import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Build
 import android.os.UserManager
-import android.util.Log
 import android.view.KeyEvent
 import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.KEYCODE_VOLUME_DOWN
@@ -162,7 +161,9 @@ class TriggerReceiverService : AccessibilityService() {
         return superUser.getPowerButtonClicks {
             if (!it) return@getPowerButtonClicks
             coroutineScope.launch(dispatcher) {
+                writeLogs(baseContext.getString(R.string.power_button_clicked))
                 if (buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
+                    writeLogs(baseContext.getString(R.string.power_button_reason))
                     runActions()
                 }
             }
@@ -288,7 +289,10 @@ class TriggerReceiverService : AccessibilityService() {
     private suspend fun runOnUSBConnected() {
         val settings = getUsbSettingsUseCase()
         when (settings) {
-            UsbSettings.RUN_ON_CONNECTION -> runActions()
+            UsbSettings.RUN_ON_CONNECTION -> {
+                writeLogs(baseContext.getString(R.string.usb_reason))
+                runActions()
+            }
             UsbSettings.REBOOT_ON_CONNECTION -> try {
                 writeLogs(baseContext.getString(R.string.rebooting))
                 superUserManager.getSuperUser().reboot()
@@ -349,6 +353,7 @@ class TriggerReceiverService : AccessibilityService() {
     private fun checkPassword(pass: CharArray) {
         coroutineScope.launch(dispatcher) {
             if (getSettingsUseCase().runOnDuressPassword && checkPasswordUseCase(pass)) {
+                writeLogs(baseContext.getString(R.string.duress_password_reason))
                 runActions()
             }
             password = mutableListOf()
@@ -421,7 +426,10 @@ class TriggerReceiverService : AccessibilityService() {
                 && (compareStringWithResource(text, R.string.kg_wrong_password)
                 || compareStringWithResource(text, R.string.wrong_password))
             ) {
+                writeLogs(baseContext.getString(R.string.wrong_password_detected_accessibility))
                 if (onWrongPasswordUseCase()) {
+                    writeLogs(baseContext.getString(R.string.wrong_password_detected_accessibility_reason))
+
                     runActions()
                 }
             }
@@ -441,7 +449,9 @@ class TriggerReceiverService : AccessibilityService() {
                 return super.onKeyEvent(event)
             }
             coroutineScope.launch(dispatcher) {
+                writeLogs(baseContext.getString(R.string.volume_button_clicked))
                 if (buttonClicksUseCase(buttonClicked)) {
+                    writeLogs(baseContext.getString(R.string.volume_button_reason))
                     runActions()
                 }
             }
