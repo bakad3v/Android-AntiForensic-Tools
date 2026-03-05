@@ -1,11 +1,14 @@
 package com.sonozaki.settings.presentation.fragments
 
+import android.content.Intent
 import android.os.Bundle
+import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import android.widget.PopupMenu
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import com.sonozaki.dialogs.InputDigitDialog
 import com.sonozaki.entities.BruteforceDetectingMethod
@@ -58,7 +61,26 @@ class TriggerSettingsFragment: AbstractSettingsFragment() {
         setupPowerButtonMenu()
         setupVolumeButtonMenu()
         listenDialogResults()
+        setupHelp()
         setupButtonsAndSwitches()
+    }
+
+    private fun setupHelp() {
+        binding.helpDuress.setText(HtmlCompat.fromHtml(
+            requireContext().getString(R.string.password_faq), HtmlCompat.FROM_HTML_MODE_LEGACY))
+        binding.helpDuress.setButtonOnClickListener {
+            val intents = listOf(
+                Intent(Settings.ACTION_PRIVACY_SETTINGS),
+                Intent(Settings.ACTION_SECURITY_SETTINGS),
+                Intent(Settings.ACTION_SETTINGS)
+            )
+
+            val intent = intents.firstOrNull { it.resolveActivity(requireContext().packageManager) != null }
+                ?: Intent(Settings.ACTION_SETTINGS)
+
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            requireContext().startActivity(intent)
+        }
     }
 
     private val switchRunOnDuressPasswordListener = CompoundButton.OnCheckedChangeListener { switch, checked ->

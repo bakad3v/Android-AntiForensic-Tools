@@ -2,6 +2,7 @@ package com.sonozaki.settings.presentation.fragments
 
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.view.LayoutInflater
@@ -9,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.CompoundButton
 import androidx.core.net.toUri
+import androidx.core.text.HtmlCompat
 import androidx.fragment.app.viewModels
 import com.sonozaki.entities.ShizukuState
 import com.sonozaki.settings.R
@@ -44,7 +46,24 @@ class PermissionSettingsFragment: AbstractSettingsFragment() {
         setupActivity(R.string.permissions_setting)
         listenDialogResults()
         setupButtonsAndSwitches()
+        setupHelp()
         observeShizukuState()
+    }
+
+    private fun setupHelp() {
+        binding.accessibilityHelp.setText(
+            HtmlCompat.fromHtml(
+                requireContext().getString(R.string.accessibility_service_faq),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            )
+        )
+        binding.accessibilityHelp.setButtonOnClickListener {
+            val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS).apply {
+                data = Uri.fromParts("package", requireContext().packageName, null)
+                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            }
+            requireContext().startActivity(intent)
+        }
     }
 
     private fun displayShizukuState(shizukuState: ShizukuState) {

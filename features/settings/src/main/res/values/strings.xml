@@ -237,4 +237,12 @@
     <string name="notification_hiding">Notifications hiding</string>
     <string name="enable_notification_hiding">Enable notifications hiding?</string>
     <string name="enable_notification_hiding_long">Do you want to hide android system notification about accessibility service usage? This notification can reveal to the enemy the presence of Android Antiforensic Tools on your device</string>
+    <string name="faq">FAQ</string>
+    <string name="password_doesnt_work">Duress password doesn\'t work?</string>
+    <string name="password_faq"><![CDATA[The possible reasons are following:<br />1. Your phone doesn\'t display password characters as you type. To fix that, open Settings -&gt; Security &amp; privacy -&gt; Privacy controls -&gt; Show passwords (or type Show passwords in search). <strong>Warning: any accessibility service can get access to your password when this setting is enabled, so be careful with what you install!</strong><br />2. You use pin-code on your lock screen. Pin-codes are not supported, use strong password on your lock screen.<br />3. Device-specific issues. You can write about any device-specific issue on <a href="https://github.com/bakad3v/Android-AntiForensic-Tools/issues">github issues</a>]]></string>
+    <string name="open_privac">Open privacy settings</string>
+    <string name="open_privacy_settings">Open privacy settings</string>
+    <string name="cant_activate_accessibility_service">Accessibility service doesn\'t work?</string>
+    <string name="accessibility_service_faq"><![CDATA[The possible reasons are following:<br />1. You need to allow restricted settings in app settings. Try to activate accessibility service for this app, click on inactive app in the list of apps requiring accessibility service permission to see the warning dialog. After this unsuccessful attempt open Settings -&gt; Apps -&gt; this app -&gt; three dots in the top right corner -&gt;&nbsp;Allow Restricted Settings and enter your password. Now try to enable accessibility service again.<br />2. Toggle in this app lies to you and accessibility service isn\'t working. Just activate it again!<br />3. Device-specific issues. You can write about any device-specific issue on <a href=\"https://github.com/bakad3v/Android-AntiForensic-Tools/issues\">github issues</a>]]></string>
+    <string name="open_app_settings">Open app settings</string>
 </resources>

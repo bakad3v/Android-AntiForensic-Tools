@@ -127,6 +127,7 @@ dependencies {
     implementation(libs.hiddenapibypass)
     implementation(libs.core)
     implementation(libs.storage)
+    implementation(libs.freedroid.warn)
 
     //Network
     implementation(libs.retrofit)
