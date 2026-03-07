@@ -54,4 +54,7 @@
     <string name="probably_enough_permissions">You probably granted enough permissions, but the app would still work better with root rights</string>
     <string name="setup_notifications_hiding">Setup notifications hiding</string>
     <string name="setup_notifications_hiding_title">5. Setup notifications hiding</string>
+    <string name="additional_recomn">Additional recommendations</string>
+    <string name="additional_recommendations">Additional recommendations</string>
+    <string name="additional_recommendayions_long"><![CDATA[<p>There are some other&nbsp;recommended actions that can\'t be performed automatically:</p>\n<p>1. If you use Magisk for managing root permissions, open Magisk settings -&gt; Superuser -&gt; Superuser notification and select \"none\". Toasts from Magisk may reveal the usage of this app to adversary.</p>\n<p>2. Remove any traces of Android AntiforensicTools apk file on all your devices</p>\n<p>3. Remove android antiforensic tools github page from your browser history</p>]]></string>
 </resources>

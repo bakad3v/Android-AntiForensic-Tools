@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="HelpView">
+        <attr name="helpTitle" format="string" />
+        <attr name="helpText" format="string" />
+        <attr name="buttonText" format="string" />
+        <attr name="showButton" format="boolean" />
+
+        <attr name="helpTitleTextAppearance" format="reference" />
+        <attr name="helpBodyTextAppearance" format="reference" />
+
+        <attr name="helpCornerRadius" format="dimension" />
+        <attr name="helpBackgroundColor" format="color|reference" />
+        <attr name="helpStrokeColor" format="color|reference" />
+        <attr name="helpStrokeWidth" format="dimension" />
+
+        <attr name="helpContentPadding" format="dimension" />
+    </declare-styleable>
+
+</resources>

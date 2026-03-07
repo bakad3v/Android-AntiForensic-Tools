@@ -138,13 +138,13 @@
             android:text="@string/faq"
             android:textStyle="bold">
         </com.google.android.material.textview.MaterialTextView>
-        <com.sonozaki.settings.presentation.views.HelpView
+        <com.sonozaki.resources.HelpView
             android:id="@+id/help_duress"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_normal"
             app:buttonText="@string/open_privacy_settings"
             app:helpTitle="@string/password_doesnt_work">
-        </com.sonozaki.settings.presentation.views.HelpView>
+        </com.sonozaki.resources.HelpView>
     </LinearLayout>
 </ScrollView>

@@ -427,6 +427,20 @@
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
+                <com.sonozaki.resources.HelpView
+                    android:id="@+id/wizard_help"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/margin_big"
+                    android:layout_marginTop="@dimen/margin_normal"
+                    android:layout_marginEnd="@dimen/margin_big"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/materialCardView6"
+                    app:helpTitle="@string/additional_recommendations"
+                    app:showButton="false"
+                    />
+
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
     </ScrollView>

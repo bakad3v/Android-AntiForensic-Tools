@@ -1,15 +1,15 @@
-package com.sonozaki.settings.presentation.views
+package com.sonozaki.resources
 
 import android.content.Context
+import android.content.res.TypedArray
 import android.text.Spanned
 import android.text.method.LinkMovementMethod
 import android.util.AttributeSet
 import android.util.TypedValue
-import android.widget.LinearLayout
 import androidx.core.content.withStyledAttributes
+import androidx.core.view.isVisible
 import com.google.android.material.card.MaterialCardView
-import com.sonozaki.settings.R
-import com.sonozaki.settings.databinding.ViewHelpBinding
+import com.sonozaki.resources.databinding.ViewHelpBinding
 
 class HelpView @JvmOverloads constructor(
     context: Context,
@@ -37,18 +37,22 @@ class HelpView @JvmOverloads constructor(
             val titleTa = getResourceId(R.styleable.HelpView_helpTitleTextAppearance, 0)
             val bodyTa = getResourceId(R.styleable.HelpView_helpBodyTextAppearance, 0)
 
-            val cornerRadius = getDimension(R.styleable.HelpView_helpCornerRadius, defaultRadius)
+            val cornerRadius =
+                getDimension(R.styleable.HelpView_helpCornerRadius, defaultRadius)
             val bgColor = getColorOrNull(R.styleable.HelpView_helpBackgroundColor)
             val strokeColor = getColorOrNull(R.styleable.HelpView_helpStrokeColor)
-            val strokeWidth = getDimension(R.styleable.HelpView_helpStrokeWidth, defaultStrokeWidth)
+            val strokeWidth =
+                getDimension(R.styleable.HelpView_helpStrokeWidth, defaultStrokeWidth)
 
-            val padding = getDimension(R.styleable.HelpView_helpContentPadding, defaultPadding)
-
+            val padding =
+                getDimension(R.styleable.HelpView_helpContentPadding, defaultPadding)
+            val showButton = getBoolean(R.styleable.HelpView_showButton, false)
             if (title != null) setTitle(title)
             if (text != null) setText(text)
             if (buttonText != null) setButtonText(buttonText)
 
             with(binding) {
+                helpButtonView.isVisible = showButton
                 if (titleTa != 0) helpTitle.setTextAppearance(titleTa)
                 if (bodyTa != 0) helpBody.setTextAppearance(bodyTa)
 
@@ -94,6 +98,6 @@ class HelpView @JvmOverloads constructor(
     private fun dp(valueDp: Float): Float =
         TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueDp, resources.displayMetrics)
 
-    private fun android.content.res.TypedArray.getColorOrNull(index: Int): Int? =
+    private fun TypedArray.getColorOrNull(index: Int): Int? =
         if (hasValue(index)) getColor(index, 0) else null
 }

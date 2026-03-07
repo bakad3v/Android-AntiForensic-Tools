@@ -85,13 +85,13 @@
             android:text="@string/faq"
             android:textStyle="bold">
         </com.google.android.material.textview.MaterialTextView>
-        <com.sonozaki.settings.presentation.views.HelpView
+        <com.sonozaki.resources.HelpView
             android:id="@+id/accessibility_help"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_normal"
             app:helpTitle="@string/cant_activate_accessibility_service"
             app:buttonText="@string/open_app_settings">
-        </com.sonozaki.settings.presentation.views.HelpView>
+        </com.sonozaki.resources.HelpView>
     </LinearLayout>
 </ScrollView>
