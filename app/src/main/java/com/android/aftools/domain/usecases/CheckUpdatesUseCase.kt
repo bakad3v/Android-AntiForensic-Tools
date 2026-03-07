@@ -19,7 +19,7 @@ class CheckUpdatesUseCase @Inject constructor(
         return when (data) {
             is RequestResult.Error -> UpdateCheckResult.CHECK_ERROR
             is RequestResult.Data -> {
-                if (data.data.newVersion || !data.data.isTestOnly) {
+                if (data.data.newVersion || (!data.data.isTestOnly && repository.testOnlyNeeded.first())) {
                     UpdateCheckResult.CHECK_UPDATE
                 } else {
                     UpdateCheckResult.CHECK_NOTHING
