@@ -144,7 +144,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_normal"
             app:buttonText="@string/open_privacy_settings"
-            app:helpTitle="@string/password_doesnt_work">
+            app:helpTitle="@string/password_doesnt_work"
+            app:showButton="true">
         </com.sonozaki.resources.HelpView>
     </LinearLayout>
 </ScrollView>

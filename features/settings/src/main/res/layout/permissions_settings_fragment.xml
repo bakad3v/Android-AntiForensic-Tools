@@ -91,7 +91,8 @@
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/margin_normal"
             app:helpTitle="@string/cant_activate_accessibility_service"
-            app:buttonText="@string/open_app_settings">
+            app:buttonText="@string/open_app_settings"
+            app:showButton="true">
         </com.sonozaki.resources.HelpView>
     </LinearLayout>
 </ScrollView>
