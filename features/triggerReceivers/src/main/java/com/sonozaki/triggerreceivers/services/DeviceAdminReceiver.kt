@@ -4,11 +4,14 @@ import android.content.Context
 import android.content.Intent
 import android.os.UserHandle
 import com.sonozaki.entities.BruteforceDetectingMethod
+import com.sonozaki.triggerreceivers.R
 import com.sonozaki.triggerreceivers.services.domain.router.ActivitiesLauncher
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetBruteforceSettingsUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.GetLogsEnabledUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.OnRightPasswordUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.OnWrongPasswordUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.SetAdminActiveUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.WriteLogsUseCase
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -33,11 +36,25 @@ class DeviceAdminReceiver: DeviceAdminReceiver() {
     lateinit var activitiesLauncher: ActivitiesLauncher
 
     @Inject
+    lateinit var getLogsEnabledUseCase: GetLogsEnabledUseCase
+
+    @Inject
+    lateinit var writeLogsUseCase: WriteLogsUseCase
+
+    @Inject
     lateinit var getBruteforceSettingsUseCase: GetBruteforceSettingsUseCase
+
+    private suspend fun writeLogs(text: String) {
+        if (getLogsEnabledUseCase()) {
+            writeLogsUseCase(text)
+        }
+    }
 
     override fun onPasswordFailed(context: Context, intent: Intent, user: UserHandle) {
         coroutineScope.launch {
+            writeLogs(context.getString(R.string.wrong_password_detected))
             if (checkBruteforceDetectionMethod() && onWrongPasswordUseCase()) {
+                writeLogs(context.getString(R.string.password_failed_reason))
                 activitiesLauncher.launchService(context)
             }
         }

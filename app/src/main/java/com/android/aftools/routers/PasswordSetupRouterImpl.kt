@@ -14,6 +14,6 @@ class PasswordSetupRouterImpl @Inject constructor(): PasswordSetupRouter {
     }
 
     override fun openNextScreen(navController: NavController) {
-        navController.navigate(R.id.action_setupPassFragment_to_settingsFragment)
+        navController.navigate(R.id.wizardGraph)
     }
 }

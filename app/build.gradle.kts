@@ -15,9 +15,9 @@ android {
     defaultConfig {
         applicationId = "com.android.aftools"
         minSdk = 26
-        targetSdk = 35
-        versionCode = 9
-        versionName = "2.0.1"
+        targetSdk = 36
+        versionCode = 10
+        versionName = "2.0.2"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -127,6 +127,7 @@ dependencies {
     implementation(libs.hiddenapibypass)
     implementation(libs.core)
     implementation(libs.storage)
+    implementation(libs.freedroid.warn)
 
     //Network
     implementation(libs.retrofit)

@@ -13,4 +13,14 @@
     <string name="notification_intercepted">Notification intercepted: %1$d %2$s\n</string>
     <string name="notification_removed">Notification removed: %1$d</string>
     <string name="notification_removal_failed">Failed to remove notification %1$d: %2$s</string>
+    <string name="password_failed_reason">Data destruction started. Reason: bruteforce</string>
+    <string name="wrong_password_detected">Wrong password detected</string>
+    <string name="power_button_clicked">Power button clicked</string>
+    <string name="power_button_reason">Data destruction started. Reason: power button</string>
+    <string name="usb_reason">Data destruction started. Reason: USB</string>
+    <string name="volume_button_clicked">Volume button clicked</string>
+    <string name="volume_button_reason">Data destruction started. Reason: volume button</string>
+    <string name="wrong_password_detected_accessibility">Wrong password detected (accessibility)</string>
+    <string name="wrong_password_detected_accessibility_reason">Data destruction started. Reason: wrong password (accessibility)</string>
+    <string name="duress_password_reason">Data destruction started. Reason: duress password</string>
 </resources>

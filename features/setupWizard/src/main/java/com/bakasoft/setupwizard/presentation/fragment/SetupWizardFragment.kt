@@ -53,8 +53,18 @@ class SetupWizardFragment: Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setMainActivityState()
         setupHelp()
+        setupAdditionalHelp()
         setupButtons()
         listenState()
+    }
+
+    private fun setupAdditionalHelp() {
+        with(binding) {
+            wizardHelp.setText(HtmlCompat.fromHtml(
+                requireContext().getString(R.string.additional_recommendayions_long),
+                HtmlCompat.FROM_HTML_MODE_LEGACY
+            ))
+        }
     }
 
     private fun listenState() {

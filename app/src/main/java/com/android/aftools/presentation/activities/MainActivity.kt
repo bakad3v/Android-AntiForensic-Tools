@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import androidx.navigation.ui.setupWithNavController
+import com.android.aftools.BuildConfig
 import com.android.aftools.R
 import com.android.aftools.databinding.MainActivityBinding
 import com.android.aftools.presentation.viewmodels.MainVM
@@ -27,6 +28,7 @@ import com.sonozaki.entities.Theme
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import org.woheller69.freeDroidWarn.FreeDroidWarn
 
 
 @AndroidEntryPoint
@@ -44,6 +46,7 @@ class MainActivity : AppCompatActivity(), ActivityStateHolder {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        FreeDroidWarn.showWarningOnUpgrade(this, BuildConfig.VERSION_CODE);
         observeAppUISettings()
         _mainBinding =
             MainActivityBinding.inflate(layoutInflater)

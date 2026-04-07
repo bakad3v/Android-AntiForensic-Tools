@@ -76,6 +76,7 @@ converter-scalars = { group = "com.squareup.retrofit2", name = "converter-scalar
 okio = { group = "com.squareup.okio", name = "okio", version.ref = "okioVersion"}
 shizuku = {group = "dev.rikka.shizuku", name = "api", version.ref = "shizuku"}
 shizuku-provider = {group = "dev.rikka.shizuku", name = "provider", version.ref = "shizuku"}
+freedroid-warn = { group = "com.github.woheller69", name = "FreeDroidWarn", version = "V1.+" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
