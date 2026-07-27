@@ -19,6 +19,8 @@ Discussions about this app have repeatedly raised misunderstandings about the th
 * You're worried about a hacker attack on your phone, the installation of spyware like Pegasus. Most likely, to face such a threat, you'd need to be targeted by a powerful adversary. Don't use Antiforensic Tools; it will only make you more vulnerable to such threats. Use Graphene OS.
 
 ## Features and limitations
+Before considering using Android AntiForensic Tools, please, take a look at my other project, [0sakaCrypt](https://github.com/bakad3v/0sakaCrypt). Unlike Android AntiForensic Tools, 0sakaCrypt does not require root access and does not need to conceal its own existence. It follows the principle of least privilege more closely and does not interfere with Android’s security model. It is also fully compatible with GrapheneOS without requiring the device to be rooted. **In most cases, using 0sakaCrypt together with GrapheneOS is the recommended approach for storing and protecting sensitive files.**
+
 I was inspired to create this app by the [Wasted](https://github.com/x13a/Wasted) app by x13a. It allows you to factory reset the device when a duress password is entered, a USB device is connected, or other triggers are activated. Wasted is a big step forward for anti-forensics on Android devices, and in some situations, it can be useful, but Wasted has some limitations:
 * Wiping device data is obvious to an adversary. That can provoke him and lead to unpredictable consequences for the user as described in this [blog post](https://t.me/tvoijazz/1026) (on russian).
 * The protection can be bypassed by booting the device into safe mode, where user apps are disabled.
