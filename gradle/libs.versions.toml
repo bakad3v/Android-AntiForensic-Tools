@@ -1,5 +1,6 @@
 [versions]
 appcompatVersion = "1.7.1"
+argon2 = "13.1"
 coilVersion = "2.7.0"
 core = "6.0.0"
 coreKtxVersion = "1.16.0"
@@ -39,6 +40,7 @@ shizuku = "13.1.5"
 
 [libraries]
 appcompat = { module = "androidx.appcompat:appcompat", version.ref = "appcompatVersion" }
+argon2 = { module = "org.signal:argon2", version.ref = "argon2" }
 coil = { module = "io.coil-kt:coil", version.ref = "coilVersion" }
 core = { module = "com.github.topjohnwu.libsu:core", version.ref = "core" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
