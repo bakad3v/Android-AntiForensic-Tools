@@ -471,6 +471,9 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     override fun onDestroy() {
+        runBlocking {
+            setServiceStatusUseCase(false)
+        }
         coroutineScope.cancel()
         super.onDestroy()
     }

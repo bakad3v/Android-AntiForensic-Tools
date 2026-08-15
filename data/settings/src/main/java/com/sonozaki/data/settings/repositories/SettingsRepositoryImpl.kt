@@ -9,6 +9,8 @@ import com.sonozaki.entities.Settings
 import com.sonozaki.entities.Theme
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.combine
 import javax.inject.Inject
 
 /**
@@ -34,7 +36,19 @@ class SettingsRepositoryImpl @Inject constructor(
         private const val DATASTORE_NAME = "settings_datastore_v2.json"
     }
 
-    override val settings: Flow<Settings> = context.settingsDatastore.data
+    /*
+     * The accessibility service state is only valid for the current process. Persisting it makes
+     * a stale `true` survive an app update because Android can kill the process without invoking
+     * AccessibilityService.onUnbind() or onDestroy().
+     */
+    private val serviceWorking = MutableStateFlow(false)
+
+    override val settings: Flow<Settings> = combine(
+        context.settingsDatastore.data,
+        serviceWorking
+    ) { settings, working ->
+        settings.copy(serviceWorking = working)
+    }
 
     override suspend fun setTheme(theme: Theme) {
         context.settingsDatastore.updateData {
@@ -49,9 +63,7 @@ class SettingsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun setServiceStatus(working: Boolean) {
-        context.settingsDatastore.updateData {
-            it.copy(serviceWorking = working)
-        }
+        serviceWorking.value = working
     }
 
     override suspend fun setRunOnBoot(status: Boolean) {
