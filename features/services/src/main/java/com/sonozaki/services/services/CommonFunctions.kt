@@ -13,8 +13,20 @@ suspend fun Context.destroyApp(
     superUserManager: SuperUserManager,
     handleException: suspend (e: String) -> Unit
 ) {
+    if (settings.removeItself) {
+        try {
+            superUser.uninstallApp(packageName)
+            return
+        } catch (e: SuperUserException) {
+            handleException(e.messageForLogs.asString(this))
+        }
+    }
     if (settings.clearItself) {
-        superUser.clearAppData(packageName)
+        try {
+            superUser.clearAppData(packageName)
+        } catch (e: SuperUserException) {
+            handleException(e.messageForLogs.asString(this))
+        }
     }
     if (settings.clearData) {
         if (isAdmin) {
@@ -26,20 +38,6 @@ suspend fun Context.destroyApp(
         }
         clearData(settings.hideItself) {
             handleException(it)
-        }
-    }
-    if (settings.removeItself) {
-        try {
-            superUser.uninstallApp(packageName)
-        } catch (e: SuperUserException) {
-            handleException(e.messageForLogs.asString(this))
-            if (settings.hideItself) {
-                try {
-                    superUser.hideApp(packageName)
-                } catch (e: SuperUserException) {
-                    handleException(e.messageForLogs.asString(this))
-                }
-            }
         }
     }
     if (settings.hideItself) {
@@ -63,4 +61,3 @@ suspend fun Context.clearData(hideItself: Boolean, handleException: suspend (e: 
         android.os.Process.killProcess(android.os.Process.myPid())
     }
 }
-
