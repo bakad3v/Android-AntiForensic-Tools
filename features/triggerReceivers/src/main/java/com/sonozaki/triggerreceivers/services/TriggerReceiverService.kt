@@ -58,7 +58,9 @@ import javax.inject.Named
 @AndroidEntryPoint
 class TriggerReceiverService : AccessibilityService() {
     private var keyguardManager: KeyguardManager? = null
-    private var password = mutableListOf<Char>()
+
+    @Inject
+    lateinit var passwordBuffer: LockScreenPasswordBuffer
 
     @Inject
     lateinit var checkPasswordUseCase: CheckPasswordUseCase
@@ -352,11 +354,14 @@ class TriggerReceiverService : AccessibilityService() {
 
     private fun checkPassword(pass: CharArray) {
         coroutineScope.launch(dispatcher) {
-            if (getSettingsUseCase().runOnDuressPassword && checkPasswordUseCase(pass)) {
-                writeLogs(baseContext.getString(R.string.duress_password_reason))
-                runActions()
+            try {
+                if (getSettingsUseCase().runOnDuressPassword && checkPasswordUseCase(pass)) {
+                    writeLogs(baseContext.getString(R.string.duress_password_reason))
+                    runActions()
+                }
+            } finally {
+                pass.fill('\u0000')
             }
-            password = mutableListOf()
         }
     }
 
@@ -377,25 +382,7 @@ class TriggerReceiverService : AccessibilityService() {
      * Trigger when password entered by user changes
      */
     private fun updatePassword(text: String) {
-        val ignoreChars = text.count { it == IGNORE_CHAR }
-        if (ignoreChars == 0 && text.length != 1) {
-            checkPassword(password.toCharArray())
-            return
-        }
-        if (password.size > text.length) {
-            password = password.subList(0, text.length)
-        }
-        if (ignoreChars == text.length)
-            return
-        val index = text.indexOfFirst { it != IGNORE_CHAR }
-        if (index == password.size) {
-            password.add(text[index])
-        } else {
-            try {
-                password[index] = text[index]
-            } catch (_: java.lang.IndexOutOfBoundsException) {
-            }
-        }
+        passwordBuffer.update(text)?.let(::checkPassword)
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -479,7 +466,6 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     companion object {
-        private const val IGNORE_CHAR = '•'
         private val PACKAGE_NAMES_INTERCEPTED = setOf("com.android.systemui","com.android.keyguard")
     }
 }
