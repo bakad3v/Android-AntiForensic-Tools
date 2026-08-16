@@ -7,4 +7,5 @@
     android:notificationTimeout="100"
     android:canRetrieveWindowContent="true"
     android:canRequestFilterKeyEvents="true"
-    android:directBootAware="true"/>
+    android:directBootAware="true"
+    android:isAccessibilityTool="true"/>

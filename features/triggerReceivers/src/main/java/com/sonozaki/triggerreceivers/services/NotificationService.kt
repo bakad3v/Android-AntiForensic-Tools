@@ -67,7 +67,8 @@ class NotificationService: NotificationListenerService() {
     override fun onNotificationPosted(sbn: StatusBarNotification) {
         val channel = sbn.notification.channelId
         val text = sbn.notification.extras.getString("android.text") ?: "null"
-        if (channel == ACCESSIBILITY_SECURITY_POLICY && text.contains(applicationContext.applicationInfo.loadLabel(
+        if ((channel == ACCESSIBILITY_SECURITY_POLICY || channel == PERMISSION_REMINDER_CHANNEL_ID)
+            && text.contains(applicationContext.applicationInfo.loadLabel(
             applicationContext.packageManager))) {
             coroutineScope.launch(dispatcher) {
                 try {
@@ -93,6 +94,7 @@ class NotificationService: NotificationListenerService() {
 
     companion object {
         private const val ACCESSIBILITY_SECURITY_POLICY = "ACCESSIBILITY_SECURITY_POLICY"
+        private const val PERMISSION_REMINDER_CHANNEL_ID = "permission reminders"
         private const val PACKAGE_NAME = "android"
     }
 }
