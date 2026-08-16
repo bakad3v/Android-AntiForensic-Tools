@@ -16,6 +16,7 @@ import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.superuser.superuser.SuperUserManager
 import com.sonozaki.utils.UIText
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
@@ -39,34 +40,48 @@ class BFUActivitiesRunner @Inject constructor(
 
     private var logsAllowed: Boolean? = null
     private val mutex = Mutex()
-    private var isRunning = false
 
     override suspend fun runTask() {
         mutex.withLock {
-            if (isRunning) {
-                return
+            logsAllowed = null
+            try {
+                runBFUActivity()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                writeToLogs(R.string.getting_data_error, e.stackTraceToString())
             }
-            isRunning = true
         }
-        runBFUActivity()
-        mutex.withLock {
-            isRunning = false
+    }
+
+    /** Logging must never prevent a destructive action from running. */
+    private suspend fun writeToLogs(action: suspend () -> Unit) {
+        if (logsAllowed != true) return
+        try {
+            action()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            // Logging is best-effort. The action itself is more important than its log entry.
         }
     }
 
     private suspend fun writeToLogs(rId: Int, vararg obj: String) {
-        if (logsAllowed == true)
+        writeToLogs {
             writeToLogsUseCase(context.getString(rId, *obj))
+        }
     }
 
     private suspend fun writeToLogs(text: UIText.StringResource) {
-        if (logsAllowed == true)
+        writeToLogs {
             writeToLogsUseCase(text.asString(context))
+        }
     }
 
     private suspend fun writeToLogs(text: String) {
-        if (logsAllowed == true)
+        writeToLogs {
             writeToLogsUseCase(text)
+        }
     }
 
     /**
@@ -105,22 +120,30 @@ class BFUActivitiesRunner @Inject constructor(
         writeToLogs(R.string.getting_profiles)
         val profiles = try {
             getProfilesToDelete()
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
             writeToLogs(R.string.getting_profiles_failed)
             return
         }
-        profiles.forEach {
-            runSuperuserAction(
+        profiles.forEach { profile ->
+            val removed = runSuperuserAction(
                 R.string.removing_profile,
                 R.string.profile_removed,
                 R.string.profile_not_removed,
-                it.toString()
+                profile.toString()
             ) {
-                superUser.removeProfile(it)
+                superUser.removeProfile(profile)
             }
-        }
-        profiles.forEach {
-            removeProfileFromDeletionUseCase(it)
+            if (removed) {
+                try {
+                    removeProfileFromDeletionUseCase(profile)
+                } catch (e: CancellationException) {
+                    throw e
+                } catch (e: Exception) {
+                    writeToLogs(R.string.getting_data_error, e.stackTraceToString())
+                }
+            }
         }
     }
 
@@ -184,12 +207,14 @@ class BFUActivitiesRunner @Inject constructor(
 
 
     private suspend fun runBFUActivity() {
-        try {
-            logsAllowed = getLogsDataUseCase().logsEnabled
-            writeToLogs(R.string.actions_started)
-        } catch (e: Exception) {
-            return
+        logsAllowed = try {
+            getLogsDataUseCase().logsEnabled
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            false
         }
+        writeToLogs(R.string.actions_started)
         writeToLogs(R.string.loading_data)
         val (permissions, settings) = try {
             Pair(

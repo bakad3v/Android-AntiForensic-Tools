@@ -18,6 +18,7 @@ import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.superuser.superuser.SuperUserManager
 import com.sonozaki.utils.UIText
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
@@ -48,21 +49,31 @@ class AFUActivitiesRunner @Inject constructor(
 ): ActivityRunner {
 
     private val mutex = Mutex()
-    private var isRunning = false
     private var logsAllowed: Boolean? = null
 
     override suspend fun runTask() {
         mutex.withLock {
-            if (isRunning) {
-                return
+            logsAllowed = null
+            try {
+                runAFUActivity()
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                writeToLogs(R.string.getting_data_error, e.stackTraceToString())
             }
-            isRunning = true
         }
-        runAFUActivity()
-        mutex.withLock {
-            isRunning = false
-        }
+    }
 
+    /** Logging is best-effort and must not cancel file deletion. */
+    private suspend fun writeToLogs(action: suspend () -> Unit) {
+        if (logsAllowed != true) return
+        try {
+            action()
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            // Ignore log storage failures and keep running the requested action.
+        }
     }
 
 
@@ -71,12 +82,14 @@ class AFUActivitiesRunner @Inject constructor(
         if (!settings.deleteFiles && !settings.removeItself && !settings.hideItself && !settings.clearItself && !settings.clearData) {
             return
         } //getting settings
-        try {
-            logsAllowed = getLogsDataUseCase().logsEnabled
-            writeToLogs(R.string.deletion_started) //getting log status, trying to write to logs
-        } catch (e: Exception) {
-            return
+        logsAllowed = try {
+            getLogsDataUseCase().logsEnabled
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            false
         }
+        writeToLogs(R.string.deletion_started)
         try {
             val files = getFilesUseCase()
             removeAll(files) //getting files, removing files
@@ -133,13 +146,15 @@ class AFUActivitiesRunner @Inject constructor(
     }
 
     private suspend fun writeToLogs(resource: UIText.StringResource) {
-        if (logsAllowed == true)
+        writeToLogs {
             writeToLogsUseCase(resource.asString(context))
+        }
     }
 
     private suspend fun writeToLogs(rId: Int, vararg obj: String) {
-        if (logsAllowed == true)
+        writeToLogs {
             writeToLogsUseCase(context.getString(rId, *obj))
+        }
     }
 
     private fun FileDomain.toDocumentFile(): DocumentFile? {
@@ -217,7 +232,7 @@ class AFUActivitiesRunner @Inject constructor(
             val result = resultFiles + resultDirs.awaitAll()
             var (success, all) = listOf(0, 0)
             result.forEach { success += it.first; all += it.second }
-            if (all == 0 || success / all > 0.5) {
+            if (all == 0 || success.toFloat() / all > 0.5) {
                 if (!df.delete()) {
                     writeAboutDeletionError(
                         true, path,
@@ -267,7 +282,7 @@ class AFUActivitiesRunner @Inject constructor(
                 )
                 return
             }
-            val percent = result.first / result.second
+            val percent = result.first.toFloat() / result.second
             if (percent > 0.5) {
                 deleteMyFileUseCase(file.uri)
                 writeToLogs(
