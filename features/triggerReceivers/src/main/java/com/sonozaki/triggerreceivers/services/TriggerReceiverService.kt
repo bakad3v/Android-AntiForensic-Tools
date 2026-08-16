@@ -49,6 +49,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
@@ -136,12 +137,22 @@ class TriggerReceiverService : AccessibilityService() {
         super.onCreate()
         coroutineScope.launch(dispatcher) {
             var cancelCallback: (() -> Unit)? = null
-            getButtonsRootDataUseCase().collect {
-                if (it) {
-                    cancelCallback = listenForButtonClicksRoot(superUserManager.getSuperUser())
-                } else {
-                    cancelCallback?.invoke()
-                }
+            try {
+                getButtonsRootDataUseCase()
+                    .distinctUntilChanged()
+                    .collect { shouldListen ->
+                        val previousCancelCallback = cancelCallback
+                        cancelCallback = null
+                        stopPowerButtonListener(previousCancelCallback)
+
+                        if (shouldListen) {
+                            cancelCallback = listenForButtonClicksRoot(superUserManager.getSuperUser())
+                        }
+                    }
+            } finally {
+                val finalCancelCallback = cancelCallback
+                cancelCallback = null
+                stopPowerButtonListener(finalCancelCallback)
             }
         }
         coroutineScope.launch(dispatcher) {
@@ -159,6 +170,14 @@ class TriggerReceiverService : AccessibilityService() {
         listenUserUnlocked()
         listenUsbConnection()
         keyguardManager = getSystemService(KeyguardManager::class.java)
+    }
+
+    private fun stopPowerButtonListener(cancelCallback: (() -> Unit)?) {
+        if (cancelCallback == null) {
+            return
+        }
+
+        runCatching(cancelCallback)
     }
 
     /**
@@ -439,7 +458,7 @@ class TriggerReceiverService : AccessibilityService() {
      * Trigger on volume buttons clicks
      */
     override fun onKeyEvent(event: KeyEvent?): Boolean {
-        if (event?.action == ACTION_DOWN) {
+        if (event?.action == ACTION_DOWN && event.repeatCount == 0) {
             val buttonClicked = if (event.keyCode == KEYCODE_VOLUME_UP) {
                 ButtonClicked.VOLUME_UP
             } else if (event.keyCode == KEYCODE_VOLUME_DOWN) {

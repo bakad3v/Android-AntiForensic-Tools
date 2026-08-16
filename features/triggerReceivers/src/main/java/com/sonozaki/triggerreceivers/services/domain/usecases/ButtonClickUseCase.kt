@@ -1,5 +1,6 @@
 package com.sonozaki.triggerreceivers.services.domain.usecases
 
+import android.os.SystemClock
 import com.sonozaki.entities.ButtonClicked
 import com.sonozaki.entities.ButtonSelected
 import com.sonozaki.entities.ButtonSettings
@@ -42,7 +43,8 @@ class ButtonClickUseCase @Inject constructor(private val buttonSettingsRepositor
     }
 
     private suspend fun buttonClick(buttonSettings: ButtonSettings, buttonSelected: ButtonSelected): Boolean {
-        val timestamp = System.currentTimeMillis()
+        // A wall-clock change must not merge separate click sequences or split one sequence.
+        val timestamp = SystemClock.elapsedRealtime()
         with(buttonSettingsRepository) {
             val buttonClicksData = getButtonClicksData(buttonSelected)
             //if no clicks were performed previously, start counting clicks and return
