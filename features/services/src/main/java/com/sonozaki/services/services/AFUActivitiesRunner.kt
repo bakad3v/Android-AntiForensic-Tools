@@ -3,7 +3,6 @@ package com.sonozaki.services.services
 import android.content.Context
 import androidx.documentfile.provider.DocumentFile
 import com.sonozaki.entities.FileType
-import com.sonozaki.entities.Settings
 import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.services.R
 import com.sonozaki.services.domain.entities.FileDomain
@@ -22,12 +21,9 @@ import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.joinAll
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
@@ -51,8 +47,8 @@ class AFUActivitiesRunner @Inject constructor(
     private val mutex = Mutex()
     private var logsAllowed: Boolean? = null
 
-    override suspend fun runTask() {
-        mutex.withLock {
+    override suspend fun runTask(): Boolean {
+        return mutex.withLock {
             logsAllowed = null
             try {
                 runAFUActivity()
@@ -60,6 +56,7 @@ class AFUActivitiesRunner @Inject constructor(
                 throw e
             } catch (e: Exception) {
                 writeToLogs(R.string.getting_data_error, e.stackTraceToString())
+                false
             }
         }
     }
@@ -77,10 +74,12 @@ class AFUActivitiesRunner @Inject constructor(
     }
 
 
-    private suspend fun runAFUActivity() {
+    private suspend fun runAFUActivity(): Boolean {
         val settings = getSettingsUseCase()
-        if (!settings.deleteFiles && !settings.removeItself && !settings.hideItself && !settings.clearItself && !settings.clearData) {
-            return
+        if (!settings.deleteFiles && !settings.removeItself && !settings.hideItself &&
+            !settings.clearItself && !settings.clearData && !settings.trim
+        ) {
+            return true
         } //getting settings
         logsAllowed = try {
             getLogsDataUseCase().logsEnabled
@@ -90,12 +89,20 @@ class AFUActivitiesRunner @Inject constructor(
             false
         }
         writeToLogs(R.string.deletion_started)
-        try {
-            val files = getFilesUseCase()
-            removeAll(files) //getting files, removing files
-            writeToLogs(R.string.deletion_completed)
-        } catch (e: Exception) {
-            writeToLogs(R.string.getting_data_error, e.stackTraceToString())
+        var completedSuccessfully = true
+        if (settings.deleteFiles) {
+            try {
+                val files = getFilesUseCase()
+                completedSuccessfully = removeAll(files) //getting files, removing files
+                if (completedSuccessfully) {
+                    writeToLogs(R.string.deletion_completed)
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (e: Exception) {
+                completedSuccessfully = false
+                writeToLogs(R.string.getting_data_error, e.stackTraceToString())
+            }
         }
         val permissions = getPermissionsUseCase()
         if (!permissions.isRoot && !permissions.isOwner && !permissions.isShizuku) {
@@ -104,44 +111,60 @@ class AFUActivitiesRunner @Inject constructor(
                     try {
                         superUserManager.removeAdminRights()
                     } catch (e: SuperUserException) {
+                        completedSuccessfully = false
                         writeToLogs(e.messageForLogs)
                     }
                 }
                 context.clearData(false) {
-
+                    completedSuccessfully = false
+                    writeToLogs(R.string.uninstallation_failed, it)
                 }
             }
-            return
+            if (settings.removeItself || settings.hideItself || settings.clearItself || settings.trim) {
+                completedSuccessfully = false
+            }
+            return completedSuccessfully
         }
         val superUser = superUserManager.getSuperUser()
-        if (permissions.isRoot || permissions.isShizuku) {
-            if (settings.trim)
-                runTrim(superUser,settings)
+        if (settings.trim) {
+            completedSuccessfully = if (permissions.isRoot || permissions.isShizuku) {
+                runTrim(superUser) && completedSuccessfully
+            } else {
+                false
+            }
         }
         try {
             writeToLogs(R.string.uninstalling_itself)
             context.destroyApp(settings,superUser,permissions.isAdmin,superUserManager) {
+                completedSuccessfully = false
                 writeToLogs(R.string.uninstallation_failed, it)
             }
+        } catch (e: CancellationException) {
+            throw e
         } catch (e: Exception) {
+            completedSuccessfully = false
             writeToLogs(R.string.uninstallation_failed, e.stackTraceToString())
         }
+        return completedSuccessfully
     }
 
     /**
      * Function for running TRIM
      */
-    private suspend fun runTrim(superUser: SuperUser, settings: Settings) {
-        if (settings.trim) {
-            try {
-                writeToLogs(R.string.running_trim)
-                superUser.runTrim()
-            } catch (e: SuperUserException) {
-                writeToLogs(e.messageForLogs)
-            } catch (e: Exception) {
-                writeToLogs(R.string.trim_failed, e.stackTraceToString())
-            }
+    private suspend fun runTrim(superUser: SuperUser): Boolean {
+        return try {
+            writeToLogs(R.string.running_trim)
+            superUser.runTrim()
             writeToLogs(R.string.trim_runned)
+            true
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: SuperUserException) {
+            writeToLogs(e.messageForLogs)
+            false
+        } catch (e: Exception) {
+            writeToLogs(R.string.trim_failed, e.stackTraceToString())
+            false
         }
     }
 
@@ -168,22 +191,26 @@ class AFUActivitiesRunner @Inject constructor(
     /**
      * Removing all files
      */
-    private suspend fun removeAll(filesList: List<FileDomain>) {
-        coroutineScope {
+    private suspend fun removeAll(filesList: List<FileDomain>): Boolean {
+        return coroutineScope {
+            var completedSuccessfully = true
             filesList.sortedByDescending { it.priority }.groupBy { it.priority }.forEach { it1 ->
-                val jobs: List<Job> = it1.value.map {
+                val results: List<Deferred<Boolean>> = it1.value.map {
                     removeFile(this, it)
                 }
-                jobs.joinAll()
+                if (!results.awaitAll().all { it }) {
+                    completedSuccessfully = false
+                }
             } //sorting and grouping files by priority
+            completedSuccessfully
         }
     }
 
     /**
      * Preprocessing and carrying out file or folder removal and analyzing results
      */
-    private fun removeFile(coroutineScope: CoroutineScope, file: FileDomain): Job {
-        return coroutineScope.launch(ioDispatcher) {
+    private fun removeFile(coroutineScope: CoroutineScope, file: FileDomain): Deferred<Boolean> {
+        return coroutineScope.async(ioDispatcher) {
             val name = file.name
             val isDirectory = file.fileType == FileType.DIRECTORY
             val id = if (isDirectory) {
@@ -196,7 +223,7 @@ class AFUActivitiesRunner @Inject constructor(
                 file.toDocumentFile() ?: throw RuntimeException()
             } catch (e: Exception) {
                 writeAboutDeletionError(isDirectory, name, context.getString(R.string.access_error))
-                return@launch
+                return@async false
             }
             val result: Pair<Int, Int> = deleteFile(df, file.name, isDirectory)
             processDeletionResults(result, isDirectory, file)
@@ -271,7 +298,7 @@ class AFUActivitiesRunner @Inject constructor(
         result: Pair<Int, Int>,
         isDirectory: Boolean,
         file: FileDomain
-    ) {
+    ): Boolean {
         if (isDirectory) {
             if (result.second == 0) {
                 deleteMyFileUseCase(file.uri)
@@ -280,7 +307,7 @@ class AFUActivitiesRunner @Inject constructor(
                     file.name,
                     "100"
                 )
-                return
+                return true
             }
             val percent = result.first.toFloat() / result.second
             if (percent > 0.5) {
@@ -290,14 +317,14 @@ class AFUActivitiesRunner @Inject constructor(
                     file.name,
                     (percent * 100).toString()
                 )
-                return
+                return true
             }
             writeToLogs(
                 R.string.folder_deletion_failed,
                 file.name,
                 (percent * 100).toString()
             )
-            return
+            return false
         }
         if (result.first == 1) {
             deleteMyFileUseCase(file.uri)
@@ -305,11 +332,12 @@ class AFUActivitiesRunner @Inject constructor(
                 R.string.deletion_success,
                 file.name
             )
-            return
+            return true
         }
         writeToLogs(
             R.string.deletion_failed,
             file.name
         )
+        return false
     }
 }

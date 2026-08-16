@@ -24,8 +24,8 @@ class ActivitiesLauncherImpl @Inject constructor(
         bfuActivitiesRunner.runTask()
     }
 
-    override suspend fun startAFU() {
-        afuActivitiesRunner.runTask()
+    override suspend fun startAFU(): Boolean {
+        return afuActivitiesRunner.runTask()
     }
 
     override fun enqueueReboot(delay: Int) {

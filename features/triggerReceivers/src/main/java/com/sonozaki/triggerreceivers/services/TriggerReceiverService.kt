@@ -52,9 +52,12 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Accessibility service for password interception and usb connections monitoring. Thanks x13a for idea.
@@ -62,6 +65,9 @@ import javax.inject.Named
 @AndroidEntryPoint
 class TriggerReceiverService : AccessibilityService() {
     private var keyguardManager: KeyguardManager? = null
+    private var usbConnected = false
+    private var usbDataConnected = false
+    private val pendingAfuMutex = Mutex()
 
     @Inject
     lateinit var passwordBuffer: LockScreenPasswordBuffer
@@ -297,19 +303,35 @@ class TriggerReceiverService : AccessibilityService() {
      * Listen to usb connection events and react if needed.
      */
     private fun listenUsbConnection() {
-        val usbFilter =
-            IntentFilter("android.hardware.usb.action.USB_STATE").apply { addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED) }
-                .apply { addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED) }
+        val usbFilter = IntentFilter(USB_STATE_ACTION).apply {
+            addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED)
+            addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED)
+            addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
+            addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
+        }
         val usbReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                if (intent?.action == UsbManager.ACTION_USB_ACCESSORY_ATTACHED || intent?.action == UsbManager.ACTION_USB_DEVICE_ATTACHED) {
-                    coroutineScope.launch(dispatcher) {
-                        runOnUSBConnected()
-                    }
+                if (intent == null) {
                     return
                 }
+
                 val manager = getSystemService(USB_SERVICE) as UsbManager
-                if (intent?.extras?.getBoolean("connected") == true && (manager.deviceList?.size != 0 || manager.accessoryList?.size != 0)) {
+                val isConnected = when (intent.action) {
+                    USB_STATE_ACTION -> {
+                        usbDataConnected = intent.getBooleanExtra(USB_CONNECTED_EXTRA, false)
+                        usbDataConnected || manager.deviceList.isNotEmpty() || !manager.accessoryList.isNullOrEmpty()
+                    }
+                    UsbManager.ACTION_USB_DEVICE_ATTACHED,
+                    UsbManager.ACTION_USB_ACCESSORY_ATTACHED -> true
+                    UsbManager.ACTION_USB_DEVICE_DETACHED,
+                    UsbManager.ACTION_USB_ACCESSORY_DETACHED ->
+                        usbDataConnected || manager.deviceList.isNotEmpty() || !manager.accessoryList.isNullOrEmpty()
+                    else -> return
+                }
+
+                val isNewConnection = !usbConnected && isConnected
+                usbConnected = isConnected
+                if (isNewConnection) {
                     coroutineScope.launch(dispatcher) {
                         runOnUSBConnected()
                     }
@@ -350,13 +372,8 @@ class TriggerReceiverService : AccessibilityService() {
         val userUnlockedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 coroutineScope.launch(dispatcher) {
-                    if (getSettingsUseCase().runOnBoot) {
-                        withContext(dispatcher) {
-                            delay(2000) //for some reason, file deletion doesn't work without delay after unlocking
-                            activitiesLauncher.startAFU()
-                        }
-                        setRunOnBootUseCase(false)
-                    }
+                    delay(AFU_DELAY_AFTER_UNLOCK_MS.milliseconds)
+                    runPendingAfuIfUnlocked()
                 }
             }
         }
@@ -401,11 +418,39 @@ class TriggerReceiverService : AccessibilityService() {
      */
     private suspend fun runActions() {
         withContext(dispatcher) {
+            val wasUnlocked = userManager.isUserUnlocked
             activitiesLauncher.startBFU()
+            // Persist the pending work before checking the unlock state. ACTION_USER_UNLOCKED can
+            // now race only with runPendingAfuIfUnlocked(), which is serialized by its mutex.
+            markAfuPending()
             if (userManager.isUserUnlocked) {
-                activitiesLauncher.startAFU()
-            } else
-                setRunOnBootUseCase(true)
+                if (!wasUnlocked) {
+                    delay(AFU_DELAY_AFTER_UNLOCK_MS.milliseconds)
+                }
+                runPendingAfuIfUnlocked()
+            }
+        }
+    }
+
+    private suspend fun markAfuPending() {
+        pendingAfuMutex.withLock {
+            setRunOnBootUseCase(true)
+        }
+    }
+
+    private suspend fun runPendingAfuIfUnlocked() {
+        if (!userManager.isUserUnlocked) {
+            return
+        }
+
+        pendingAfuMutex.withLock {
+            if (!userManager.isUserUnlocked || !getSettingsUseCase().runOnBoot) {
+                return
+            }
+
+            if (activitiesLauncher.startAFU()) {
+                setRunOnBootUseCase(false)
+            }
         }
     }
 
@@ -497,6 +542,10 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     companion object {
+        private const val USB_STATE_ACTION = "android.hardware.usb.action.USB_STATE"
+        private const val USB_CONNECTED_EXTRA = "connected"
+        private const val AFU_DELAY_AFTER_UNLOCK_MS = 2_000L
+
         private val PACKAGE_NAMES_INTERCEPTED = setOf("com.android.systemui","com.android.keyguard")
     }
 }

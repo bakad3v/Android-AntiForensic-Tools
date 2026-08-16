@@ -41,15 +41,17 @@ class BFUActivitiesRunner @Inject constructor(
     private var logsAllowed: Boolean? = null
     private val mutex = Mutex()
 
-    override suspend fun runTask() {
-        mutex.withLock {
+    override suspend fun runTask(): Boolean {
+        return mutex.withLock {
             logsAllowed = null
             try {
                 runBFUActivity()
+                true
             } catch (e: CancellationException) {
                 throw e
             } catch (e: Exception) {
                 writeToLogs(R.string.getting_data_error, e.stackTraceToString())
+                false
             }
         }
     }
