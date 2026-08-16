@@ -42,8 +42,11 @@ import com.sonozaki.triggerreceivers.services.domain.usecases.SetRunOnBootUseCas
 import com.sonozaki.triggerreceivers.services.domain.usecases.SetServiceStatusUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.WriteLogsUseCase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -65,8 +68,11 @@ class TriggerReceiverService : AccessibilityService() {
     @Inject
     lateinit var checkPasswordUseCase: CheckPasswordUseCase
 
-    @Inject
-    lateinit var coroutineScope: CoroutineScope
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ -> }
+
+    private val coroutineScope by lazy {
+        CoroutineScope(SupervisorJob() + dispatcher + coroutineExceptionHandler)
+    }
 
     @Inject
     lateinit var setServiceStatusUseCase: SetServiceStatusUseCase
@@ -173,8 +179,14 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     private suspend fun writeLogs(text: String) {
-        if (getLogsEnabledUseCase()) {
-            writeLogsUseCase(text)
+        try {
+            if (getLogsEnabledUseCase()) {
+                writeLogsUseCase(text)
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            // Logging is best-effort and must not prevent trigger processing.
         }
     }
 
