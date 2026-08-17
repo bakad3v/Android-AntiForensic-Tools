@@ -198,7 +198,11 @@ class Dshizuku @Inject constructor(
         length: Long,
         data: BufferedSource
     ): Boolean {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        return if (getPermissionsUseCase().isShizuku) {
+            shizukuManager.installTestOnlyApp(length, data)
+        } else {
+            dhizukuManager.installTestOnlyApp(length, data)
+        }
     }
 
     //Function available only for shizuku

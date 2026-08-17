@@ -200,7 +200,7 @@ interface SuperUser {
 
     /**
      * Install application with testOnly flag.
-     * Requirements: root
+     * Requirements: root or shizuku
      */
     @Throws(SuperUserException::class)
     suspend fun installTestOnlyApp(length: Long, data: BufferedSource): Boolean

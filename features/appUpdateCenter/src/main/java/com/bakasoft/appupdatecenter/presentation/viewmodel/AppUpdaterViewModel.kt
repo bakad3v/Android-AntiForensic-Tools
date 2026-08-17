@@ -49,7 +49,8 @@ class AppUpdaterViewModel @Inject constructor(
             is RequestResult.Error -> AppUpdaterState.Error(networkErrorToText(appUpdate.error), popupStatus)
             is RequestResult.Data -> AppUpdaterState.Data(
                 appUpdate.data, appUpdate.data.newVersion,
-                permissions.isRoot && (appUpdate.data.newVersion || !appUpdate.data.isTestOnly),
+                (permissions.isRoot || permissions.isShizuku) &&
+                        (appUpdate.data.newVersion || !appUpdate.data.isTestOnly),
                 popupStatus, appUpdate.data.isTestOnly, selectedOption)
         }
     }.stateIn(
