@@ -9,7 +9,6 @@ import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.BruteforceSettings
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.first
 import javax.inject.Inject
 
 class BruteforceSettingsRepositoryImpl @Inject constructor(
@@ -36,7 +35,8 @@ class BruteforceSettingsRepositoryImpl @Inject constructor(
 
     override suspend fun setBruteforceStatus(status: BruteforceDetectingMethod) {
         context.bruteforceDataStore.updateData {
-            it.copy(detectingMethod = status)
+            // Attempts from one detection mechanism must not leak into another one.
+            it.copy(detectingMethod = status, wrongAttempts = 0)
         }
     }
 
@@ -47,12 +47,10 @@ class BruteforceSettingsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun onWrongPassword(): Boolean {
-
-        context.bruteforceDataStore.updateData {
-            it.copy(wrongAttempts = it.wrongAttempts+1)
+        val updatedData = context.bruteforceDataStore.updateData {
+            it.copy(wrongAttempts = it.wrongAttempts + 1)
         }
-        val data = context.bruteforceDataStore.data.first()
-        return data.wrongAttempts >= data.allowedAttempts
+        return updatedData.wrongAttempts >= updatedData.allowedAttempts
     }
 
     override suspend fun onRightPassword() {
