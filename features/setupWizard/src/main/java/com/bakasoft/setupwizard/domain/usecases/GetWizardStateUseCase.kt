@@ -48,7 +48,7 @@ class GetWizardStateUseCase @Inject constructor(
             deviceProtectionSettings: DeviceProtectionSettings, appLatestData: AppLatestVersion?,
             filesSelected: Boolean, profilesSelected: Boolean, rootCommandNotEmpty: Boolean,
             listeningNotifications: Boolean ->
-            val testOnlyNeeded = permissions.isAdmin && (permissions.isRoot || permissions.isOwner) && settings.removeItself
+            val testOnlyNeeded = permissions.isAdmin && settings.removeItself
             val appVersionState = getAppVersionState(appLatestData, testOnlyNeeded)
 
             val accessibilityServiceState = getAccessibilityServiceState(settings)
@@ -246,7 +246,7 @@ class GetWizardStateUseCase @Inject constructor(
         return when(selected) {
             DataSelected.ROOT -> permissions.isRoot
             DataSelected.PROFILES, DataSelected.FILES -> permissions.isRoot || (permissions.isShizuku && permissions.isOwner)
-            DataSelected.WIPE -> permissions.isRoot || permissions.isShizuku || permissions.isOwner
+            DataSelected.WIPE -> permissions.isRoot || permissions.isShizuku || permissions.isOwner || (permissions.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
             DataSelected.NONE -> false
         }
     }
@@ -331,7 +331,8 @@ class GetWizardStateUseCase @Inject constructor(
             BruteforceDetectingMethod.ADMIN ->
                 SettingsElementState.OK
 
-            BruteforceDetectingMethod.NONE, BruteforceDetectingMethod.ACCESSIBILITY_SERVICE  -> SettingsElementState.REQUIRED
+            BruteforceDetectingMethod.ACCESSIBILITY_SERVICE  -> SettingsElementState.REQUIRED
+            BruteforceDetectingMethod.NONE -> SettingsElementState.RECOMMENDED
         }
 
     private fun getButtonClicksState(buttonSettings: ButtonSettings): SettingsElementState =
@@ -361,18 +362,20 @@ class GetWizardStateUseCase @Inject constructor(
 
     private fun getPermissionState(permissions: Permissions, protectionFixAvailable: Boolean,
                                    rootCommandNotEmpty: Boolean, profilesSelected: Boolean, wipe: Boolean): PermissionsState {
-        val wipePermission = (permissions.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE) || permissions.isOwner
-        if (permissions.isRoot
+        val wipePermission = permissions.isRoot || permissions.isShizuku || permissions.isOwner || (permissions.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+        if ((permissions.isRoot && permissions.isAdmin)
             || (wipe && protectionFixAvailable &&
-                    wipePermission)) {
+                    wipePermission && permissions.isAdmin)) {
             return PermissionsState.PERFECT
         }
-        if (rootCommandNotEmpty || profilesSelected && !permissions.isOwner || wipe && !wipePermission) {
+        if ((rootCommandNotEmpty && !permissions.isRoot)
+            || (profilesSelected && !permissions.isOwner && !permissions.isRoot)
+            || wipe && !wipePermission) {
             return PermissionsState.NOT_ENOUGH
         }
 
         return if (permissions.isAdmin || permissions.isShizuku || permissions.isOwner) {
-            if (protectionFixAvailable || (permissions.isShizuku && permissions.isOwner)) {
+            if ((protectionFixAvailable || (permissions.isShizuku && permissions.isOwner)) && permissions.isAdmin) {
                 PermissionsState.PROBABLY_ENOUGH
             } else {
                 PermissionsState.PROBABLY_NOT_ENOUGH
@@ -391,7 +394,7 @@ class GetWizardStateUseCase @Inject constructor(
     private fun getAppVersionState(
         appLatestData: AppLatestVersion?,
         testOnlyNeeded: Boolean
-    ): SettingsElementState = if (testOnlyNeeded && appLatestData?.isTestOnly == false) {
+    ): SettingsElementState = if (testOnlyNeeded && !repository.isTestOnly) {
         SettingsElementState.REQUIRED
     } else if (appLatestData == null) {
             SettingsElementState.UNKNOW

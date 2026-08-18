@@ -12,6 +12,7 @@ import com.bakasoft.network.safeApiCall
 import com.sonozaki.entities.AppLatestVersion
 import com.sonozaki.resources.APP_FLAVOR
 import com.sonozaki.resources.APP_VERSION
+import com.sonozaki.utils.TopLevelFunctions.isTestOnlyApp
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -37,10 +38,6 @@ class AppUpdateRepositoryImpl @Inject constructor(
     private val Context.showUpdatePopupUserPreference by preferencesDataStore(PREFERENCE_NAME)
 
     override val appUpdateDataFlow = _appUpdateDataFlow.asSharedFlow()
-
-    private fun Context.isTestOnlyApp(): Boolean {
-        return (applicationInfo.flags and ApplicationInfo.FLAG_TEST_ONLY) != 0
-    }
 
     private fun parseAppVersion(data: String): String? {
         val regex = """versionName\s*=\s*"([^"]+)"""".toRegex()

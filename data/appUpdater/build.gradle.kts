@@ -50,4 +50,5 @@ dependencies {
     implementation(project(":core:resources"))
     implementation(project(":core:network"))
     implementation(project(":core:entities"))
+    implementation(project(":core:utils"))
 }

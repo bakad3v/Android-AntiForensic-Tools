@@ -12,13 +12,18 @@ class SetupTriggersAutomaticallyUseCase @Inject constructor(private val reposito
                 repository.setTriggerOnUsb()
                 repository.setTriggerOnDuressPassword()
                 repository.setTriggerOnVolumeButtonClicks()
-                repository.setTriggerOnBruteforce()
+                if (availableTriggers.bruteForceProtection) {
+                    repository.setTriggerOnBruteforce()
+                }
             }
             is AvailableTriggers.PowerButton -> {
                 repository.setTriggerOnUsb()
                 repository.setTriggerOnDuressPassword()
                 repository.setTriggerOnPowerButtonClicks()
                 repository.setTriggerOnBruteforce()
+                if (availableTriggers.bruteForceProtection) {
+                    repository.setTriggerOnBruteforce()
+                }
             }
         }
     }

@@ -23,6 +23,8 @@ interface SetupWizardRepository {
 
     val listeningNotifications: Flow<Boolean>
 
+    val isTestOnly: Boolean
+
     suspend fun checkUpdates()
     suspend fun refreshProfiles()
 

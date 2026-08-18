@@ -1,6 +1,7 @@
 package com.sonozaki.utils
 
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.util.TypedValue
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
@@ -15,6 +16,10 @@ import java.time.ZoneId.systemDefault
 import java.time.format.DateTimeFormatter
 
 object TopLevelFunctions {
+
+  fun Context.isTestOnlyApp(): Boolean {
+    return (applicationInfo.flags and ApplicationInfo.FLAG_TEST_ONLY) != 0
+  }
 
   fun LocalDateTime.formatDate(): String = this.toLocalDate().toString()
 

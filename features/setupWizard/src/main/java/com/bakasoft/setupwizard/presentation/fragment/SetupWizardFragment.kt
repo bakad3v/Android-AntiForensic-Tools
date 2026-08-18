@@ -24,6 +24,7 @@ import com.bakasoft.setupwizard.domain.routers.SetupWizardRouter
 import com.bakasoft.setupwizard.presentation.viewmodel.SetupWizardVM
 import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.activitystate.ActivityStateHolder
+import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.EnumMap
@@ -161,6 +162,23 @@ class SetupWizardFragment: Fragment() {
                     grantSuperuserPermissions.setText(requireContext().getString(R.string.some_permissions_granted))
                 PermissionsState.PROBABLY_ENOUGH ->
                     grantSuperuserPermissions.setText(requireContext().getString(R.string.probably_enough_permissions))
+            }
+
+            val bruteforceSettings = map.getOrDefault(WizardElement.TRIGGER_ON_BRUTEFORCE,
+                SettingsElementState.UNKNOW)
+            when(bruteforceSettings) {
+                SettingsElementState.RECOMMENDED -> triggerOnBruteforce.setText(
+                    requireContext().getString(R.string.reccomended_to_detect_bruteforce)
+                )
+
+                SettingsElementState.REQUIRED -> triggerOnBruteforce.setText(
+                    requireContext().getString(R.string.unsafe_bruteforce_detection)
+                )
+
+                SettingsElementState.NOT_NEEDED, SettingsElementState.UNKNOW, SettingsElementState.OK ->
+                    triggerOnBruteforce.setText(
+                        requireContext().getString(R.string.trigger_on_bruteforce)
+                    )
             }
 
             val safeBootSettings = map.getOrDefault(WizardElement.DISABLE_SAFE_BOOT,
