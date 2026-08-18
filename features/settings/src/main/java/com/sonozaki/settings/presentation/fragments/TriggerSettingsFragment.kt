@@ -318,10 +318,6 @@ class TriggerSettingsFragment: AbstractSettingsFragment() {
                     viewModel.showBruteforceDialogAdmin()
                 }
 
-                R.id.with_accessibility_service -> {
-                   viewModel.showBruteforceDialogAccessibility()
-                }
-
                 else -> throw RuntimeException("Wrong menu item")
             }
             return@setOnMenuItemClickListener true

@@ -48,7 +48,7 @@ class GetWizardStateUseCase @Inject constructor(
             deviceProtectionSettings: DeviceProtectionSettings, appLatestData: AppLatestVersion?,
             filesSelected: Boolean, profilesSelected: Boolean, rootCommandNotEmpty: Boolean,
             listeningNotifications: Boolean ->
-            val testOnlyNeeded = permissions.isAdmin && permissions.isRoot && settings.removeItself
+            val testOnlyNeeded = permissions.isAdmin && (permissions.isRoot || permissions.isOwner) && settings.removeItself
             val appVersionState = getAppVersionState(appLatestData, testOnlyNeeded)
 
             val accessibilityServiceState = getAccessibilityServiceState(settings)
@@ -328,10 +328,10 @@ class GetWizardStateUseCase @Inject constructor(
 
     private fun getBruteforceState(bruteforceSettings: BruteforceSettings): SettingsElementState =
         when (bruteforceSettings.detectingMethod) {
-            BruteforceDetectingMethod.ADMIN, BruteforceDetectingMethod.ACCESSIBILITY_SERVICE ->
+            BruteforceDetectingMethod.ADMIN ->
                 SettingsElementState.OK
 
-            BruteforceDetectingMethod.NONE -> SettingsElementState.REQUIRED
+            BruteforceDetectingMethod.NONE, BruteforceDetectingMethod.ACCESSIBILITY_SERVICE  -> SettingsElementState.REQUIRED
         }
 
     private fun getButtonClicksState(buttonSettings: ButtonSettings): SettingsElementState =
@@ -391,11 +391,11 @@ class GetWizardStateUseCase @Inject constructor(
     private fun getAppVersionState(
         appLatestData: AppLatestVersion?,
         testOnlyNeeded: Boolean
-    ): SettingsElementState = if (appLatestData == null) {
-        SettingsElementState.UNKNOW
-    } else if (testOnlyNeeded && !appLatestData.isTestOnly) {
+    ): SettingsElementState = if (testOnlyNeeded && appLatestData?.isTestOnly == false) {
         SettingsElementState.REQUIRED
-    } else if (appLatestData.newVersion) {
+    } else if (appLatestData == null) {
+            SettingsElementState.UNKNOW
+    }else if (appLatestData.newVersion) {
         SettingsElementState.RECOMMENDED
     } else {
         SettingsElementState.OK

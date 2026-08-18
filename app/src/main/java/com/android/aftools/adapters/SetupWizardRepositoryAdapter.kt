@@ -99,7 +99,7 @@ class SetupWizardRepositoryAdapter @Inject constructor(
     }
 
     override suspend fun setTriggerOnBruteforce() {
-        bruteforceRepository.setBruteforceStatus(BruteforceDetectingMethod.ACCESSIBILITY_SERVICE)
+        bruteforceRepository.setBruteforceStatus(BruteforceDetectingMethod.ADMIN)
     }
 
     override suspend fun setSelfDestruction() {
