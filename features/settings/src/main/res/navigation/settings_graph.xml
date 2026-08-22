@@ -7,6 +7,10 @@
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.sonozaki.settings.presentation.fragments.SettingsFragment">
+        <argument
+            android:name="settingsTarget"
+            android:defaultValue="root"
+            app:argType="string" />
         <action
             android:id="@+id/action_settingsFragment_to_aboutSettingsFragment"
             app:destination="@id/aboutSettingsFragment"

@@ -250,7 +250,7 @@ class SetupWizardFragment: Fragment() {
             selectData.setOnClickListener {
                 when(dataSelected) {
                     DataSelected.NONE, DataSelected.PROFILES -> setupWizardRouter.openProfiles(findNavController())
-                    DataSelected.WIPE -> setupWizardRouter.openSettings(findNavController())
+                    DataSelected.WIPE -> setupWizardRouter.openDataDestructionSettings(findNavController())
                     DataSelected.FILES -> setupWizardRouter.openFiles(findNavController())
                     DataSelected.ROOT -> setupWizardRouter.openRoot(findNavController())
                 }
@@ -258,7 +258,7 @@ class SetupWizardFragment: Fragment() {
             activateDataDestruction.setOnClickListener {
                 when(dataSelected) {
                     DataSelected.NONE, DataSelected.PROFILES -> setupWizardRouter.openProfiles(findNavController())
-                    DataSelected.WIPE -> setupWizardRouter.openSettings(findNavController())
+                    DataSelected.WIPE -> setupWizardRouter.openDataDestructionSettings(findNavController())
                     DataSelected.FILES -> setupWizardRouter.openFiles(findNavController())
                     DataSelected.ROOT -> setupWizardRouter.openRoot(findNavController())
                 }
@@ -318,43 +318,43 @@ class SetupWizardFragment: Fragment() {
                 setupWizardRouter.openUpdateCenter(findNavController())
             }
             provideAccessibilityService.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openPermissionSettings(findNavController())
             }
             grantSuperuserPermissions.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openPermissionSettings(findNavController())
             }
             triggerOnUsbConnection.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openTriggerSettings(findNavController())
             }
             triggerOnDuressPassword.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openTriggerSettings(findNavController())
             }
             triggerOnButton.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openTriggerSettings(findNavController())
             }
             triggerOnBruteforce.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openTriggerSettings(findNavController())
             }
             removeItself.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openDataDestructionSettings(findNavController())
             }
             hideNotifications.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openNotificationSettings(findNavController())
             }
             hideApp.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openDataDestructionSettings(findNavController())
             }
             disableLogs.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openPermanentSettings(findNavController())
             }
             disableSafeBoot.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openPermanentSettings(findNavController())
             }
             setupMultiuserUiHiding.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openMultiuserSettings(findNavController())
             }
             runTrim.setOnClickListener {
-                setupWizardRouter.openSettings(findNavController())
+                setupWizardRouter.openDataDestructionSettings(findNavController())
             }
         }
     }
