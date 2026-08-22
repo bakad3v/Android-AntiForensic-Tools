@@ -363,9 +363,7 @@ class GetWizardStateUseCase @Inject constructor(
     private fun getPermissionState(permissions: Permissions, protectionFixAvailable: Boolean,
                                    rootCommandNotEmpty: Boolean, profilesSelected: Boolean, wipe: Boolean): PermissionsState {
         val wipePermission = permissions.isRoot || permissions.isShizuku || permissions.isOwner || (permissions.isAdmin && Build.VERSION.SDK_INT < Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
-        if ((permissions.isRoot && permissions.isAdmin)
-            || (wipe && protectionFixAvailable &&
-                    wipePermission && permissions.isAdmin)) {
+        if ((permissions.isRoot && permissions.isAdmin)) {
             return PermissionsState.PERFECT
         }
         if ((rootCommandNotEmpty && !permissions.isRoot)
@@ -374,8 +372,8 @@ class GetWizardStateUseCase @Inject constructor(
             return PermissionsState.NOT_ENOUGH
         }
 
-        return if (permissions.isAdmin || permissions.isShizuku || permissions.isOwner) {
-            if ((protectionFixAvailable || (permissions.isShizuku && permissions.isOwner)) && permissions.isAdmin) {
+        return if (permissions.isAdmin || permissions.isShizuku || permissions.isOwner || permissions.isRoot) {
+            if ((protectionFixAvailable || (permissions.isShizuku && permissions.isOwner) || permissions.isRoot) && permissions.isAdmin) {
                 PermissionsState.PROBABLY_ENOUGH
             } else {
                 PermissionsState.PROBABLY_NOT_ENOUGH
@@ -398,7 +396,7 @@ class GetWizardStateUseCase @Inject constructor(
         SettingsElementState.REQUIRED
     } else if (appLatestData == null) {
             SettingsElementState.UNKNOW
-    }else if (appLatestData.newVersion) {
+    }else if (appLatestData.newVersion || !repository.isTestOnly) {
         SettingsElementState.RECOMMENDED
     } else {
         SettingsElementState.OK

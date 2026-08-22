@@ -5,7 +5,7 @@
     <string name="install_required_version">0. Install the correct app version</string>
     <string name="grant_necessary_permissions">1. Grant necessary permissions</string>
     <string name="provide_accessibility_service">Activate the accessibility service</string>
-    <string name="grant_superuser_permissions">Grant superuser permissions</string>
+    <string name="grant_superuser_permissions">Grant root and admin permissions</string>
     <string name="setup_triggers">2. Set up triggers</string>
     <string name="trigger_on_duress_password">Trigger on duress password</string>
     <string name="trigger_on_button">Trigger on button clicks</string>

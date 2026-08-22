@@ -90,8 +90,14 @@ class SetupTriggersConfirmationFragment: Fragment() {
             text.text = HtmlCompat.fromHtml(
                 when(triggers) {
                     is AvailableTriggers.NoTriggers -> requireContext().getString(R.string.cant_setup_triggers)
-                    is AvailableTriggers.VolumeButton -> requireContext().getString(R.string.setup_volume_button, triggers.clicks) + requireContext().getString(R.string.incorrect_password, triggers.allowedAttempts)
-                    is AvailableTriggers.PowerButton -> requireContext().getString(R.string.setup_power_button, triggers.clicks) + requireContext().getString(R.string.incorrect_password, triggers.allowedAttempts)
+                    is AvailableTriggers.VolumeButton ->
+                        requireContext().getString(R.string.setup_volume_button, triggers.clicks) + if (triggers.bruteForceProtection) {
+                            requireContext().getString(R.string.incorrect_password, triggers.allowedAttempts)
+                        } else ""
+                    is AvailableTriggers.PowerButton ->
+                        requireContext().getString(R.string.setup_power_button, triggers.clicks) + if (triggers.bruteForceProtection) {
+                        requireContext().getString(R.string.incorrect_password, triggers.allowedAttempts)
+                    } else ""
             }, HtmlCompat.FROM_HTML_MODE_LEGACY)
         }
     }
