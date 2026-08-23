@@ -59,7 +59,7 @@ class GetWizardStateUseCase @Inject constructor(
 
             val buttonClicksState = getButtonClicksState(buttonSettings)
 
-            val bruteforceState = getBruteforceState(bruteforceSettings)
+            val bruteforceState = getBruteforceState(permissions, bruteforceSettings)
 
             val selectedData =
                 getSelectedData(profilesSelected, settings, filesSelected, rootCommandNotEmpty)
@@ -326,11 +326,14 @@ class GetWizardStateUseCase @Inject constructor(
         DataSelected.NONE
     }
 
-    private fun getBruteforceState(bruteforceSettings: BruteforceSettings): SettingsElementState =
+    private fun getBruteforceState(permissions: Permissions, bruteforceSettings: BruteforceSettings): SettingsElementState =
         when (bruteforceSettings.detectingMethod) {
             BruteforceDetectingMethod.ADMIN ->
-                SettingsElementState.OK
-
+                if (permissions.isAdmin) {
+                    SettingsElementState.OK
+                } else {
+                    SettingsElementState.REQUIRED
+                }
             BruteforceDetectingMethod.ACCESSIBILITY_SERVICE  -> SettingsElementState.REQUIRED
             BruteforceDetectingMethod.NONE -> SettingsElementState.RECOMMENDED
         }

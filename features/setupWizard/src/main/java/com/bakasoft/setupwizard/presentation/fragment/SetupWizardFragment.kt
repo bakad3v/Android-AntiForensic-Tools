@@ -24,7 +24,6 @@ import com.bakasoft.setupwizard.domain.routers.SetupWizardRouter
 import com.bakasoft.setupwizard.presentation.viewmodel.SetupWizardVM
 import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.activitystate.ActivityStateHolder
-import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.EnumMap
@@ -172,7 +171,7 @@ class SetupWizardFragment: Fragment() {
                 )
 
                 SettingsElementState.REQUIRED -> triggerOnBruteforce.setText(
-                    requireContext().getString(R.string.unsafe_bruteforce_detection)
+                    requireContext().getString(R.string.bruteforce_detection_misconfig)
                 )
 
                 SettingsElementState.NOT_NEEDED, SettingsElementState.UNKNOW, SettingsElementState.OK ->

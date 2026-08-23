@@ -12,4 +12,8 @@ interface MainActivityRepository {
 
     val testOnlyNeeded: Flow<Boolean>
     suspend fun checkUpdates()
+    suspend fun disableAdmin()
+    suspend fun savedTestOnlyStatus(): Boolean
+    suspend fun saveTestOnlyStatus(status: Boolean)
+    fun isTestOnly(): Boolean
 }

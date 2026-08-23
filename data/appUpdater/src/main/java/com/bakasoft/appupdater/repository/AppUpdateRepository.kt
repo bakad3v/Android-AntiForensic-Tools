@@ -9,4 +9,6 @@ interface AppUpdateRepository {
     val appUpdateDataFlow: Flow<RequestResult<AppLatestVersion>>
     suspend fun setUpdatePopupStatus(status: Boolean)
     suspend fun checkUpdates()
+    suspend fun saveTestOnlyStatus(status: Boolean)
+    val isTestOnlyStatus: Flow<Boolean>
 }
