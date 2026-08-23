@@ -47,6 +47,8 @@ class DeviceAdmin @Inject constructor(
 
     private fun checkAdminRights(): Boolean = dpm.isAdminActive(deviceAdminReceiver)
 
+    fun hasAdminRights(): Boolean = checkAdminRights()
+
     private suspend fun awaitAdminRemoval(): Boolean {
         repeat(ADMIN_REMOVAL_CHECK_ATTEMPTS) {
             if (!checkAdminRights()) {

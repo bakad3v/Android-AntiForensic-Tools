@@ -101,9 +101,9 @@ class AppUpdateRepositoryImpl @Inject constructor(
     override val showUpdatePopupStatus: Flow<Boolean>
         get() = context.showUpdatePopupUserPreference.data.map { it[UPDATE_POPUP_USER_PREFERENCE] != false }
 
-    override val isTestOnlyStatus: Flow<Boolean>
+    override val isTestOnlyStatus: Flow<Boolean?>
         get() = testOnlyStatusPreference.data.map {
-            it[IS_TESTONLY_SAVED_PREFERENCE] == true
+            it[IS_TESTONLY_SAVED_PREFERENCE]
         }
 
     override suspend fun setUpdatePopupStatus(status: Boolean) {

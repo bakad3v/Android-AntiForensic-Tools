@@ -407,6 +407,10 @@ class TriggerReceiverService : AccessibilityService() {
                     writeLogs(baseContext.getString(R.string.duress_password_reason))
                     runActions()
                 }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                writeLogs(baseContext.getString(R.string.password_verification_error))
             } finally {
                 pass.fill('\u0000')
             }

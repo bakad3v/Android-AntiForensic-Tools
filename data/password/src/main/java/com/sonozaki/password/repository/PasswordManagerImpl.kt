@@ -22,6 +22,7 @@ class PasswordManagerImpl @Inject constructor(
   passwordStatusSerializer: BaseSerializer<PasswordStatus>,
   passwordHashMigration: PasswordHashMigration,
   private val passwordHasher: PasswordHasher,
+  private val passwordOperationGate: PasswordOperationGate,
   @Named(DEFAULT_DISPATCHER) private val defaultDispatcher: CoroutineDispatcher
 ) : PasswordManager {
   private val Context.passwordPrefs by encryptedDataStore(
@@ -40,11 +41,13 @@ class PasswordManagerImpl @Inject constructor(
 
   override suspend fun setPassword(password: CharArray) {
     try {
-      val passwordHash = withContext(defaultDispatcher) {
-        passwordHasher.hash(password)
-      }
-      context.passwordPrefs.updateData {
-        PasswordStatus(passwordHash = passwordHash, passwordSet = true)
+      passwordOperationGate.runExclusive {
+        val passwordHash = withContext(defaultDispatcher) {
+          passwordHasher.hash(password)
+        }
+        context.passwordPrefs.updateData {
+          PasswordStatus(passwordHash = passwordHash, passwordSet = true)
+        }
       }
     } finally {
       password.clear()
@@ -53,9 +56,11 @@ class PasswordManagerImpl @Inject constructor(
 
   override suspend fun checkPassword(password: CharArray): Boolean {
     return try {
-      val passwordHash = context.passwordPrefs.data.first().passwordHash
-      passwordHash != null && withContext(defaultDispatcher) {
-        passwordHasher.verify(password, passwordHash)
+      passwordOperationGate.runExclusive {
+        val passwordHash = context.passwordPrefs.data.first().passwordHash
+        passwordHash != null && withContext(defaultDispatcher) {
+          passwordHasher.verify(password, passwordHash)
+        }
       }
     } finally {
       password.clear()

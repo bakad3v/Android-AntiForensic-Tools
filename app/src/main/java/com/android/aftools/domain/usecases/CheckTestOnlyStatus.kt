@@ -7,10 +7,21 @@ class CheckTestOnlyStatus @Inject constructor(
     private val repository: MainActivityRepository
 ) {
     suspend operator fun invoke() {
-        val isTestOnlyCurrent = repository.isTestOnly()
-        if (!repository.savedTestOnlyStatus() && isTestOnlyCurrent) {
-            repository.disableAdmin()
+        val currentStatus = repository.isTestOnly()
+        val savedStatus = repository.savedTestOnlyStatus()
+
+        when {
+            !currentStatus -> repository.saveTestOnlyStatus(false)
+            savedStatus == true -> Unit
+            savedStatus == false -> removeAdminAndSaveStatus()
+            repository.isAppUpdated() -> removeAdminAndSaveStatus()
+            else -> repository.saveTestOnlyStatus(true)
         }
-        repository.saveTestOnlyStatus(isTestOnlyCurrent)
+    }
+
+    private suspend fun removeAdminAndSaveStatus() {
+        if (repository.disableAdmin()) {
+            repository.saveTestOnlyStatus(true)
+        }
     }
 }

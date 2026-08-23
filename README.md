@@ -50,6 +50,7 @@ Ideally you should change the package name yourself before installing. When rena
 * AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB, shizuku or root for installation!**"
 ### Installation of testOnly apps
 #### Easiest way (root or shizuku)
+**Important: if you update to v2.0.3 or later from the earlier version, admin rights would be revoked. Grant them again**  
 1. Install the USUAL app version
 2. Grant it root or shizuku rights and **don't** give it admin rights
 3. Select "App update center" in the menu

@@ -2,7 +2,6 @@ package com.sonozaki.password.security
 
 import com.sonozaki.password.entities.PasswordHash
 import org.signal.argon2.Argon2
-import org.signal.argon2.Argon2Exception
 import org.signal.argon2.MemoryCost
 import org.signal.argon2.Type
 import org.signal.argon2.Version
@@ -79,8 +78,6 @@ class PasswordHasher internal constructor(
                 )
             )
             MessageDigest.isEqual(expectedHash, actualHash)
-        } catch (_: Argon2Exception) {
-            false
         } finally {
             passwordBytes.fill(0)
             salt.fill(0)

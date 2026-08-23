@@ -7,7 +7,7 @@ on:
     types:
       - closed
 
-# Required repository variables:
+# Required repository secrets:
 # AFT_KEYSTORE_BASE64, AFT_KEYSTORE_PASSWORD, AFT_KEY_ALIAS, AFT_KEY_PASSWORD
 permissions:
   contents: write
@@ -59,16 +59,21 @@ jobs:
           java-version: '17'
           cache: gradle
 
+      - name: Run unit tests
+        run: |
+          chmod +x gradlew
+          ./gradlew --no-daemon test
+
       - name: Restore release keystore
         env:
-          KEYSTORE_BASE64: ${{ vars.AFT_KEYSTORE_BASE64 }}
-          KEYSTORE_PASSWORD: ${{ vars.AFT_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ vars.AFT_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ vars.AFT_KEY_PASSWORD }}
+          KEYSTORE_BASE64: ${{ secrets.AFT_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.AFT_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.AFT_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.AFT_KEY_PASSWORD }}
         run: |
           for value in "$KEYSTORE_BASE64" "$KEYSTORE_PASSWORD" "$KEY_ALIAS" "$KEY_PASSWORD"; do
             if [[ -z "$value" ]]; then
-              echo "A required signing repository variable is empty or missing." >&2
+              echo "A required signing repository secret is empty or missing." >&2
               exit 1
             fi
             echo "::add-mask::$value"
@@ -78,11 +83,10 @@ jobs:
 
       - name: Build signed APKs
         env:
-          KEYSTORE_PASSWORD: ${{ vars.AFT_KEYSTORE_PASSWORD }}
-          KEY_ALIAS: ${{ vars.AFT_KEY_ALIAS }}
-          KEY_PASSWORD: ${{ vars.AFT_KEY_PASSWORD }}
+          KEYSTORE_PASSWORD: ${{ secrets.AFT_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.AFT_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.AFT_KEY_PASSWORD }}
         run: |
-          chmod +x gradlew
           ./gradlew --no-daemon \
             :app:assembleIslandAdbRelease \
             :app:assembleIslandNormalRelease \
