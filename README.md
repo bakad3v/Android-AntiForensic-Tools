@@ -38,7 +38,7 @@ Another disadvantage of the app is that its most advanced features, including se
 Despite using many available Android privileges, the app is limited by the OS itself. Custom OSes such as [GrapheneOS](https://grapheneos.org/) are better suited to withstand advanced adversaries and can patch security holes that this application cannot.
 
 ## Installation
-In the Releases section you can download four versions of the app. Two of them can be installed as regular APKs; two must be installed via ADB or using root or Shizuku. If you enabled device admin rights, root rights and app self-destruction, please install the testOnly versions (instructions below); otherwise self-destruction will not work in BFU (before first unlock) mode. 
+In the Releases section you can download four versions of the app. Two of them can be installed as regular APKs; two must be installed via ADB or using root or Shizuku. If you enabled device admin rights and app self-destruction, please install the testOnly versions (instructions below); otherwise self-destruction will not work in BFU (before first unlock) mode. **TL;DR - it's reccomended to install TESTONLY versions of the apps**
 
 This app is disguised as other apps - [Island](https://github.com/oasisfeng/island) and [Shelter](https://gitea.angry.im/PeterCxy/Shelter). This app has nothing in common with those apps and use their package name, icon and name only for hiding apps traces. This is because even after uninstallation app's package name and maybe some other data will remain in some places of the system like packages.xml. It's needed to change apps package name so that after app uninstallation or self-destruction for an adversary examining the system it looks as if you uninstalled some other app from the device, not Android AntiForensic Tools. However, I can't guarantee that renaming the package will prevent traces of the application from being detected by an advanced adversary; further research is required to verify this. These apps were chosen for cloaking because they're open source, and you're unlikely to use both apps at the same time. If you have one of these installed on your device, install a version of Android AntiForensic Tools that masquerades as the other.
 
@@ -46,12 +46,12 @@ Ideally you should change the package name yourself before installing. When rena
 ### Apps versions
 * AFTools_island_USUAL- a version of the app masquerading as the Island app. Can be installed without superuser rights.
 * AFTools_shelter_USUAL - a version of the app masquerading as the Shelter app. Can be installed without superuser rights.
-* AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB or root for installation!**
-* AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB or root for installation!**"
+* AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB, shizuku or root for installation!**
+* AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB, shizuku or root for installation!**"
 ### Installation of testOnly apps
-#### Easiest way (root only)
+#### Easiest way (root or shizuku)
 1. Install the USUAL app version
-2. Grant it root rights and **don't** give it admin rights
+2. Grant it root or shizuku rights and **don't** give it admin rights
 3. Select "App update center" in the menu
 4. Select "install testonly version" option and click "install update"
 
