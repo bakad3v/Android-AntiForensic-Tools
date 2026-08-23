@@ -12,6 +12,17 @@ android {
     namespace = "com.android.aftools"
     compileSdk = 35
 
+    val releaseStoreFile = providers.gradleProperty("AFT_RELEASE_STORE_FILE").orNull
+    val releaseStorePassword = providers.gradleProperty("AFT_RELEASE_STORE_PASSWORD").orNull
+    val releaseKeyAlias = providers.gradleProperty("AFT_RELEASE_KEY_ALIAS").orNull
+    val releaseKeyPassword = providers.gradleProperty("AFT_RELEASE_KEY_PASSWORD").orNull
+    val hasReleaseSigning = listOf(
+        releaseStoreFile,
+        releaseStorePassword,
+        releaseKeyAlias,
+        releaseKeyPassword
+    ).all { it != null }
+
     defaultConfig {
         applicationId = "com.android.aftools"
         minSdk = 26
@@ -21,8 +32,22 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        create("release") {
+            if (hasReleaseSigning) {
+                storeFile = file(requireNotNull(releaseStoreFile))
+                storePassword = requireNotNull(releaseStorePassword)
+                keyAlias = requireNotNull(releaseKeyAlias)
+                keyPassword = requireNotNull(releaseKeyPassword)
+            }
+        }
+    }
+
     buildTypes {
         release {
+            if (hasReleaseSigning) {
+                signingConfig = signingConfigs.getByName("release")
+            }
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
