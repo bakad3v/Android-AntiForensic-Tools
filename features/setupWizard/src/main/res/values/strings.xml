@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="everything_ok">You\'re OK!</string>
-    <string name="all_requirements_satisafied"><![CDATA[All requirements satisfied! Consider using <a href="https://grapheneos.org">GrapheneOS</a> for advanced security.]]></string>
+    <string name="all_requirements_satisafied"><![CDATA[All requirements satisfied! Consider using <a href="https://github.com/schnatterer/rooted-graphene">GrapheneOS</a> for advanced security.]]></string>
     <string name="install_required_version">0. Install the correct app version</string>
     <string name="grant_necessary_permissions">1. Grant necessary permissions</string>
     <string name="provide_accessibility_service">Activate the accessibility service</string>
