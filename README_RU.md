@@ -125,4 +125,4 @@ LTC: ltc1qtfhun6yzt0qlpa9d6s8gr2yd70sg0kx755u3se
 
 BTC: bc1qn9a9eyy2vgrz8yvhk0654d63dt56pxhpn6q4xl
 
-BTC lightning: dualwhorl66@walletofsatoshi.com
+USDT (TRC20), TRON: TUCrXnNRXgMccuvGF5cCrNuNJTg4uDvBbZ
