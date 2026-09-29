@@ -190,4 +190,5 @@ dependencies {
     implementation(project(":data:logs"))
     implementation(project(":data:profiles"))
     implementation(project(":data:appUpdater"))
+    implementation(project(":data:dialogs"))
 }

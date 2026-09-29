@@ -7,6 +7,8 @@ import com.bakasoft.appinstaller.domain.repository.AppInstallerServiceRepository
 import com.bakasoft.appupdatecenter.domain.repository.AppUpdateCenterRepository
 import com.bakasoft.appupdater.repository.AppUpdateRepository
 import com.bakasoft.appupdater.repository.AppUpdateRepositoryImpl
+import com.bakad3v.dialogs.repository.DialogsRepository
+import com.bakad3v.dialogs.repository.DialogsRepositoryImpl
 import com.bakasoft.setupwizard.domain.repository.SetupWizardRepository
 import com.sonozaki.data.files.repository.FilesRepository
 import com.sonozaki.data.files.repository.FilesRepositoryImpl
@@ -43,6 +45,11 @@ abstract class RepositoriesModule {
     @Binds
     @Singleton
     abstract fun bindAppUpdateRepository(impl: AppUpdateRepositoryImpl): AppUpdateRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindDialogsRepository(impl: DialogsRepositoryImpl): DialogsRepository
+
     @Binds
     @Singleton
     abstract fun bindFilesRepository(filesRepositoryImpl: FilesRepositoryImpl): FilesRepository

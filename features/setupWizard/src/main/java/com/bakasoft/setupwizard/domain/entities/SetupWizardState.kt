@@ -6,7 +6,8 @@ sealed class SetupWizardState {
     data object Loading: SetupWizardState()
     data class Data(val dataMap: EnumMap<WizardElement, SettingsElementState>, val state: AppState,
                     val dataSelected: DataSelected, val protectionFixActive: Boolean, val triggersFixActive: Boolean,
-        val permissionsState: PermissionsState): SetupWizardState()
+        val permissionsState: PermissionsState,
+        val showAdminBruteforceTestOnlyWarning: Boolean): SetupWizardState()
 }
 
 enum class DataSelected {

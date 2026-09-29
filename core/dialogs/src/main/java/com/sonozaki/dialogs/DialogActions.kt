@@ -9,7 +9,8 @@ sealed class DialogActions {
     val message: UIText.StringResource,
     val requestKey: String,
     val hideCancel: Boolean = false,
-    val cancellable: Boolean = true
+    val cancellable: Boolean = true,
+    val showDoNotShowAgain: Boolean = false
   ) : DialogActions()
 
   class ShowInfoDialog(val title: UIText.StringResource, val message: UIText.StringResource) :

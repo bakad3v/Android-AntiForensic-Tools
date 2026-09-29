@@ -6,11 +6,12 @@ import android.os.Bundle
 import android.text.method.LinkMovementMethod
 import androidx.core.os.bundleOf
 import androidx.core.text.HtmlCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.LifecycleOwner
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.sonozaki.dialogs.databinding.InfoDialogFragmentBinding
+import com.sonozaki.dialogs.databinding.QuestionDialogFragmentBinding
 
 
 /**
@@ -27,13 +28,21 @@ class QuestionDialog : DialogFragment() {
         ?: throw RuntimeException("Request key absent in QuestionDialog")
       val hideCancel = getBoolean(HIDE_CANCEL)
       val cancellable = getBoolean(CANCELLABLE)
-      val infoDialogFragmentBinding = InfoDialogFragmentBinding.inflate(layoutInflater)
-      infoDialogFragmentBinding.root.text =
+      val showDoNotShowAgain = getBoolean(SHOW_DO_NOT_SHOW_AGAIN)
+      val binding = QuestionDialogFragmentBinding.inflate(layoutInflater)
+      binding.message.text =
         HtmlCompat.fromHtml(message, HtmlCompat.FROM_HTML_MODE_LEGACY)
-      infoDialogFragmentBinding.root.movementMethod = LinkMovementMethod.getInstance()
+      binding.message.movementMethod = LinkMovementMethod.getInstance()
+      binding.doNotShowAgain.isVisible = showDoNotShowAgain
+      binding.doNotShowAgain.setOnCheckedChangeListener { _, isChecked ->
+        parentFragmentManager.setFragmentResult(
+          doNotShowAgainRequestKey(requestKey),
+          bundleOf(RESPONSE to isChecked)
+        )
+      }
       val dialog = MaterialAlertDialogBuilder(requireActivity())
         .setTitle(title)
-        .setView(infoDialogFragmentBinding.root)
+        .setView(binding.root)
         .setPositiveButton(R.string.ok) { _, _ ->
           parentFragmentManager.setFragmentResult(
             requestKey,
@@ -62,9 +71,25 @@ class QuestionDialog : DialogFragment() {
     const val RESPONSE = "RESPONSE"
     const val HIDE_CANCEL = "HIDE_CANCEL"
     const val CANCELLABLE = "CANCELLABLE"
-    fun show(fragmentManager: FragmentManager, title: String, message: String, requestKey: String, hideCancel: Boolean = false, cancellable: Boolean = true) {
+    private const val SHOW_DO_NOT_SHOW_AGAIN = "SHOW_DO_NOT_SHOW_AGAIN"
+    fun show(
+      fragmentManager: FragmentManager,
+      title: String,
+      message: String,
+      requestKey: String,
+      hideCancel: Boolean = false,
+      cancellable: Boolean = true,
+      showDoNotShowAgain: Boolean = false
+    ) {
       val fragment = QuestionDialog().apply {
-        arguments = bundleOf(MESSAGE to message, TITLE to title, ARG_REQUEST_KEY to requestKey, HIDE_CANCEL to hideCancel, CANCELLABLE to cancellable)
+        arguments = bundleOf(
+          MESSAGE to message,
+          TITLE to title,
+          ARG_REQUEST_KEY to requestKey,
+          HIDE_CANCEL to hideCancel,
+          CANCELLABLE to cancellable,
+          SHOW_DO_NOT_SHOW_AGAIN to showDoNotShowAgain
+        )
         }
       fragment.show(fragmentManager, TAG)
     }
@@ -73,6 +98,21 @@ class QuestionDialog : DialogFragment() {
       fragmentManager.setFragmentResultListener(requestKey,lifecycleOwner
       ) { _, _ -> listener.invoke() }
     }
+
+    fun setupDoNotShowAgainListener(
+      fragmentManager: FragmentManager,
+      requestKey: String,
+      lifecycleOwner: LifecycleOwner,
+      listener: (Boolean) -> Unit
+    ) {
+      fragmentManager.setFragmentResultListener(
+        doNotShowAgainRequestKey(requestKey),
+        lifecycleOwner
+      ) { _, result -> listener(result.getBoolean(RESPONSE)) }
+    }
+
+    private fun doNotShowAgainRequestKey(requestKey: String) =
+      "${requestKey}_doNotShowAgain"
 
   }
 }

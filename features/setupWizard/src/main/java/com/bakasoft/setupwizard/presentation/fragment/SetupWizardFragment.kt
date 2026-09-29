@@ -22,8 +22,11 @@ import com.bakasoft.setupwizard.domain.entities.SetupWizardState
 import com.bakasoft.setupwizard.domain.entities.WizardElement
 import com.bakasoft.setupwizard.domain.routers.SetupWizardRouter
 import com.bakasoft.setupwizard.presentation.viewmodel.SetupWizardVM
+import com.bakasoft.setupwizard.presentation.viewmodel.SetupWizardVM.Companion.ADMIN_BRUTEFORCE_WARNING_REQUEST
 import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.activitystate.ActivityStateHolder
+import com.sonozaki.dialogs.DialogLauncher
+import com.sonozaki.dialogs.QuestionDialog
 import com.sonozaki.utils.TopLevelFunctions.launchLifecycleAwareCoroutine
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.EnumMap
@@ -35,6 +38,9 @@ class SetupWizardFragment: Fragment() {
     private val binding: WizardScreenBinding get() = _binding?: throw RuntimeException("SetupWizardFragmentBinding == null")
     private var _binding: WizardScreenBinding? = null
     private val viewModel: SetupWizardVM by viewModels()
+    private val dialogLauncher by lazy {
+        DialogLauncher(parentFragmentManager, context)
+    }
 
     @Inject
     lateinit var setupWizardRouter: SetupWizardRouter
@@ -55,6 +61,8 @@ class SetupWizardFragment: Fragment() {
         setupHelp()
         setupAdditionalHelp()
         setupButtons()
+        setupAdminBruteforceWarningResult()
+        listenDialogActions()
         listenState()
     }
 
@@ -84,6 +92,29 @@ class SetupWizardFragment: Fragment() {
                     }
                 }
             }
+        }
+    }
+
+    private fun listenDialogActions() {
+        viewLifecycleOwner.launchLifecycleAwareCoroutine {
+            viewModel.dialogActionsFlow.collect(dialogLauncher::launchDialogFromAction)
+        }
+    }
+
+    private fun setupAdminBruteforceWarningResult() {
+        QuestionDialog.setupListener(
+            fragmentManager = parentFragmentManager,
+            requestKey = ADMIN_BRUTEFORCE_WARNING_REQUEST,
+            lifecycleOwner = viewLifecycleOwner
+        ) {
+            setupWizardRouter.openUpdateCenter(findNavController())
+        }
+        QuestionDialog.setupDoNotShowAgainListener(
+            fragmentManager = parentFragmentManager,
+            requestKey = ADMIN_BRUTEFORCE_WARNING_REQUEST,
+            lifecycleOwner = viewLifecycleOwner
+        ) { disabled ->
+            viewModel.setAdminBruteforceWarningDisabled(disabled)
         }
     }
 

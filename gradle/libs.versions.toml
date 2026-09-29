@@ -6,6 +6,7 @@ core = "6.0.0"
 coreKtxVersion = "1.16.0"
 coroutinesVersion = "1.9.0"
 daggerVersion = "2.55"
+datastoreVersion = "1.2.1"
 desugaringVersion = "2.1.5"
 dhizukuVersion = "2.5.3"
 espressoCoreVersion = "3.6.1"
@@ -44,6 +45,7 @@ argon2 = { module = "org.signal:argon2", version.ref = "argon2" }
 coil = { module = "io.coil-kt:coil", version.ref = "coilVersion" }
 core = { module = "com.github.topjohnwu.libsu:core", version.ref = "core" }
 core-ktx = { module = "androidx.core:core-ktx", version.ref = "coreKtxVersion" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastoreVersion" }
 better-datastore = { module = "com.github.bakad3v:BetterEncryptedDatastore", version.ref = "betterDatastore"  }
 desugar_jdk_libs = { module = "com.android.tools:desugar_jdk_libs", version.ref = "desugaringVersion" }
 dhizuku-api = { module = "io.github.iamr0s:Dhizuku-API", version.ref = "dhizukuVersion" }

@@ -31,12 +31,19 @@ class GetWizardStateUseCase @Inject constructor(
     private val superUserManager: SuperUserManager
 ) {
     operator fun invoke(): Flow<SetupWizardState.Data> {
+        val bruteforceWarningState = combine(
+            repository.bruteforceSettings,
+            repository.adminBruteforceWarningDisabled
+        ) { settings, warningDisabled ->
+            settings to warningDisabled
+        }
+
         return combine(
             repository.settings,
             repository.permissions,
             repository.usbSettings,
             repository.buttonSettings,
-            repository.bruteforceSettings,
+            bruteforceWarningState,
             repository.deviceProtectionSettings,
             repository.appLatestData,
             repository.filesSelected,
@@ -44,10 +51,12 @@ class GetWizardStateUseCase @Inject constructor(
             repository.rootCommandNotEmpty,
             repository.listeningNotifications
         ) { settings: Settings, permissions: Permissions, usbSettings: UsbSettings,
-            buttonSettings: ButtonSettings, bruteforceSettings: BruteforceSettings,
+            buttonSettings: ButtonSettings,
+            bruteforceWarningState: Pair<BruteforceSettings, Boolean>,
             deviceProtectionSettings: DeviceProtectionSettings, appLatestData: AppLatestVersion?,
             filesSelected: Boolean, profilesSelected: Boolean, rootCommandNotEmpty: Boolean,
             listeningNotifications: Boolean ->
+            val (bruteforceSettings, adminBruteforceWarningDisabled) = bruteforceWarningState
             val testOnlyNeeded = permissions.isAdmin && settings.removeItself
             val appVersionState = getAppVersionState(appLatestData, testOnlyNeeded)
 
@@ -140,7 +149,11 @@ class GetWizardStateUseCase @Inject constructor(
                 dataSelected = selectedData,
                 protectionFixActive = protectionFixAvailable,
                 triggersFixActive = settings.serviceWorking,
-                permissionsState = superUserPermissions)
+                permissionsState = superUserPermissions,
+                showAdminBruteforceTestOnlyWarning = permissions.isAdmin
+                        && settings.removeItself
+                        && !repository.isTestOnly
+                        && !adminBruteforceWarningDisabled)
         }
     }
 

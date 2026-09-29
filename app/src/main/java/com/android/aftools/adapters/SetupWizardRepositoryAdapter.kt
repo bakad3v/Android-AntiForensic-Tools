@@ -2,6 +2,7 @@ package com.android.aftools.adapters
 
 import android.content.Context
 import com.bakasoft.appupdater.repository.AppUpdateRepository
+import com.bakad3v.dialogs.repository.DialogsRepository
 import com.bakasoft.network.RequestResult
 import com.bakasoft.setupwizard.domain.repository.SetupWizardRepository
 import com.sonozaki.data.files.repository.FilesRepository
@@ -46,6 +47,7 @@ class SetupWizardRepositoryAdapter @Inject constructor(
     private val superUserManager: SuperUserManager,
     private val rootRepository: RootRepository,
     private val notificationSettingsRepository: NotificationSettingsRepository,
+    private val dialogsRepository: DialogsRepository,
     @ApplicationContext private val context: Context
 ): SetupWizardRepository {
     override val permissions: Flow<Permissions>
@@ -81,12 +83,19 @@ class SetupWizardRepositoryAdapter @Inject constructor(
 
     override val rootCommandNotEmpty = rootRepository.getRootCommand().map { it.isNotBlank() }
 
+    override val adminBruteforceWarningDisabled =
+        dialogsRepository.adminBruteforceWarningDisabled
+
     override suspend fun checkUpdates() {
         appUpdateRepository.checkUpdates()
     }
 
     override suspend fun refreshProfiles() {
         profilesRepository.refreshDeviceProfiles()
+    }
+
+    override suspend fun setAdminBruteforceWarningDisabled(disabled: Boolean) {
+        dialogsRepository.setAdminBruteforceWarningDisabled(disabled)
     }
 
     override suspend fun setTriggerOnUsb() {

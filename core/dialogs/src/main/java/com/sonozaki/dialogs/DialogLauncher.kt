@@ -18,7 +18,14 @@ class DialogLauncher (
       }
 
       is DialogActions.ShowQuestionDialog -> with(action) {
-        showQuestionDialog(title.asString(context), message.asString(context), requestKey, hideCancel, cancellable)
+        showQuestionDialog(
+          title.asString(context),
+          message.asString(context),
+          requestKey,
+          hideCancel,
+          cancellable,
+          showDoNotShowAgain
+        )
       }
       is DialogActions.ShowInputDigitDialog -> with(action) {
         showDigitInputDialog(title.asString(context), hint, message.asString(context), range, requestKey)
@@ -32,8 +39,23 @@ class DialogLauncher (
       )
   }
 
-  fun showQuestionDialog(title: String, message: String, requestKey: String, hideCancel: Boolean = false, cancellable: Boolean = true) {
-      QuestionDialog.show(fragmentManager, title, message, requestKey, hideCancel, cancellable)
+  fun showQuestionDialog(
+    title: String,
+    message: String,
+    requestKey: String,
+    hideCancel: Boolean = false,
+    cancellable: Boolean = true,
+    showDoNotShowAgain: Boolean = false
+  ) {
+      QuestionDialog.show(
+        fragmentManager,
+        title,
+        message,
+        requestKey,
+        hideCancel,
+        cancellable,
+        showDoNotShowAgain
+      )
   }
 
   private fun showDigitInputDialog(title: String, hint: String, message: String, range: IntRange, requestKey: String) {
