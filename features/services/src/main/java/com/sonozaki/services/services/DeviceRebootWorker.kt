@@ -56,7 +56,7 @@ class DeviceRebootWorker @AssistedInject constructor(
             val work = OneTimeWorkRequestBuilder<DeviceRebootWorker>()
                 .setInitialDelay(delay.toLong(), TimeUnit.SECONDS)
                 .build()
-            WorkManager.getInstance(context).enqueueUniqueWork(NAME, ExistingWorkPolicy.REPLACE, work)
+            WorkManager.getInstance(context).enqueueUniqueWork(NAME, ExistingWorkPolicy.KEEP, work)
         }
 
         fun stopWorks(context: Context) {
