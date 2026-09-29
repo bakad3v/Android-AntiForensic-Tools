@@ -319,7 +319,7 @@ class TriggerReceiverService : AccessibilityService() {
                 val isConnected = when (intent.action) {
                     USB_STATE_ACTION -> {
                         usbDataConnected = intent.getBooleanExtra(USB_CONNECTED_EXTRA, false)
-                        usbDataConnected || manager.deviceList.isNotEmpty() || !manager.accessoryList.isNullOrEmpty()
+                        usbDataConnected
                     }
                     UsbManager.ACTION_USB_DEVICE_ATTACHED,
                     UsbManager.ACTION_USB_ACCESSORY_ATTACHED -> true
