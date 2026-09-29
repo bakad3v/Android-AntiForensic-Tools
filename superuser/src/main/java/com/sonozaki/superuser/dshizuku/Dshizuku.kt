@@ -223,6 +223,17 @@ class Dshizuku @Inject constructor(
         }
     }
 
+    override suspend fun enableDisplayPassword() {
+        if (getPermissionsUseCase().isShizuku) {
+            shizukuManager.enableDisplayPassword()
+        } else {
+            throw SuperUserException(
+                NO_ROOT_RIGHTS,
+                UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+            )
+        }
+    }
+
     //Function available only for shizuku
     override suspend fun getLogsStatus(): Boolean {
         return if (getPermissionsUseCase().isShizuku) {

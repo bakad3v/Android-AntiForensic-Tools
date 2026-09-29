@@ -253,6 +253,13 @@ class DeviceAdmin @Inject constructor(
         )
     }
 
+    override suspend fun enableDisplayPassword() {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
     override suspend fun getLogsStatus(): Boolean {
         throw SuperUserException(
             ADMIN_ERROR_TEXT,

@@ -68,7 +68,25 @@ class TriggerSettingsFragment: AbstractSettingsFragment() {
     private fun setupHelp() {
         binding.helpDuress.setText(HtmlCompat.fromHtml(
             requireContext().getString(R.string.password_faq), HtmlCompat.FROM_HTML_MODE_LEGACY))
+
+        viewLifecycleOwner.launchLifecycleAwareCoroutine {
+            viewModel.permissionsState.collect { permissions ->
+                val buttonText = if (permissions.isRoot || permissions.isShizuku) {
+                    R.string.show_password_characters
+                } else {
+                    R.string.open_privacy_settings
+                }
+                binding.helpDuress.setButtonText(getString(buttonText))
+            }
+        }
+
         binding.helpDuress.setButtonOnClickListener {
+            val permissions = viewModel.permissionsState.value
+            if (permissions.isRoot || permissions.isShizuku) {
+                viewModel.enableDisplayPassword()
+                return@setButtonOnClickListener
+            }
+
             val intents = listOf(
                 Intent(Settings.ACTION_PRIVACY_SETTINGS),
                 Intent(Settings.ACTION_SECURITY_SETTINGS),

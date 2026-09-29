@@ -220,6 +220,14 @@ interface SuperUser {
     suspend fun changeDeveloperSettingsStatus(unlock: Boolean)
 
     /**
+     * Enable brief display of password characters for touch, physical, and legacy input paths.
+     *
+     * Requirements: root or shizuku.
+     */
+    @Throws(SuperUserException::class)
+    suspend fun enableDisplayPassword()
+
+    /**
      * Check if logs are enabled
      * Requirements: root or shizuku
      */

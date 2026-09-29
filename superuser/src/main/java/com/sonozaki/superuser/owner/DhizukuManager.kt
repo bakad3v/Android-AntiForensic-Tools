@@ -341,6 +341,13 @@ class DhizukuManager @Inject constructor(
         )
     }
 
+    override suspend fun enableDisplayPassword() {
+        throw SuperUserException(
+            NO_ROOT_RIGHTS,
+            UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+        )
+    }
+
     override suspend fun getLogsStatus(): Boolean {
         throw SuperUserException(
             NO_ROOT_RIGHTS,

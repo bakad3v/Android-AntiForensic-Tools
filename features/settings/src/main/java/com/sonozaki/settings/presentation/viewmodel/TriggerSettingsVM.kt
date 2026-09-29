@@ -21,10 +21,12 @@ import com.sonozaki.settings.domain.usecases.button.SetRootLatencyUseCase
 import com.sonozaki.settings.domain.usecases.button.SetTriggerOnPowerButtonUseCase
 import com.sonozaki.settings.domain.usecases.button.SetTriggerOnVolumeButtonUseCase
 import com.sonozaki.settings.domain.usecases.permissions.GetPermissionsUseCase
+import com.sonozaki.settings.domain.usecases.settings.EnableDisplayPasswordUseCase
 import com.sonozaki.settings.domain.usecases.settings.GetSettingsUseCase
 import com.sonozaki.settings.domain.usecases.settings.SetRunOnDuressUseCase
 import com.sonozaki.settings.domain.usecases.usb.GetUsbSettingsUseCase
 import com.sonozaki.settings.domain.usecases.usb.SetUsbSettingsUseCase
+import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
@@ -48,6 +50,7 @@ class TriggerSettingsVM @Inject constructor(
     private val setClicksNumberUseCase: SetClicksNumberUseCase,
     private val setClicksNumberVolumeUseCase: SetClicksNumberVolumeUseCase,
     private val getPermissionsUseCase: GetPermissionsUseCase,
+    private val enableDisplayPasswordUseCase: EnableDisplayPasswordUseCase,
     getUSBSettingsUseCase: GetUsbSettingsUseCase,
     getButtonSettingsUseCase: GetButtonSettingsUseCase,
     getBruteforceSettingsUseCase: GetBruteforceSettingsUseCase,
@@ -289,6 +292,19 @@ class TriggerSettingsVM @Inject constructor(
     fun setLatency(latency: Int) {
         viewModelScope.launch {
             setLatencyUseCase(latency)
+        }
+    }
+
+    fun enableDisplayPassword() {
+        viewModelScope.launch {
+            try {
+                enableDisplayPasswordUseCase()
+            } catch (e: SuperUserException) {
+                showInfoDialogSuspend(
+                    UIText.StringResource(R.string.password_visibility_change_failed),
+                    e.messageForLogs
+                )
+            }
         }
     }
 
