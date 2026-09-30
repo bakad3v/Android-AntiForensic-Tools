@@ -1,7 +1,7 @@
 package com.sonozaki.triggerreceivers.services
 
+import android.app.KeyguardManager
 import android.app.admin.DeviceAdminReceiver
-import android.app.admin.DevicePolicyManager
 import android.content.Context
 import android.content.Intent
 import android.os.Process
@@ -12,6 +12,7 @@ import com.sonozaki.triggerreceivers.services.domain.router.ActivitiesLauncher
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetBruteforceSettingsUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.GetLogsEnabledUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.OnRightPasswordUseCase
+import com.sonozaki.triggerreceivers.services.domain.usecases.OnWrongPasswordUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.SetAdminActiveUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.WriteLogsUseCase
 import dagger.hilt.android.AndroidEntryPoint
@@ -27,7 +28,7 @@ class DeviceAdminReceiver: DeviceAdminReceiver() {
     lateinit var onRightPasswordUseCase: OnRightPasswordUseCase
 
     @Inject
-    lateinit var devicePolicyManager: DevicePolicyManager
+    lateinit var onWrongPasswordUseCase: OnWrongPasswordUseCase
 
     @Inject
     lateinit var coroutineScope: CoroutineScope
@@ -65,12 +66,11 @@ class DeviceAdminReceiver: DeviceAdminReceiver() {
             return
         }
 
-        // Capture the system-owned value while handling this exact broadcast. Reading it later
-        // could make multiple queued callbacks observe the same newer attempt count.
-        val failedAttempts = try {
-            devicePolicyManager.currentFailedPasswordAttempts
-        } catch (_: SecurityException) {
-            // The administrator may have been disabled while this broadcast was being delivered.
+        // DeviceAdminReceiver does not identify the UI that submitted the credential. Only count
+        // the event when the device is locked and Keyguard is logically showing. Capture this
+        // state synchronously because it can change before the asynchronous work starts.
+        val keyguardManager = context.getSystemService(KeyguardManager::class.java)
+        if (!keyguardManager.isKeyguardLocked || !keyguardManager.isDeviceLocked) {
             return
         }
 
@@ -80,7 +80,7 @@ class DeviceAdminReceiver: DeviceAdminReceiver() {
                 return@launchAsync
             }
 
-            val shouldTrigger = shouldTriggerAdminBruteforce(settings, failedAttempts)
+            val shouldTrigger = onWrongPasswordUseCase()
             if (shouldTrigger) {
                 // Enqueue the security-critical work before attempting best-effort logging.
                 activitiesLauncher.launchService(context)
@@ -100,7 +100,8 @@ class DeviceAdminReceiver: DeviceAdminReceiver() {
         }
 
         launchAsync {
-            // Keep the fallback accessibility counter consistent across detection-mode changes.
+            // Both detection modes use this local counter; a successful challenge starts a new
+            // sequence of failed attempts.
             onRightPasswordUseCase()
         }
     }
