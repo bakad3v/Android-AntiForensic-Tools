@@ -8,6 +8,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Build
+import android.os.SystemClock
 import android.os.UserManager
 import android.view.KeyEvent
 import android.view.KeyEvent.ACTION_DOWN
@@ -193,9 +194,10 @@ class TriggerReceiverService : AccessibilityService() {
     private fun listenForButtonClicksRoot(superUser: SuperUser): () -> Unit {
         return superUser.getPowerButtonClicks {
             if (!it) return@getPowerButtonClicks
+            val timestamp = SystemClock.elapsedRealtime()
             coroutineScope.launch(dispatcher) {
                 writeLogs(baseContext.getString(R.string.power_button_clicked))
-                if (buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
+                if (buttonClicksUseCase(ButtonClicked.POWER_BUTTON, timestamp)) {
                     writeLogs(baseContext.getString(R.string.power_button_reason))
                     runActions()
                 }
@@ -271,8 +273,9 @@ class TriggerReceiverService : AccessibilityService() {
      * or use screen state changes as proxy for power button clicks (deprecated)
      */
     private suspend fun handleScreenStateChanged(action: String) {
+        val timestamp = SystemClock.elapsedRealtime()
         val deprecatedButton = getButtonSettingsUseCase().triggerOnButton == PowerButtonTriggerOptions.DEPRECATED_WAY
-        if (deprecatedButton && buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
+        if (deprecatedButton && buttonClicksUseCase(ButtonClicked.POWER_BUTTON, timestamp)) {
             runActions()
         }
         if (action == Intent.ACTION_SCREEN_OFF) {
@@ -515,9 +518,10 @@ class TriggerReceiverService : AccessibilityService() {
             } else {
                 return super.onKeyEvent(event)
             }
+            val timestamp = SystemClock.elapsedRealtime()
             coroutineScope.launch(dispatcher) {
                 writeLogs(baseContext.getString(R.string.volume_button_clicked))
-                if (buttonClicksUseCase(buttonClicked)) {
+                if (buttonClicksUseCase(buttonClicked, timestamp)) {
                     writeLogs(baseContext.getString(R.string.volume_button_reason))
                     runActions()
                 }
