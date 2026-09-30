@@ -518,10 +518,9 @@ class TriggerReceiverService : AccessibilityService() {
             } else {
                 return super.onKeyEvent(event)
             }
-            val timestamp = SystemClock.elapsedRealtime()
             coroutineScope.launch(dispatcher) {
                 writeLogs(baseContext.getString(R.string.volume_button_clicked))
-                if (buttonClicksUseCase(buttonClicked, timestamp)) {
+                if (buttonClicksUseCase(buttonClicked, event.eventTime)) {
                     writeLogs(baseContext.getString(R.string.volume_button_reason))
                     runActions()
                 }
