@@ -15,6 +15,8 @@ import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.KEYCODE_VOLUME_DOWN
 import android.view.KeyEvent.KEYCODE_VOLUME_UP
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
+import android.view.accessibility.AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
 import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.ButtonClicked
 import com.sonozaki.entities.MultiuserUIProtection
@@ -464,8 +466,20 @@ class TriggerReceiverService : AccessibilityService() {
     /**
      * Trigger when password entered by user changes
      */
-    private fun updatePassword(text: String) {
-        passwordBuffer.update(text)?.let(::checkPassword)
+    private fun updatePassword(event: AccessibilityEvent) {
+        val text = event.text.joinToString("")
+        val enteredPassword = when (event.eventType) {
+            TYPE_VIEW_TEXT_CHANGED -> passwordBuffer.update(
+                text = text,
+                fromIndex = event.fromIndex,
+                removedCount = event.removedCount,
+                addedCount = event.addedCount
+            )
+
+            TYPE_VIEW_TEXT_SELECTION_CHANGED -> passwordBuffer.updateSnapshot(text)
+            else -> null
+        }
+        enteredPassword?.let(::checkPassword)
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -473,7 +487,7 @@ class TriggerReceiverService : AccessibilityService() {
             event.isEnabled != true
         ) return
         if (event.isPassword == true) {
-            updatePassword(event.text.joinToString(""))
+            updatePassword(event)
         } else {
             watchWrongPassword(event.text.joinToString(""))
         }
