@@ -6,6 +6,12 @@ on:
       - master
     types:
       - closed
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag in the form vX.Y.Z (must match app versionName)
+        required: true
+        type: string
 
 # Required repository secrets:
 # AFT_KEYSTORE_BASE64, AFT_KEYSTORE_PASSWORD, AFT_KEY_ALIAS, AFT_KEY_PASSWORD
@@ -18,28 +24,42 @@ concurrency:
 
 jobs:
   release:
-    # A closed PR may have been declined; publish only a merged one.
-    if: github.event.pull_request.merged == true
+    # A closed PR may have been declined; publish only a merged one. Manual runs
+    # are allowed explicitly through workflow_dispatch.
+    if: github.event_name == 'workflow_dispatch' || github.event.pull_request.merged == true
     runs-on: ubuntu-latest
 
     steps:
       - name: Validate release version
         id: version
         env:
+          EVENT_NAME: ${{ github.event_name }}
+          MANUAL_TAG: ${{ inputs.tag }}
           PR_TITLE: ${{ github.event.pull_request.title }}
         run: |
-          if [[ ! "$PR_TITLE" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
-            echo "PR title must be a version tag in the form vX.Y.Z; received: $PR_TITLE" >&2
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            TAG="$MANUAL_TAG"
+          else
+            TAG="$PR_TITLE"
+          fi
+
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Release tag must be in the form vX.Y.Z; received: $TAG" >&2
             exit 1
           fi
 
-          echo "tag=$PR_TITLE" >> "$GITHUB_OUTPUT"
-          echo "name=${PR_TITLE#v}" >> "$GITHUB_OUTPUT"
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "name=${TAG#v}" >> "$GITHUB_OUTPUT"
 
       - name: Check out merged commit
+        if: github.event_name == 'pull_request'
         uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha }}
+
+      - name: Check out selected branch
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/checkout@v4
 
       - name: Ensure app version matches release tag
         env:
@@ -47,8 +67,8 @@ jobs:
         run: |
           source_version="$(sed -nE 's/^[[:space:]]*versionName[[:space:]]*=[[:space:]]*"([^"]+)".*/\1/p' app/build.gradle.kts)"
           if [[ "$source_version" != "$VERSION" ]]; then
-            echo "app/build.gradle.kts has versionName '$source_version', but the PR title is 'v$VERSION'." >&2
-            echo "Update versionName in the PR so AppUpdateRepositoryImpl generates valid release URLs." >&2
+            echo "app/build.gradle.kts has versionName '$source_version', but the release tag is 'v$VERSION'." >&2
+            echo "Update versionName before releasing so AppUpdateRepositoryImpl generates valid release URLs." >&2
             exit 1
           fi
 
