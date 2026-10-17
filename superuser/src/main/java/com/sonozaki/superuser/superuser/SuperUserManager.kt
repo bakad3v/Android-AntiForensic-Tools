@@ -46,6 +46,8 @@ class SuperUserManager @Inject constructor(private val dshizuku: Dshizuku, priva
      */
     suspend fun removeAdminRights() = admin.removeAdminRights()
 
+    fun hasAdminRights(): Boolean = admin.hasAdminRights()
+
     /**
      * Get the most privileged superuser available
      */

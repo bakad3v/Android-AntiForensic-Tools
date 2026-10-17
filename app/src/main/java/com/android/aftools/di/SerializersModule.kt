@@ -18,6 +18,7 @@ import com.sonozaki.entities.Permissions
 import com.sonozaki.entities.Settings
 import com.sonozaki.entities.UsbSettings
 import com.sonozaki.password.entities.PasswordStatus
+import com.sonozaki.password.entities.PasswordStatusV1
 import com.sonozaki.resources.IO_DISPATCHER
 import com.sonozaki.root.entities.RootDomain
 import dagger.Module
@@ -76,6 +77,12 @@ class SerializersModule {
     fun bindPasswordStatusBaseSerializer(@Named(IO_DISPATCHER) ioDispatcher: CoroutineDispatcher) =
         BaseSerializer<PasswordStatus>(ioDispatcher, PasswordStatus.serializer(),
             PasswordStatus())
+
+    @Provides
+    @Singleton
+    fun bindPasswordStatusV1BaseSerializer(@Named(IO_DISPATCHER) ioDispatcher: CoroutineDispatcher) =
+        BaseSerializer<PasswordStatusV1>(ioDispatcher, PasswordStatusV1.serializer(),
+            PasswordStatusV1())
 
     @Provides
     @Singleton

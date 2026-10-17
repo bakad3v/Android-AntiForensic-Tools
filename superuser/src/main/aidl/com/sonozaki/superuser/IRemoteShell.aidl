@@ -14,4 +14,6 @@ interface IRemoteShell {
     ParcelFileDescriptor processInput(long processId) = 6;
 
     void destroyProcess(long processId) = 7;
+
+    ShellResult waitForProcess(long processId) = 8;
 }

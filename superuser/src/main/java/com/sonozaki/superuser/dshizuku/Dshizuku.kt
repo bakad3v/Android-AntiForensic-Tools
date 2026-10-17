@@ -198,7 +198,11 @@ class Dshizuku @Inject constructor(
         length: Long,
         data: BufferedSource
     ): Boolean {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        return if (getPermissionsUseCase().isShizuku) {
+            shizukuManager.installTestOnlyApp(length, data)
+        } else {
+            dhizukuManager.installTestOnlyApp(length, data)
+        }
     }
 
     //Function available only for shizuku
@@ -216,6 +220,17 @@ class Dshizuku @Inject constructor(
             shizukuManager.changeDeveloperSettingsStatus(unlock)
         } else {
             dhizukuManager.changeDeveloperSettingsStatus(unlock)
+        }
+    }
+
+    override suspend fun enableDisplayPassword() {
+        if (getPermissionsUseCase().isShizuku) {
+            shizukuManager.enableDisplayPassword()
+        } else {
+            throw SuperUserException(
+                NO_ROOT_RIGHTS,
+                UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights)
+            )
         }
     }
 

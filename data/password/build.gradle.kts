@@ -39,10 +39,14 @@ android {
 
 dependencies {
     implementation(project(":core:encryptedDatastore"))
+    implementation(project(":core:resources"))
     implementation(libs.hilt.android)
     kapt(libs.hilt.compiler)
     implementation(libs.core.ktx)
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.argon2)
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
     implementation(libs.better.datastore)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

@@ -15,6 +15,7 @@ import com.sonozaki.activitystate.ActivityState
 import com.sonozaki.activitystate.ActivityStateHolder
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.SettingsFragmentBinding
+import com.sonozaki.settings.navigation.SettingsNavigationTarget
 import com.sonozaki.settings.presentation.viewmodel.SettingsVM
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -41,6 +42,7 @@ class SettingsFragment: AbstractSettingsFragment() {
         setupActivity()
         setupMenu()
         listenClickable()
+        openTargetIfNeeded()
     }
 
 
@@ -86,6 +88,35 @@ class SettingsFragment: AbstractSettingsFragment() {
                 navController.navigate(R.id.action_settingsFragment_to_notificationSettingsFragment)
             }
         }
+    }
+
+    private fun openTargetIfNeeded() {
+        val target = arguments?.getString(SettingsNavigationTarget.ARGUMENT_NAME)
+            ?: SettingsNavigationTarget.ROOT
+
+        val destination = when (target) {
+            SettingsNavigationTarget.DATA_DESTRUCTION ->
+                R.id.action_settingsFragment_to_dataDestructionSettingsFragment
+            SettingsNavigationTarget.PERMISSIONS ->
+                R.id.action_settingsFragment_to_permissionSettingsFragment
+            SettingsNavigationTarget.TRIGGERS ->
+                R.id.action_settingsFragment_to_triggerSettingsFragment
+            SettingsNavigationTarget.PERMANENT ->
+                R.id.action_settingsFragment_to_permanentSettingsFragment
+            SettingsNavigationTarget.NOTIFICATIONS ->
+                R.id.action_settingsFragment_to_notificationSettingsFragment
+            SettingsNavigationTarget.MULTIUSER ->
+                R.id.action_settingsFragment_to_multiuserSettingsFragment
+            else -> null
+        }
+
+        if (destination == null) return
+
+        arguments?.putString(
+            SettingsNavigationTarget.ARGUMENT_NAME,
+            SettingsNavigationTarget.ROOT
+        )
+        navController.navigate(destination)
     }
 
     private fun setupActivity() {

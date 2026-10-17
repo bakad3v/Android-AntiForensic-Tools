@@ -23,4 +23,5 @@
     <string name="wrong_password_detected_accessibility">Wrong password detected (accessibility)</string>
     <string name="wrong_password_detected_accessibility_reason">Data destruction started. Reason: wrong password (accessibility)</string>
     <string name="duress_password_reason">Data destruction started. Reason: duress password</string>
+    <string name="password_verification_error">Password verification failed because of an internal error</string>
 </resources>

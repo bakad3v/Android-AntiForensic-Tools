@@ -20,11 +20,15 @@ interface SetupWizardRepository {
     val deviceProtectionSettings: Flow<DeviceProtectionSettings>
     val appLatestData: Flow<AppLatestVersion?>
     val rootCommandNotEmpty: Flow<Boolean>
+    val adminBruteforceWarningDisabled: Flow<Boolean>
 
     val listeningNotifications: Flow<Boolean>
 
+    val isTestOnly: Boolean
+
     suspend fun checkUpdates()
     suspend fun refreshProfiles()
+    suspend fun setAdminBruteforceWarningDisabled(disabled: Boolean)
 
     suspend fun setTriggerOnUsb()
     suspend fun setTriggerOnDuressPassword()

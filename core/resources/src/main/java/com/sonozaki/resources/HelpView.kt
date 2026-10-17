@@ -83,7 +83,7 @@ class HelpView @JvmOverloads constructor(
         binding.helpButton.setOnClickListener(listener)
     }
 
-    private fun setButtonText(text: CharSequence) {
+    fun setButtonText(text: CharSequence) {
         binding.helpButton.text = text
     }
 

@@ -15,8 +15,8 @@ Your data is protected with [Better Encrypted Datastore](https://github.com/baka
 ## Threat models
 Discussions about this app have repeatedly raised misunderstandings about the threat models it can and cannot protect users from. This app cannot protect you from all possible threats and **may actually make you more vulnerable to some**. Before using it, consider which scenario is most realistic for you:
 * Your adversary isn't going to hack your phone using technical means, either due to a lack of technical equipment or because they're in a hurry. They will use only pressure, threats and physical force to obtain your device password. Such an adversary could be a corrupt police officer trying to force your password out of you immediately upon arrest, a thief, or an abusive partner. In this case Android Antiforensic Tools is your go-to - it's probably the best app for protecting against these types of threats.
-* Your adversary could use Celebrite's UFED or other technical means to hack your phone and is ready to do forensic research. Such an adversary could be a customs officer at the border or a member of the security services. The most reliable way to protect your device against such attacks is to use [GrapheneOS](https://grapheneos.org/). Unfortunately, Android AntiForensic Tools is not compatible with GrapheneOS unless the device is rooted. Rooting is not recommended because it increases the attack surface and weakens some of the security protections provided by GrapheneOS. You should also understand that, although forensic experts may be unable to recover the destroyed data itself, they may still be able to determine that data was deliberately deleted. If this is a problem for you, you should not use Android AntiForensic Tools. In that case, using an unmodified installation of GrapheneOS is the safer option.
-* You're worried about a hacker attack on your phone, the installation of spyware like Pegasus. Most likely, to face such a threat, you'd need to be targeted by a powerful adversary. Don't use Antiforensic Tools; it will only make you more vulnerable to such threats. Use Graphene OS.
+* Your adversary could use Celebrite's UFED or other technical means to hack your phone and is ready to do forensic research. Such an adversary could be a customs officer at the border or a member of the security services. The most reliable way to protect your device against such attacks is to use [GrapheneOS](https://grapheneos.org/). Unfortunately, Android AntiForensic Tools is not compatible with GrapheneOS unless the device is rooted. You can [root](https://github.com/schnatterer/rooted-graphene) the GrapheneOS, and it's better to use Android AntiForensic Tools with rooted GrapheneOS then with any other OS, but rooting is not recommended by GrapheneOS developers because it increases the attack surface and potentially weakens some of the security protections provided by GrapheneOS. You should also understand that, although forensic experts may be unable to recover the destroyed data itself, they may still be able to determine that data was deliberately deleted. If this is a problem for you, you should not use Android AntiForensic Tools. Consider using the unmodified version of the GrapheneOS if it's possible for you. 
+* You're worried about a hacker attack on your phone or the installation of spyware like Pegasus. Most likely, to face such a threat, you'd need to be targeted by a powerful adversary. Don't use Antiforensic Tools; it will only make you more vulnerable to such threats. Use unmodified Graphene OS.
 
 ## Features and limitations
 Before considering using Android AntiForensic Tools, please, take a look at my other project, [0sakaCrypt](https://github.com/bakad3v/0sakaCrypt). Unlike Android AntiForensic Tools, 0sakaCrypt does not require root access and does not need to conceal its own existence. It follows the principle of least privilege more closely and does not interfere with Android’s security model. It is also fully compatible with GrapheneOS without requiring the device to be rooted. **In most cases, using 0sakaCrypt together with GrapheneOS is the recommended approach for storing and protecting sensitive files.**
@@ -38,7 +38,7 @@ Another disadvantage of the app is that its most advanced features, including se
 Despite using many available Android privileges, the app is limited by the OS itself. Custom OSes such as [GrapheneOS](https://grapheneos.org/) are better suited to withstand advanced adversaries and can patch security holes that this application cannot.
 
 ## Installation
-In the Releases section you can download four versions of the app. Two of them can be installed as regular APKs; two must be installed via ADB or using root or Shizuku. If you enabled device admin rights, root rights and app self-destruction, please install the testOnly versions (instructions below); otherwise self-destruction will not work in BFU (before first unlock) mode. 
+In the Releases section you can download four versions of the app. Two of them can be installed as regular APKs; two must be installed via ADB or using root or Shizuku. If you enabled device admin rights and app self-destruction, please install the testOnly versions (instructions below); otherwise self-destruction will not work in BFU (before first unlock) mode. **TL;DR - it's reccomended to install TESTONLY versions of the apps**
 
 This app is disguised as other apps - [Island](https://github.com/oasisfeng/island) and [Shelter](https://gitea.angry.im/PeterCxy/Shelter). This app has nothing in common with those apps and use their package name, icon and name only for hiding apps traces. This is because even after uninstallation app's package name and maybe some other data will remain in some places of the system like packages.xml. It's needed to change apps package name so that after app uninstallation or self-destruction for an adversary examining the system it looks as if you uninstalled some other app from the device, not Android AntiForensic Tools. However, I can't guarantee that renaming the package will prevent traces of the application from being detected by an advanced adversary; further research is required to verify this. These apps were chosen for cloaking because they're open source, and you're unlikely to use both apps at the same time. If you have one of these installed on your device, install a version of Android AntiForensic Tools that masquerades as the other.
 
@@ -46,12 +46,15 @@ Ideally you should change the package name yourself before installing. When rena
 ### Apps versions
 * AFTools_island_USUAL- a version of the app masquerading as the Island app. Can be installed without superuser rights.
 * AFTools_shelter_USUAL - a version of the app masquerading as the Shelter app. Can be installed without superuser rights.
-* AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB or root for installation!**
-* AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB or root for installation!**"
+* AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB, shizuku or root for installation!**
+* AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB, shizuku or root for installation!**"
+
+If you want bruteforce detection to work, since v2.0.3. **you have to install the testOnly version**.
 ### Installation of testOnly apps
-#### Easiest way (root only)
+#### Easiest way (root or shizuku)
+**Important: if you update to v2.0.3 or later from the earlier version, admin rights would be revoked. Grant them again**  
 1. Install the USUAL app version
-2. Grant it root rights and **don't** give it admin rights
+2. Grant it root or shizuku rights and **don't** give it admin rights
 3. Select "App update center" in the menu
 4. Select "install testonly version" option and click "install update"
 
@@ -130,4 +133,4 @@ LTC: ltc1qtfhun6yzt0qlpa9d6s8gr2yd70sg0kx755u3se
 
 BTC: bc1qn9a9eyy2vgrz8yvhk0654d63dt56pxhpn6q4xl
 
-BTC lightning: dualwhorl66@walletofsatoshi.com
+USDT (TRC20), TRON: TUCrXnNRXgMccuvGF5cCrNuNJTg4uDvBbZ

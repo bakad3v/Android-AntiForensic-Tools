@@ -4,6 +4,4 @@
         android:title="@string/no" />
     <item android:id="@+id/with_admin_rights"
         android:title="@string/with_admin_rights" />
-    <item android:id="@+id/with_accessibility_service"
-        android:title="@string/with_accessibility_service" />
 </menu>

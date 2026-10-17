@@ -16,6 +16,8 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.InputStream
 import java.io.OutputStream
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.atomic.AtomicLong
 import kotlin.system.exitProcess
 import com.sonozaki.superuser.IRemoteShell
 import com.sonozaki.superuser.ShellResult
@@ -26,8 +28,8 @@ class ShizukuShell(): IRemoteShell.Stub() {
     private val serviceScopeJob = SupervisorJob()
     private val serviceScope = CoroutineScope(Dispatchers.IO + serviceScopeJob)
 
-    private var latestId = 0L
-    private val currentProcesses = HashMap<Long, Process>()
+    private val latestId = AtomicLong(0L)
+    private val currentProcesses = ConcurrentHashMap<Long, Process>()
 
     // Needed for shizuku v13
     @Suppress("UNUSED_PARAMETER")
@@ -64,7 +66,7 @@ class ShizukuShell(): IRemoteShell.Stub() {
     }
 
     override fun execute(command: String?): Long {
-        val processId = latestId++
+        val processId = latestId.getAndIncrement()
 
         val process = Runtime.getRuntime().exec(command)
         currentProcesses[processId] = process
@@ -105,9 +107,11 @@ class ShizukuShell(): IRemoteShell.Stub() {
 
         val pipe = ParcelFileDescriptor.createPipe()
         serviceScope.launch {
-            AutoCloseInputStream(pipe[0]).use {
+            AutoCloseInputStream(pipe[0]).use { input ->
                 try {
-                    it.copyTo(process.outputStream)
+                    process.outputStream.use { output ->
+                        input.copyTo(output)
+                    }
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -115,6 +119,28 @@ class ShizukuShell(): IRemoteShell.Stub() {
         }
 
         return pipe[1]
+    }
+
+    override fun waitForProcess(processId: Long) = runBlocking(Dispatchers.IO) {
+        val process = currentProcesses[processId]
+            ?: return@runBlocking ShellResult(
+                exitCode = PROCESS_NOT_FOUND_EXIT_CODE,
+                errorOutput = "Process $processId not found"
+            )
+
+        try {
+            val output = async {
+                process.inputStream.readBytes().decodeToString()
+            }
+            val error = async {
+                process.errorStream.readBytes().decodeToString()
+            }
+            val exitCode = process.waitFor()
+
+            ShellResult(exitCode, output.await(), error.await())
+        } finally {
+            currentProcesses.remove(processId, process)
+        }
     }
 
     override fun destroyProcess(processId: Long) {
@@ -141,6 +167,10 @@ class ShizukuShell(): IRemoteShell.Stub() {
 
     private fun Process.tryDestroy() = runCatching {
         destroy()
+    }
+
+    private companion object {
+        const val PROCESS_NOT_FOUND_EXIT_CODE = 3
     }
 
 }

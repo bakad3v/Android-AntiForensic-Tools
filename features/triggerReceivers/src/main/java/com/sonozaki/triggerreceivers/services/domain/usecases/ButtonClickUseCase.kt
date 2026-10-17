@@ -1,5 +1,6 @@
 package com.sonozaki.triggerreceivers.services.domain.usecases
 
+import android.os.SystemClock
 import com.sonozaki.entities.ButtonClicked
 import com.sonozaki.entities.ButtonSelected
 import com.sonozaki.entities.ButtonSettings
@@ -41,8 +42,11 @@ class ButtonClickUseCase @Inject constructor(private val buttonSettingsRepositor
         }
     }
 
-    private suspend fun buttonClick(buttonSettings: ButtonSettings, buttonSelected: ButtonSelected): Boolean {
-        val timestamp = System.currentTimeMillis()
+    private suspend fun buttonClick(
+        buttonSettings: ButtonSettings,
+        buttonSelected: ButtonSelected,
+        timestamp: Long): Boolean {
+        // A wall-clock change must not merge separate click sequences or split one sequence.
         with(buttonSettingsRepository) {
             val buttonClicksData = getButtonClicksData(buttonSelected)
             //if no clicks were performed previously, start counting clicks and return
@@ -52,7 +56,8 @@ class ButtonClickUseCase @Inject constructor(private val buttonSettingsRepositor
                 return false
             }
             val latency = getLatency(buttonSettings, buttonSelected)
-            if (timestamp - buttonClicksData.lastTimestamp <= latency) {
+            val elapsed = timestamp - buttonClicksData.lastTimestamp
+            if (elapsed in 0..latency.toLong()) {
                 setClicksInRow(buttonClicksData.clicksInRow + 1, buttonSelected)
                 setLastTimestamp(timestamp, buttonSelected)
             } else { //if delay between last clicks and this click is smaller than latency, update number of clicks and return
@@ -96,7 +101,7 @@ class ButtonClickUseCase @Inject constructor(private val buttonSettingsRepositor
         return null
     }
 
-    suspend operator fun invoke(buttonClicked: ButtonClicked): Boolean {
+    suspend operator fun invoke(buttonClicked: ButtonClicked, timestamp: Long): Boolean {
         mutex.withLock {
             val buttonSettings = buttonSettingsRepository.getButtonSettings()
             val buttonSelected = getButtonSelected(buttonSettings, buttonClicked)
@@ -104,7 +109,7 @@ class ButtonClickUseCase @Inject constructor(private val buttonSettingsRepositor
             if (buttonSelected == null) {
                 return false
             }
-            val result = buttonClick(buttonSettings,buttonSelected)
+            val result = buttonClick(buttonSettings,buttonSelected, timestamp)
             return result
         }
     }

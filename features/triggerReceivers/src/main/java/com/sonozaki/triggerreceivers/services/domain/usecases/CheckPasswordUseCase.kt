@@ -4,7 +4,5 @@ import com.sonozaki.triggerreceivers.services.domain.repository.ReceiversReposit
 import javax.inject.Inject
 
 class CheckPasswordUseCase @Inject constructor(private val repository: ReceiversRepository) {
-  suspend operator fun invoke(password: CharArray): Boolean {
-    return repository.checkPassword(password)
-  }
+  suspend operator fun invoke(password: CharArray): Boolean = repository.checkPassword(password)
 }

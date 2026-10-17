@@ -6,6 +6,7 @@ import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.IBinder
+import android.os.ParcelFileDescriptor
 import android.os.UserManager
 import com.anggrayudi.storage.extension.toInt
 import com.sonozaki.entities.ShizukuState
@@ -25,6 +26,7 @@ import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -118,6 +120,63 @@ class ShizukuManager @Inject constructor(
             }
         } else { //if service is dead or shizuku inactive return error
             throw SuperUserException(SHIZUKU_NOT_INITIALIZED, UIText.StringResource(R.string.shizuku_not_initialized))
+        }
+    }
+
+    /**
+     * Runs a shell command and streams [data] to its standard input. This is required for commands
+     * that cannot read files from the app's private data directory when the user service runs as
+     * the Android shell user.
+     */
+    private suspend fun runAdbCommandWithInput(
+        command: String,
+        data: BufferedSource
+    ): ShellResult = data.use { source ->
+        withContext(coroutineDispatcher) {
+            if (shizukuStateFlow.value != ShizukuState.INITIALIZED) {
+                throw SuperUserException(
+                    SHIZUKU_NOT_INITIALIZED,
+                    UIText.StringResource(R.string.shizuku_not_initialized)
+                )
+            }
+
+            val service = userService
+                ?: throw SuperUserException(
+                    SHIZUKU_NOT_INITIALIZED,
+                    UIText.StringResource(R.string.shizuku_not_initialized)
+                )
+
+            val processId = service.execute(command)
+            try {
+                val input = service.processInput(processId)
+                    ?: throw SuperUserException(
+                        SHIZUKU_COMMAND_FAILED,
+                        UIText.StringResource(R.string.shizuku_failure, "Unable to open process input")
+                    )
+                val result = async { service.waitForProcess(processId) }
+                var transferFailure: Exception? = null
+
+                try {
+                    ParcelFileDescriptor.AutoCloseOutputStream(input).use { output ->
+                        source.inputStream().copyTo(output)
+                    }
+                } catch (e: Exception) {
+                    transferFailure = e
+                }
+
+                result.await().also {
+                    if (!it.isSuccessful) {
+                        throw SuperUserException(
+                            SHIZUKU_COMMAND_FAILED,
+                            UIText.StringResource(R.string.shizuku_failure, it.errorOutput)
+                        )
+                    }
+                    transferFailure?.let { throw it }
+                }
+            } catch (e: Exception) {
+                runCatching { service.destroyProcess(processId) }
+                throw e
+            }
         }
     }
 
@@ -225,7 +284,11 @@ class ShizukuManager @Inject constructor(
         length: Long,
         data: BufferedSource
     ): Boolean {
-        throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+        if (length <= 0) {
+            data.close()
+            throw IllegalArgumentException("APK length must be positive")
+        }
+        return runAdbCommandWithInput("pm install -t -r -S $length", data).isSuccessful
     }
 
     override suspend fun stopLogd() {

@@ -12,6 +12,7 @@ import com.sonozaki.superuser.superuser.SuperUser
 import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
 import com.topjohnwu.superuser.Shell
+import kotlinx.coroutines.delay
 import okio.BufferedSource
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -35,12 +36,28 @@ class DeviceAdmin @Inject constructor(
     suspend fun removeAdminRights() {
         try {
             dpm.removeActiveAdmin(deviceAdminReceiver)
+            if (!awaitAdminRemoval()) {
+                throw IllegalStateException("Timed out waiting for device admin removal")
+            }
+            setAdminInactiveUseCase()
         } catch (e: Exception) {
             handleException(e)
         }
     }
 
     private fun checkAdminRights(): Boolean = dpm.isAdminActive(deviceAdminReceiver)
+
+    fun hasAdminRights(): Boolean = checkAdminRights()
+
+    private suspend fun awaitAdminRemoval(): Boolean {
+        repeat(ADMIN_REMOVAL_CHECK_ATTEMPTS) {
+            if (!checkAdminRights()) {
+                return true
+            }
+            delay(ADMIN_REMOVAL_CHECK_DELAY_MS)
+        }
+        return !checkAdminRights()
+    }
 
     private suspend fun handleException(e: Exception) {
         if (!checkAdminRights()) {
@@ -236,6 +253,13 @@ class DeviceAdmin @Inject constructor(
         )
     }
 
+    override suspend fun enableDisplayPassword() {
+        throw SuperUserException(
+            ADMIN_ERROR_TEXT,
+            UIText.StringResource(R.string.device_admin_error)
+        )
+    }
+
     override suspend fun getLogsStatus(): Boolean {
         throw SuperUserException(
             ADMIN_ERROR_TEXT,
@@ -268,5 +292,7 @@ class DeviceAdmin @Inject constructor(
         private const val ADMIN_ERROR_TEXT =
             "Device admin rights are not enough to perform operations."
         private const val NO_ADMIN_RIGHTS = "App doesn't have admin rights."
+        private const val ADMIN_REMOVAL_CHECK_ATTEMPTS = 75
+        private const val ADMIN_REMOVAL_CHECK_DELAY_MS = 200L
     }
 }

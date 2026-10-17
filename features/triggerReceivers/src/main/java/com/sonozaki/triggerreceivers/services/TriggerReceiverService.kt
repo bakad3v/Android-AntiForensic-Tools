@@ -8,12 +8,15 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.hardware.usb.UsbManager
 import android.os.Build
+import android.os.SystemClock
 import android.os.UserManager
 import android.view.KeyEvent
 import android.view.KeyEvent.ACTION_DOWN
 import android.view.KeyEvent.KEYCODE_VOLUME_DOWN
 import android.view.KeyEvent.KEYCODE_VOLUME_UP
 import android.view.accessibility.AccessibilityEvent
+import android.view.accessibility.AccessibilityEvent.TYPE_VIEW_TEXT_CHANGED
+import android.view.accessibility.AccessibilityEvent.TYPE_VIEW_TEXT_SELECTION_CHANGED
 import com.sonozaki.entities.BruteforceDetectingMethod
 import com.sonozaki.entities.ButtonClicked
 import com.sonozaki.entities.MultiuserUIProtection
@@ -42,15 +45,22 @@ import com.sonozaki.triggerreceivers.services.domain.usecases.SetRunOnBootUseCas
 import com.sonozaki.triggerreceivers.services.domain.usecases.SetServiceStatusUseCase
 import com.sonozaki.triggerreceivers.services.domain.usecases.WriteLogsUseCase
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.time.Duration.Companion.milliseconds
 
 /**
  * Accessibility service for password interception and usb connections monitoring. Thanks x13a for idea.
@@ -58,13 +68,21 @@ import javax.inject.Named
 @AndroidEntryPoint
 class TriggerReceiverService : AccessibilityService() {
     private var keyguardManager: KeyguardManager? = null
-    private var password = mutableListOf<Char>()
+    private var usbConnected = false
+    private var usbDataConnected = false
+    private val pendingAfuMutex = Mutex()
+
+    @Inject
+    lateinit var passwordBuffer: LockScreenPasswordBuffer
 
     @Inject
     lateinit var checkPasswordUseCase: CheckPasswordUseCase
 
-    @Inject
-    lateinit var coroutineScope: CoroutineScope
+    private val coroutineExceptionHandler = CoroutineExceptionHandler { _, _ -> }
+
+    private val coroutineScope by lazy {
+        CoroutineScope(SupervisorJob() + dispatcher + coroutineExceptionHandler)
+    }
 
     @Inject
     lateinit var setServiceStatusUseCase: SetServiceStatusUseCase
@@ -128,12 +146,22 @@ class TriggerReceiverService : AccessibilityService() {
         super.onCreate()
         coroutineScope.launch(dispatcher) {
             var cancelCallback: (() -> Unit)? = null
-            getButtonsRootDataUseCase().collect {
-                if (it) {
-                    cancelCallback = listenForButtonClicksRoot(superUserManager.getSuperUser())
-                } else {
-                    cancelCallback?.invoke()
-                }
+            try {
+                getButtonsRootDataUseCase()
+                    .distinctUntilChanged()
+                    .collect { shouldListen ->
+                        val previousCancelCallback = cancelCallback
+                        cancelCallback = null
+                        stopPowerButtonListener(previousCancelCallback)
+
+                        if (shouldListen) {
+                            cancelCallback = listenForButtonClicksRoot(superUserManager.getSuperUser())
+                        }
+                    }
+            } finally {
+                val finalCancelCallback = cancelCallback
+                cancelCallback = null
+                stopPowerButtonListener(finalCancelCallback)
             }
         }
         coroutineScope.launch(dispatcher) {
@@ -153,6 +181,14 @@ class TriggerReceiverService : AccessibilityService() {
         keyguardManager = getSystemService(KeyguardManager::class.java)
     }
 
+    private fun stopPowerButtonListener(cancelCallback: (() -> Unit)?) {
+        if (cancelCallback == null) {
+            return
+        }
+
+        runCatching(cancelCallback)
+    }
+
     /**
      * Listen for power button clicks
      * @return callback for stopping listening to power button clicks
@@ -160,9 +196,10 @@ class TriggerReceiverService : AccessibilityService() {
     private fun listenForButtonClicksRoot(superUser: SuperUser): () -> Unit {
         return superUser.getPowerButtonClicks {
             if (!it) return@getPowerButtonClicks
+            val timestamp = SystemClock.elapsedRealtime()
             coroutineScope.launch(dispatcher) {
                 writeLogs(baseContext.getString(R.string.power_button_clicked))
-                if (buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
+                if (buttonClicksUseCase(ButtonClicked.POWER_BUTTON, timestamp)) {
                     writeLogs(baseContext.getString(R.string.power_button_reason))
                     runActions()
                 }
@@ -171,8 +208,14 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     private suspend fun writeLogs(text: String) {
-        if (getLogsEnabledUseCase()) {
-            writeLogsUseCase(text)
+        try {
+            if (getLogsEnabledUseCase()) {
+                writeLogsUseCase(text)
+            }
+        } catch (e: CancellationException) {
+            throw e
+        } catch (_: Exception) {
+            // Logging is best-effort and must not prevent trigger processing.
         }
     }
 
@@ -232,8 +275,9 @@ class TriggerReceiverService : AccessibilityService() {
      * or use screen state changes as proxy for power button clicks (deprecated)
      */
     private suspend fun handleScreenStateChanged(action: String) {
+        val timestamp = SystemClock.elapsedRealtime()
         val deprecatedButton = getButtonSettingsUseCase().triggerOnButton == PowerButtonTriggerOptions.DEPRECATED_WAY
-        if (deprecatedButton && buttonClicksUseCase(ButtonClicked.POWER_BUTTON)) {
+        if (deprecatedButton && buttonClicksUseCase(ButtonClicked.POWER_BUTTON, timestamp)) {
             runActions()
         }
         if (action == Intent.ACTION_SCREEN_OFF) {
@@ -264,19 +308,35 @@ class TriggerReceiverService : AccessibilityService() {
      * Listen to usb connection events and react if needed.
      */
     private fun listenUsbConnection() {
-        val usbFilter =
-            IntentFilter("android.hardware.usb.action.USB_STATE").apply { addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED) }
-                .apply { addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED) }
+        val usbFilter = IntentFilter(USB_STATE_ACTION).apply {
+            addAction(UsbManager.ACTION_USB_ACCESSORY_ATTACHED)
+            addAction(UsbManager.ACTION_USB_ACCESSORY_DETACHED)
+            addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
+            addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
+        }
         val usbReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
-                if (intent?.action == UsbManager.ACTION_USB_ACCESSORY_ATTACHED || intent?.action == UsbManager.ACTION_USB_DEVICE_ATTACHED) {
-                    coroutineScope.launch(dispatcher) {
-                        runOnUSBConnected()
-                    }
+                if (intent == null) {
                     return
                 }
+
                 val manager = getSystemService(USB_SERVICE) as UsbManager
-                if (intent?.extras?.getBoolean("connected") == true && (manager.deviceList?.size != 0 || manager.accessoryList?.size != 0)) {
+                val isConnected = when (intent.action) {
+                    USB_STATE_ACTION -> {
+                        usbDataConnected = intent.getBooleanExtra(USB_CONNECTED_EXTRA, false)
+                        usbDataConnected
+                    }
+                    UsbManager.ACTION_USB_DEVICE_ATTACHED,
+                    UsbManager.ACTION_USB_ACCESSORY_ATTACHED -> true
+                    UsbManager.ACTION_USB_DEVICE_DETACHED,
+                    UsbManager.ACTION_USB_ACCESSORY_DETACHED ->
+                        usbDataConnected || manager.deviceList.isNotEmpty() || !manager.accessoryList.isNullOrEmpty()
+                    else -> return
+                }
+
+                val isNewConnection = !usbConnected && isConnected
+                usbConnected = isConnected
+                if (isNewConnection) {
                     coroutineScope.launch(dispatcher) {
                         runOnUSBConnected()
                     }
@@ -317,13 +377,8 @@ class TriggerReceiverService : AccessibilityService() {
         val userUnlockedReceiver = object : BroadcastReceiver() {
             override fun onReceive(context: Context?, intent: Intent?) {
                 coroutineScope.launch(dispatcher) {
-                    if (getSettingsUseCase().runOnBoot) {
-                        withContext(dispatcher) {
-                            delay(2000) //for some reason, file deletion doesn't work without delay after unlocking
-                            activitiesLauncher.startAFU()
-                        }
-                        setRunOnBootUseCase(false)
-                    }
+                    delay(AFU_DELAY_AFTER_UNLOCK_MS.milliseconds)
+                    runPendingAfuIfUnlocked()
                 }
             }
         }
@@ -352,11 +407,18 @@ class TriggerReceiverService : AccessibilityService() {
 
     private fun checkPassword(pass: CharArray) {
         coroutineScope.launch(dispatcher) {
-            if (getSettingsUseCase().runOnDuressPassword && checkPasswordUseCase(pass)) {
-                writeLogs(baseContext.getString(R.string.duress_password_reason))
-                runActions()
+            try {
+                if (getSettingsUseCase().runOnDuressPassword && checkPasswordUseCase(pass)) {
+                    writeLogs(baseContext.getString(R.string.duress_password_reason))
+                    runActions()
+                }
+            } catch (e: CancellationException) {
+                throw e
+            } catch (_: Exception) {
+                writeLogs(baseContext.getString(R.string.password_verification_error))
+            } finally {
+                pass.fill('\u0000')
             }
-            password = mutableListOf()
         }
     }
 
@@ -365,37 +427,59 @@ class TriggerReceiverService : AccessibilityService() {
      */
     private suspend fun runActions() {
         withContext(dispatcher) {
+            val wasUnlocked = userManager.isUserUnlocked
             activitiesLauncher.startBFU()
+            // Persist the pending work before checking the unlock state. ACTION_USER_UNLOCKED can
+            // now race only with runPendingAfuIfUnlocked(), which is serialized by its mutex.
+            markAfuPending()
             if (userManager.isUserUnlocked) {
-                activitiesLauncher.startAFU()
-            } else
-                setRunOnBootUseCase(true)
+                if (!wasUnlocked) {
+                    delay(AFU_DELAY_AFTER_UNLOCK_MS.milliseconds)
+                }
+                runPendingAfuIfUnlocked()
+            }
+        }
+    }
+
+    private suspend fun markAfuPending() {
+        pendingAfuMutex.withLock {
+            setRunOnBootUseCase(true)
+        }
+    }
+
+    private suspend fun runPendingAfuIfUnlocked() {
+        if (!userManager.isUserUnlocked) {
+            return
+        }
+
+        pendingAfuMutex.withLock {
+            if (!userManager.isUserUnlocked || !getSettingsUseCase().runOnBoot) {
+                return
+            }
+
+            if (activitiesLauncher.startAFU()) {
+                setRunOnBootUseCase(false)
+            }
         }
     }
 
     /**
      * Trigger when password entered by user changes
      */
-    private fun updatePassword(text: String) {
-        val ignoreChars = text.count { it == IGNORE_CHAR }
-        if (ignoreChars == 0 && text.length != 1) {
-            checkPassword(password.toCharArray())
-            return
+    private fun updatePassword(event: AccessibilityEvent) {
+        val text = event.text.joinToString("")
+        val enteredPassword = when (event.eventType) {
+            TYPE_VIEW_TEXT_CHANGED -> passwordBuffer.update(
+                text = text,
+                fromIndex = event.fromIndex,
+                removedCount = event.removedCount,
+                addedCount = event.addedCount
+            )
+
+            TYPE_VIEW_TEXT_SELECTION_CHANGED -> passwordBuffer.updateSnapshot(text)
+            else -> null
         }
-        if (password.size > text.length) {
-            password = password.subList(0, text.length)
-        }
-        if (ignoreChars == text.length)
-            return
-        val index = text.indexOfFirst { it != IGNORE_CHAR }
-        if (index == password.size) {
-            password.add(text[index])
-        } else {
-            try {
-                password[index] = text[index]
-            } catch (_: java.lang.IndexOutOfBoundsException) {
-            }
-        }
+        enteredPassword?.let(::checkPassword)
     }
 
     override fun onAccessibilityEvent(event: AccessibilityEvent?) {
@@ -403,7 +487,7 @@ class TriggerReceiverService : AccessibilityService() {
             event.isEnabled != true
         ) return
         if (event.isPassword == true) {
-            updatePassword(event.text.joinToString(""))
+            updatePassword(event)
         } else {
             watchWrongPassword(event.text.joinToString(""))
         }
@@ -440,7 +524,7 @@ class TriggerReceiverService : AccessibilityService() {
      * Trigger on volume buttons clicks
      */
     override fun onKeyEvent(event: KeyEvent?): Boolean {
-        if (event?.action == ACTION_DOWN) {
+        if (event?.action == ACTION_DOWN && event.repeatCount == 0) {
             val buttonClicked = if (event.keyCode == KEYCODE_VOLUME_UP) {
                 ButtonClicked.VOLUME_UP
             } else if (event.keyCode == KEYCODE_VOLUME_DOWN) {
@@ -450,7 +534,7 @@ class TriggerReceiverService : AccessibilityService() {
             }
             coroutineScope.launch(dispatcher) {
                 writeLogs(baseContext.getString(R.string.volume_button_clicked))
-                if (buttonClicksUseCase(buttonClicked)) {
+                if (buttonClicksUseCase(buttonClicked, event.eventTime)) {
                     writeLogs(baseContext.getString(R.string.volume_button_reason))
                     runActions()
                 }
@@ -471,12 +555,18 @@ class TriggerReceiverService : AccessibilityService() {
     }
 
     override fun onDestroy() {
+        runBlocking {
+            setServiceStatusUseCase(false)
+        }
         coroutineScope.cancel()
         super.onDestroy()
     }
 
     companion object {
-        private const val IGNORE_CHAR = '•'
+        private const val USB_STATE_ACTION = "android.hardware.usb.action.USB_STATE"
+        private const val USB_CONNECTED_EXTRA = "connected"
+        private const val AFU_DELAY_AFTER_UNLOCK_MS = 2_000L
+
         private val PACKAGE_NAMES_INTERCEPTED = setOf("com.android.systemui","com.android.keyguard")
     }
 }

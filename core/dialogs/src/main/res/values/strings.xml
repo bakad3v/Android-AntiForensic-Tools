@@ -3,6 +3,7 @@
 
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
+    <string name="do_not_show_again">Don\'t show again</string>
     <string name="empty_value_in_dialog">Empty value</string>
     <string name="number_out_of_range">Number out of range</string>
 </resources>

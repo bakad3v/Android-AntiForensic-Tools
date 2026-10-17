@@ -212,6 +212,12 @@ abstract class CommandsRunner(private val context: Context,
         runCommand("settings put global ${Settings.Global.DEVELOPMENT_SETTINGS_ENABLED} ${unlock.toInt()}")
     }
 
+    override suspend fun enableDisplayPassword() {
+        runCommand("settings put secure show_password_touch 1")
+        runCommand("settings put secure show_password_physical 1")
+        runCommand("settings put system show_password 1")
+    }
+
     override suspend fun getSafeBootStatus(): Boolean {
         val result = runCommand("settings get global safe_boot_disallowed").output[0]
         if (result.endsWith("null")) {
@@ -269,6 +275,7 @@ abstract class CommandsRunner(private val context: Context,
             "Wrong android version, SDK version %s or higher required"
         private const val PRIMARY_USER_LOGOUT = "You can't logout from primary user"
         private const val NUMBER_NOT_RECOGNISED = "Number not recognised"
+
         private const val DATA_NOT_FOUND = "Data not found"
     }
 }

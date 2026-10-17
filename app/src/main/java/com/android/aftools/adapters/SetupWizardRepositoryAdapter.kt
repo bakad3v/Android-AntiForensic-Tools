@@ -1,6 +1,8 @@
 package com.android.aftools.adapters
 
+import android.content.Context
 import com.bakasoft.appupdater.repository.AppUpdateRepository
+import com.bakad3v.dialogs.repository.DialogsRepository
 import com.bakasoft.network.RequestResult
 import com.bakasoft.setupwizard.domain.repository.SetupWizardRepository
 import com.sonozaki.data.files.repository.FilesRepository
@@ -26,6 +28,8 @@ import com.sonozaki.entities.UsbSettings
 import com.sonozaki.entities.VolumeButtonTriggerOptions
 import com.sonozaki.root.repository.RootRepository
 import com.sonozaki.superuser.superuser.SuperUserManager
+import com.sonozaki.utils.TopLevelFunctions.isTestOnlyApp
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -42,7 +46,9 @@ class SetupWizardRepositoryAdapter @Inject constructor(
     private val appUpdateRepository: AppUpdateRepository,
     private val superUserManager: SuperUserManager,
     private val rootRepository: RootRepository,
-    private val notificationSettingsRepository: NotificationSettingsRepository
+    private val notificationSettingsRepository: NotificationSettingsRepository,
+    private val dialogsRepository: DialogsRepository,
+    @ApplicationContext private val context: Context
 ): SetupWizardRepository {
     override val permissions: Flow<Permissions>
         get() = permissionsRepository.permissions
@@ -68,11 +74,17 @@ class SetupWizardRepositoryAdapter @Inject constructor(
             }
         }
 
+    override val isTestOnly: Boolean
+        get() = context.isTestOnlyApp()
+
     override val listeningNotifications = notificationSettingsRepository.notificationSettings.map {
         it == NotificationSettings.ENABLED
     }
 
     override val rootCommandNotEmpty = rootRepository.getRootCommand().map { it.isNotBlank() }
+
+    override val adminBruteforceWarningDisabled =
+        dialogsRepository.adminBruteforceWarningDisabled
 
     override suspend fun checkUpdates() {
         appUpdateRepository.checkUpdates()
@@ -80,6 +92,10 @@ class SetupWizardRepositoryAdapter @Inject constructor(
 
     override suspend fun refreshProfiles() {
         profilesRepository.refreshDeviceProfiles()
+    }
+
+    override suspend fun setAdminBruteforceWarningDisabled(disabled: Boolean) {
+        dialogsRepository.setAdminBruteforceWarningDisabled(disabled)
     }
 
     override suspend fun setTriggerOnUsb() {
@@ -99,7 +115,7 @@ class SetupWizardRepositoryAdapter @Inject constructor(
     }
 
     override suspend fun setTriggerOnBruteforce() {
-        bruteforceRepository.setBruteforceStatus(BruteforceDetectingMethod.ACCESSIBILITY_SERVICE)
+        bruteforceRepository.setBruteforceStatus(BruteforceDetectingMethod.ADMIN)
     }
 
     override suspend fun setSelfDestruction() {

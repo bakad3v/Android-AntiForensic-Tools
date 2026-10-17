@@ -18,11 +18,11 @@ class GetAvailableTriggersUseCase @Inject constructor(
             } else if (!permissions.isRoot) {
                 val clicks = buttonSettings.volumeButtonAllowedClicks
                 val allowedAttempts = bruteforceSettings.allowedAttempts
-                AvailableTriggers.VolumeButton(clicks, allowedAttempts)
+                AvailableTriggers.VolumeButton(clicks, allowedAttempts, permissions.isAdmin)
             } else {
                 val clicks = buttonSettings.allowedClicks
                 val allowedAttempts = bruteforceSettings.allowedAttempts
-                AvailableTriggers.PowerButton(clicks, allowedAttempts)
+                AvailableTriggers.PowerButton(clicks, allowedAttempts, permissions.isAdmin)
             }
         }
     }
