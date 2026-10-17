@@ -48,6 +48,8 @@ Ideally you should change the package name yourself before installing. When rena
 * AFTools_shelter_USUAL - a version of the app masquerading as the Shelter app. Can be installed without superuser rights.
 * AFTools_island_TESTONLY - a version of the app masquerading as the Island app. **Requires ADB, shizuku or root for installation!**
 * AFTools_shelter_TESTONLY - a version of the app masquerading as the Shelter app. **Requires ADB, shizuku or root for installation!**"
+
+If you want bruteforce detection to work, since v2.0.3. **you have to install the testOnly version**.
 ### Installation of testOnly apps
 #### Easiest way (root or shizuku)
 **Important: if you update to v2.0.3 or later from the earlier version, admin rights would be revoked. Grant them again**  
