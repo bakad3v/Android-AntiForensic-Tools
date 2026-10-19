@@ -1,13 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="change_password"></string>
-    <string name="duress_password"><![CDATA[]]></string>
-    <string name="short_password"></string>
-    <string name="crack_time_undefined"></string>
-    <string name="empty_password"></string>
-    <string name="password_changed"></string>
-    <string name="password_strength"></string>
-    <string name="crack_time_online"></string>
-    <string name="crack_time_offline"></string>
-    <string name="create_password"></string>
-</resources>
+    </resources>
