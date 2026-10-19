@@ -1,32 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="add_file"></string>
-    <string name="file_photo_description"></string>
-    <string name="long_help_files"><![CDATA[]]></string>
-    <string name="minpr"></string>
-    <string name="changePriority"></string>
-    <string name="want_to_clear"></string>
-    <string name="access_denied"></string>
-    <string name="enable_files_deletion"></string>
-    <string name="clear"></string>
-    <string name="enable_deletion_long"><![CDATA[]]></string>
-    <string name="apply"></string>
-    <string name="show_more"></string>
-    <string name="folder_removal_unsuccessful"></string>
-    <string name="delete_files"></string>
-    <string name="sizesmall"></string>
-    <string name="sizebig"></string>
-    <string name="fab_text"></string>
-    <string name="maxpr"></string>
-    <string name="about_file_title"></string>
-    <string name="priority"></string>
-    <string name="alphabet"></string>
-    <string name="file_removal_unsuccessfull"></string>
-    <string name="disalphabet"></string>
-    <string name="edit_text"></string>
-    <string name="file_deletion_settings"></string>
-    <string name="add_folder"></string>
-    <string name="disable_files_deletion"></string>
-    <string name="file"></string>
-    <string name="fileDetails"><![CDATA[]]></string>
-</resources>
+    </resources>
