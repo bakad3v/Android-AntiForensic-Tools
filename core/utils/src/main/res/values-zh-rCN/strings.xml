@@ -1,8 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="server_error"></string>
-    <string name="network_error"></string>
-    <string name="empty_response"></string>
-    <string name="unknown_error"></string>
-    <string name="connection_error"></string>
-</resources>
+    </resources>
