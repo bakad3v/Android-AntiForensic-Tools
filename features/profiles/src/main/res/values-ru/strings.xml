@@ -1,26 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="file_photo_description"></string>
-    <string name="current"></string>
-    <string name="enable_profile_deletion"></string>
-    <string name="profiles_faq"></string>
-    <string name="stop_user"></string>
-    <string name="disable_profile_deletion"></string>
-    <string name="unknown"></string>
-    <string name="profiles"></string>
-    <string name="profiles_deletion_settings"></string>
-    <string name="user_settings_disabled"></string>
-    <string name="add_profile"></string>
-    <string name="user_settings_disabled_long"></string>
-    <string name="failed_to_stop_profile"></string>
-    <string name="enable_profile_deletion_long"></string>
-    <string name="not_running"></string>
-    <string name="cant_delete_profile_long"></string>
-    <string name="profile_id"></string>
-    <string name="login"></string>
-    <string name="running"></string>
-    <string name="not_delete"></string>
-    <string name="refresh_profiles"></string>
-    <string name="cant_delete_profile"></string>
-    <string name="no_superuser_rights_profiles"></string>
-</resources>
+    </resources>
