@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="medium"></string>
+    <string name="worst"></string>
+    <string name="good"></string>
+    <string name="excellent"></string>
+    <string name="empty"></string>
+    <string name="weak"></string>
 </resources>
