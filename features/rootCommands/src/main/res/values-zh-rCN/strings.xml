@@ -1,11 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="edit_command"></string>
-    <string name="root_command_settings"></string>
-    <string name="no_root_rights_commands"></string>
-    <string name="enable_root_command_long"></string>
-    <string name="enter_root_commands"></string>
-    <string name="save_command"></string>
-    <string name="enable_root_command"></string>
-    <string name="disable_root_command"></string>
-</resources>
+    </resources>
