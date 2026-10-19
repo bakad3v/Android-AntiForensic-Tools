@@ -1,14 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="updates_found"></string>
-    <string name="prominent_disclosure_message"></string>
-    <string name="update_check_failed"></string>
-    <string name="app_update_center"></string>
-    <string name="ok"></string>
-    <string name="logo_background"></string>
-    <string name="cancel"></string>
-    <string name="updates_found_long"></string>
-    <string name="update_check_failed_long"></string>
-    <string name="wake_up" translatable="false"></string>
-    <string name="app_name" translatable="false"></string>
-</resources>
+    </resources>
