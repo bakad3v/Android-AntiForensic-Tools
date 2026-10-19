@@ -1,8 +1,3 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="empty_value_in_dialog"></string>
-    <string name="do_not_show_again"></string>
-    <string name="ok"></string>
-    <string name="number_out_of_range"></string>
-    <string name="cancel"></string>
-</resources>
+    </resources>
