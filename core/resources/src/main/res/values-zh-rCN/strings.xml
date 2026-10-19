@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_superuser_rights"></string>
+    <string name="help"></string>
+    <string name="delete"></string>
+    <string name="number_not_found"></string>
+    <string name="enable_deletion"></string>
+    <string name="no_root_rights"></string>
 </resources>
