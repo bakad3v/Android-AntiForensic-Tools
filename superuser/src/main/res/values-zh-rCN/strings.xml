@@ -1,3 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="shizuku_failure"></string>
+    <string name="wrong_android_version"></string>
+    <string name="not_enough_rights"></string>
+    <string name="data_not_found"></string>
+    <string name="unknow_root_error"></string>
+    <string name="cant_logout_from_primary_user"></string>
+    <string name="no_admin_rights"></string>
+    <string name="device_admin_error"></string>
+    <string name="shizuku_not_initialized"></string>
+    <string name="unknow_owner_error"></string>
+    <string name="unknow_admin_error"></string>
 </resources>
