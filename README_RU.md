@@ -4,7 +4,7 @@
 
 ## Переводы
 
-Переводы проекта выполняются через [Weblate](https://hosted.weblate.org/projects/PROJECT-SLUG/).
+Переводы проекта выполняются через [Weblate](https://hosted.weblate.org/projects/android-antiforensic-tools/).
 Вы можете помочь перевести Android AntiForensic Tools на свой язык.
 
 ## Описание приложения
