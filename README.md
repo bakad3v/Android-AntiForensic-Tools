@@ -8,7 +8,7 @@ You can read my statement on the upcoming sideloading ban and learn some ways to
 
 ## Translations
 
-Translations are managed through [Weblate](https://hosted.weblate.org/projects/PROJECT-SLUG/).
+Translations are managed through [Weblate](https://hosted.weblate.org/projects/android-antiforensic-tools/).
 You can help translate Android AntiForensic Tools into your language.
 
 ## Description
