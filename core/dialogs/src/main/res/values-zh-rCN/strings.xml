@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    </resources>
+    <string name="cancel">取消</string>
+    <string name="ok">好的</string>
+    <string name="do_not_show_again">不要再次提示</string>
+    <string name="empty_value_in_dialog">空值</string>
+    <string name="number_out_of_range">数字超出范围</string>
+</resources>
