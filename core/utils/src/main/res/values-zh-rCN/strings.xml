@@ -1,3 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    </resources>
+    <string name="empty_response">空响应</string>
+    <string name="connection_error">链接错误</string>
+    <string name="server_error">服务器错误 %1$d: %2$s</string>
+    <string name="unknown_error">未知错误：%1$s</string>
+    <string name="network_error">网络错误</string>
+</resources>
