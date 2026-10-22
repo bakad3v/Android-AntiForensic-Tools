@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    </resources>
+    <string name="cancel">取消</string>
+    <string name="ok">好的</string>
+    <string name="logo_background">标志背景</string>
+    <string name="prominent_disclosure_message">该应用利用无障碍服务，在锁屏界面监测“胁迫密码”，并监测 USB 连接情况。</string>
+    <string name="update_check_failed">检查更新时出错</string>
+    <string name="update_check_failed_long">软件检查更新出错，请检查您的网络连接，或在设置中禁用更新检查功能。</string>
+    <string name="updates_found">发现更新！</string>
+    <string name="updates_found_long">已发现应用程序更新！请前往更新设置以安装更新，或禁用更新检查。</string>
+    <string name="app_update_center">应用更新中心</string>
+</resources>
