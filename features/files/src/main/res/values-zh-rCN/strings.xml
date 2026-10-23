@@ -1,3 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    </resources>
+    <string name="fab_text">添加文件/文件夹</string>
+    <string name="add_file">添加文件</string>
+    <string name="add_folder">添加文件夹</string>
+    <string name="file_photo_description">文件图标</string>
+    <string name="show_more">展示更多</string>
+    <string name="edit_text">编辑</string>
+    <string name="priority">优先级：%1$d</string>
+    <string name="apply">确认操作</string>
+    <string name="want_to_clear">您想清除整个文件列表吗？</string>
+    <string name="enable_files_deletion">启用删除</string>
+    <string name="enable_deletion_long"><![CDATA[<p>如果触发了相关机制，所选文件将被删除。</p>\n<p><strong>重要提示：在 BFU（首次解锁前）模式下，文件删除功能无法生效。若在 BFU 模式下输入了“胁迫密码”，则文件删除操作会在手机解锁后启动。如果您设置了应用“自毁”功能，该功能也仅会在所有文件均被删除后才会执行。因此，建议尽量避免使用此模式；若能授予应用足够的权限，建议直接删除包含您机密文件的配置文件。</strong></p>]]></string>
+    <string name="file">文件:%1$s</string>
+    <string name="changePriority">更改文件优先级</string>
+    <string name="about_file_title">关于文件</string>
+    <string name="fileDetails"><![CDATA[<p>名称: %1$s</p><p>优先级: %2$s</p><p>大小: %3$s</p>]]></string>
+    <string name="long_help_files"><![CDATA[<p>在此输入伪密码后，您可以选择要删除的文件。在此菜单中，仅可选择<strong>无需 root 权限即可删除</strong>的文件。</p>\n<p>若要添加新文件或文件夹，请点击 <strong>+</strong> 按钮。</p>\n<p>您可以从列表中删除文件、清空列表，或编辑文件的优先级。优先级较高（数值较大）的文件会优先被删除。别忘了点击顶部栏中的启用图标，以开启文件删除功能！</p>]]></string>
+    <string name="file_removal_unsuccessfull">文件未被删除</string>
+    <string name="folder_removal_unsuccessful">文件夹未被删除</string>
+    <string name="access_denied">您拒绝了对文件的访问权限。这可能会引发一些问题。</string>
+    <string name="maxpr">优先级：最高者优先</string>
+    <string name="minpr">优先级：最低者优先</string>
+    <string name="alphabet">按字母顺序</string>
+    <string name="disalphabet">按照字母逆序</string>
+    <string name="sizebig">大小：最大优先</string>
+    <string name="sizesmall">大小：最小优先</string>
+    <string name="disable_files_deletion">禁止删除</string>
+    <string name="file_deletion_settings">文件删除设置</string>
+    <string name="clear">清理列表</string>
+    <string name="delete_files">删除文件</string>
+</resources>
