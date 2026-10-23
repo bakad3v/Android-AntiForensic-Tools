@@ -3,6 +3,6 @@
     <string name="app_installation_description">应用安装通知</string>
     <string name="app_installation">应用的安装</string>
     <string name="app_update_in_progress">应用正在更新</string>
-    <string name="update_success">更新成功。</string>
+    <string name="update_success">更新成功</string>
     <string name="update_failed">更新失败</string>
 </resources>
