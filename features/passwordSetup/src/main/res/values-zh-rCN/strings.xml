@@ -1,3 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    </resources>
+    <string name="create_password">设置密码</string>
+    <string name="short_password">密码太短了</string>
+    <string name="duress_password"><![CDATA[\n<p>此密码既可用于解锁应用程序，也可用于触发数据删除操作。若您已正确配置该应用，在锁屏界面输入此密码，即会执行您所设定的破坏性操作。以下是一些建议：</p>\n<p>• 请在您的设备上使用密码（而非 PIN 码）！</p>\n<p>• 请设置一个高强度的密码。</p>\n<p>• Android 系统对锁屏密码设有一定限制。通常，密码长度需在 4 到 16 个字符之间，且不得包含非 ASCII 字符。由于部分固件可能采用不同的规则，程序未必总能准确识别这些限制——建议您在自己的设备上进行实际测试。</p>\n<p>• 建议设置一个与您设备锁屏密码相似的密码。如果两者相似，攻击者更有可能误以为您只是不小心输错了密码。</p>\n]]></string>
+    <string name="change_password">改密码</string>
+    <string name="password_changed">密码更改成功</string>
+    <string name="empty_password">密码为空</string>
+    <string name="crack_time_undefined">破解所需时间：不适用</string>
+    <string name="crack_time_offline">离线破解时间：%1$s</string>
+    <string name="crack_time_online">破解时间（通过锁屏界面）：%1$s</string>
+    <string name="password_strength">密码长度：%1$s</string>
+</resources>
