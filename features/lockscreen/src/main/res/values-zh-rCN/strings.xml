@@ -1,3 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    </resources>
+    <string name="enter_password">输入密码</string>
+    <string name="wrong_password">错误的密码</string>
+    <string name="app_entered">有人进入了应用</string>
+</resources>
