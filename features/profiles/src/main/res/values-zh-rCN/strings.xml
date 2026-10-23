@@ -1,3 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    </resources>
+    <string name="file_photo_description">文件图标</string>
+    <string name="not_delete">请勿删除</string>
+    <string name="profile_id">资料 ID：%1$d\n</string>
+    <string name="profiles_faq">您可以在此处选择要删除的配置文件，或创建新的配置文件。别忘了点击顶部栏中的启用图标，以开启配置文件删除功能！</string>
+    <string name="profiles">资料</string>
+    <string name="no_superuser_rights_profiles">您需要超级用户权限才能管理资料</string>
+    <string name="user_settings_disabled">此设备不支持多用户设置。</string>
+    <string name="user_settings_disabled_long">您的设备似乎不支持多用户功能。如果您拥有 root 权限，则可以在“设置”选项卡中启用多用户界面。</string>
+    <string name="enable_profile_deletion_long">如果您触发了相应操作，所有标记为待删除的资料都将被删除</string>
+    <string name="enable_profile_deletion">允许删除资料</string>
+    <string name="refresh_profiles">刷新资料</string>
+    <string name="add_profile">添加资料</string>
+    <string name="disable_profile_deletion">禁止删除资料</string>
+    <string name="profiles_deletion_settings">资料删除设置</string>
+    <string name="current">当前的</string>
+    <string name="running">进行中</string>
+    <string name="not_running">停止进行</string>
+    <string name="unknown">未知</string>
+    <string name="stop_user">停止用户</string>
+    <string name="failed_to_stop_profile">停止资料失败</string>
+    <string name="cant_delete_profile">不能删除资料</string>
+    <string name="cant_delete_profile_long">你没有足够的权限来设置资料删除</string>
+    <string name="login">登录</string>
+</resources>
