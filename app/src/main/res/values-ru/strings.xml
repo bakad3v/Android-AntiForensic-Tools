@@ -1,3 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="cancel">Отмена</string>
+    <string name="ok">ОК</string>
+    <string name="logo_background">Фон логотипа</string>
+    <string name="prominent_disclosure_message">Это приложение использует сервис специальных возможностей, чтобы перехватывать пароль под принуждением на экране блокировки и обнаруживать USB-подключения.</string>
+    <string name="update_check_failed">Ошибка при проверке обновлений</string>
+    <string name="update_check_failed_long">Приложение не смогло проверить обновления. Пожалуйста, проверьте ваше Интернет-соединение или отключите проверку обновлений в настройках.</string>
+    <string name="updates_found">Обновления найдены!</string>
+    <string name="updates_found_long">Обновления для приложения найдены! Пожалуйста, откройте центр обновлений, чтобы установить обновления или отключить проверку обновлений.</string>
+    <string name="app_update_center">Центр обновлений</string>
 </resources>

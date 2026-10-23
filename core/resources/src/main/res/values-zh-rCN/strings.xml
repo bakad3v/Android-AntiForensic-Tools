@@ -1,3 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="no_root_rights">app还没有root权限</string>
+    <string name="number_not_found">未找到数字</string>
+    <string name="no_superuser_rights">你没有超级用户权限</string>
+    <string name="help">帮助</string>
+    <string name="delete">删除</string>
+    <string name="enable_deletion">启用删除</string>
 </resources>
