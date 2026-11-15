@@ -10,6 +10,8 @@ import javax.inject.Inject
 class MagiskManager @Inject constructor(
     @ApplicationContext private val context: Context
 ) {
+    fun launchIntent(): Intent? = context.packageManager.getLaunchIntentForPackage(PACKAGE_NAME)
+
     /** Magisk 31.1 moved permission grants into the manager app. */
     @Suppress("DEPRECATION")
     fun permissionIntent(): Intent? {
@@ -25,7 +27,7 @@ class MagiskManager @Inject constructor(
             packageInfo.versionCode.toLong()
         }
         return if (versionCode >= MANUAL_GRANT_VERSION_CODE) {
-            packageManager.getLaunchIntentForPackage(PACKAGE_NAME)
+            launchIntent()
         } else {
             null
         }

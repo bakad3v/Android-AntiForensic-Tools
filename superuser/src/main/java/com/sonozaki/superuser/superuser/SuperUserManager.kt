@@ -25,6 +25,8 @@ class SuperUserManager @Inject constructor(private val dshizuku: Dshizuku, priva
 
     fun rootPermissionIntent(): Intent? = magiskManager.permissionIntent()
 
+    fun magiskLaunchIntent(): Intent? = magiskManager.launchIntent()
+
     fun askShizukuRights() = shizukuManager.requestShizukuPermission()
 
     fun checkShizukuInstalled() = shizukuManager.checkShizukuInstalled()

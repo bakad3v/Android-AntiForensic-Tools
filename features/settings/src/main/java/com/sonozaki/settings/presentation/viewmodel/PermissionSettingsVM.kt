@@ -109,12 +109,16 @@ class PermissionSettingsVM @Inject constructor(
     }
 
     fun showRootDisableDialog() {
+        showQuestionDialog(
+            title = UIText.StringResource(R.string.disable_root),
+            message = UIText.StringResource(R.string.disable_root_long),
+            requestKey = DISABLE_ROOT_DIALOG
+        )
+    }
+
+    fun openMagisk() {
         viewModelScope.launch {
-            showInfoDialogSuspend(
-                message = UIText.StringResource(R.string.disable_root_long),
-                title = UIText.StringResource(R.string.disable_root)
-            )
-            setRootActiveUseCase(false)
+            superUserManager.magiskLaunchIntent()?.let { rootPermissionIntents.send(it) }
         }
     }
 
@@ -149,6 +153,7 @@ class PermissionSettingsVM @Inject constructor(
     companion object {
         const val MOVE_TO_ACCESSIBILITY_SERVICE = "move_to_accessibility_service"
         const val ROOT_WARNING_DIALOG = "root_warning_dialog"
+        const val DISABLE_ROOT_DIALOG = "disable_root_dialog"
         const val INSTALL_DIZUKU_DIALOG = "install_dizuku"
         const val INSTALL_SHIZUKU_DIALOG = "install_shizuku"
         const val DISABLE_SHIZUKU_MANUALLY = "disable_shizuku_manually"
