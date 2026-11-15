@@ -5,6 +5,7 @@ import com.sonozaki.superuser.admin.DeviceAdmin
 import com.sonozaki.superuser.domain.usecases.GetPermissionsUseCase
 import com.sonozaki.superuser.dshizuku.Dshizuku
 import com.sonozaki.superuser.owner.DhizukuManager
+import com.sonozaki.superuser.root.MagiskManager
 import com.sonozaki.superuser.root.Root
 import com.sonozaki.superuser.shizuku.ShizukuManager
 import com.sonozaki.utils.UIText
@@ -15,12 +16,14 @@ import javax.inject.Singleton
  * Class for retrieving superusers and managing permissions.
  */
 @Singleton
-class SuperUserManager @Inject constructor(private val dshizuku: Dshizuku, private val dhizukuManager: DhizukuManager, private val root: Root, private val admin: DeviceAdmin, private val getPermissionsUseCase: GetPermissionsUseCase, private val shizukuManager: ShizukuManager) {
+class SuperUserManager @Inject constructor(private val dshizuku: Dshizuku, private val dhizukuManager: DhizukuManager, private val root: Root, private val admin: DeviceAdmin, private val getPermissionsUseCase: GetPermissionsUseCase, private val shizukuManager: ShizukuManager, private val magiskManager: MagiskManager) {
 
     /**
-     * Show dialog with root rights request.
+     * Check root access with a fresh shell, prompting on root managers that support it.
      */
-    fun askRootRights(): Boolean = root.askSuperUserRights()
+    suspend fun askRootRights(): Boolean = root.refreshRootRights()
+
+    fun rootPermissionIntent(): Intent? = magiskManager.permissionIntent()
 
     fun askShizukuRights() = shizukuManager.requestShizukuPermission()
 

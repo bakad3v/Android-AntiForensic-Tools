@@ -13,7 +13,10 @@ import com.sonozaki.superuser.superuser.SuperUserManager
 import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +30,9 @@ class PermissionSettingsVM @Inject constructor(
 ): AbstractSettingsVM(settingsActionChannel, getSettingsUseCase, getPermissionsUseCase) {
 
     val shizukuState = superUserManager.shizukuStateFlow
+    private val rootPermissionIntents = Channel<Intent>(Channel.BUFFERED)
+    val rootPermissionIntentsFlow = rootPermissionIntents.receiveAsFlow()
+    private val rootCheckMutex = Mutex()
 
     fun showAccessibilityServiceDialog() {
         showQuestionDialog(
@@ -114,8 +120,21 @@ class PermissionSettingsVM @Inject constructor(
 
     fun askRoot() {
         viewModelScope.launch {
-            val rootResult = superUserManager.askRootRights()
-            setRootActiveUseCase(rootResult)
+            val intent = superUserManager.rootPermissionIntent()
+            if (intent != null) {
+                rootPermissionIntents.send(intent)
+            } else {
+                refreshRootStatus()
+            }
+        }
+    }
+
+    fun refreshRootStatus() {
+        viewModelScope.launch {
+            rootCheckMutex.withLock {
+                val rootResult = superUserManager.askRootRights()
+                setRootActiveUseCase(rootResult)
+            }
         }
     }
 

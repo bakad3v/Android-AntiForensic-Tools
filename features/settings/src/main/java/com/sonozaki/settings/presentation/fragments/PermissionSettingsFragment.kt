@@ -1,5 +1,6 @@
 package com.sonozaki.settings.presentation.fragments
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -48,6 +49,24 @@ class PermissionSettingsFragment: AbstractSettingsFragment() {
         setupButtonsAndSwitches()
         setupHelp()
         observeShizukuState()
+        observeRootPermissionIntents()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshRootStatus()
+    }
+
+    private fun observeRootPermissionIntents() {
+        viewLifecycleOwner.launchLifecycleAwareCoroutine {
+            viewModel.rootPermissionIntentsFlow.collect { intent ->
+                try {
+                    startActivity(intent)
+                } catch (_: ActivityNotFoundException) {
+                    viewModel.refreshRootStatus()
+                }
+            }
+        }
     }
 
     private fun setupHelp() {

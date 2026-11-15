@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.REQUEST_DELETE_PACKAGES" />
     <queries>
+        <package android:name="com.topjohnwu.magisk" />
         <package android:name="moe.shizuku.privileged.api" />
     </queries>
     <application>
