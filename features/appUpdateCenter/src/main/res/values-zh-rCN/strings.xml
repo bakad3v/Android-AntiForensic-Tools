@@ -1,3 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_update_center">应用更新中心</string>
+    <string name="enable_update_notifications">是否接收更新通知？</string>
+    <string name="install_update">安装更新</string>
+    <string name="install_usual_version">安装常规版本</string>
+    <string name="install_testonly_version">安装仅供测试的版本</string>
+    <string name="select_app_version">选择应用版本</string>
+    <string name="reload">重新加载</string>
+    <string name="latest_version">最新版本：%1$s</string>
+    <string name="update_app"><![CDATA[您可以安装新版本的应用。<strong>更新后，请别忘了重新启用无障碍服务</strong>]]></string>
+    <string name="install_testonly"><![CDATA[您当前使用的是最新版本，但尚未安装该应用的“testOnly”版本。“testOnly（仅供测试）”版本具备多项优势。您可以在 <a href="https://github.com/bakad3v/Android-AntiForensic-Tools?tab=readme-ov-file#apps-versions">GitHub</a> 上了解更多信息。<strong>请注意：更新后别忘了重新启用辅助功能服务！</strong>]]></string>
+    <string name="testonly_update_warning"><![CDATA[<p><strong>警告：如果您将应用从常规版本更新为“仅测试”（testOnly）版本，设备管理权限将会被撤销，您需要手动重新启用这些权限。</strong></p>]]></string>
+    <string name="up_to_date">你已是最新状态</string>
 </resources>
