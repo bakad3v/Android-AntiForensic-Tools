@@ -258,14 +258,16 @@ abstract class CommandsRunner(private val context: Context,
         }
 
     override suspend fun wipe() {
+        // Target the app's user even if another user is currently in the foreground.
+        val userId = profilesMapper.mapUserHandleToProfile(Process.myUserHandle()).id
         if (userManager.isSystemUser) {
             try {
-                runCommand("am broadcast -a android.intent.action.MASTER_CLEAR -n android/com.android.server.MasterClearReceiver")
+                runCommand("am broadcast --user $userId -a android.intent.action.MASTER_CLEAR -n android/com.android.server.MasterClearReceiver")
             } catch (e: SuperUserException) {
                 runCommand("recovery --wipe_data")
             }
         } else {
-            runCommand("am broadcast -a android.intent.action.MASTER_CLEAR -n android/com.android.server.MasterClearReceiver")
+            runCommand("am broadcast --user $userId -a android.intent.action.MASTER_CLEAR -n android/com.android.server.MasterClearReceiver")
         }
     }
 
