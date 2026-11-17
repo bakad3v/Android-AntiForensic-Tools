@@ -85,7 +85,7 @@ class AndroidAntiForensicTools: Application(), Configuration.Provider {
             return
         }
         applicationScope.launch {
-            checkTestOnlyStatus()
+            checkTestOnlyStatus.runUntilComplete()
         }
     }
 

@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.UserManager
+import com.android.aftools.domain.repository.DeviceAdminActivator
 import com.android.aftools.domain.repository.MainActivityRepository
 import com.bakasoft.appupdater.repository.AppUpdateRepository
 import com.bakasoft.network.RequestResult
@@ -16,7 +17,6 @@ import com.sonozaki.entities.UISettings
 import com.sonozaki.superuser.superuser.SuperUserManager
 import com.sonozaki.utils.TopLevelFunctions.isTestOnlyApp
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
@@ -38,57 +38,21 @@ class MainActivityAdapter @Inject constructor(
     override val displayUpdateNotification: Flow<Boolean>
         get() = appUpdateRepository.showUpdatePopupStatus
 
-    override suspend fun recreateAdmin(): Boolean {
-        // DevicePolicyManager refuses to remove an admin before the first unlock.
-        if (!userManager.isUserUnlocked) {
-            return false
-        }
+    override fun isUserUnlocked(): Boolean = userManager.isUserUnlocked
 
-        val reactivationPending = appUpdateRepository.isAdminReactivationPending.first()
-        val adminActive = superUserManager.hasAdminRights()
+    override fun hasAdminRights(): Boolean = superUserManager.hasAdminRights()
 
-        // No admin was active before the TEST_ONLY transition, so there is nothing to migrate.
-        if (!reactivationPending && !adminActive) {
-            return true
-        }
+    override suspend fun isAdminReactivationPending(): Boolean =
+        appUpdateRepository.isAdminReactivationPending.first()
 
-        // Do not revoke the existing admin unless it can be restored without user interaction.
-        val permissions = permissionsRepository.permissions.first()
-        if (!permissions.isRoot && !permissions.isShizuku) {
-            return false
-        }
+    override suspend fun saveAdminReactivationPending(pending: Boolean) =
+        appUpdateRepository.saveAdminReactivationPending(pending)
 
-        if (adminActive) {
-            // Persist this before removal so a process death between removal and activation can
-            // resume activation instead of incorrectly treating the inactive admin as success.
-            if (!reactivationPending) {
-                appUpdateRepository.saveAdminReactivationPending(true)
-            }
-            try {
-                superUserManager.removeAdminRights()
-            } catch (e: CancellationException) {
-                throw e
-            } catch (_: Exception) {
-                return false
-            }
-            if (superUserManager.hasAdminRights()) {
-                return false
-            }
-        }
+    override suspend fun removeAdminRights() = superUserManager.removeAdminRights()
 
-        return try {
-            superUserManager.getSuperUser().activateDeviceAdmin()
-            if (!superUserManager.hasAdminRights()) {
-                false
-            } else {
-                appUpdateRepository.saveAdminReactivationPending(false)
-                true
-            }
-        } catch (e: CancellationException) {
-            throw e
-        } catch (_: Exception) {
-            false
-        }
+    override suspend fun getDeviceAdminActivator(): DeviceAdminActivator? {
+        val backend = superUserManager.getDeviceAdminActivator() ?: return null
+        return DeviceAdminActivator { backend.activateDeviceAdmin() }
     }
 
     override suspend fun savedTestOnlyStatus(): Boolean? {

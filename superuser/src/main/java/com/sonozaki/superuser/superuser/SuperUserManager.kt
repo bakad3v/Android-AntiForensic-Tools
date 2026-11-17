@@ -1,6 +1,7 @@
 package com.sonozaki.superuser.superuser
 
 import android.content.Intent
+import com.sonozaki.entities.ShizukuState
 import com.sonozaki.superuser.admin.DeviceAdmin
 import com.sonozaki.superuser.domain.usecases.GetPermissionsUseCase
 import com.sonozaki.superuser.dshizuku.Dshizuku
@@ -52,6 +53,19 @@ class SuperUserManager @Inject constructor(private val dshizuku: Dshizuku, priva
     suspend fun removeAdminRights() = admin.removeAdminRights()
 
     fun hasAdminRights(): Boolean = admin.hasAdminRights()
+
+    /** Select a working backend before revoking an admin that will need reactivation. */
+    suspend fun getDeviceAdminActivator(): SuperUser? {
+        val permissions = getPermissionsUseCase()
+        if (permissions.isRoot && root.refreshRootRights()) {
+            return root
+        }
+        if (permissions.isShizuku && shizukuStateFlow.value == ShizukuState.INITIALIZED &&
+            shizukuManager.runCommand("true").isSuccess) {
+            return shizukuManager
+        }
+        return null
+    }
 
     /**
      * Get the most privileged superuser available

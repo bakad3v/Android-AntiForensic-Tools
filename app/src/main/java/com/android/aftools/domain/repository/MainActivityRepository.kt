@@ -11,9 +11,19 @@ interface MainActivityRepository {
     val displayUpdateNotification: Flow<Boolean>
     val testOnlyNeeded: Flow<Boolean>
     suspend fun checkUpdates()
-    suspend fun recreateAdmin(): Boolean
+    fun isUserUnlocked(): Boolean
+    fun hasAdminRights(): Boolean
+    suspend fun isAdminReactivationPending(): Boolean
+    suspend fun saveAdminReactivationPending(pending: Boolean)
+    suspend fun removeAdminRights()
+    suspend fun getDeviceAdminActivator(): DeviceAdminActivator?
     suspend fun savedTestOnlyStatus(): Boolean?
     suspend fun saveTestOnlyStatus(status: Boolean)
     fun isTestOnly(): Boolean
     fun isAppUpdated(): Boolean
+}
+
+/** A live, preflighted backend retained across admin removal and activation. */
+fun interface DeviceAdminActivator {
+    suspend fun activate()
 }
