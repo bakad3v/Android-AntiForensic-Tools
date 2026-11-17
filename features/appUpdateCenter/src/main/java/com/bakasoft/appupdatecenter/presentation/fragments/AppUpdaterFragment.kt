@@ -193,8 +193,7 @@ class AppUpdaterFragment: Fragment() {
             btnInstallUpdate.setOnClickListener {
                 viewModel.setInstallerData(
                     path,
-                    data.selectedOption == SelectedOption.INSTALL_TESTONLY,
-                    !data.isAppTestOnly && data.selectedOption == SelectedOption.INSTALL_TESTONLY
+                    data.selectedOption == SelectedOption.INSTALL_TESTONLY
                 )
             }
         }

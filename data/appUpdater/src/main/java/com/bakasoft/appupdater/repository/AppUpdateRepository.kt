@@ -10,5 +10,7 @@ interface AppUpdateRepository {
     suspend fun setUpdatePopupStatus(status: Boolean)
     suspend fun checkUpdates()
     suspend fun saveTestOnlyStatus(status: Boolean)
+    suspend fun saveAdminReactivationPending(pending: Boolean)
     val isTestOnlyStatus: Flow<Boolean?>
+    val isAdminReactivationPending: Flow<Boolean>
 }

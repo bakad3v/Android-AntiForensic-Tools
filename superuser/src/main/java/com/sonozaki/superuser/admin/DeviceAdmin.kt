@@ -49,6 +49,15 @@ class DeviceAdmin @Inject constructor(
 
     fun hasAdminRights(): Boolean = checkAdminRights()
 
+    override suspend fun activateDeviceAdmin() {
+        if (!checkAdminRights()) {
+            throw SuperUserException(
+                ADMIN_ERROR_TEXT,
+                UIText.StringResource(R.string.device_admin_error)
+            )
+        }
+    }
+
     private suspend fun awaitAdminRemoval(): Boolean {
         repeat(ADMIN_REMOVAL_CHECK_ATTEMPTS) {
             if (!checkAdminRights()) {

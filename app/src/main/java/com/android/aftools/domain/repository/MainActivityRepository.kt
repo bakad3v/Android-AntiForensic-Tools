@@ -9,10 +9,9 @@ interface MainActivityRepository {
     val uiSettings: Flow<UISettings>
     val appLatestData: Flow<RequestResult<AppLatestVersion>>
     val displayUpdateNotification: Flow<Boolean>
-
     val testOnlyNeeded: Flow<Boolean>
     suspend fun checkUpdates()
-    suspend fun disableAdmin(): Boolean
+    suspend fun recreateAdmin(): Boolean
     suspend fun savedTestOnlyStatus(): Boolean?
     suspend fun saveTestOnlyStatus(status: Boolean)
     fun isTestOnly(): Boolean

@@ -22,7 +22,7 @@ class CheckTestOnlyStatusTest {
 
         CheckTestOnlyStatus(repository)()
 
-        assertEquals(0, repository.disableAdminCalls)
+        assertEquals(0, repository.recreateAdminCalls)
         assertEquals(listOf(true), repository.savedStatuses)
     }
 
@@ -36,7 +36,7 @@ class CheckTestOnlyStatusTest {
 
         CheckTestOnlyStatus(repository)()
 
-        assertEquals(1, repository.disableAdminCalls)
+        assertEquals(1, repository.recreateAdminCalls)
         assertEquals(listOf(true), repository.savedStatuses)
     }
 
@@ -50,7 +50,7 @@ class CheckTestOnlyStatusTest {
 
         CheckTestOnlyStatus(repository)()
 
-        assertEquals(1, repository.disableAdminCalls)
+        assertEquals(1, repository.recreateAdminCalls)
         assertEquals(listOf(true), repository.savedStatuses)
     }
 
@@ -64,23 +64,41 @@ class CheckTestOnlyStatusTest {
 
         CheckTestOnlyStatus(repository)()
 
-        assertEquals(0, repository.disableAdminCalls)
+        assertEquals(0, repository.recreateAdminCalls)
         assertTrue(repository.savedStatuses.isEmpty())
     }
 
     @Test
-    fun failedAdminRemoval_doesNotSaveTestOnlyStatus() = runBlocking {
+    fun failedAdminRecreation_doesNotSaveTestOnlyStatus() = runBlocking {
         val repository = FakeMainActivityRepository(
             currentStatus = true,
             savedStatus = false,
             appUpdated = true,
-            adminRemovalSucceeds = false
+            adminRecreationSucceeds = false
         )
 
         CheckTestOnlyStatus(repository)()
 
-        assertEquals(1, repository.disableAdminCalls)
+        assertEquals(1, repository.recreateAdminCalls)
         assertTrue(repository.savedStatuses.isEmpty())
+    }
+
+    @Test
+    fun incompleteAdminRecreation_isRetriedUntilItSucceeds() = runBlocking {
+        val repository = FakeMainActivityRepository(
+            currentStatus = true,
+            savedStatus = false,
+            appUpdated = true,
+            adminRecreationSucceeds = false
+        )
+        val checkStatus = CheckTestOnlyStatus(repository)
+
+        checkStatus()
+        repository.adminRecreationSucceeds = true
+        checkStatus()
+
+        assertEquals(2, repository.recreateAdminCalls)
+        assertEquals(listOf(true), repository.savedStatuses)
     }
 
     @Test
@@ -93,7 +111,7 @@ class CheckTestOnlyStatusTest {
 
         CheckTestOnlyStatus(repository)()
 
-        assertEquals(0, repository.disableAdminCalls)
+        assertEquals(0, repository.recreateAdminCalls)
         assertEquals(listOf(false), repository.savedStatuses)
     }
 
@@ -101,9 +119,9 @@ class CheckTestOnlyStatusTest {
         private val currentStatus: Boolean,
         private val savedStatus: Boolean?,
         private val appUpdated: Boolean,
-        private val adminRemovalSucceeds: Boolean = true
+        var adminRecreationSucceeds: Boolean = true
     ) : MainActivityRepository {
-        var disableAdminCalls = 0
+        var recreateAdminCalls = 0
             private set
         val savedStatuses = mutableListOf<Boolean>()
 
@@ -114,9 +132,9 @@ class CheckTestOnlyStatusTest {
 
         override suspend fun checkUpdates() = Unit
 
-        override suspend fun disableAdmin(): Boolean {
-            disableAdminCalls++
-            return adminRemovalSucceeds
+        override suspend fun recreateAdmin(): Boolean {
+            recreateAdminCalls++
+            return adminRecreationSucceeds
         }
 
         override suspend fun savedTestOnlyStatus(): Boolean? = savedStatus

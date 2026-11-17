@@ -20,7 +20,7 @@ class CheckTestOnlyStatus @Inject constructor(
     }
 
     private suspend fun removeAdminAndSaveStatus() {
-        if (repository.disableAdmin()) {
+        if (repository.recreateAdmin()) {
             repository.saveTestOnlyStatus(true)
         }
     }

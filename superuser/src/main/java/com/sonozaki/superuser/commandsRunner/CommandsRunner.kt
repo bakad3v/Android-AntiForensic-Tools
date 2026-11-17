@@ -1,5 +1,6 @@
 package com.sonozaki.superuser.commandsRunner
 
+import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.os.Build
@@ -27,6 +28,30 @@ abstract class CommandsRunner(private val context: Context,
     private val userManager: UserManager,
     private val deviceAdmin: ComponentName): SuperUser {
     abstract suspend fun runCommand(command: String): CommandResult
+
+    override suspend fun activateDeviceAdmin() = withContext(coroutineDispatcher) {
+        val dpm = context.getSystemService(DevicePolicyManager::class.java)
+        if (dpm.isAdminActive(deviceAdmin)) {
+            return@withContext
+        }
+
+        // The foreground user may differ from the user running this app (e.g. a work profile).
+        val userId = profilesMapper.mapUserHandleToProfile(Process.myUserHandle()).id
+        val result = runCommand("dpm set-active-admin --user $userId ${deviceAdmin.flattenToString()}")
+        if (!result.isSuccess || !dpm.isAdminActive(deviceAdmin)) {
+            val reason = if (result.isSuccess) {
+                "Device admin receiver is still inactive after activation"
+            } else {
+                (result.error + result.output).filter { it.isNotBlank() }
+                    .joinToString("\n")
+                    .ifBlank { "Device admin activation command failed" }
+            }
+            throw SuperUserException(
+                reason,
+                UIText.StringResource(R.string.unknow_admin_error, reason)
+            )
+        }
+    }
 
     protected suspend fun checkAdminApp(packageName: String) {
         if (packageName == context.packageName) {

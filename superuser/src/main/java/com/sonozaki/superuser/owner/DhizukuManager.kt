@@ -53,6 +53,16 @@ class DhizukuManager @Inject constructor(
     private val packageInstaller by lazy { getDhizukuPackageInstaller() }
     private val deviceOwner by lazy { Dhizuku.getOwnerComponent() }
 
+    override suspend fun activateDeviceAdmin() {
+        if (!appDPM.isAdminActive(deviceAdmin)) {
+            // Device owner privileges do not include the system MANAGE_DEVICE_ADMINS permission.
+            throw SuperUserException(
+                "Dhizuku cannot activate another device admin",
+                UIText.StringResource(R.string.not_enough_rights)
+            )
+        }
+    }
+
     private fun initDhizuku() {
         Dhizuku.init(context)
         if (VERSION.SDK_INT >= Build.VERSION_CODES.P) HiddenApiBypass.setHiddenApiExemptions("")

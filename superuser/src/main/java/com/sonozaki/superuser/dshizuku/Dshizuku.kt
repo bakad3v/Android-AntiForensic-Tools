@@ -19,6 +19,14 @@ class Dshizuku @Inject constructor(
     private val getPermissionsUseCase: GetPermissionsUseCase
 ): SuperUser {
 
+    override suspend fun activateDeviceAdmin() {
+        if (getPermissionsUseCase().isShizuku) {
+            shizukuManager.activateDeviceAdmin()
+        } else {
+            dhizukuManager.activateDeviceAdmin()
+        }
+    }
+
 
     /**
      * Function for choosing shizuku or dhizuku to run a command.

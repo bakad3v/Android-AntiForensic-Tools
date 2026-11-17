@@ -8,6 +8,17 @@ import okio.BufferedSource
  */
 interface SuperUser {
     /**
+     * Activate this app's device admin receiver for the Android user running the app.
+     * Uses the runtime package name, including application ID suffixes. Already active is a no-op.
+     *
+     * Requirements: root or Shizuku. Dhizuku and device admin alone cannot activate an inactive
+     * receiver; use [android.app.admin.DevicePolicyManager.ACTION_ADD_DEVICE_ADMIN] for user approval.
+     * This grants device admin rights, not device owner rights.
+     */
+    @Throws(SuperUserException::class)
+    suspend fun activateDeviceAdmin()
+
+    /**
      * Wipe device memory if called from main user or profiles data if called from secondary user.
      *
      * Requirements: any superuser. Calling this function from main user is restricted: device admin can't call this function on Android 14 and above.
