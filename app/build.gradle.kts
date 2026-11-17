@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.android.aftools"
-    compileSdk = 35
+    compileSdk = 37
 
     val releaseStoreFile = providers.gradleProperty("AFT_RELEASE_STORE_FILE").orNull
     val releaseStorePassword = providers.gradleProperty("AFT_RELEASE_STORE_PASSWORD").orNull
@@ -26,9 +26,9 @@ android {
     defaultConfig {
         applicationId = "com.android.aftools"
         minSdk = 26
-        targetSdk = 36
-        versionCode = 11
-        versionName = "2.0.3"
+        targetSdk = 37
+        versionCode = 12
+        versionName = "2.0.4"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
