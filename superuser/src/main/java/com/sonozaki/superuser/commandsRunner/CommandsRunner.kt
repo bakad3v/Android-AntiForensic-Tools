@@ -70,7 +70,7 @@ abstract class CommandsRunner(private val context: Context,
     }
 
     override suspend fun getUserLimit(): Int? {
-        return Regex("\\d").find(runCommand("pm get-max-users").output[0])?.value?.toInt()
+        return Regex("\\d+").find(runCommand("pm get-max-users").output[0])?.value?.toInt()
     }
 
     override suspend fun setSafeBootStatus(status: Boolean) {
@@ -83,7 +83,7 @@ abstract class CommandsRunner(private val context: Context,
                 ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.Q),
                 UIText.StringResource(
                     R.string.wrong_android_version,
-                    Build.VERSION_CODES.P.toString()
+                    Build.VERSION_CODES.Q.toString()
                 )
             )
         runCommand("settings put global user_switcher_enabled ${status.toInt()}")
@@ -95,7 +95,7 @@ abstract class CommandsRunner(private val context: Context,
                 ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.Q),
                 UIText.StringResource(
                     R.string.wrong_android_version,
-                    Build.VERSION_CODES.P.toString()
+                    Build.VERSION_CODES.Q.toString()
                 )
             )
         return try {
