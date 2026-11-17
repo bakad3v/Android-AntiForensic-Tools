@@ -268,6 +268,10 @@ class DhizukuManager @Inject constructor(
         throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
     }
 
+    override suspend fun removeAccessibilityServiceDialog() {
+        throw SuperUserException(NOT_ENOUGH_RIGHTS, UIText.StringResource(R.string.not_enough_rights))
+    }
+
     override suspend fun setSwitchUserRestriction(status: Boolean) = withContext(coroutineDispatcher) {
         if (VERSION.SDK_INT < Build.VERSION_CODES.P)
             throw SuperUserException(

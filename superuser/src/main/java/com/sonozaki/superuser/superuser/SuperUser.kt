@@ -254,4 +254,9 @@ interface SuperUser {
      */
     @Throws(SuperUserException::class)
     suspend fun removeNotification(packageName: String, id: Int)
+
+    /**
+     * Removes Restricted Settings dialog for this app
+     */
+    suspend fun removeAccessibilityServiceDialog()
 }

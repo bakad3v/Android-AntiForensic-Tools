@@ -13,6 +13,7 @@ import com.sonozaki.superuser.superuser.SuperUserManager
 import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
@@ -24,13 +25,17 @@ class PermissionSettingsVM @Inject constructor(
     private val superUserManager: SuperUserManager,
     private val setRootActiveUseCase: SetRootActiveUseCase,
     private val setOwnerActiveUseCase: SetOwnerActiveUseCase,
+    private val getPermissionsUseCase: GetPermissionsUseCase,
     settingsActionChannel: Channel<DialogActions>,
     getSettingsUseCase: GetSettingsUseCase,
-    getPermissionsUseCase: GetPermissionsUseCase
 ): AbstractSettingsVM(settingsActionChannel, getSettingsUseCase, getPermissionsUseCase) {
 
     val shizukuState = superUserManager.shizukuStateFlow
     private val rootPermissionIntents = Channel<Intent>(Channel.BUFFERED)
+
+    private val openAccessibilityServiceEvents: Channel<Unit> = Channel(Channel.BUFFERED)
+
+    val openAccessibilityServiceFlow = openAccessibilityServiceEvents.receiveAsFlow()
     val rootPermissionIntentsFlow = rootPermissionIntents.receiveAsFlow()
     private val rootCheckMutex = Mutex()
 
@@ -40,6 +45,19 @@ class PermissionSettingsVM @Inject constructor(
             message = UIText.StringResource(R.string.accessibility_service_long),
             MOVE_TO_ACCESSIBILITY_SERVICE
         )
+    }
+
+    fun startAccessibilityService() {
+        viewModelScope.launch {
+            val permissions = getPermissionsUseCase().first()
+            if (permissions.isRoot || permissions.isShizuku) {
+                try {
+                    superUserManager.getSuperUser().removeAccessibilityServiceDialog()
+                } catch (_: Exception) {
+                }
+            }
+            openAccessibilityServiceEvents.send(Unit)
+        }
     }
 
     fun adminRightsIntent(): Intent {

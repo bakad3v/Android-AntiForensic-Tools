@@ -3,6 +3,7 @@ package com.sonozaki.superuser.commandsRunner
 import android.content.ComponentName
 import android.content.Context
 import android.os.Build
+import android.os.Process
 import android.os.UserManager
 import android.provider.Settings
 import com.anggrayudi.storage.extension.toBoolean
@@ -71,6 +72,17 @@ abstract class CommandsRunner(private val context: Context,
 
     override suspend fun getUserLimit(): Int? {
         return Regex("\\d+").find(runCommand("pm get-max-users").output[0])?.value?.toInt()
+    }
+
+    override suspend fun removeAccessibilityServiceDialog() {
+        val userId = profilesMapper
+            .mapUserHandleToProfile(Process.myUserHandle())
+            .id
+
+        runCommand(
+            "cmd appops set --user $userId " +
+                    "${context.packageName} ACCESS_RESTRICTED_SETTINGS allow"
+        )
     }
 
     override suspend fun setSafeBootStatus(status: Boolean) {

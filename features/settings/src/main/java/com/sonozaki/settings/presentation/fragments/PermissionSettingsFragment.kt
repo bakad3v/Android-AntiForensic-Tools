@@ -51,6 +51,15 @@ class PermissionSettingsFragment: AbstractSettingsFragment() {
         setupHelp()
         observeShizukuState()
         observeRootPermissionIntents()
+        observeAccessibilityServiceLaunch()
+    }
+
+    private fun observeAccessibilityServiceLaunch() {
+        viewLifecycleOwner.launchLifecycleAwareCoroutine {
+            viewModel.openAccessibilityServiceFlow.collect {
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            }
+        }
     }
 
     override fun onResume() {
@@ -190,7 +199,7 @@ class PermissionSettingsFragment: AbstractSettingsFragment() {
     }
 
     private fun startAccessibilityService() {
-        startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+        viewModel.startAccessibilityService()
     }
 
     private fun openShizukuApp() {

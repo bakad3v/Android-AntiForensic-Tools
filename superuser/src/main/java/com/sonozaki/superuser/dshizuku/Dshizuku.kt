@@ -264,6 +264,14 @@ class Dshizuku @Inject constructor(
         throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
     }
 
+    override suspend fun removeAccessibilityServiceDialog() {
+        if (getPermissionsUseCase().isShizuku) {
+            shizukuManager.removeAccessibilityServiceDialog()
+        } else {
+            dhizukuManager.removeAccessibilityServiceDialog()
+        }
+    }
+
     companion object {
         private const val NO_ROOT_RIGHTS = "App doesn't have root rights"
     }
