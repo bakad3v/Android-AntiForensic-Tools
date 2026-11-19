@@ -8,8 +8,8 @@
     <string name="reload">Reload</string>
     <string name="latest_version">Latest version: %1$s</string>
     <string name="update_app"><![CDATA[You can install a new version of the app. <strong>Don\'t forget to reactivate accessibility service after update!</strong>]]></string>
-    <string name="install_testonly"><![CDATA[You have the latest version, but you don\'t have the testOnly version of the app installed. The testOnly app version has several advantages. You can read more on <a href="https://github.com/bakad3v/Android-AntiForensic-Tools?tab=readme-ov-file#apps-versions">GitHub</a>. <strong>Don\'t forget to reactivate accessibility service after update!</strong>]]></string>
-    <string name="testonly_update_warning"><![CDATA[<p><strong>Warning: if you will update from usual to testOnly version of the app, device admin rights would be revoken and you would need to enable them again manually.</strong></p>]]></string>
+    <string name="install_testonly"><![CDATA[You have the latest version, but you don\'t have the testOnly version of the app installed. "testOnly" is simply the system flag, it doesn\'t mean that this app version is only for tests! Actually, the testOnly app version has several advantages, and it\'s recommended for installation. You can read more on <a href="https://github.com/bakad3v/Android-AntiForensic-Tools?tab=readme-ov-file#apps-versions">GitHub</a>. <strong>Don\'t forget to reactivate accessibility service after update!</strong>]]></string>
+    <string name="testonly_update_warning"><![CDATA[<p><strong>Warning: if you will update from usual to testOnly version of the app without granting the app root or shizuku rights, device admin rights would be revoken and you would need to enable them again manually.</strong></p>]]></string>
     <string name="up_to_date">You\'re up to date</string>
     <string name="app_update_center">App update center</string>
 </resources>

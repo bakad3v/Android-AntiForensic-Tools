@@ -151,10 +151,6 @@ class AppUpdaterFragment: Fragment() {
             } else {
                 requireContext().getString(R.string.up_to_date)
             }
-            tvAdminRightsStatusSubtitle.isVisible = !data.isAppTestOnly
-            if (!data.isAppTestOnly) {
-                tvAdminRightsStatusSubtitle.text = HtmlCompat.fromHtml(requireContext().getString(R.string.testonly_update_warning), HtmlCompat.FROM_HTML_MODE_LEGACY)
-            }
             rbRegularVersion.isEnabled = data.activeUsualVersion
             rbRootVersion.isEnabled = data.activeTestOnlyVersion
             when(data.selectedOption) {

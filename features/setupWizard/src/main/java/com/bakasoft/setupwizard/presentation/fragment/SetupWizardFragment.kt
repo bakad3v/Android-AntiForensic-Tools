@@ -314,10 +314,6 @@ class SetupWizardFragment: Fragment() {
                 SettingsElementState.UNKNOW))
             removeItself.setState(dataMap.getOrDefault(WizardElement.ENABLE_SELF_DESTRUCTION,
                 SettingsElementState.UNKNOW))
-            hideNotifications.setState(
-                dataMap.getOrDefault(WizardElement.HIDE_NOTIFICATIONS,
-                    SettingsElementState.UNKNOW)
-            )
             hideApp.setState(dataMap.getOrDefault(WizardElement.ENABLE_HIDING,
                 SettingsElementState.UNKNOW))
             disableLogs.setState(dataMap.getOrDefault(WizardElement.DISABLE_LOGS,
@@ -368,9 +364,6 @@ class SetupWizardFragment: Fragment() {
             removeItself.setOnClickListener {
                 setupWizardRouter.openDataDestructionSettings(findNavController())
             }
-            hideNotifications.setOnClickListener {
-                setupWizardRouter.openNotificationSettings(findNavController())
-            }
             hideApp.setOnClickListener {
                 setupWizardRouter.openDataDestructionSettings(findNavController())
             }
@@ -402,9 +395,6 @@ class SetupWizardFragment: Fragment() {
             }
             protectionHelp.setOnClickListener {
                 openLink(ANTIFORENSIC_PROTECTION_HELP)
-            }
-            notificationsHelp.setOnClickListener {
-                openLink(NOTIFICATION_SETTINGS_HELP)
             }
         }
     }

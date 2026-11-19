@@ -107,8 +107,6 @@ class GetWizardStateUseCase @Inject constructor(
 
             val protectionFixAvailable = getProtectionAvailable(permissions, selectedData)
 
-            val notificationSettingsState = getNotificationsHidingStatus(listeningNotifications)
-
             val superUserPermissions =
                 getPermissionState(permissions, protectionFixAvailable, rootCommandNotEmpty, profilesSelected, settings.wipe)
             val superUserPermissionsState = when(superUserPermissions) {
@@ -132,7 +130,6 @@ class GetWizardStateUseCase @Inject constructor(
                 put(WizardElement.DISABLE_LOGS, disableLogsState)
                 put(WizardElement.SETUP_MULTIUSER, disableMultiuserUIState)
                 put(WizardElement.ACTIVATE_TRIM, activateTrimState)
-                put(WizardElement.HIDE_NOTIFICATIONS, notificationSettingsState)
             }
 
             val appState = if (dataMap.containsValue(SettingsElementState.REQUIRED)) {
@@ -154,14 +151,6 @@ class GetWizardStateUseCase @Inject constructor(
                         && settings.removeItself
                         && !repository.isTestOnly
                         && !adminBruteforceWarningDisabled)
-        }
-    }
-
-    private fun getNotificationsHidingStatus(listeningNotifications: Boolean): SettingsElementState {
-        return if (listeningNotifications) {
-            SettingsElementState.OK
-        } else {
-            SettingsElementState.RECOMMENDED
         }
     }
 
