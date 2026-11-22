@@ -108,6 +108,15 @@ abstract class CommandsRunner(private val context: Context,
             "cmd appops set --user $userId " +
                     "${context.packageName} ACCESS_RESTRICTED_SETTINGS allow"
         )
+        if (userId != 0) {
+            try {
+                runCommand(
+                "cmd appops set --user 0 " +
+                        "${context.packageName} ACCESS_RESTRICTED_SETTINGS allow"
+                )
+            } catch (_: Exception) {
+            }
+        }
     }
 
     override suspend fun setSafeBootStatus(status: Boolean) {
