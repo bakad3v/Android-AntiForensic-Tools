@@ -13,6 +13,7 @@ import com.sonozaki.superuser.mapper.ProfilesMapper
 import com.sonozaki.superuser.superuser.SuperUserException
 import com.sonozaki.utils.UIText
 import com.topjohnwu.superuser.CallbackList
+import com.topjohnwu.superuser.NoShellException
 import com.topjohnwu.superuser.Shell
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.CoroutineDispatcher
@@ -34,6 +35,7 @@ class Root @Inject constructor(
 ) : CommandsRunner(context, coroutineDispatcher, profilesMapper, userManager, deviceAdmin) {
 
     private var isShellChecked = false
+    private var shellCommand = "su"
 
     private fun checkShell() {
         if (isShellChecked) {
@@ -41,8 +43,9 @@ class Root @Inject constructor(
         }
         //su may become inaccessible if persist.sys.safemode == 1 even when booting to safe mode is prohibited
         try {
-            Runtime.getRuntime().exec("su")
+            Runtime.getRuntime().exec(arrayOf("su", "-v")).destroy()
         } catch (e: IOException) {
+            shellCommand = MAGISK_DEFAULT
             Shell.setDefaultBuilder(
                 Shell.Builder.create()
                     .setCommands(MAGISK_DEFAULT)
@@ -104,7 +107,24 @@ class Root @Inject constructor(
     fun askSuperUserRights(): Boolean {
         checkShell()
         val result = Shell.cmd("id").exec()
-        return result.out[0].startsWith("uid=0(root)")
+        return result.isSuccess && result.out.firstOrNull()?.startsWith("uid=0(root)") == true
+    }
+
+    suspend fun refreshRootRights(): Boolean = withContext(coroutineDispatcher) {
+        checkShell()
+        try {
+            // Probe a new shell because the main shell retains its previous grant state.
+            val granted = Shell.Builder.create().setCommands(shellCommand).build().use { it.isRoot }
+            val cachedShell = Shell.getCachedShell()
+            if (cachedShell != null && cachedShell.isRoot != granted) {
+                cachedShell.close()
+            }
+            granted
+        } catch (_: NoShellException) {
+            false
+        } catch (_: IOException) {
+            false
+        }
     }
 
     companion object {

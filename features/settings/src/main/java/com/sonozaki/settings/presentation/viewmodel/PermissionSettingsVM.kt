@@ -13,7 +13,11 @@ import com.sonozaki.superuser.superuser.SuperUserManager
 import com.sonozaki.utils.UIText
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.sync.Mutex
+import kotlinx.coroutines.sync.withLock
 import javax.inject.Inject
 
 @HiltViewModel
@@ -21,12 +25,19 @@ class PermissionSettingsVM @Inject constructor(
     private val superUserManager: SuperUserManager,
     private val setRootActiveUseCase: SetRootActiveUseCase,
     private val setOwnerActiveUseCase: SetOwnerActiveUseCase,
+    private val getPermissionsUseCase: GetPermissionsUseCase,
     settingsActionChannel: Channel<DialogActions>,
     getSettingsUseCase: GetSettingsUseCase,
-    getPermissionsUseCase: GetPermissionsUseCase
 ): AbstractSettingsVM(settingsActionChannel, getSettingsUseCase, getPermissionsUseCase) {
 
     val shizukuState = superUserManager.shizukuStateFlow
+    private val rootPermissionIntents = Channel<Intent>(Channel.BUFFERED)
+
+    private val openAccessibilityServiceEvents: Channel<Unit> = Channel(Channel.BUFFERED)
+
+    val openAccessibilityServiceFlow = openAccessibilityServiceEvents.receiveAsFlow()
+    val rootPermissionIntentsFlow = rootPermissionIntents.receiveAsFlow()
+    private val rootCheckMutex = Mutex()
 
     fun showAccessibilityServiceDialog() {
         showQuestionDialog(
@@ -34,6 +45,19 @@ class PermissionSettingsVM @Inject constructor(
             message = UIText.StringResource(R.string.accessibility_service_long),
             MOVE_TO_ACCESSIBILITY_SERVICE
         )
+    }
+
+    fun startAccessibilityService() {
+        viewModelScope.launch {
+            val permissions = getPermissionsUseCase().first()
+            if (permissions.isRoot || permissions.isShizuku) {
+                try {
+                    superUserManager.getSuperUser().removeAccessibilityServiceDialog()
+                } catch (_: Exception) {
+                }
+            }
+            openAccessibilityServiceEvents.send(Unit)
+        }
     }
 
     fun adminRightsIntent(): Intent {
@@ -103,19 +127,36 @@ class PermissionSettingsVM @Inject constructor(
     }
 
     fun showRootDisableDialog() {
+        showQuestionDialog(
+            title = UIText.StringResource(R.string.disable_root),
+            message = UIText.StringResource(R.string.disable_root_long),
+            requestKey = DISABLE_ROOT_DIALOG
+        )
+    }
+
+    fun openMagisk() {
         viewModelScope.launch {
-            showInfoDialogSuspend(
-                message = UIText.StringResource(R.string.disable_root_long),
-                title = UIText.StringResource(R.string.disable_root)
-            )
-            setRootActiveUseCase(false)
+            superUserManager.magiskLaunchIntent()?.let { rootPermissionIntents.send(it) }
         }
     }
 
     fun askRoot() {
         viewModelScope.launch {
-            val rootResult = superUserManager.askRootRights()
-            setRootActiveUseCase(rootResult)
+            val intent = superUserManager.rootPermissionIntent()
+            if (intent != null) {
+                rootPermissionIntents.send(intent)
+            } else {
+                refreshRootStatus()
+            }
+        }
+    }
+
+    fun refreshRootStatus() {
+        viewModelScope.launch {
+            rootCheckMutex.withLock {
+                val rootResult = superUserManager.askRootRights()
+                setRootActiveUseCase(rootResult)
+            }
         }
     }
 
@@ -130,6 +171,7 @@ class PermissionSettingsVM @Inject constructor(
     companion object {
         const val MOVE_TO_ACCESSIBILITY_SERVICE = "move_to_accessibility_service"
         const val ROOT_WARNING_DIALOG = "root_warning_dialog"
+        const val DISABLE_ROOT_DIALOG = "disable_root_dialog"
         const val INSTALL_DIZUKU_DIALOG = "install_dizuku"
         const val INSTALL_SHIZUKU_DIALOG = "install_shizuku"
         const val DISABLE_SHIZUKU_MANUALLY = "disable_shizuku_manually"

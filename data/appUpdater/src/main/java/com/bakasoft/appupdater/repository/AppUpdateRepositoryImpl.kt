@@ -41,6 +41,7 @@ class AppUpdateRepositoryImpl @Inject constructor(
        private const val TEST_ONLY_STATUS_PREFERENCE_NAME = "test_only_status"
        private val UPDATE_POPUP_USER_PREFERENCE = booleanPreferencesKey("show_update_popup")
        private val IS_TESTONLY_SAVED_PREFERENCE = booleanPreferencesKey("is_testOnlyPreference")
+       private val ADMIN_REACTIVATION_PENDING = booleanPreferencesKey("admin_reactivation_pending")
     }
 
     private val Context.showUpdatePopupUserPreference by preferencesDataStore(PREFERENCE_NAME)
@@ -106,6 +107,11 @@ class AppUpdateRepositoryImpl @Inject constructor(
             it[IS_TESTONLY_SAVED_PREFERENCE]
         }
 
+    override val isAdminReactivationPending: Flow<Boolean>
+        get() = testOnlyStatusPreference.data.map {
+            it[ADMIN_REACTIVATION_PENDING] == true
+        }
+
     override suspend fun setUpdatePopupStatus(status: Boolean) {
         context.showUpdatePopupUserPreference.edit {
             it[UPDATE_POPUP_USER_PREFERENCE] = status
@@ -115,6 +121,12 @@ class AppUpdateRepositoryImpl @Inject constructor(
     override suspend fun saveTestOnlyStatus(status: Boolean) {
         testOnlyStatusPreference.edit {
             it[IS_TESTONLY_SAVED_PREFERENCE] = status
+        }
+    }
+
+    override suspend fun saveAdminReactivationPending(pending: Boolean) {
+        testOnlyStatusPreference.edit {
+            it[ADMIN_REACTIVATION_PENDING] = pending
         }
     }
 }

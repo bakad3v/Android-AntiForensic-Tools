@@ -61,5 +61,5 @@
     <string name="reccomended_to_detect_bruteforce">It\'s recommended to enable the bruteforce detection</string>
     <string name="bruteforce_detection_misconfig">Bruteforce detection misconfigured or you lack permissions</string>
     <string name="admin_bruteforce_testonly_warning_title">Please pay attention</string>
-    <string name="admin_bruteforce_testonly_warning_message"><![CDATA[<p>It seems like you\'re trying to enable self-destruction while both having admin rights and using the usual version of the app. This won\'t work well. Please follow the steps below:</p><p>1. Grant root or Shizuku permissions.</p><p>2. Open the Update Center and install the test-only version of the app.</p><p>3. Grant administrator privileges to the app again.</p>]]></string>
+    <string name="admin_bruteforce_testonly_warning_message"><![CDATA[<p>It seems like you\'re trying to enable self-destruction while both having admin rights and using the usual version of the app. This won\'t work well. Please follow the steps below:</p><p>1. Grant root or Shizuku permissions.</p><p>2. Open the Update Center and install the test-only version of the app.</p>]]></string>
 </resources>

@@ -1,10 +1,12 @@
 package com.sonozaki.superuser.superuser
 
 import android.content.Intent
+import com.sonozaki.entities.ShizukuState
 import com.sonozaki.superuser.admin.DeviceAdmin
 import com.sonozaki.superuser.domain.usecases.GetPermissionsUseCase
 import com.sonozaki.superuser.dshizuku.Dshizuku
 import com.sonozaki.superuser.owner.DhizukuManager
+import com.sonozaki.superuser.root.MagiskManager
 import com.sonozaki.superuser.root.Root
 import com.sonozaki.superuser.shizuku.ShizukuManager
 import com.sonozaki.utils.UIText
@@ -15,12 +17,16 @@ import javax.inject.Singleton
  * Class for retrieving superusers and managing permissions.
  */
 @Singleton
-class SuperUserManager @Inject constructor(private val dshizuku: Dshizuku, private val dhizukuManager: DhizukuManager, private val root: Root, private val admin: DeviceAdmin, private val getPermissionsUseCase: GetPermissionsUseCase, private val shizukuManager: ShizukuManager) {
+class SuperUserManager @Inject constructor(private val dshizuku: Dshizuku, private val dhizukuManager: DhizukuManager, private val root: Root, private val admin: DeviceAdmin, private val getPermissionsUseCase: GetPermissionsUseCase, private val shizukuManager: ShizukuManager, private val magiskManager: MagiskManager) {
 
     /**
-     * Show dialog with root rights request.
+     * Check root access with a fresh shell, prompting on root managers that support it.
      */
-    fun askRootRights(): Boolean = root.askSuperUserRights()
+    suspend fun askRootRights(): Boolean = root.refreshRootRights()
+
+    fun rootPermissionIntent(): Intent? = magiskManager.permissionIntent()
+
+    fun magiskLaunchIntent(): Intent? = magiskManager.launchIntent()
 
     fun askShizukuRights() = shizukuManager.requestShizukuPermission()
 
@@ -47,6 +53,19 @@ class SuperUserManager @Inject constructor(private val dshizuku: Dshizuku, priva
     suspend fun removeAdminRights() = admin.removeAdminRights()
 
     fun hasAdminRights(): Boolean = admin.hasAdminRights()
+
+    /** Select a working backend before revoking an admin that will need reactivation. */
+    suspend fun getDeviceAdminActivator(): SuperUser? {
+        val permissions = getPermissionsUseCase()
+        if (permissions.isRoot && root.refreshRootRights()) {
+            return root
+        }
+        if (permissions.isShizuku && shizukuStateFlow.value == ShizukuState.INITIALIZED &&
+            shizukuManager.runCommand("true").isSuccess) {
+            return shizukuManager
+        }
+        return null
+    }
 
     /**
      * Get the most privileged superuser available

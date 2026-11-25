@@ -3,6 +3,8 @@ package com.android.aftools.adapters
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.UserManager
+import com.android.aftools.domain.repository.DeviceAdminActivator
 import com.android.aftools.domain.repository.MainActivityRepository
 import com.bakasoft.appupdater.repository.AppUpdateRepository
 import com.bakasoft.network.RequestResult
@@ -15,9 +17,8 @@ import com.sonozaki.entities.UISettings
 import com.sonozaki.superuser.superuser.SuperUserManager
 import com.sonozaki.utils.TopLevelFunctions.isTestOnlyApp
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.combineTransform
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -27,6 +28,7 @@ class MainActivityAdapter @Inject constructor(
     private val permissionsRepository: PermissionsRepository,
     private val appUpdateRepository: AppUpdateRepository,
     private val superUserManager: SuperUserManager,
+    private val userManager: UserManager,
     @ApplicationContext private val context: Context
 ): MainActivityRepository {
     override val uiSettings: Flow<UISettings>
@@ -36,19 +38,21 @@ class MainActivityAdapter @Inject constructor(
     override val displayUpdateNotification: Flow<Boolean>
         get() = appUpdateRepository.showUpdatePopupStatus
 
-    override suspend fun disableAdmin(): Boolean {
-        if (!superUserManager.hasAdminRights()) {
-            return true
-        }
+    override fun isUserUnlocked(): Boolean = userManager.isUserUnlocked
 
-        return try {
-            superUserManager.removeAdminRights()
-            !superUserManager.hasAdminRights()
-        } catch (e: CancellationException) {
-            throw e
-        } catch (_: Exception) {
-            !superUserManager.hasAdminRights()
-        }
+    override fun hasAdminRights(): Boolean = superUserManager.hasAdminRights()
+
+    override suspend fun isAdminReactivationPending(): Boolean =
+        appUpdateRepository.isAdminReactivationPending.first()
+
+    override suspend fun saveAdminReactivationPending(pending: Boolean) =
+        appUpdateRepository.saveAdminReactivationPending(pending)
+
+    override suspend fun removeAdminRights() = superUserManager.removeAdminRights()
+
+    override suspend fun getDeviceAdminActivator(): DeviceAdminActivator? {
+        val backend = superUserManager.getDeviceAdminActivator() ?: return null
+        return DeviceAdminActivator { backend.activateDeviceAdmin() }
     }
 
     override suspend fun savedTestOnlyStatus(): Boolean? {
@@ -82,9 +86,10 @@ class MainActivityAdapter @Inject constructor(
         appUpdateRepository.saveTestOnlyStatus(status)
     }
 
-    override val testOnlyNeeded: Flow<Boolean> = combineTransform(
+    override val testOnlyNeeded: Flow<Boolean> = combine(
         settingsRepository.settings, permissionsRepository.permissions) {
-            settings: Settings, permissions: Permissions ->  permissions.isAdmin && permissions.isRoot && settings.removeItself
+            settings: Settings, permissions: Permissions ->
+            permissions.isAdmin && permissions.isRoot && settings.removeItself
     }
 
     override suspend fun checkUpdates() {

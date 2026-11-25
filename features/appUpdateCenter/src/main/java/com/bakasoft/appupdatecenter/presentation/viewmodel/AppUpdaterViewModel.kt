@@ -65,9 +65,9 @@ class AppUpdaterViewModel @Inject constructor(
         }
     }
 
-    fun setInstallerData(path: String, isTestOnly: Boolean, disableAdmin: Boolean) {
+    fun setInstallerData(path: String, isTestOnly: Boolean) {
         viewModelScope.launch {
-            setAppInstallerDataUseCase(path, isTestOnly, disableAdmin)
+            setAppInstallerDataUseCase(path, isTestOnly)
             actionsChannel.send(AppUpdaterActions.START_UPDATE)
         }
     }

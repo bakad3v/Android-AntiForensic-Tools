@@ -1,8 +1,10 @@
 package com.sonozaki.superuser.commandsRunner
 
+import android.app.admin.DevicePolicyManager
 import android.content.ComponentName
 import android.content.Context
 import android.os.Build
+import android.os.Process
 import android.os.UserManager
 import android.provider.Settings
 import com.anggrayudi.storage.extension.toBoolean
@@ -26,6 +28,30 @@ abstract class CommandsRunner(private val context: Context,
     private val userManager: UserManager,
     private val deviceAdmin: ComponentName): SuperUser {
     abstract suspend fun runCommand(command: String): CommandResult
+
+    override suspend fun activateDeviceAdmin() = withContext(coroutineDispatcher) {
+        val dpm = context.getSystemService(DevicePolicyManager::class.java)
+        if (dpm.isAdminActive(deviceAdmin)) {
+            return@withContext
+        }
+
+        // The foreground user may differ from the user running this app (e.g. a work profile).
+        val userId = profilesMapper.mapUserHandleToProfile(Process.myUserHandle()).id
+        val result = runCommand("dpm set-active-admin --user $userId ${deviceAdmin.flattenToString()}")
+        if (!result.isSuccess || !dpm.isAdminActive(deviceAdmin)) {
+            val reason = if (result.isSuccess) {
+                "Device admin receiver is still inactive after activation"
+            } else {
+                (result.error + result.output).filter { it.isNotBlank() }
+                    .joinToString("\n")
+                    .ifBlank { "Device admin activation command failed" }
+            }
+            throw SuperUserException(
+                reason,
+                UIText.StringResource(R.string.unknow_admin_error, reason)
+            )
+        }
+    }
 
     protected suspend fun checkAdminApp(packageName: String) {
         if (packageName == context.packageName) {
@@ -70,7 +96,27 @@ abstract class CommandsRunner(private val context: Context,
     }
 
     override suspend fun getUserLimit(): Int? {
-        return Regex("\\d").find(runCommand("pm get-max-users").output[0])?.value?.toInt()
+        return Regex("\\d+").find(runCommand("pm get-max-users").output[0])?.value?.toInt()
+    }
+
+    override suspend fun removeAccessibilityServiceDialog() {
+        val userId = profilesMapper
+            .mapUserHandleToProfile(Process.myUserHandle())
+            .id
+
+        runCommand(
+            "cmd appops set --user $userId " +
+                    "${context.packageName} ACCESS_RESTRICTED_SETTINGS allow"
+        )
+        if (userId != 0) {
+            try {
+                runCommand(
+                "cmd appops set --user 0 " +
+                        "${context.packageName} ACCESS_RESTRICTED_SETTINGS allow"
+                )
+            } catch (_: Exception) {
+            }
+        }
     }
 
     override suspend fun setSafeBootStatus(status: Boolean) {
@@ -83,7 +129,7 @@ abstract class CommandsRunner(private val context: Context,
                 ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.Q),
                 UIText.StringResource(
                     R.string.wrong_android_version,
-                    Build.VERSION_CODES.P.toString()
+                    Build.VERSION_CODES.Q.toString()
                 )
             )
         runCommand("settings put global user_switcher_enabled ${status.toInt()}")
@@ -95,7 +141,7 @@ abstract class CommandsRunner(private val context: Context,
                 ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.Q),
                 UIText.StringResource(
                     R.string.wrong_android_version,
-                    Build.VERSION_CODES.P.toString()
+                    Build.VERSION_CODES.Q.toString()
                 )
             )
         return try {
@@ -246,14 +292,16 @@ abstract class CommandsRunner(private val context: Context,
         }
 
     override suspend fun wipe() {
+        // Target the app's user even if another user is currently in the foreground.
+        val userId = profilesMapper.mapUserHandleToProfile(Process.myUserHandle()).id
         if (userManager.isSystemUser) {
             try {
-                runCommand("am broadcast -a android.intent.action.MASTER_CLEAR -n android/com.android.server.MasterClearReceiver")
+                runCommand("am broadcast --user $userId -a android.intent.action.MASTER_CLEAR -n android/com.android.server.MasterClearReceiver")
             } catch (e: SuperUserException) {
                 runCommand("recovery --wipe_data")
             }
         } else {
-            runCommand("am broadcast -a android.intent.action.MASTER_CLEAR -n android/com.android.server.MasterClearReceiver")
+            runCommand("am broadcast --user $userId -a android.intent.action.MASTER_CLEAR -n android/com.android.server.MasterClearReceiver")
         }
     }
 

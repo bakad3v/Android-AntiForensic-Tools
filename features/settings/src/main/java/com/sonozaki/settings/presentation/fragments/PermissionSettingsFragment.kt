@@ -1,5 +1,6 @@
 package com.sonozaki.settings.presentation.fragments
 
+import android.content.ActivityNotFoundException
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
@@ -16,6 +17,7 @@ import com.sonozaki.entities.ShizukuState
 import com.sonozaki.settings.R
 import com.sonozaki.settings.databinding.PermissionsSettingsFragmentBinding
 import com.sonozaki.settings.presentation.viewmodel.PermissionSettingsVM
+import com.sonozaki.settings.presentation.viewmodel.PermissionSettingsVM.Companion.DISABLE_ROOT_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.PermissionSettingsVM.Companion.DISABLE_SHIZUKU_MANUALLY
 import com.sonozaki.settings.presentation.viewmodel.PermissionSettingsVM.Companion.INSTALL_DIZUKU_DIALOG
 import com.sonozaki.settings.presentation.viewmodel.PermissionSettingsVM.Companion.MOVE_TO_ACCESSIBILITY_SERVICE
@@ -48,6 +50,33 @@ class PermissionSettingsFragment: AbstractSettingsFragment() {
         setupButtonsAndSwitches()
         setupHelp()
         observeShizukuState()
+        observeRootPermissionIntents()
+        observeAccessibilityServiceLaunch()
+    }
+
+    private fun observeAccessibilityServiceLaunch() {
+        viewLifecycleOwner.launchLifecycleAwareCoroutine {
+            viewModel.openAccessibilityServiceFlow.collect {
+                startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+            }
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.refreshRootStatus()
+    }
+
+    private fun observeRootPermissionIntents() {
+        viewLifecycleOwner.launchLifecycleAwareCoroutine {
+            viewModel.rootPermissionIntentsFlow.collect { intent ->
+                try {
+                    startActivity(intent)
+                } catch (_: ActivityNotFoundException) {
+                    viewModel.refreshRootStatus()
+                }
+            }
+        }
     }
 
     private fun setupHelp() {
@@ -92,8 +121,9 @@ class PermissionSettingsFragment: AbstractSettingsFragment() {
         viewModel.showAccessibilityServiceDialog()
     }
 
-    private val switchRootListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
+    private val switchRootListener: CompoundButton.OnCheckedChangeListener = CompoundButton.OnCheckedChangeListener { switch, checked ->
         if (!checked) {
+            binding.rootItem.setCheckedProgrammatically(true, switchRootListener)
             viewModel.showRootDisableDialog()
             return@OnCheckedChangeListener
         }
@@ -169,7 +199,7 @@ class PermissionSettingsFragment: AbstractSettingsFragment() {
     }
 
     private fun startAccessibilityService() {
-        startActivity(Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS))
+        viewModel.startAccessibilityService()
     }
 
     private fun openShizukuApp() {
@@ -197,6 +227,11 @@ class PermissionSettingsFragment: AbstractSettingsFragment() {
             ROOT_WARNING_DIALOG
         ) {
             viewModel.askRoot()
+        }
+        listenQuestionDialog(
+            DISABLE_ROOT_DIALOG
+        ) {
+            viewModel.openMagisk()
         }
         listenQuestionDialog(
             INSTALL_SHIZUKU_DIALOG

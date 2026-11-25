@@ -345,7 +345,7 @@ class ShizukuManager @Inject constructor(
                 ANDROID_VERSION_INCORRECT.format(Build.VERSION_CODES.Q),
                 UIText.StringResource(
                     R.string.wrong_android_version,
-                    Build.VERSION_CODES.P.toString()
+                    Build.VERSION_CODES.Q.toString()
                 )
             )
         runAdbCommandImmediately("settings put global user_switcher_enabled ${status.toInt()}")

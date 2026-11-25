@@ -19,6 +19,14 @@ class Dshizuku @Inject constructor(
     private val getPermissionsUseCase: GetPermissionsUseCase
 ): SuperUser {
 
+    override suspend fun activateDeviceAdmin() {
+        if (getPermissionsUseCase().isShizuku) {
+            shizukuManager.activateDeviceAdmin()
+        } else {
+            dhizukuManager.activateDeviceAdmin()
+        }
+    }
+
 
     /**
      * Function for choosing shizuku or dhizuku to run a command.
@@ -262,6 +270,14 @@ class Dshizuku @Inject constructor(
 
     override suspend fun removeNotification(packageName: String, id: Int) {
         throw SuperUserException(NO_ROOT_RIGHTS, UIText.StringResource(com.sonozaki.resources.R.string.no_root_rights))
+    }
+
+    override suspend fun removeAccessibilityServiceDialog() {
+        if (getPermissionsUseCase().isShizuku) {
+            shizukuManager.removeAccessibilityServiceDialog()
+        } else {
+            dhizukuManager.removeAccessibilityServiceDialog()
+        }
     }
 
     companion object {
