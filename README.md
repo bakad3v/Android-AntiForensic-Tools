@@ -42,6 +42,10 @@ Another disadvantage of the app is that its most advanced features, including se
 
 Despite using many available Android privileges, the app is limited by the OS itself. Custom OSes such as [GrapheneOS](https://grapheneos.org/) are better suited to withstand advanced adversaries and can patch security holes that this application cannot.
 
+This app makes some permanent changes in your device configuration (disables logs and safe boot mode) which are necessary for your protection, but can look suspicious by themself.
+
+Finally, destroying data on USB connection would probably not protect you against forensic systems like Cellebrite, because such system can find exploit faster than trigger clear the data.
+
 ## Installation
 In the Releases section you can download four versions of the app. Two of them can be installed as regular APKs; two must be installed via ADB or using root or Shizuku. If you enabled device admin rights and app self-destruction, please install the testOnly versions (instructions below); otherwise self-destruction will not work in BFU (before first unlock) mode. **TL;DR - it's reccomended to install TESTONLY versions of the apps**
 
